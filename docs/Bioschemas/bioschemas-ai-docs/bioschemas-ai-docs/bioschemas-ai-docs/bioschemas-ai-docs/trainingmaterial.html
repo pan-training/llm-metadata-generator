@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:image" content="//bioschemas.org/assets/img/apple-touch-icon.png" />
+  <title>
+  			Bioschemas - 1.1 Draft
+  		
+  </title>
+  <meta name="description" content="">
+  <!-- Icons  -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+  <link rel="manifest" href="/assets/img/site.webmanifest">
+  <link rel="mask-icon" href="/assets/img/safari-pinned-tab.svg" color="#0b794b">
+  <link rel="shortcut icon" href="">
+  <!-- Styling  -->
+  <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="canonical" href="http://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT">
+  <link rel="alternate" type="application/rss+xml" title="Bioschemas" href="/feed.xml">
+  <!-- Bioschemas  -->
+  
+  <!-- JavaScript  -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/toc.js"></script>
+  <script src="/assets/js/lunr.min.js"></script>
+  <script src="/assets/js/search.js"></script>
+  <script defer src="/assets/js/all.min.js"></script>
+  <!-- Signposting -->
+  
+</head>
+
+  <body>
+    <a class="visually-hidden-focusable" href='#main'>Skip to content</a>
+<header id="header_wrap" class="p-3">
+    <!--start search-->
+    <div class="search-outer" id="search-container">
+        <!--<div class="position-relative">-->
+            <form role="search rounded-bottom" class="input-group">
+                <span class="input-group-text" id="search-label"><i class="fa-solid fa-magnifying-glass"></i></span><input type="search" id="search-input" class="search-input form-control" tabindex="0" placeholder="Search..." aria-label="Search..." autocomplete="off">
+            </form>
+            <div id="search-results" class="search-results"></div>
+        <!--</div>-->
+    </div>
+    <!--end search-->
+    <a class="btn btn-github rounded-0 rounded-bottom shadow text-white fs-5 d-flex align-items-center" href="https://github.com/Bioschemas">
+        <div class="flex-grow-1 me-sm-2 d-none d-sm-block">GitHub</div>
+        <div class="flex-shrink-0"></div><i class="fab fa-github"></div></i>
+    </a>
+    <!--<a class="btn btn-twitter rounded-0 rounded-bottom shadow text-white fs-5 d-flex align-items-center" href="https://twitter.com/bioschemas">
+        <div class="flex-grow-1 me-sm-2 d-none d-sm-block">Twitter</div>
+        <div class="flex-shrink-0"></div><i class="fab fa-twitter"></i></div>
+    </a>-->
+    <div class="biohex-logo">
+        <a href="/">
+            <img class="hexagon" src="/assets/img/square_logo2.svg" alt="Bioschemas">
+        </a>
+        <a href="/">
+            <img class="bio-title" src="/assets/img/name_lower.svg" alt="Bioschemas">
+        </a>
+    </div>
+</header>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top py-xl-1" aria-label="navbar">
+  <div class="container-fluid justify-content-end">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bioschemasNavbar"
+      aria-controls="bioschemasNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-md-center fs-5" id="bioschemasNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active mx-2" aria-current="page" href="/"><i
+              class="fas fa-home me-2"></i>Home</a></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown01" data-bs-toggle="dropdown"
+            aria-expanded="false">Getting Started</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="/tutorials/">Overview</a></li>
+            <li><a class="dropdown-item" href="/tutorials/what_why_schema">Introduction to
+                Schema.org, what and why?</a></li>
+            <li><a class="dropdown-item" href="/tutorials/markup_examples">Schema.org markup
+                examples</a></li>
+            <li><a class="dropdown-item" href="/tutorials/what_why_bioschemas">Introduction to
+                Bioschemas, what and why?</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_right_profile">Choosing a
+                profile</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_add_markup">Adding
+                Bioschemas markup to pages</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_add_github">Adding markup
+                to GitHub pages</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_check_deploy">Validating
+                Bioschemas markup</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/tutorials/dde/">Profile and Type Development in DDE &raquo; </a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" href="/tutorials/dde/update_profile">Updating a
+                  profile in DDE</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/howto_create_new_profile">Developing profiles from scratch</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/new_profile">Creating a new
+                  profile in the DDE</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/update_type">Updating a
+                  type in DDE</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/new_type">Creating a new
+                    type in the DDE</a></li>
+                <li><a class="dropdown-item"
+                  href="/tutorials/dde/review_a_specification_pull_request">Review a Specification
+                  Pull request (PR)</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/validation_editor">Using a validation editor</a></li>
+              </ul>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/tutorials/community/">Community-based
+                tutorials &raquo; </a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" href="/tutorials/community/idp">Adding markup to IDP
+                  resources</a></li>
+                <li><a class="dropdown-item" href="/tutorials/community/plant">Adding markup to Plant
+                    resources</a></li>
+                <li><a class="dropdown-item" href="/tutorials/community/rd">Adding markup to Rare
+                    Disease resources</a></li>
+                <li><a class="dropdown-item" href="/tutorials/community/biodiversity">Adding markup
+                    to Biodiversity-related resources</a></li>
+                    <li><a class="dropdown-item" href="/tutorials/community/training">Adding markup to training resources</a></li></ul>
+              </ul>
+          </li>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown02" data-bs-toggle="dropdown"
+            aria-expanded="false">Specifications</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="/profiles/">Bioschemas Profiles</a></li>
+            <li><a class="dropdown-item" href="/types/">Bioschemas Types</a></li>
+            <li><a class="dropdown-item" href="/properties/">Bioschemas Properties</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown03" data-bs-toggle="dropdown"
+            aria-expanded="false">Deploy &amp; Develop</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="https://discovery.biothings.io/markup-generator">Markup Generator <i
+                  class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item" href="/developer/software">Software</a></li>
+            <li><a class="dropdown-item" href="https://github.com/Bioschemas/specifications/wiki/Technical">Technical
+                Wiki <i class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item" href="/developer/liveDeploys">Live deploys</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown04" data-bs-toggle="dropdown"
+            aria-expanded="false">Community</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="/community/">Overview</a></li>
+            <li><a class="dropdown-item" href="/community/howtojoin">Join Bioschemas!</a></li>
+            <li><a class="dropdown-item" href="/news/">News</a></li>
+            <li><a class="dropdown-item" href="/meetings/">BioSchemas-related Meetings</a></li>
+            <li><a class="dropdown-item" href="/people/">People</a></li>
+            <li><a class="dropdown-item" href="/groups/">Groups</a></li>
+            <li><a class="dropdown-item" href="/community/champions">Bioschemas Champions</a></li>
+            <li><a class="dropdown-item" href="/community/stories">User Stories</a></li>
+            <li><a class="dropdown-item" href="/community/related">Related Communities</a></li>
+            <li><a class="dropdown-item" href="/useCases/">Use Cases</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown05" data-bs-toggle="dropdown"
+            aria-expanded="false">About</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item"
+                href="https://github.com/Bioschemas/governance/blob/master/governance.md">Bioschemas Governance <i
+                  class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item"
+                href="https://github.com/Bioschemas/governance/blob/master/codeOfConduct.md">Code of Conduct <i
+                  class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item" href="/about/publications">Publications</a></li>
+            <li><a class="dropdown-item" href="/about/funding">Funding</a></li>
+            <li><a class="dropdown-item" href="/about/logos">Logos</a></li>
+            <li><a class="dropdown-item" href="/about/privacy">Privacy Policy</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    
+    <div class="container min-vh-100">
+      <main id="main" class="my-5">
+        <!--
+    ToDo: Remove this validation after all the specs
+        are updated to the new specification-table template.
+-->
+
+
+
+
+<h1>TrainingMaterial <u>DRAFT</u> Profile</h1>
+
+<h3><strong>Version:</strong> 1.1-DRAFT (21 November 2022)</h3>
+<br />
+<p>If you spot any errors or omissions with this type, please file an issue in our <a href="https://github.com/Bioschemas/specifications/labels/type%3A%20TrainingMaterial" target="_blank">GitHub</a>.</p>
+<br />
+<nav class="mt-3">
+   <div class="nav nav-tabs" id="nav-tab" role="tablist">
+     <button class="nav-link active" id="nav-description-tab" data-bs-toggle="tab" data-bs-target="#nav-description" type="button" role="tab" aria-controls="nav-description" aria-selected="true">Description</button>
+     <button class="nav-link" id="nav-contributors-tab" data-bs-toggle="tab" data-bs-target="#nav-contributors" type="button" role="tab" aria-controls="nav-contributors" aria-selected="false">Contributors</button>
+     <button class="nav-link" id="nav-links-tab" data-bs-toggle="tab" data-bs-target="#nav-links" type="button" role="tab" aria-controls="nav-links" aria-selected="false">Links</button>
+   </div>
+</nav>
+<div class="tab-content py-3 mb-3 border-bottom" id="nav-tabContent">
+   <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
+      <!-- Bioschemas <a href="/specifications/">specifications and types list.</a> -->
+      <h3>Schema.org hierarchy</h3>
+      This Profile fits into the schema.org hierarchy as follows:
+      <br/>
+      <br/>
+      
+      
+      <a href="http://schema.org/Thing">Thing</a>
+      
+      
+      &gt;
+      
+      
+      
+      <a href="http://schema.org/CreativeWork">CreativeWork</a>
+      
+      
+      &gt;
+      
+      
+      
+      <a href="http://schema.org/LearningResource">LearningResource</a>
+      
+      
+      
+      
+      <h3>Description</h3>
+      <!--
+         ToDo: Remove this validation after all the specs
+               are updated to the new specification-table template.
+      -->
+      
+      
+      <p>A specification for describing training materials in life sciences. The Life Science Training Materials specification provides a way to describe bioscience training material on the World Wide Web. It defines a set of metadata and vocabularies, built on top of existing technologies and standards, that can be used to represent events in Web pages and applications. The goal of the specification is to make it easier to discover, exchange and integrate life science training material information across the Internet. Version: 1.1-DRAFT. <h3>Summary of Changes</h3><br>Changes since previous release 1.0-RELEASE of the TrainingMaterials profile:<ul><li>added sameAs property as recommended</li></ul></p>
+      
+
+      <h3>Latest profiles</h3>
+      
+      
+      <p>Latest release: <a href="/profiles/TrainingMaterial/1.0-RELEASE">1.0-RELEASE</a></p>
+      
+      
+      <p>Latest draft: <a href="/profiles/TrainingMaterial/1.1-DRAFT">1.1-DRAFT</a></p>
+      
+
+      <h3>Previous profiles</h3>
+      
+      
+      <p>Previous version: <a href="/profiles/TrainingMaterial/0.9-DRAFT-2020_12_08">0.9-DRAFT-2020_12_08</a></p>
+      
+      
+      
+      <p>Previous release: <a href="/profiles/TrainingMaterial/1.0-RELEASE">1.0-RELEASE</a></p>
+      
+   </div>
+   <div class="tab-pane fade" id="nav-contributors" role="tabpanel" aria-labelledby="nav-contributors-tab">
+<h3>Contributors</h3>
+<p>The following people have been involved in the creation of this specification document. They are all members of the <a href="/groups/Training">Training</a> group.</p>
+
+<h5 class="my-4">Group Leader(s)</h5>
+<div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4" id="leadTable">
+    <div class="col mt-2"><a href="/people/PatriciaPalagi">Patricia Palagi</a></div>
+    <div class="col mt-2"><a href="/people/MichelleBrazas">Michelle Brazas</a></div>
+    <div class="col mt-2"><a href="/people/LeylaGarcia">Leyla Jael Castro</a></div>
+</div>
+
+<h5 class="my-4">Other team members</h5>
+<div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4" id="peopleTable">
+    <div class="col mt-2"><a href="/people/CeliaVanGelder">Celia van Gelder</a></div>
+    <div class="col mt-2"><a href="/people/SonikaTyagi">Sonika Tyagi</a></div>
+    <div class="col mt-2"><a href="/people/TerriAtwood">Teresa Attwood</a></div>
+    <div class="col mt-2"><a href="/people/MateuszKuzak">Mateusz Kuzak</a></div>
+    <div class="col mt-2"><a href="/people/AnnetteMcgrath">Annette McGrath</a></div>
+    <div class="col mt-2"><a href="/people/PhilBarker">Phil Barker</a></div>
+    <div class="col mt-2"><a href="/people/FrancisOuellette">Francis Ouellette</a></div>
+    <div class="col mt-2"><a href="/people/DaveClements">Dave Clements</a></div>
+    <div class="col mt-2"><a href="/people/EijaKorpelainen">Eija Korpelainen</a></div>
+    <div class="col mt-2"><a href="/people/CharlotteZwetsloot">Charlotte Zwetsloot</a></div>
+    <div class="col mt-2"><a href="/people/MohammadAsifKhan">Mohammad Asif Khan</a></div>
+    <div class="col mt-2"><a href="/people/VerenaRas">Verena Ras</a></div>
+    <div class="col mt-2"><a href="/people/AnnMeyer">Ann Meyer</a></div>
+    <div class="col mt-2"><a href="/people/SarahMorgan">Sarah Morgan</a></div>
+    <div class="col mt-2"><a href="/people/VictoriaDominguezDelAngel">Victoria Dominguez Del Angel</a></div>
+    <div class="col mt-2"><a href="/people/ChrisChild">Chris Child</a></div>
+    <div class="col mt-2"><a href="/people/PhilReed">Phil Reed</a></div>
+    <div class="col mt-2"><a href="/people/TimDennis">Tim Dennis</a></div>
+    <div class="col mt-2"><a href="/people/AlexSmith">Alexandra Smith</a></div>
+</div>
+
+   </div>
+   <div class="tab-pane fade" id="nav-links" role="tabpanel" aria-labelledby="nav-links-tab">
+      <div class="table-responsive shadow rounded mt-4 mb-5">
+      <table class="table table-hover table-borderless mb-0 bioschemas_spec_list">
+         <thead>
+            <tr>
+               <th>Group</th>
+               <th>Use Cases</th>
+               <th>Cross Walk</th>
+               <th>Task &amp; Issues</th>
+               <th>Examples</th>
+               <th>Live Deploys</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td>
+                  <a href="/groups/Training">Training</a>
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="/useCases/TrainingMaterial">
+                  <img src="/images/use_case_spec.svg" alt="View Bioschemas TrainingMaterial Use Cases">
+                  </a>
+                  
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="https://docs.google.com/spreadsheets/d/1w6_iqgcBgbqqZVmhpf9L21eoVlq64U7RPf1xGKhiRpk/edit#gid=1483018794" target="_blank">
+                  <img src="/images/cross_walk.svg" alt="View Bioschemas TrainingMaterial Cross Walk">
+                  </a>
+                  
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="https://github.com/Bioschemas/specifications/labels/type%3A%20TrainingMaterial" target="_blank">
+                  <img src="/images/specs_tasks.png" alt="Bioschemas TrainingMaterial Github Tasks or Issues">
+                  </a>
+                  
+               </td>
+               <td class="spec_links" target="_blank">
+                  
+                  <a href="https://github.com/BioSchemas/specifications/tree/master/TrainingMaterial/examples" target="_blank">
+                  <img src="/images/spec_examples.png" alt="View Bioschemas TrainingMaterial Examples">
+                  </a>
+                  
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="/liveDeploys">
+                  <img src="/images/live_deploy.svg" alt="View Bioschemas TrainingMaterial Examples">
+                  </a>
+                  
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      </div>
+      <br />
+      
+      
+      <p>You can read the <a href="/specifications/TrainingMaterial">release version of this specification here</a>.</p>
+      
+      
+   </div>
+</div>
+
+
+<h5>Key to specification table</h5>
+<ul>
+  <li><em style="color: #0B794B;"><strong>Green</strong></em> properties/types are proposed by Bioschemas, or indicate proposed changes by Bioschemas to Schema.org</li>
+  <li><em style="color: #990000;"><strong>Red</strong></em> properties/types exist in the core of Schema.org</li>
+  <li><em style="color: #0000CC;"><strong>Blue</strong></em> properties/types exist in the pending area of Schema.org</li>
+  <li><em style="color: #454547;"><strong>Black</strong></em> properties/types are reused from external vocabularies/ontologies</li>
+</ul>
+
+<p>CD = Cardinality</p>
+
+
+
+
+<div class="table-responsive shadow rounded mt-4 mb-5">
+<table class="table table-hover table-borderless mb-0 spec-prof-table">
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>CD</th>
+            <th class="control-vocabulary-column">Controlled Vocabulary</th>
+            <th class="example-column">Example</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="cardinality">
+            <td colspan="6">
+                Marginality: <b>Minimum.</b>
+            </td>
+        </tr>
+        
+          <tr>
+    <td class="property-column"><a href="https://www.w3.org/TR/json-ld/#dfn-context" target="_blank" class="external" rel="noopener">@context</a></td>
+    <td><a href="http://schema.org/URL" target="_blank" rel="noopener">URL</a></td>
+    <td class="description-column">Used to provide the context (namespaces) for the JSON-LD file. <br />Not needed in other serialisations.</td>
+    <td>ONE</td>
+    <td class="control-vocabulary-column"></td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810@context&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalContext" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalContext" tabindex="-1" aria-labelledby="myModalContext" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810@context&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@context</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://schema.org/</span><span class="dl">"</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="property-column"><a href="https://www.w3.org/TR/json-ld/#specifying-the-type" target="_blank" class="external" rel="noopener">@type</a></td>
+    <td><a href="http://schema.org/Text" target="_blank" rel="noopener">Text</a></td>
+    <td class="description-column">Schema.org/Bioschemas class for the resource declared using JSON-LD syntax. For other serialisations please use the appropriate mechanism.<br />While it is permissible to provide multiple types, it is preferred to use a single type.</td>
+    <td>MANY</td>
+    <td class="control-vocabulary-column">Schema.org, Bioschemas</td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810@type&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalType" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalType" tabindex="-1" aria-labelledby="myModalType" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810@type&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">LearningResource</span><span class="dl">"</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="property-column"><a href="https://www.w3.org/TR/json-ld/#node-identifiers" target="_blank" class="external" rel="noopener">@id</a></td>
+    <td><a href="https://datatracker.ietf.org/doc/html/rfc3987#section-2" target="_blank" class="external" rel="noopener">IRI</a></td>
+    <td class="description-column">Used to distinguish the resource being described in JSON-LD. For other serialisations use the appropriate approach.</td>
+    <td>ONE</td>
+    <td class="control-vocabulary-column"></td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810@id&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalid" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalid" tabindex="-1" aria-labelledby="myModalid" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810@id&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://example.com/entity/A12345</span><span class="dl">"</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="property-column"><a href="http://purl.org/dc/terms/conformsTo" target="_blank" class="external" rel="noopener">dct:conformsTo</a></td>
+    <td><a href="https://datatracker.ietf.org/doc/html/rfc3987#section-2" target="_blank" class="external" rel="noopener">IRI</a></td>
+    <td class="description-column">Used to state the Bioschemas profile that the markup relates to. The versioned URL of the profile must be used.<br />Note that we use a CURIE in the table here but the full URL for Dublin Core terms must be used in the markup (http://purl.org/dc/terms/conformsTo), see example.</td>
+    <td>ONE</td>
+    <td class="control-vocabulary-column">Bioschemas profile versioned URL</td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810dct:conformsTo&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalconformsTo" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalconformsTo" tabindex="-1" aria-labelledby="myModalconformsTo" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810dct:conformsTo&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">http://purl.org/dc/terms/conformsTo</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">CreativeWork</span><span class="dl">"</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+
+        
+        <tr>
+            <td class="property-column"><a href="http://schema.org/description" target="_blank" class="schemaorg">description</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A description of the item.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/keywords" target="_blank" class="schemaorg">keywords</a></td>
+            <td>
+                <a href="http://schema.org/DefinedTerm" target="_blank">DefinedTerm</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>Keywords or tags used to describe this content. Multiple entries in a keywords list are typically delimited by commas.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/name" target="_blank" class="schemaorg">name</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The name of the item.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr class="cardinality">
+            <td colspan="6">
+                Marginality: <b>Recommended.</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="property-column"><a href="http://schema.org/about" target="_blank" class="schemaorg">about</a></td>
+            <td>
+                <a href="http://schema.org/Thing" target="_blank">Thing</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The subject of this Training Material. Use the DefinedTerm type to add a
+ controlled vocabulary term to describe the topic (such as from the EDAM
+ ontology) The subject matter of the content.
+ Inverse property: subjectOf.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/abstract" target="_blank" class="schemaorg">abstract</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An abstract is a short description that summarizes a CreativeWork.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/audience" target="_blank" class="schemaorg">audience</a></td>
+            <td>
+                <a href="http://schema.org/Audience" target="_blank">Audience</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A succinct description of the intended target audience for your materials: e.g., graduates, postgraduates, clinicians. An intended audience, i.e. a group for whom something was created. Supersedes serviceAudience.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/author" target="_blank" class="schemaorg">author</a></td>
+            <td>
+                <a href="http://schema.org/Organization" target="_blank">Organization</a><br>
+                <a href="http://schema.org/Person" target="_blank">Person</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>Those involved in the preparation, creation and/or presentation of the published work, specifically writing the initial draft The author of this content or rating. Please note that author is special in that HTML 5 provides a special mechanism for indicating authorship via the rel tag. That is equivalent to this and may be used interchangeably.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/competencyRequired" target="_blank" class="schemaorg">competencyRequired</a></td>
+            <td>
+                <a href="http://schema.org/DefinedTerm" target="_blank">DefinedTerm</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>Knowledge, skill, ability or personal attribute that must be demonstrated by a person or other entity in order to do something such as earn an Educational Occupational Credential or understand a LearningResource.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/educationalLevel" target="_blank" class="schemaorg">educationalLevel</a></td>
+            <td>
+                <a href="http://schema.org/DefinedTerm" target="_blank">DefinedTerm</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The students level of ability in the topic being taught. Examples of skill levels include ‘beginner’, ‘intermediate’ or ‘advanced’. The level in terms of progression through an educational or training context. Examples of educational levels include ‘beginner’, ‘intermediate’ or ‘advanced’, and formal sets of level indicators.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/identifier" target="_blank" class="schemaorg">identifier</a></td>
+            <td>
+                <a href="http://schema.org/PropertyValue" target="_blank">PropertyValue</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An identifier for this resource such as a DOI or compact URI
+ The identifier property represents any kind of identifier for any kind of Thing, such as ISBNs, GTIN codes, UUIDs etc. Schema.org provides dedicated properties for representing many of these, either as textual strings or as URL (URI) links. See background notes for more details.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/inLanguage" target="_blank" class="schemaorg">inLanguage</a></td>
+            <td>
+                <a href="http://schema.org/Language" target="_blank">Language</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>Defaults to English if not specified. Please choose a value from <a href="http://tools.ietf.org/html/bcp47">IETF BCP 47 standard</a>.
+You can add multiple languages if the Training Material offers different translations The language of the content or performance or used in an action. Please use one of the language codes from the IETF BCP 47 standard. See also availableLanguage. Supersedes language.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/learningResourceType" target="_blank" class="schemaorg">learningResourceType</a></td>
+            <td>
+                <a href="http://schema.org/DefinedTerm" target="_blank">DefinedTerm</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>This may include things such as video lecture, e-Learning module, or tutorial. The predominant type or kind characterizing the learning resource. For example, ‘presentation’, ‘handout’.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/license" target="_blank" class="schemaorg">license</a></td>
+            <td>
+                <a href="http://schema.org/CreativeWork" target="_blank">CreativeWork</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>If there is a licence it must be added. A license document that applies to this content, typically indicated by URL.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/mentions" target="_blank" class="schemaorg">mentions</a></td>
+            <td>
+                <a href="http://schema.org/Thing" target="_blank">Thing</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>Datasets, tools, technologies, entities etc, which are referred to by this training material or actively used in this training material. Indicates that the CreativeWork contains a reference to, but is not necessarily about a concept.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/sameAs" target="_blank" class="schemaorg">sameAs</a></td>
+            <td>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>URL of a reference Web page that unambiguously indicates the item’s identity. E.g. the URL of the item’s Wikipedia page, Wikidata entry, or official website.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/teaches" target="_blank" class="schemaorg">teaches</a></td>
+            <td>
+                <a href="http://schema.org/DefinedTerm" target="_blank">DefinedTerm</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The item being described is intended to help a person learn the competency or learning outcome defined by the referenced term.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/timeRequired" target="_blank" class="schemaorg">timeRequired</a></td>
+            <td>
+                <a href="http://schema.org/Duration" target="_blank">Duration</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The estimated time it takes to work through this resource.</p>
+
+<p>Please specify in <a href="https://en.wikipedia.org/wiki/ISO_8601">ISO 8601 duration format</a>. Approximate or typical time it takes to work with or through this learning resource for the typical intended target audience, e.g. ‘PT30M’, ‘PT1H25M’.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/url" target="_blank" class="schemaorg">url</a></td>
+            <td>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The preferred URL of the Training Material. You must provide this value if it is known. URL of the item.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr class="cardinality">
+            <td colspan="6">
+                Marginality: <b>Optional.</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="property-column"><a href="http://schema.org/accessibilitySummary" target="_blank" class="schemaorg">accessibilitySummary</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A human-readable summary of specific accessibility features or deficiencies, consistent with the other accessibility metadata but expressing subtleties such as “short descriptions are present but long descriptions will be needed for non-visual users” or “short descriptions are present and no long descriptions are needed.”</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/contributor" target="_blank" class="schemaorg">contributor</a></td>
+            <td>
+                <a href="http://schema.org/Organization" target="_blank">Organization</a><br>
+                <a href="http://schema.org/Person" target="_blank">Person</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>Contributors are those that made non-authorship contributions e.g. critical review, commentary or revision A secondary contributor to the CreativeWork or Event.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/creativeWorkStatus" target="_blank" class="schemaorg">creativeWorkStatus</a></td>
+            <td>
+                <a href="http://schema.org/DefinedTerm" target="_blank">DefinedTerm</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The status of a training material. If this is not filled in it will be regarded as Active.</p>
+
+<p>Options are ‘Active’, ‘Under development’, and ‘Archived’. The status of a creative work in terms of its stage in a lifecycle. Example terms include Incomplete, Draft, Published, Obsolete. Some organizations define a set of terms for the stages of their publication lifecycle.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/dateCreated" target="_blank" class="schemaorg">dateCreated</a></td>
+            <td>
+                <a href="http://schema.org/Date" target="_blank">Date</a><br>
+                <a href="http://schema.org/DateTime" target="_blank">DateTime</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The date on which the CreativeWork was created or the item was added to a DataFeed.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/dateModified" target="_blank" class="schemaorg">dateModified</a></td>
+            <td>
+                <a href="http://schema.org/Date" target="_blank">Date</a><br>
+                <a href="http://schema.org/DateTime" target="_blank">DateTime</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The date on which the CreativeWork was most recently modified or when the item’s entry was modified within a DataFeed.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/datePublished" target="_blank" class="schemaorg">datePublished</a></td>
+            <td>
+                <a href="http://schema.org/Date" target="_blank">Date</a><br>
+                <a href="http://schema.org/DateTime" target="_blank">DateTime</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>Date of first broadcast/publication.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/hasPart" target="_blank" class="schemaorg">hasPart</a></td>
+            <td>
+                <a href="http://schema.org/CreativeWork" target="_blank">CreativeWork</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A sub-training material or externally referenced training material
+ Indicates an item or CreativeWork that is part of this item, or CreativeWork (in some sense).
+ Inverse property: isPartOf.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/isPartOf" target="_blank" class="schemaorg">isPartOf</a></td>
+            <td>
+                <a href="http://schema.org/CreativeWork" target="_blank">CreativeWork</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The Course this Training Material was/will be used in. Or a training material this training material is a part of (for example, if this is a module in a book, isPartOf can describe the book).</p>
+
+<p>Inverse property: hasPart</p>
+
+<p>If this varies in CourseInstances, use the workFeatured property  Indicates an item or CreativeWork that this item, or CreativeWork (in some sense), is part of.
+ Inverse property: hasPart.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/recordedAt" target="_blank" class="schemaorg">recordedAt</a></td>
+            <td>
+                <a href="http://schema.org/Event" target="_blank">Event</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The course instance or event where this training material was or will be featured.</p>
+
+<p>Use isPartOf to refer to a Course, unless this training material is unique to a specific Course Instance. The Event where the CreativeWork was recorded. The CreativeWork may capture all or part of the event.
+Inverse property: recordedIn.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/version" target="_blank" class="schemaorg">version</a></td>
+            <td>
+                <a href="http://schema.org/Number" target="_blank">Number</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>If this training material is versioned, its strongly recommended you use this property to list the version being displayed The version of the CreativeWork embodied by a specified resource.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/workTranslation" target="_blank" class="schemaorg">workTranslation</a></td>
+            <td>
+                <a href="http://schema.org/CreativeWork" target="_blank">CreativeWork</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A work that is a translation of the content of this work. e.g. 西遊記 has an English workTranslation “Journey to the West”,a German workTranslation “Monkeys Pilgerfahrt” and a Vietnamese translation Tây du ký bình khảo.
+Inverse property: translationOfWork.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+
+
+      </main>
+    </div>
+    
+
+<button id="back-to-top" class="btn btn-primary" type="button" aria-hidden="true" onclick="topFunction()">
+    <i class="fas fa-arrow-up"></i><span class="ms-2 d-none d-sm-inline">Back to top</span>
+</button>
+<footer class="py-4 mt-3 border-top">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div class="col-md-5 d-flex align-items-center">
+            <a href="/index.html"
+                class="col-md-3 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <img class="w-50" src="/assets/img/square_logo2.svg" alt="Bioschemas">
+            </a>
+            <span class="text-muted">2026 | This page is available under the <a target="_blank"
+                    href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike
+                    License</a></span>
+        </div>
+        <ul class="nav mb-3 mb-lg-4 align-items-center">
+            <li class="nav-item"><a href="/index.html" class="nav-link px-2 text-muted">Home</a>
+            </li>
+            <li class="nav-item"><a href="/about/funders" class="nav-link px-2 text-muted">Funding</a>
+            </li>
+            <li class="nav-item"><a href="mailto:enquiries@bioschemas.org" itemprop="email"
+                    class="nav-link px-2 text-muted">Hugs &amp; bugs</a></li>
+            <li class="nav-item"><a href="/community/howtojoin" class="nav-link px-2 text-muted">Join</a>
+            </li>
+        </ul>
+    </div>
+</footer>
+
+<script src="/assets/js/clipboard.min.js"></script>
+<script src="/assets/js/scripts.js"></script>
+    <style>
+    #cookie-notice {padding: 0.5rem 1rem; display: none; text-align: center; position: fixed; bottom: 0; width: calc(100% - 2rem); background: #222; color: rgba(255,255,255,0.8);}
+    #cookie-notice a {display: inline-block; cursor: pointer; margin-left: 0.5rem;}
+    @media (max-width: 767px) {
+        #cookie-notice span {display: block; padding-top: 3px; margin-bottom: 1rem;}
+        #cookie-notice a {position: relative; bottom: 4px;}
+    }
+</style>
+<div class="container w-100" id="cookie-notice">
+    <span>We would like to use third party cookies and scripts to improve the functionality of this website.</span>
+    <a id="cookie-notice-accept" class="btn btn-primary btn-sm">Approve</a>
+    <a id="cookie-notice-deny" class="btn btn-primary btn-sm">Deny</a>
+    <a href="/about/privacy.html" class="btn btn-primary btn-sm">More info</a>
+</div>
+<script>
+    function createCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+    function eraseCookie(name) {
+        createCookie(name,"",-1);
+    }
+
+    if(readCookie('cookie-notice-option')=='true') {
+        
+        function loadScriptAsync(scriptSrc, callback) {
+    if (typeof callback !== 'function') {
+        throw new Error('Not a valid callback for async script load');
+    }
+    var script = document.createElement('script');
+    script.onload = callback;
+    script.src = scriptSrc;
+    document.head.appendChild(script);
+}
+
+loadScriptAsync('https://www.googletagmanager.com/gtag/js?id=G-G3BQK7PF1V', function () {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-G3BQK7PF1V', { 'anonymize_ip': true });
+    console.log('Google Analytics is active');
+})
+
+        
+    } else if (readCookie('cookie-notice-option')!='false'){
+        document.getElementById('cookie-notice').style.display = 'block';
+    }
+
+    document.getElementById('cookie-notice-accept').addEventListener("click",function() {
+        createCookie('cookie-notice-option','true',31);
+        document.getElementById('cookie-notice').style.display = 'none';
+        location.reload();
+    });
+
+    document.getElementById('cookie-notice-deny').addEventListener("click",function() {
+        createCookie('cookie-notice-option','false',31);
+        document.getElementById('cookie-notice').style.display = 'none';
+        location.reload();
+    });
+
+</script>
+
+  </body>
+</html>

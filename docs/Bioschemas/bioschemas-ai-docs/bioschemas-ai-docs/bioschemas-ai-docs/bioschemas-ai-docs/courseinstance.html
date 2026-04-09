@@ -1,0 +1,1962 @@
+<!DOCTYPE html>
+<html lang="en">
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <meta property="og:image" content="//bioschemas.org/assets/img/apple-touch-icon.png" />
+  <title>
+  			Bioschemas - 1.0 Release
+  		
+  </title>
+  <meta name="description" content="">
+  <!-- Icons  -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+  <link rel="manifest" href="/assets/img/site.webmanifest">
+  <link rel="mask-icon" href="/assets/img/safari-pinned-tab.svg" color="#0b794b">
+  <link rel="shortcut icon" href="">
+  <!-- Styling  -->
+  <link href='https://fonts.googleapis.com/css?family=Noto+Sans' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/assets/css/main.css">
+  <link rel="canonical" href="http://bioschemas.org/profiles/CourseInstance/1.0-RELEASE">
+  <link rel="alternate" type="application/rss+xml" title="Bioschemas" href="/feed.xml">
+  <!-- Bioschemas  -->
+  
+  <!-- JavaScript  -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/toc.js"></script>
+  <script src="/assets/js/lunr.min.js"></script>
+  <script src="/assets/js/search.js"></script>
+  <script defer src="/assets/js/all.min.js"></script>
+  <!-- Signposting -->
+  
+</head>
+
+  <body>
+    <a class="visually-hidden-focusable" href='#main'>Skip to content</a>
+<header id="header_wrap" class="p-3">
+    <!--start search-->
+    <div class="search-outer" id="search-container">
+        <!--<div class="position-relative">-->
+            <form role="search rounded-bottom" class="input-group">
+                <span class="input-group-text" id="search-label"><i class="fa-solid fa-magnifying-glass"></i></span><input type="search" id="search-input" class="search-input form-control" tabindex="0" placeholder="Search..." aria-label="Search..." autocomplete="off">
+            </form>
+            <div id="search-results" class="search-results"></div>
+        <!--</div>-->
+    </div>
+    <!--end search-->
+    <a class="btn btn-github rounded-0 rounded-bottom shadow text-white fs-5 d-flex align-items-center" href="https://github.com/Bioschemas">
+        <div class="flex-grow-1 me-sm-2 d-none d-sm-block">GitHub</div>
+        <div class="flex-shrink-0"></div><i class="fab fa-github"></div></i>
+    </a>
+    <!--<a class="btn btn-twitter rounded-0 rounded-bottom shadow text-white fs-5 d-flex align-items-center" href="https://twitter.com/bioschemas">
+        <div class="flex-grow-1 me-sm-2 d-none d-sm-block">Twitter</div>
+        <div class="flex-shrink-0"></div><i class="fab fa-twitter"></i></div>
+    </a>-->
+    <div class="biohex-logo">
+        <a href="/">
+            <img class="hexagon" src="/assets/img/square_logo2.svg" alt="Bioschemas">
+        </a>
+        <a href="/">
+            <img class="bio-title" src="/assets/img/name_lower.svg" alt="Bioschemas">
+        </a>
+    </div>
+</header>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top py-xl-1" aria-label="navbar">
+  <div class="container-fluid justify-content-end">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#bioschemasNavbar"
+      aria-controls="bioschemasNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-md-center fs-5" id="bioschemasNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active mx-2" aria-current="page" href="/"><i
+              class="fas fa-home me-2"></i>Home</a></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown01" data-bs-toggle="dropdown"
+            aria-expanded="false">Getting Started</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="/tutorials/">Overview</a></li>
+            <li><a class="dropdown-item" href="/tutorials/what_why_schema">Introduction to
+                Schema.org, what and why?</a></li>
+            <li><a class="dropdown-item" href="/tutorials/markup_examples">Schema.org markup
+                examples</a></li>
+            <li><a class="dropdown-item" href="/tutorials/what_why_bioschemas">Introduction to
+                Bioschemas, what and why?</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_right_profile">Choosing a
+                profile</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_add_markup">Adding
+                Bioschemas markup to pages</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_add_github">Adding markup
+                to GitHub pages</a></li>
+            <li><a class="dropdown-item" href="/tutorials/howto/howto_check_deploy">Validating
+                Bioschemas markup</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/tutorials/dde/">Profile and Type Development in DDE &raquo; </a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" href="/tutorials/dde/update_profile">Updating a
+                  profile in DDE</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/howto_create_new_profile">Developing profiles from scratch</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/new_profile">Creating a new
+                  profile in the DDE</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/update_type">Updating a
+                  type in DDE</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/new_type">Creating a new
+                    type in the DDE</a></li>
+                <li><a class="dropdown-item"
+                  href="/tutorials/dde/review_a_specification_pull_request">Review a Specification
+                  Pull request (PR)</a></li>
+                <li><a class="dropdown-item" href="/tutorials/dde/validation_editor">Using a validation editor</a></li>
+              </ul>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/tutorials/community/">Community-based
+                tutorials &raquo; </a>
+              <ul class="dropdown-menu dropdown-submenu">
+                <li><a class="dropdown-item" href="/tutorials/community/idp">Adding markup to IDP
+                  resources</a></li>
+                <li><a class="dropdown-item" href="/tutorials/community/plant">Adding markup to Plant
+                    resources</a></li>
+                <li><a class="dropdown-item" href="/tutorials/community/rd">Adding markup to Rare
+                    Disease resources</a></li>
+                <li><a class="dropdown-item" href="/tutorials/community/biodiversity">Adding markup
+                    to Biodiversity-related resources</a></li>
+                    <li><a class="dropdown-item" href="/tutorials/community/training">Adding markup to training resources</a></li></ul>
+              </ul>
+          </li>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown02" data-bs-toggle="dropdown"
+            aria-expanded="false">Specifications</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="/profiles/">Bioschemas Profiles</a></li>
+            <li><a class="dropdown-item" href="/types/">Bioschemas Types</a></li>
+            <li><a class="dropdown-item" href="/properties/">Bioschemas Properties</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown03" data-bs-toggle="dropdown"
+            aria-expanded="false">Deploy &amp; Develop</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="https://discovery.biothings.io/markup-generator">Markup Generator <i
+                  class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item" href="/developer/software">Software</a></li>
+            <li><a class="dropdown-item" href="https://github.com/Bioschemas/specifications/wiki/Technical">Technical
+                Wiki <i class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item" href="/developer/liveDeploys">Live deploys</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown04" data-bs-toggle="dropdown"
+            aria-expanded="false">Community</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item" href="/community/">Overview</a></li>
+            <li><a class="dropdown-item" href="/community/howtojoin">Join Bioschemas!</a></li>
+            <li><a class="dropdown-item" href="/news/">News</a></li>
+            <li><a class="dropdown-item" href="/meetings/">BioSchemas-related Meetings</a></li>
+            <li><a class="dropdown-item" href="/people/">People</a></li>
+            <li><a class="dropdown-item" href="/groups/">Groups</a></li>
+            <li><a class="dropdown-item" href="/community/champions">Bioschemas Champions</a></li>
+            <li><a class="dropdown-item" href="/community/stories">User Stories</a></li>
+            <li><a class="dropdown-item" href="/community/related">Related Communities</a></li>
+            <li><a class="dropdown-item" href="/useCases/">Use Cases</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active mx-2" href="#" id="dropdown05" data-bs-toggle="dropdown"
+            aria-expanded="false">About</a>
+          <ul class="dropdown-menu" aria-labelledby="btnCommunity">
+            <li><a class="dropdown-item"
+                href="https://github.com/Bioschemas/governance/blob/master/governance.md">Bioschemas Governance <i
+                  class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item"
+                href="https://github.com/Bioschemas/governance/blob/master/codeOfConduct.md">Code of Conduct <i
+                  class="fas fa-external-link-alt fa-sm ms-2"></i></a></li>
+            <li><a class="dropdown-item" href="/about/publications">Publications</a></li>
+            <li><a class="dropdown-item" href="/about/funding">Funding</a></li>
+            <li><a class="dropdown-item" href="/about/logos">Logos</a></li>
+            <li><a class="dropdown-item" href="/about/privacy">Privacy Policy</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+    
+    <div class="container min-vh-100">
+      <main id="main" class="my-5">
+        <!--
+    ToDo: Remove this validation after all the specs
+        are updated to the new specification-table template.
+-->
+
+
+
+
+<h1>CourseInstance Profile</h1>
+
+<h3><strong>Version:</strong> 1.0-RELEASE (13 September 2022)</h3>
+<h2>Specification describing the instance of a course. </h2>
+<br />
+<p>If you spot any errors or omissions with this type, please file an issue in our <a href="https://github.com/BioSchemas/bioschemas/labels/type%3A%20CourseInstance" target="_blank">GitHub</a>.</p>
+<br />
+<nav class="mt-3">
+   <div class="nav nav-tabs" id="nav-tab" role="tablist">
+     <button class="nav-link active" id="nav-description-tab" data-bs-toggle="tab" data-bs-target="#nav-description" type="button" role="tab" aria-controls="nav-description" aria-selected="true">Description</button>
+     <button class="nav-link" id="nav-contributors-tab" data-bs-toggle="tab" data-bs-target="#nav-contributors" type="button" role="tab" aria-controls="nav-contributors" aria-selected="false">Contributors</button>
+     <button class="nav-link" id="nav-links-tab" data-bs-toggle="tab" data-bs-target="#nav-links" type="button" role="tab" aria-controls="nav-links" aria-selected="false">Links</button>
+   </div>
+</nav>
+<div class="tab-content py-3 mb-3 border-bottom" id="nav-tabContent">
+   <div class="tab-pane fade show active" id="nav-description" role="tabpanel" aria-labelledby="nav-description-tab">
+      <!-- Bioschemas <a href="/specifications/">specifications and types list.</a> -->
+      <h3>Schema.org hierarchy</h3>
+      This Profile fits into the schema.org hierarchy as follows:
+      <br/>
+      <br/>
+      
+      
+      <a href="http://schema.org/Thing">Thing</a>
+      
+      
+      &gt;
+      
+      
+      
+      <a href="http://schema.org/Event">Event</a>
+      
+      
+      &gt;
+      
+      
+      
+      <a href="http://schema.org/CourseInstance">CourseInstance</a>
+      
+      
+      
+      
+      <h3>Description</h3>
+      <!--
+         ToDo: Remove this validation after all the specs
+               are updated to the new specification-table template.
+      -->
+      
+      
+      <p>This specification can be used in tandem with a Course. A course is used to describe the broad, common aspects of a recurring training event - whereas a course instance is about the specific times and location of when that course is held. <h4>Summary of Changes</h4>    No changes since 0.9-DRAFT of the CourseInstance profile.</p>
+      
+
+      <h3>Latest profiles</h3>
+      
+      
+      <p>Latest release: <a href="/profiles/CourseInstance/1.0-RELEASE">1.0-RELEASE</a></p>
+      
+      
+      <p>Latest draft: <a href="/profiles/CourseInstance/1.1-DRAFT">1.1-DRAFT</a></p>
+      
+
+      <h3>Previous profiles</h3>
+      
+      
+      <p>Previous version: <a href="/profiles/CourseInstance/0.9-DRAFT">0.9-DRAFT</a></p>
+      
+      
+      
+   </div>
+   <div class="tab-pane fade" id="nav-contributors" role="tabpanel" aria-labelledby="nav-contributors-tab">
+<h3>Contributors</h3>
+<p>The following people have been involved in the creation of this specification document. They are all members of the <a href="/groups/Training">Training</a> group.</p>
+
+<h5 class="my-4">Group Leader(s)</h5>
+<div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4" id="leadTable">
+    <div class="col mt-2"><a href="/people/PatriciaPalagi">Patricia Palagi</a></div>
+    <div class="col mt-2"><a href="/people/MichelleBrazas">Michelle Brazas</a></div>
+    <div class="col mt-2"><a href="/people/LeylaGarcia">Leyla Jael Castro</a></div>
+</div>
+
+<h5 class="my-4">Other team members</h5>
+<div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 g-4" id="peopleTable">
+    <div class="col mt-2"><a href="/people/CeliaVanGelder">Celia van Gelder</a></div>
+    <div class="col mt-2"><a href="/people/SonikaTyagi">Sonika Tyagi</a></div>
+    <div class="col mt-2"><a href="/people/TerriAtwood">Teresa Attwood</a></div>
+    <div class="col mt-2"><a href="/people/MateuszKuzak">Mateusz Kuzak</a></div>
+    <div class="col mt-2"><a href="/people/AnnetteMcgrath">Annette McGrath</a></div>
+    <div class="col mt-2"><a href="/people/PhilBarker">Phil Barker</a></div>
+    <div class="col mt-2"><a href="/people/FrancisOuellette">Francis Ouellette</a></div>
+    <div class="col mt-2"><a href="/people/DaveClements">Dave Clements</a></div>
+    <div class="col mt-2"><a href="/people/EijaKorpelainen">Eija Korpelainen</a></div>
+    <div class="col mt-2"><a href="/people/CharlotteZwetsloot">Charlotte Zwetsloot</a></div>
+    <div class="col mt-2"><a href="/people/MohammadAsifKhan">Mohammad Asif Khan</a></div>
+    <div class="col mt-2"><a href="/people/VerenaRas">Verena Ras</a></div>
+    <div class="col mt-2"><a href="/people/AnnMeyer">Ann Meyer</a></div>
+    <div class="col mt-2"><a href="/people/SarahMorgan">Sarah Morgan</a></div>
+    <div class="col mt-2"><a href="/people/VictoriaDominguezDelAngel">Victoria Dominguez Del Angel</a></div>
+    <div class="col mt-2"><a href="/people/ChrisChild">Chris Child</a></div>
+    <div class="col mt-2"><a href="/people/PhilReed">Phil Reed</a></div>
+    <div class="col mt-2"><a href="/people/TimDennis">Tim Dennis</a></div>
+    <div class="col mt-2"><a href="/people/AlexSmith">Alexandra Smith</a></div>
+</div>
+
+   </div>
+   <div class="tab-pane fade" id="nav-links" role="tabpanel" aria-labelledby="nav-links-tab">
+      <div class="table-responsive shadow rounded mt-4 mb-5">
+      <table class="table table-hover table-borderless mb-0 bioschemas_spec_list">
+         <thead>
+            <tr>
+               <th>Group</th>
+               <th>Use Cases</th>
+               <th>Cross Walk</th>
+               <th>Task &amp; Issues</th>
+               <th>Examples</th>
+               <th>Live Deploys</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td>
+                  <a href="/groups/Training">Training</a>
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="/useCases/TrainingGroup">
+                  <img src="/images/use_case_spec.svg" alt="View Bioschemas CourseInstance Use Cases">
+                  </a>
+                  
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="https://docs.google.com/spreadsheets/d/1I0WLOYzL4Och-IkrztQQjyUKvrTtfVjXKgNN3UaAcgg" target="_blank">
+                  <img src="/images/cross_walk.svg" alt="View Bioschemas CourseInstance Cross Walk">
+                  </a>
+                  
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="https://github.com/BioSchemas/bioschemas/labels/type%3A%20CourseInstance" target="_blank">
+                  <img src="/images/specs_tasks.png" alt="Bioschemas CourseInstance Github Tasks or Issues">
+                  </a>
+                  
+               </td>
+               <td class="spec_links" target="_blank">
+                  
+                  <a href="https://github.com/BioSchemas/specifications/blob/master/CourseInstance/examples/1.0-RELEASE/courseInstance.json" target="_blank">
+                  <img src="/images/spec_examples.png" alt="View Bioschemas CourseInstance Examples">
+                  </a>
+                  
+               </td>
+               <td class="spec_links">
+                  
+                  <a href="/liveDeploys">
+                  <img src="/images/live_deploy.svg" alt="View Bioschemas CourseInstance Examples">
+                  </a>
+                  
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      </div>
+      <br />
+      
+      
+      <p>You can read the <a href="/specifications/drafts/CourseInstance">draft version of this specification here</a>.</p>
+      
+      
+   </div>
+</div>
+
+
+<h5>Key to specification table</h5>
+<ul>
+  <li><em style="color: #0B794B;"><strong>Green</strong></em> properties/types are proposed by Bioschemas, or indicate proposed changes by Bioschemas to Schema.org</li>
+  <li><em style="color: #990000;"><strong>Red</strong></em> properties/types exist in the core of Schema.org</li>
+  <li><em style="color: #0000CC;"><strong>Blue</strong></em> properties/types exist in the pending area of Schema.org</li>
+  <li><em style="color: #454547;"><strong>Black</strong></em> properties/types are reused from external vocabularies/ontologies</li>
+</ul>
+
+<p>CD = Cardinality</p>
+
+
+
+ 
+<span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="View all examples">
+    <button type="button" class="btn btn-primary" data-bs-target="#exampleModal" data-bs-toggle="modal">
+        Examples
+    </button>
+</span>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Examples for all properties</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="bundle-property-examples" class="example-code">
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="c1">//Property: alternateName</span>
+<span class="dl">"</span><span class="s2">alternateName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">CS101 as part of M.130</span><span class="dl">"</span>
+
+<span class="c1">//Property: contributor</span>
+<span class="dl">"</span><span class="s2">contributor</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">John Smith</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Janet Jones</span><span class="dl">"</span><span class="p">,</span>
+ <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://manchester.ac.uk/staff/profiles/janet-jones</span><span class="dl">"</span>
+<span class="p">}]</span>
+
+<span class="c1">//Property: courseMode</span>
+<span class="dl">"</span><span class="s2">courseMode</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">online</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">synchronous</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">part-time</span><span class="dl">"</span><span class="p">]</span>
+
+<span class="c1">//Property: description</span>
+<span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">An instance of a course being ran in an institution Y in the Fall 2020 onsite</span><span class="dl">"</span>
+
+<span class="c1">//Property: duration</span>
+<span class="dl">"</span><span class="s2">duration</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">P1DT6H</span><span class="dl">"</span>
+
+<span class="c1">//Property: endDate</span>
+<span class="dl">"</span><span class="s2">endTime</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2019-02-05T17:00:00</span><span class="dl">"</span>
+
+<span class="c1">//Property: eventStatus</span>
+<span class="dl">"</span><span class="s2">eventStatus</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">postponed</span><span class="dl">"</span>
+
+<span class="c1">//Property: funder</span>
+<span class="dl">"</span><span class="s2">funder</span><span class="dl">"</span><span class="p">:</span>  <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">John Smith</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Organization</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">University of South Africa</span><span class="dl">"</span>
+<span class="p">}]</span>
+
+<span class="c1">//Property: image</span>
+<span class="dl">"</span><span class="s2">image</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://image.server.com/my-image.jpg</span><span class="dl">"</span>
+
+<span class="c1">//Property: inLanguage</span>
+<span class="dl">"</span><span class="s2">inLanguage</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">en-GB</span><span class="dl">"</span>
+
+<span class="c1">//Property: instructor</span>
+<span class="dl">"</span><span class="s2">instructor</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Alan Jones</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">John Smith</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://manchester.ac.uk/staff/profiles/john-smith</span><span class="dl">"</span>
+<span class="p">}]</span>
+
+<span class="c1">//Property: location</span>
+<span class="dl">"</span><span class="s2">location</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Place</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">address</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">PostalAddress</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">streetAddress</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1.17, Kilburn Building, University of Manchester</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">addressLocality</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Manchester</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">addressRegion</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Greater Manchester</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">addressCountry</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">United Kingdom</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">postalCode</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">M13 9PL</span><span class="dl">"</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//Property: maximumAttendeeCapacity</span>
+ <span class="dl">"</span><span class="s2">maximumAttendeeCapacity</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">35</span><span class="dl">"</span>
+
+<span class="c1">//Property: name</span>
+<span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">RNA-seq data analysis in R in Autumn 2020 CS101</span><span class="dl">"</span>
+
+<span class="c1">//Property: offers</span>
+<span class="dl">"</span><span class="s2">offers</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="c1">//Early bird tickets</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Early Bird Tickets</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">priceValidUntil</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2021-02-04T09:00:00</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">50.00</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span>
+    <span class="p">},</span>
+
+    <span class="c1">//Academic Pricing</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Academic Price</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">100.00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">priceValidUntil</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2021-02-05T17:00:00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">eligibleCustomerType</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">BusinessEntityType</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Academic</span><span class="dl">"</span>
+      <span class="p">},</span>
+      <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c1">//Industry Pricing</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Industry Price</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">500.00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">eligibleCustomerType</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">BusinessEntityType</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Industrial</span><span class="dl">"</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="c1">//First 50 tickets free</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Free bursary for first 50 registrants</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">0.00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://www.eventbrite.com/my-workshop</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">eligibleQuantity</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">QuantitativeValue</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">value</span><span class="dl">"</span><span class="p">:</span> <span class="mi">50</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="c1">//Property: organizer</span>
+<span class="dl">"</span><span class="s2">organizer</span><span class="dl">"</span><span class="p">:</span>  <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Elizabeth Windsor</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">email</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">e.r.windsor@gmail.com</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Organization</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">University of Soth Wales</span><span class="dl">"</span>
+<span class="p">}]</span>
+
+
+<span class="c1">//Property: startDate</span>
+<span class="dl">"</span><span class="s2">startDate</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2019-02-04T09:00:00</span><span class="dl">"</span>
+
+<span class="c1">//Property: subEvent</span>
+<span class="dl">"</span><span class="s2">subEvent</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Event</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Lunch time Lecture</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://lectureatlunch.com</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This special lecture hosted during lunchtime as part of the RNA-SEQ in R workshop demonstrates some of the latest technologies available.</span><span class="dl">"</span>
+  <span class="p">}]</span>
+
+
+<span class="c1">//Property: superEvent</span>
+<span class="dl">"</span><span class="s2">superEvent</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Event</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">ISCB Conference</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://www.iscb.org</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This years ISCB conference will contain a special education section</span><span class="dl">"</span>
+  <span class="p">},</span>
+<span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Event</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Online lecture</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://onlinelectureat.org</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This online lecture describes the neXtProt database. It closes the general, and in person, course on protein sequence databases.</span><span class="dl">"</span>
+<span class="p">}]</span>
+
+<span class="c1">//Property: url</span>
+<span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://example.com/rna-seq_in_r</span><span class="dl">"</span>
+
+<span class="c1">//Property: workFeatured</span>
+<span class="dl">"</span><span class="s2">workFeatured</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">TrainingMaterial</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Course Slides for Autumn 2020 offering of CS101</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://example.com/slides_website</span><span class="dl">"</span>
+  <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">The course slides contain diagrams, questions, and links to various resources about this course</span><span class="dl">"</span> 
+  <span class="dl">"</span><span class="s2">keywords</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Computer Science, CS, Introductory</span><span class="dl">"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Thing</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">neXtProt database</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://www.nextprot.org</span><span class="dl">"</span>
+  <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">The course instance was dedicated to the neXtProt database and how to explore the universe of human proteins</span><span class="dl">"</span> 
+  <span class="dl">"</span><span class="s2">keywords</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Molecular Biology, Introductory</span><span class="dl">"</span>
+<span class="p">}</span>
+<span class="p">]</span></code></pre></figure>
+                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#bundle-property-examples"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="table-responsive shadow rounded mt-4 mb-5">
+<table class="table table-hover table-borderless mb-0 spec-prof-table">
+    <thead>
+        <tr>
+            <th>Property</th>
+            <th>Expected Type</th>
+            <th>Description</th>
+            <th>CD</th>
+            <th class="control-vocabulary-column">Controlled Vocabulary</th>
+            <th class="example-column">Example</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="cardinality">
+            <td colspan="6">
+                Marginality: <b>Minimum.</b>
+            </td>
+        </tr>
+        
+          <tr>
+    <td class="property-column"><a href="https://www.w3.org/TR/json-ld/#dfn-context" target="_blank" class="external" rel="noopener">@context</a></td>
+    <td><a href="http://schema.org/URL" target="_blank" rel="noopener">URL</a></td>
+    <td class="description-column">Used to provide the context (namespaces) for the JSON-LD file. <br />Not needed in other serialisations.</td>
+    <td>ONE</td>
+    <td class="control-vocabulary-column"></td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810@context&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalContext" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalContext" tabindex="-1" aria-labelledby="myModalContext" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810@context&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@context</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://schema.org/</span><span class="dl">"</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="property-column"><a href="https://www.w3.org/TR/json-ld/#specifying-the-type" target="_blank" class="external" rel="noopener">@type</a></td>
+    <td><a href="http://schema.org/Text" target="_blank" rel="noopener">Text</a></td>
+    <td class="description-column">Schema.org/Bioschemas class for the resource declared using JSON-LD syntax. For other serialisations please use the appropriate mechanism.<br />While it is permissible to provide multiple types, it is preferred to use a single type.</td>
+    <td>MANY</td>
+    <td class="control-vocabulary-column">Schema.org, Bioschemas</td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810@type&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalType" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalType" tabindex="-1" aria-labelledby="myModalType" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810@type&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">CourseInstance</span><span class="dl">"</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="property-column"><a href="https://www.w3.org/TR/json-ld/#node-identifiers" target="_blank" class="external" rel="noopener">@id</a></td>
+    <td><a href="https://datatracker.ietf.org/doc/html/rfc3987#section-2" target="_blank" class="external" rel="noopener">IRI</a></td>
+    <td class="description-column">Used to distinguish the resource being described in JSON-LD. For other serialisations use the appropriate approach.</td>
+    <td>ONE</td>
+    <td class="control-vocabulary-column"></td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810@id&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalid" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalid" tabindex="-1" aria-labelledby="myModalid" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810@id&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://example.com/entity/A12345</span><span class="dl">"</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+<tr>
+    <td class="property-column"><a href="http://purl.org/dc/terms/conformsTo" target="_blank" class="external" rel="noopener">dct:conformsTo</a></td>
+    <td><a href="https://datatracker.ietf.org/doc/html/rfc3987#section-2" target="_blank" class="external" rel="noopener">IRI</a></td>
+    <td class="description-column">Used to state the Bioschemas profile that the markup relates to. The versioned URL of the profile must be used.<br />Note that we use a CURIE in the table here but the full URL for Dublin Core terms must be used in the markup (http://purl.org/dc/terms/conformsTo), see example.</td>
+    <td>ONE</td>
+    <td class="control-vocabulary-column">Bioschemas profile versioned URL</td>
+    <td class="example-column">
+        <!-- Example modal starts here -->
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810dct:conformsTo&#8811</strong> example">
+            <button type="button" class="btn btn-primary" data-bs-target="#myModalconformsTo" data-bs-toggle="modal">
+                <i class="fas fa-file-code"></i>
+            </button>
+        </span>
+        <!-- Modal -->
+        </div>
+        <div class="modal fade" id="myModalconformsTo" tabindex="-1" aria-labelledby="myModalconformsTo" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810dct:conformsTo&#8811</strong> example</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="Minimum-example-num-1" class="example-code"><figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="p">{</span>
+    <span class="dl">"</span><span class="s2">http://purl.org/dc/terms/conformsTo</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@id</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">CreativeWork</span><span class="dl">"</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+                            <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </td>
+</tr>
+
+        
+        <tr>
+            <td class="property-column"><a href="http://schema.org/courseMode" target="_blank" class="schemaorg">courseMode</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The medium or means of delivery of the course instance or the mode of study, either as a text label (e.g. “online”, “onsite” or “blended”; “synchronous” or “asynchronous”; “full-time” or “part-time”) or as a URL reference to a term from a controlled vocabulary (e.g. https://ceds.ed.gov/element/001311#Asynchronous ).</p>
+<br />
+                <strong>Bioschemas: </strong><p>The medium, means or pace of delivery of the course instance or the mode of study, either as a text label (e.g. “online”, “onsite”, “hybrid” or “blended”; “synchronous” or “asynchronous”; “full-time” or “part-time”) or as a URL reference to a term from a controlled vocabulary (e.g. https://ceds.ed.gov/element/001311#Asynchronous ).</p>
+
+<p>Another example of a Glossary of terms as defined by the Bioschemas Training community and published in Zenodo in 2016: https://zenodo.org/record/166378#.YrHnEi8iu-o</p>
+
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810courseMode&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalcourseMode" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalcourseMode" tabindex="-1" aria-labelledby="myModalcourseMode" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810courseMode&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Minimum-example-num-1" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">courseMode</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">online</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">synchronous</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">part-time</span><span class="dl">"</span><span class="p">]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-1"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/location" target="_blank" class="schemaorg">location</a></td>
+            <td>
+                <a href="http://schema.org/Place" target="_blank">Place</a><br>
+                <a href="http://schema.org/PostalAddress" target="_blank">PostalAddress</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+                <a href="http://schema.org/VirtualLocation" target="_blank">VirtualLocation</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The location of for example where the event is happening, an organization is located, or where an action takes place.</p>
+<br />
+                <strong>Bioschemas: </strong><p>Location of the Course Instance. If the Course Instance is online, add the connection details as text</p>
+
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810location&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModallocation" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModallocation" tabindex="-1" aria-labelledby="myModallocation" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810location&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Minimum-example-num-2" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">location</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Place</span><span class="dl">"</span><span class="p">,</span>
+    <span class="dl">"</span><span class="s2">address</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">PostalAddress</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">streetAddress</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">1.17, Kilburn Building, University of Manchester</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">addressLocality</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Manchester</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">addressRegion</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Greater Manchester</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">addressCountry</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">United Kingdom</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">postalCode</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">M13 9PL</span><span class="dl">"</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Minimum-example-num-2"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr class="cardinality">
+            <td colspan="6">
+                Marginality: <b>Recommended.</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="property-column"><a href="http://schema.org/endDate" target="_blank" class="schemaorg">endDate</a></td>
+            <td>
+                <a href="http://schema.org/Date" target="_blank">Date</a><br>
+                <a href="http://schema.org/DateTime" target="_blank">DateTime</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The end date and time of the item (in ISO 8601 date format).</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column"><p>ISO 8601</p>
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810endDate&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalendDate" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalendDate" tabindex="-1" aria-labelledby="myModalendDate" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810endDate&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Recommended-example-num-1" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">endTime</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2019-02-05T17:00:00</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Recommended-example-num-1"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/inLanguage" target="_blank" class="schemaorg">inLanguage</a></td>
+            <td>
+                <a href="http://schema.org/Language" target="_blank">Language</a><br>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The language of the content or performance or used in an action. Please use one of the language codes from the IETF BCP 47 standard. See also availableLanguage. Supersedes language.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810inLanguage&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalinLanguage" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalinLanguage" tabindex="-1" aria-labelledby="myModalinLanguage" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810inLanguage&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Recommended-example-num-2" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">inLanguage</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">en-GB</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Recommended-example-num-2"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/instructor" target="_blank" class="schemaorg">instructor</a></td>
+            <td>
+                <a href="http://schema.org/Person" target="_blank">Person</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A person assigned to instruct or provide instructional assistance for the CourseInstance.</p>
+<br />
+                <strong>Bioschemas: </strong><p>An instructor can be the main teacher or trainer, as well as a training assistant, or a helper.</p>
+
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810instructor&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalinstructor" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalinstructor" tabindex="-1" aria-labelledby="myModalinstructor" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810instructor&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Recommended-example-num-3" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">instructor</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Alan Jones</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">John Smith</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://manchester.ac.uk/staff/profiles/john-smith</span><span class="dl">"</span>
+<span class="p">}]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Recommended-example-num-3"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/offers" target="_blank" class="schemaorg">offers</a></td>
+            <td>
+                <a href="http://schema.org/Demand" target="_blank">Demand</a><br>
+                <a href="http://schema.org/Offer" target="_blank">Offer</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An offer to provide this item—for example, an offer to sell a product, rent the DVD of a movie, perform a service, or give away tickets to an event. Use businessFunction to indicate the kind of transaction offered, i.e. sell, lease, etc. This property can also be used to describe a Demand. While this property is listed as expected on a number of common types, it can be used in others. In that case, using a second type, such as Product or a subtype of Product, can clarify the nature of the offer.
+Inverse property: itemOffered.</p>
+<br />
+                <strong>Bioschemas: </strong><p>The price an attendee would pay to attend this CourseInstance. The price currency can be for instance in “GBP” (pound sterling) or “CHF” (Swiss francs).</p>
+
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column"><p>Price currency ISO 4217
+Date specified price ISO 8601</p>
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810offers&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModaloffers" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModaloffers" tabindex="-1" aria-labelledby="myModaloffers" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810offers&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Recommended-example-num-4" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">offers</span><span class="dl">"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="c1">//Early bird tickets</span>
+    <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Early Bird Tickets</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">priceValidUntil</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2021-02-04T09:00:00</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">50.00</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span>
+    <span class="p">},</span>
+
+    <span class="c1">//Academic Pricing</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Academic Price</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">100.00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">priceValidUntil</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2021-02-05T17:00:00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">eligibleCustomerType</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">BusinessEntityType</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Academic</span><span class="dl">"</span>
+      <span class="p">},</span>
+      <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="c1">//Industry Pricing</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Industry Price</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">500.00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">eligibleCustomerType</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">BusinessEntityType</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Industrial</span><span class="dl">"</span>
+      <span class="p">},</span>
+    <span class="p">},</span>
+    <span class="c1">//First 50 tickets free</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Offer</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Free bursary for first 50 registrants</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">price</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">0.00</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">priceCurrency</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GBP</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://www.eventbrite.com/my-workshop</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">eligibleQuantity</span><span class="dl">"</span><span class="p">:</span> <span class="p">{</span>
+        <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">QuantitativeValue</span><span class="dl">"</span><span class="p">,</span>
+        <span class="dl">"</span><span class="s2">value</span><span class="dl">"</span><span class="p">:</span> <span class="mi">50</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Recommended-example-num-4"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/startDate" target="_blank" class="schemaorg">startDate</a></td>
+            <td>
+                <a href="http://schema.org/Date" target="_blank">Date</a><br>
+                <a href="http://schema.org/DateTime" target="_blank">DateTime</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The start date and time of the item (in ISO 8601 date format).</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column"><p>ISO 8601</p>
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810startDate&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalstartDate" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalstartDate" tabindex="-1" aria-labelledby="myModalstartDate" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810startDate&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Recommended-example-num-5" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">startDate</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">2019-02-04T09:00:00</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Recommended-example-num-5"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/url" target="_blank" class="schemaorg">url</a></td>
+            <td>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>URL of the item.</p>
+<br />
+                <strong>Bioschemas: </strong><p>The preferred URL of this course instance. You must provide this value if it is known</p>
+
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810url&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalurl" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalurl" tabindex="-1" aria-labelledby="myModalurl" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810url&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Recommended-example-num-6" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://example.com/rna-seq_in_r</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Recommended-example-num-6"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr class="cardinality">
+            <td colspan="6">
+                Marginality: <b>Optional.</b>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="property-column"><a href="http://schema.org/alternateName" target="_blank" class="schemaorg">alternateName</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An alias for the item.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810alternateName&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalalternateName" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalalternateName" tabindex="-1" aria-labelledby="myModalalternateName" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810alternateName&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-1" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">alternateName</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">CS101 as part of M.130</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-1"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/contributor" target="_blank" class="schemaorg">contributor</a></td>
+            <td>
+                <a href="http://schema.org/Organization" target="_blank">Organization</a><br>
+                <a href="http://schema.org/Person" target="_blank">Person</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A secondary contributor to the CreativeWork or Event.</p>
+<br />
+                <strong>Bioschemas: </strong><p>Contributors are those who made non-authorship contributions: e.g., critical review, commentary or revision.</p>
+
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810contributor&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalcontributor" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalcontributor" tabindex="-1" aria-labelledby="myModalcontributor" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810contributor&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-2" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">contributor</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">John Smith</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Janet Jones</span><span class="dl">"</span><span class="p">,</span>
+ <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://manchester.ac.uk/staff/profiles/janet-jones</span><span class="dl">"</span>
+<span class="p">}]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-2"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/description" target="_blank" class="schemaorg">description</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A description of the item.</p>
+<br />
+                <strong>Bioschemas: </strong><p>A description of the Course Instance.</p>
+
+<p>(courseInstance) description can be used to override (course) description for specific course instances.</p>
+
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810description&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModaldescription" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModaldescription" tabindex="-1" aria-labelledby="myModaldescription" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810description&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-3" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">An instance of a course being ran in an institution Y in the Fall 2020 onsite</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-3"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/duration" target="_blank" class="schemaorg">duration</a></td>
+            <td>
+                <a href="http://schema.org/Duration" target="_blank">Duration</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The duration of the item (movie, audio recording, event, etc.) in ISO 8601 date format.</p>
+<br />
+                <strong>Bioschemas: </strong><p>(CourseInstance) duration can be used to override (Course) duration for specific course instances.</p>
+
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810duration&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalduration" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalduration" tabindex="-1" aria-labelledby="myModalduration" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810duration&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-4" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">duration</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">P1DT6H</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-4"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/eventStatus" target="_blank" class="schemaorg">eventStatus</a></td>
+            <td>
+                <a href="http://schema.org/EventStatusType" target="_blank">EventStatusType</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An eventStatus of an event represents its status; particularly useful when an event is cancelled or rescheduled.</p>
+<br />
+                <strong>Bioschemas: </strong><p>An eventStatus of an event represents its status; particularly useful when an event is cancelled or rescheduled. Used as text label (e.g. “postponed”, “cancelled”, “date TBC”, “application open” or “registration closed”).</p>
+
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810eventStatus&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModaleventStatus" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModaleventStatus" tabindex="-1" aria-labelledby="myModaleventStatus" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810eventStatus&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-5" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">eventStatus</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">postponed</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-5"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/funder" target="_blank" class="schemaorg">funder</a></td>
+            <td>
+                <a href="http://schema.org/Organization" target="_blank">Organization</a><br>
+                <a href="http://schema.org/Person" target="_blank">Person</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A person or organization that supports (sponsors) something through some kind of financial contribution.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810funder&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalfunder" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalfunder" tabindex="-1" aria-labelledby="myModalfunder" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810funder&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-6" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">funder</span><span class="dl">"</span><span class="p">:</span>  <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">John Smith</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Organization</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">University of South Africa</span><span class="dl">"</span>
+<span class="p">}]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-6"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/image" target="_blank" class="schemaorg">image</a></td>
+            <td>
+                <a href="http://schema.org/ImageObject" target="_blank">ImageObject</a><br>
+                <a href="http://schema.org/URL" target="_blank">URL</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An image of the item. This can be a URL or a fully described ImageObject.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810image&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalimage" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalimage" tabindex="-1" aria-labelledby="myModalimage" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810image&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-7" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">image</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://image.server.com/my-image.jpg</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-7"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/maximumAttendeeCapacity" target="_blank" class="schemaorg">maximumAttendeeCapacity</a></td>
+            <td>
+                <a href="http://schema.org/Integer" target="_blank">Integer</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The total number of individuals that may attend an event or venue.</p>
+<br />
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810maximumAttendeeCapacity&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalmaximumAttendeeCapacity" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalmaximumAttendeeCapacity" tabindex="-1" aria-labelledby="myModalmaximumAttendeeCapacity" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810maximumAttendeeCapacity&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-8" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"> <span class="dl">"</span><span class="s2">maximumAttendeeCapacity</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">35</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-8"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/name" target="_blank" class="schemaorg">name</a></td>
+            <td>
+                <a href="http://schema.org/Text" target="_blank">Text</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>The name of the item.</p>
+<br />
+                <strong>Bioschemas: </strong><p>The name of the course.</p>
+
+<p>Course instance name can be used to override Course name for variations in specific Course instances. Use name from Course unless the Course instance has a different name from the course.</p>
+
+            </td>
+            <td>ONE</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810name&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalname" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalname" tabindex="-1" aria-labelledby="myModalname" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810name&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-9" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">RNA-seq data analysis in R in Autumn 2020 CS101</span><span class="dl">"</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-9"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/organizer" target="_blank" class="schemaorg">organizer</a></td>
+            <td>
+                <a href="http://schema.org/Organization" target="_blank">Organization</a><br>
+                <a href="http://schema.org/Person" target="_blank">Person</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An organizer of an Event.</p>
+<br />
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810organizer&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalorganizer" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalorganizer" tabindex="-1" aria-labelledby="myModalorganizer" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810organizer&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-10" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">organizer</span><span class="dl">"</span><span class="p">:</span>  <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Person</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Elizabeth Windsor</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">email</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">e.r.windsor@gmail.com</span><span class="dl">"</span>
+<span class="p">},{</span> 
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Organization</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">University of Soth Wales</span><span class="dl">"</span>
+<span class="p">}]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-10"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/subEvent" target="_blank" class="schemaorg">subEvent</a></td>
+            <td>
+                <a href="http://schema.org/Event" target="_blank">Event</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An Event that is part of this event. For example, a conference event includes many presentations, each of which is a subEvent of the conference. Supersedes subEvents.
+Inverse property: superEvent.</p>
+<br />
+                <strong>Bioschemas: </strong><p>For events within events e.g. guest lecture within a workshop event</p>
+
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810subEvent&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalsubEvent" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalsubEvent" tabindex="-1" aria-labelledby="myModalsubEvent" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810subEvent&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-11" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">subEvent</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Event</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Lunch time Lecture</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://lectureatlunch.com</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This special lecture hosted during lunchtime as part of the RNA-SEQ in R workshop demonstrates some of the latest technologies available.</span><span class="dl">"</span>
+  <span class="p">}]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-11"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/superEvent" target="_blank" class="schemaorg">superEvent</a></td>
+            <td>
+                <a href="http://schema.org/Event" target="_blank">Event</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>An event that this event is a part of. For example, a collection of individual music performances might each have a music festival as their superEvent.
+Inverse property: subEvent.</p>
+<br />
+                <strong>Bioschemas: </strong><p>Use to describe the event a course instance takes place within. e.g. Galaxy Workshop during the ISMB Conference.</p>
+
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810superEvent&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalsuperEvent" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalsuperEvent" tabindex="-1" aria-labelledby="myModalsuperEvent" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810superEvent&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-12" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">superEvent</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Event</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">ISCB Conference</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://www.iscb.org</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This years ISCB conference will contain a special education section</span><span class="dl">"</span>
+  <span class="p">},</span>
+<span class="p">{</span>
+      <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Event</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Online lecture</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://onlinelectureat.org</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">This online lecture describes the neXtProt database. It closes the general, and in person, course on protein sequence databases.</span><span class="dl">"</span>
+<span class="p">}]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-12"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="property-column"><a href="http://schema.org/workFeatured" target="_blank" class="schemaorg">workFeatured</a></td>
+            <td>
+                <a href="http://schema.org/CreativeWork" target="_blank">CreativeWork</a><br>
+            </td>
+            <td class="description-column">
+                <strong>Schema: </strong><p>A work featured in some event, e.g. exhibited in an ExhibitionEvent. Specific subproperties are available for workPerformed (e.g. a play), or a workPresented (a Movie at a ScreeningEvent).</p>
+<br />
+                <strong>Bioschemas: </strong><p>The training material used in this specific course instance, or produced for this course instance.</p>
+
+<p>If this is the same for all Course Instances, use hasPart and/or mentions in Course instead</p>
+
+            </td>
+            <td>MANY</td>
+            <td class="control-vocabulary-column">
+</td>
+            <td class="example-column">
+                <!-- Example modal starts here -->
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-html="true" title="View <strong>&#8810workFeatured&#8811</strong> example">
+                    <button type="button" class="btn btn-primary" data-bs-target="#myModalworkFeatured" data-bs-toggle="modal">
+                        <i class="fas fa-file-code"></i>
+                    </button>
+                </span>
+                <!-- Modal -->
+                </div>
+                <div class="modal fade" id="myModalworkFeatured" tabindex="-1" aria-labelledby="myModalworkFeatured" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Property <strong>&#8810workFeatured&#8811</strong> example</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div id="Optional-example-num-13" class="example-code">
+                                    <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="dl">"</span><span class="s2">workFeatured</span><span class="dl">"</span><span class="p">:</span> <span class="p">[{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">TrainingMaterial</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Course Slides for Autumn 2020 offering of CS101</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">http://example.com/slides_website</span><span class="dl">"</span>
+  <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">The course slides contain diagrams, questions, and links to various resources about this course</span><span class="dl">"</span> 
+  <span class="dl">"</span><span class="s2">keywords</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Computer Science, CS, Introductory</span><span class="dl">"</span>
+<span class="p">},</span>
+<span class="p">{</span>
+  <span class="dl">"</span><span class="s2">@type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Thing</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">name</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">neXtProt database</span><span class="dl">"</span><span class="p">,</span>
+  <span class="dl">"</span><span class="s2">url</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">https://www.nextprot.org</span><span class="dl">"</span>
+  <span class="dl">"</span><span class="s2">description</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">The course instance was dedicated to the neXtProt database and how to explore the universe of human proteins</span><span class="dl">"</span> 
+  <span class="dl">"</span><span class="s2">keywords</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">Molecular Biology, Introductory</span><span class="dl">"</span>
+<span class="p">}</span>
+<span class="p">]</span></code></pre></figure>
+                                    <button type="button" data-bs-toggle="tooltip" title="Copy to clipboard" class="btn btn-primary btn-copy" data-clipboard-target="#Optional-example-num-13"><i class="fas fa-copy"></i></button>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+
+
+      </main>
+    </div>
+    
+
+<button id="back-to-top" class="btn btn-primary" type="button" aria-hidden="true" onclick="topFunction()">
+    <i class="fas fa-arrow-up"></i><span class="ms-2 d-none d-sm-inline">Back to top</span>
+</button>
+<footer class="py-4 mt-3 border-top">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center">
+        <div class="col-md-5 d-flex align-items-center">
+            <a href="/index.html"
+                class="col-md-3 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <img class="w-50" src="/assets/img/square_logo2.svg" alt="Bioschemas">
+            </a>
+            <span class="text-muted">2026 | This page is available under the <a target="_blank"
+                    href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike
+                    License</a></span>
+        </div>
+        <ul class="nav mb-3 mb-lg-4 align-items-center">
+            <li class="nav-item"><a href="/index.html" class="nav-link px-2 text-muted">Home</a>
+            </li>
+            <li class="nav-item"><a href="/about/funders" class="nav-link px-2 text-muted">Funding</a>
+            </li>
+            <li class="nav-item"><a href="mailto:enquiries@bioschemas.org" itemprop="email"
+                    class="nav-link px-2 text-muted">Hugs &amp; bugs</a></li>
+            <li class="nav-item"><a href="/community/howtojoin" class="nav-link px-2 text-muted">Join</a>
+            </li>
+        </ul>
+    </div>
+</footer>
+
+<script src="/assets/js/clipboard.min.js"></script>
+<script src="/assets/js/scripts.js"></script>
+    <style>
+    #cookie-notice {padding: 0.5rem 1rem; display: none; text-align: center; position: fixed; bottom: 0; width: calc(100% - 2rem); background: #222; color: rgba(255,255,255,0.8);}
+    #cookie-notice a {display: inline-block; cursor: pointer; margin-left: 0.5rem;}
+    @media (max-width: 767px) {
+        #cookie-notice span {display: block; padding-top: 3px; margin-bottom: 1rem;}
+        #cookie-notice a {position: relative; bottom: 4px;}
+    }
+</style>
+<div class="container w-100" id="cookie-notice">
+    <span>We would like to use third party cookies and scripts to improve the functionality of this website.</span>
+    <a id="cookie-notice-accept" class="btn btn-primary btn-sm">Approve</a>
+    <a id="cookie-notice-deny" class="btn btn-primary btn-sm">Deny</a>
+    <a href="/about/privacy.html" class="btn btn-primary btn-sm">More info</a>
+</div>
+<script>
+    function createCookie(name,value,days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+    function readCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+    function eraseCookie(name) {
+        createCookie(name,"",-1);
+    }
+
+    if(readCookie('cookie-notice-option')=='true') {
+        
+        function loadScriptAsync(scriptSrc, callback) {
+    if (typeof callback !== 'function') {
+        throw new Error('Not a valid callback for async script load');
+    }
+    var script = document.createElement('script');
+    script.onload = callback;
+    script.src = scriptSrc;
+    document.head.appendChild(script);
+}
+
+loadScriptAsync('https://www.googletagmanager.com/gtag/js?id=G-G3BQK7PF1V', function () {
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-G3BQK7PF1V', { 'anonymize_ip': true });
+    console.log('Google Analytics is active');
+})
+
+        
+    } else if (readCookie('cookie-notice-option')!='false'){
+        document.getElementById('cookie-notice').style.display = 'block';
+    }
+
+    document.getElementById('cookie-notice-accept').addEventListener("click",function() {
+        createCookie('cookie-notice-option','true',31);
+        document.getElementById('cookie-notice').style.display = 'none';
+        location.reload();
+    });
+
+    document.getElementById('cookie-notice-deny').addEventListener("click",function() {
+        createCookie('cookie-notice-option','false',31);
+        document.getElementById('cookie-notice').style.display = 'none';
+        location.reload();
+    });
+
+</script>
+
+  </body>
+</html>
