@@ -28,6 +28,12 @@ def create_app(config=None) -> Flask:
 
     # Register CLI command groups.
     _register_db_cli(app)
+    _register_users_cli(app)
+
+    # Register blueprints.
+    from app.api.health import bp as health_bp
+
+    app.register_blueprint(health_bp)
 
     # Start the background scheduler unless we are in testing mode.
     if not app.config.get("TESTING"):
@@ -52,3 +58,53 @@ def _register_db_cli(app: Flask) -> None:
 
         init_db()
         click.echo("Database initialised.")
+
+
+def _register_users_cli(app: Flask) -> None:
+    """Register the ``flask users`` command group."""
+
+    @app.cli.group()
+    def users():
+        """User management commands."""
+
+    @users.command("create")
+    @click.option("--admin", is_flag=True, default=False, help="Grant admin privileges.")
+    def create_user_command(admin: bool) -> None:
+        """Create a new user and print their Bearer token."""
+        from app.models.user import create_user
+
+        user = create_user(is_admin=admin)
+        role = "admin" if user.is_admin else "user"
+        click.echo(f"Created {role} (id={user.id}).")
+        click.echo(f"Token: {user.token}")
+
+    @users.command("list")
+    def list_users_command() -> None:
+        """List all users."""
+        from app.db.sqlite import get_db
+
+        db = get_db()
+        rows = db.execute(
+            "SELECT id, created_at, is_admin FROM users ORDER BY id"
+        ).fetchall()
+        if not rows:
+            click.echo("No users found.")
+            return
+        for row in rows:
+            role = "admin" if row["is_admin"] else "user"
+            click.echo(f"id={row['id']}  created={row['created_at']}  role={role}")
+
+    @users.command("revoke")
+    @click.argument("token")
+    def revoke_user_command(token: str) -> None:
+        """Revoke a user token (delete the user row)."""
+        from app.db.sqlite import get_db
+
+        db = get_db()
+        result = db.execute("DELETE FROM users WHERE token = ?", (token,))
+        db.commit()
+        if result.rowcount:
+            click.echo("Token revoked.")
+        else:
+            click.echo("Token not found.", err=True)
+
