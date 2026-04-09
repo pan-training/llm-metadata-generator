@@ -16,29 +16,10 @@ An LLM-powered Flask service that generates [Bioschemas](https://bioschemas.org/
 
 ---
 
-## Architecture
-
-```
-llm-metadata-generator/
-├── app/
-│   ├── api/            # Flask blueprints (collection + single-resource endpoints)
-│   ├── agents/         # LLM agent workflows (bioschemas, ontology, semantic-tool, model-selector)
-│   ├── models/         # SQLAlchemy / raw-SQL models (User, Session, Metadata, …)
-│   ├── db/             # SQLite + sqlite-vector initialisation helpers
-│   ├── cron/           # APScheduler jobs (metadata refresh, ontology updates, tool updates)
-│   └── admin/          # Admin blueprint (user management, ontology/tool admin interface)
-├── templates/          # Jinja2 HTML templates (session viewer)
-├── tests/              # pytest test suite
-├── config.py           # Environment-driven configuration
-├── requirements.txt    # Python dependencies
-├── TODO.md             # Issue-ready todo list
-└── .github/
-    └── copilot-instructions.md
-```
-
----
-
 ## API
+
+> **Note:** These endpoints are planned and not yet implemented. See the issue list for implementation status.
+> When new endpoints are added or changed, update this section accordingly.
 
 | Method | Path | Description |
 |--------|------|-------------|
@@ -47,28 +28,56 @@ llm-metadata-generator/
 
 Both endpoints respond with `400` and a plain-text explanation when the target URL does not contain recognisable training content (events or learning materials).
 
-Authentication is **Bearer token** (`Authorization: Bearer <token>`). Tokens are created by an admin CLI command.
+<details>
+<summary>Authentication</summary>
+
+All API requests must include a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer <token>
+```
+
+Tokens are created by an admin CLI command (`flask users create`) – there are no usernames or passwords. The HTML session viewer uses a login page where you POST your token to get a browser session.
+
+</details>
 
 ---
 
 ## Setup
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-flask db init          # initialise SQLite database
-flask users create     # create the first admin user (prints token)
+# Install dependencies (using Poetry)
+poetry install
+
+# Initialise the database
+flask db init
+
+# Create the first admin user (prints token)
+flask users create
+
+# Start the development server
 flask run
 ```
 
-Set environment variables in a `.env` file (see `config.py` for all options):
+Copy `.env.example` to `.env` and fill in your values (see `config.py` for all options):
 
 ```
 OPENAI_API_BASE=https://api.openai.com/v1
 OPENAI_API_KEY=sk-...
-DATABASE_URL=sqlite:///data/metadata.db
 SECRET_KEY=change-me
 ```
+
+> **Tip:** The SQLite database is stored in `data/` by default. Advanced configuration is documented in `config.py`.
+
+---
+
+## Where to start
+
+- New API endpoints → `app/api/`
+- LLM agent workflows → `app/agents/`
+- Database models and schema → `app/models/` and `app/db/schema.sql`
+- Background cron jobs → `app/cron/`
+- Admin interface → `app/admin/`
 
 ---
 
