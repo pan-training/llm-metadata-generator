@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "llm-metadata-generator"
+version = "0.1.0"
+description = "LLM-powered Flask service that generates Bioschemas JSON-LD metadata from training-material websites"
+authors = []
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Flask = "^3.1"
+APScheduler = "^3.10"
+requests = "^2.31"
+openai = "^2.0"
+python-dotenv = "^1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
