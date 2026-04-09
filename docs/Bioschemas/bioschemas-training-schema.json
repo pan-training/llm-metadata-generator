@@ -3,7 +3,7 @@
   "$id": "https://bioschemas.org/schemas/bioschemas-training-complete.json",
   "title": "Bioschemas Life Sciences Training — Complete Schema",
   "description": "A comprehensive JSON Schema covering all three Bioschemas training profiles: TrainingMaterial (v1.1-DRAFT), Course (v1.0-RELEASE), and CourseInstance (v1.0-RELEASE). Each profile definition includes full property descriptions, marginality annotations (Minimum/Recommended/Optional), cardinality, controlled-vocabulary guidance, TeSS-ingestion notes, and concrete examples. Use this schema both for validation of JSON-LD payloads and as authoritative documentation when generating Bioschemas markup.",
-  "$comment": "Sources: bioschemas.org profile pages for TrainingMaterial/1.1-DRAFT, Course/1.0-RELEASE, CourseInstance/1.0-RELEASE; TeSS RDF extractor documentation. Best-practice summary: (1) Always include @context, @type, @id, name, description, keywords, dct:conformsTo. (2) Use ORCID URIs in author/@id. (3) Use EDAM ontology URIs in about[].url. (4) Use DOIs in identifier. (5) Use ISO 8601 for all dates and durations. (6) Use SPDX short identifiers or CC-BY URLs for license. (7) Use IETF BCP 47 language codes (e.g. 'en', 'en-GB') for inLanguage. (8) Link Course to its CourseInstance(s) via hasCourseInstance.",
+  "$comment": "Sources: bioschemas.org profile pages for TrainingMaterial/1.1-DRAFT, Course/1.0-RELEASE, CourseInstance/1.0-RELEASE; TeSS RDF extractor documentation. Best-practice summary: (1) Always include @context, @type, @id, name, description, keywords, dct:conformsTo. (2) Use ORCID URIs in author/@id. (3) Use ontology URIs in about[].url — EDAM (http://edamontology.org/) is the primary ontology for life-science topics, but other domain ontologies are equally valid: PaNET (https://pan-ontologies.github.io/PaNET/) covers photon/neutron and large-scale facility science, and further ontologies (e.g. NCI Thesaurus, MeSH, OBI) may be used for their respective domains. The llm-metadata-generator is designed to support multiple configurable ontologies — see TODO.md item 6. (4) Use DOIs in identifier. (5) Use ISO 8601 for all dates and durations. (6) Use SPDX short identifiers or CC-BY URLs for license. (7) Use IETF BCP 47 language codes (e.g. 'en', 'en-GB') for inLanguage. (8) Link Course to its CourseInstance(s) via hasCourseInstance.",
   "type": "array",
   "minItems": 1,
   "items": {
@@ -158,13 +158,14 @@
     "ConformsTo": {
       "title": "dct:conformsTo",
       "description": "Used to state the Bioschemas profile that the markup relates to. The versioned URL of the profile must be used. Use the full Dublin Core URI http://purl.org/dc/terms/conformsTo as the property name in markup. Marginality: Minimum.",
-      "$comment": "Best practice: always include dct:conformsTo so that TeSS and other ingestors can determine which Bioschemas profile the resource conforms to and apply the correct extraction logic. Use the object form {'@id': 'https://bioschemas.org/profiles/X/Y', '@type': 'CreativeWork'} for maximum compatibility. TeSS uses this value to select the correct extractor and for validation reporting.",
+      "$comment": "Best practice: always include dct:conformsTo so that TeSS and other ingestors can determine which Bioschemas profile the resource conforms to and apply the correct extraction logic. Use the object form {'@id': 'https://bioschemas.org/profiles/X/Y', '@type': 'CreativeWork'} for maximum compatibility. TeSS uses this value to select the correct extractor and for validation reporting.\n\nComprehensive list of Bioschemas training-related profile versions (use the most recent release for new markup):\n\nTrainingMaterial versions:\n  https://bioschemas.org/profiles/TrainingMaterial/0.1-DRAFT-2018_11_09\n  https://bioschemas.org/profiles/TrainingMaterial/0.2-DRAFT-2019_02_25\n  https://bioschemas.org/profiles/TrainingMaterial/0.3-DRAFT-2020_03_10\n  https://bioschemas.org/profiles/TrainingMaterial/0.4-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.5-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.6-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.7-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.8-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.9-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE\n  https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT  (latest — recommended for new markup)\n\nCourse versions:\n  https://bioschemas.org/profiles/Course/0.1-DRAFT-2018_11_09\n  https://bioschemas.org/profiles/Course/0.2-DRAFT-2019_02_25\n  https://bioschemas.org/profiles/Course/0.3-DRAFT-2019_06_14\n  https://bioschemas.org/profiles/Course/0.4-DRAFT\n  https://bioschemas.org/profiles/Course/0.5-DRAFT\n  https://bioschemas.org/profiles/Course/0.6-DRAFT\n  https://bioschemas.org/profiles/Course/0.7-DRAFT\n  https://bioschemas.org/profiles/Course/0.8-DRAFT\n  https://bioschemas.org/profiles/Course/0.9-DRAFT\n  https://bioschemas.org/profiles/Course/0.10-DRAFT\n  https://bioschemas.org/profiles/Course/1.0-RELEASE  (latest — recommended for new markup)\n\nCourseInstance versions:\n  https://bioschemas.org/profiles/CourseInstance/0.1-DRAFT-2018_11_09\n  https://bioschemas.org/profiles/CourseInstance/0.2-DRAFT-2019_02_25\n  https://bioschemas.org/profiles/CourseInstance/0.3-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.4-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.5-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.6-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.7-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.8-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.9-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE  (latest — recommended for new markup)\n\nOther notable Bioschemas profiles (not covered by this schema but may appear in linked resources):\n  https://bioschemas.org/profiles/ComputationalTool/1.0-RELEASE\n  https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE\n  https://bioschemas.org/profiles/Dataset/1.0-RELEASE\n  https://bioschemas.org/profiles/Gene/1.0-RELEASE\n  https://bioschemas.org/profiles/Protein/0.11-RELEASE\n  https://bioschemas.org/profiles/Sample/0.3-RELEASE\n  https://bioschemas.org/profiles/BioChemEntity/0.7-RELEASE\n  https://bioschemas.org/profiles/Taxon/0.6-RELEASE",
       "oneOf": [
         {
           "type": "string",
           "pattern": "^https://bioschemas\\.org/profiles/",
           "examples": [
             "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+            "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE",
             "https://bioschemas.org/profiles/Course/1.0-RELEASE",
             "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE"
           ]
@@ -187,6 +188,10 @@
           "examples": [
             {
               "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+              "@type": "CreativeWork"
+            },
+            {
+              "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE",
               "@type": "CreativeWork"
             },
             {
@@ -330,8 +335,8 @@
     },
     "DefinedTerm": {
       "title": "DefinedTerm",
-      "description": "A term from a controlled vocabulary such as EDAM, used to describe topics, skills, or learning objectives.",
-      "$comment": "Best practice: use EDAM ontology URIs (http://edamontology.org/topic_XXXX or http://edamontology.org/operation_XXXX) for the 'url' field. TeSS captures EDAM URIs specially into scientific_topic_uris for topic matching and browsing. The 'name' field should match the canonical EDAM label.",
+      "description": "A term from a controlled vocabulary, used to describe topics, skills, or learning objectives. Multiple ontologies are supported; choose the most appropriate for your domain.",
+      "$comment": "Several ontologies can be used for about[], teaches, and related properties. Choose the ontology most appropriate for the resource's domain:\n\n- EDAM (http://edamontology.org/): the primary ontology for life-science / bioinformatics topics and operations. Use topic_XXXX for subject areas and operation_XXXX for methods. TeSS captures EDAM URIs specially into scientific_topic_uris for faceted browsing. Browse at https://edamontology.github.io/edam-browser/ .\n\n- PaNET (https://pan-ontologies.github.io/PaNET/): covers photon, neutron, and large-scale research-facility (synchrotron, free-electron laser, neutron source) training topics. Used by PaN training platforms. Browse at https://pan-ontologies.github.io/PaNET/index-en.html .\n\n- NCI Thesaurus (http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#): broad biomedical and clinical vocabulary.\n\n- MeSH (https://id.nlm.nih.gov/mesh/): NLM Medical Subject Headings — useful for clinical/health topics.\n\n- OBI (http://purl.obolibrary.org/obo/): Ontology for Biomedical Investigations.\n\nThe llm-metadata-generator is designed to support multiple configurable ontologies — see TODO.md item 6. The 'name' field should match the canonical label in the chosen ontology.",
       "type": "object",
       "properties": {
         "@type": {
@@ -340,21 +345,27 @@
         },
         "name": {
           "type": "string",
-          "description": "Human-readable label for the term.",
+          "description": "Human-readable label for the term, matching the canonical label in the source ontology.",
           "examples": [
             "Bioinformatics",
             "Sequence alignment",
-            "Genome assembly"
+            "Genome assembly",
+            "Neutron scattering",
+            "Synchrotron radiation",
+            "X-ray diffraction"
           ]
         },
         "url": {
           "type": "string",
           "format": "uri",
-          "description": "URI of the term in its defining ontology (e.g. EDAM).",
+          "description": "URI of the term in its defining ontology. Use EDAM URIs for life-science topics, PaNET URIs for photon/neutron science topics, or terms from other domain-appropriate ontologies.",
           "examples": [
             "http://edamontology.org/topic_0091",
             "http://edamontology.org/topic_0622",
-            "http://edamontology.org/topic_0097"
+            "http://edamontology.org/topic_0097",
+            "https://pan-ontologies.github.io/PaNET/PaNET01160",
+            "https://pan-ontologies.github.io/PaNET/PaNET01130",
+            "https://pan-ontologies.github.io/PaNET/PaNET01131"
           ]
         },
         "@id": {
@@ -381,13 +392,28 @@
           "@type": "DefinedTerm",
           "name": "Sequence alignment",
           "url": "http://edamontology.org/topic_0182"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Neutron scattering",
+          "url": "https://pan-ontologies.github.io/PaNET/PaNET01160"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Synchrotron radiation",
+          "url": "https://pan-ontologies.github.io/PaNET/PaNET01130"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "X-ray diffraction",
+          "url": "https://pan-ontologies.github.io/PaNET/PaNET01131"
         }
       ]
     },
     "ThingOrArray": {
       "title": "Thing, DefinedTerm, URI, or array thereof",
       "description": "A subject, topic, skill, or learning outcome. Can be a DefinedTerm with ontology URI, a plain string, or a URI. MANY cardinality: use an array when multiple values apply.",
-      "$comment": "Best practice: use DefinedTerm with EDAM URIs for machine-readable topic tagging. TeSS captures EDAM URIs as scientific topics. Plain text strings are also accepted and stored as free-text tags.",
+      "$comment": "Best practice: use DefinedTerm with ontology URIs for machine-readable topic tagging. Use EDAM URIs (http://edamontology.org/) for life-science topics — TeSS captures these as scientific_topic_uris for faceted browsing. Use PaNET URIs (https://pan-ontologies.github.io/PaNET/) for photon/neutron science topics. Plain text strings are also accepted and stored as free-text tags.",
       "oneOf": [
         {
           "type": "string",
