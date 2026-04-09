@@ -1,0 +1,346 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/bioschemas-tess-training.json",
+  "title": "Bioschemas Training (TeSS-compatible)",
+  "type": "array",
+
+  "items": {
+    "oneOf": [
+      { "$ref": "#/$defs/LearningResource" },
+      { "$ref": "#/$defs/Course" },
+      { "$ref": "#/$defs/CourseInstanceOrEvent" }
+    ]
+  },
+
+  "$defs": {
+    "Base": {
+      "type": "object",
+      "properties": {
+        "@context": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "object" }
+          ]
+        },
+        "@id": { "type": "string", "format": "uri" },
+        "@type": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      },
+      "required": ["@type"],
+      "additionalProperties": true
+    },
+
+    "ConformsTo": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "https://bioschemas.org/profiles/.+"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "@id": {
+              "type": "string",
+              "pattern": "https://bioschemas.org/profiles/.+"
+            }
+          },
+          "required": ["@id"]
+        }
+      ]
+    },
+
+    "Person": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Person" },
+        "name": { "type": "string" },
+        "@id": { "type": "string", "format": "uri" },
+        "identifier": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+
+    "Organization": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "Organization" },
+        "name": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+
+    "Agent": {
+      "oneOf": [
+        { "$ref": "#/$defs/Person" },
+        { "$ref": "#/$defs/Organization" },
+        { "type": "string" }
+      ]
+    },
+
+    "Identifier": {
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "@type": { "const": "PropertyValue" },
+            "propertyID": { "type": "string" },
+            "value": { "type": "string" }
+          },
+          "required": ["value"]
+        }
+      ]
+    },
+
+    "DefinedTerm": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "DefinedTerm" },
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      },
+      "required": ["name"]
+    },
+
+    "AlignmentObject": {
+      "type": "object",
+      "properties": {
+        "@type": { "const": "AlignmentObject" },
+        "alignmentType": { "type": "string" },
+        "targetName": { "type": "string" },
+        "targetUrl": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "CreativeWorkRef": {
+      "type": "object",
+      "properties": {
+        "@type": { "type": "string" },
+        "name": { "type": "string" },
+        "url": { "type": "string", "format": "uri" }
+      }
+    },
+
+    "Location": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "@type": { "const": "Place" },
+            "name": { "type": "string" },
+            "address": {
+              "type": "object",
+              "properties": {
+                "@type": { "const": "PostalAddress" },
+                "streetAddress": { "type": "string" },
+                "addressLocality": { "type": "string" },
+                "addressRegion": { "type": "string" },
+                "postalCode": { "type": "string" },
+                "addressCountry": { "type": "string" }
+              }
+            },
+            "geo": {
+              "type": "object",
+              "properties": {
+                "@type": { "const": "GeoCoordinates" },
+                "latitude": { "type": "string" },
+                "longitude": { "type": "string" }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "@type": { "const": "VirtualLocation" },
+            "name": { "type": "string" },
+            "url": { "type": "string", "format": "uri" }
+          },
+          "required": ["url"]
+        }
+      ]
+    },
+
+    "TextOrArray": {
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+
+    "ThingOrArray": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/$defs/DefinedTerm" },
+        {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "string" },
+              { "$ref": "#/$defs/DefinedTerm" }
+            ]
+          }
+        }
+      ]
+    },
+
+    "LearningResource": {
+      "allOf": [
+        { "$ref": "#/$defs/Base" },
+        {
+          "type": "object",
+          "properties": {
+            "@type": {
+              "enum": ["LearningResource", "CreativeWork", "TrainingMaterial"]
+            },
+
+            "dct:conformsTo": { "$ref": "#/$defs/ConformsTo" },
+            "conformsTo": { "$ref": "#/$defs/ConformsTo" },
+
+            "name": { "type": "string" },
+            "description": { "type": "string" },
+
+            "keywords": { "$ref": "#/$defs/TextOrArray" },
+            "identifier": { "$ref": "#/$defs/Identifier" },
+
+            "author": {
+              "oneOf": [
+                { "$ref": "#/$defs/Agent" },
+                {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/Agent" }
+                }
+              ]
+            },
+
+            "contributor": { "$ref": "#/$defs/Agent" },
+
+            "license": { "type": "string" },
+
+            "inLanguage": { "$ref": "#/$defs/TextOrArray" },
+
+            "learningResourceType": { "$ref": "#/$defs/TextOrArray" },
+
+            "teaches": { "$ref": "#/$defs/ThingOrArray" },
+            "about": { "$ref": "#/$defs/ThingOrArray" },
+
+            "learningObjectives": { "$ref": "#/$defs/TextOrArray" },
+
+            "mentions": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/CreativeWorkRef" }
+            },
+
+            "provider": {
+              "oneOf": [
+                { "$ref": "#/$defs/Agent" },
+                { "type": "string", "format": "uri" }
+              ]
+            },
+
+            "version": { "type": "string" },
+            "dateCreated": { "type": "string" },
+            "dateModified": { "type": "string" },
+            "datePublished": { "type": "string" },
+
+            "targetAudience": { "$ref": "#/$defs/TextOrArray" },
+
+            "difficulty_level": { "type": "string" }
+          },
+          "required": ["name"]
+        }
+      ]
+    },
+
+    "Course": {
+      "allOf": [
+        { "$ref": "#/$defs/Base" },
+        {
+          "type": "object",
+          "properties": {
+            "@type": { "const": "Course" },
+
+            "conformsTo": { "$ref": "#/$defs/ConformsTo" },
+
+            "name": { "type": "string" },
+            "description": { "type": "string" },
+
+            "about": { "$ref": "#/$defs/ThingOrArray" },
+
+            "coursePrerequisites": { "$ref": "#/$defs/TextOrArray" },
+
+            "competencyRequired": {
+              "oneOf": [
+                { "type": "string" },
+                { "$ref": "#/$defs/AlignmentObject" }
+              ]
+            },
+
+            "hasCourseInstance": {
+              "oneOf": [
+                { "$ref": "#/$defs/CourseInstanceOrEvent" },
+                {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/CourseInstanceOrEvent" }
+                }
+              ]
+            }
+          },
+          "required": ["name"]
+        }
+      ]
+    },
+
+    "CourseInstanceOrEvent": {
+      "allOf": [
+        { "$ref": "#/$defs/Base" },
+        {
+          "type": "object",
+          "properties": {
+            "@type": {
+              "enum": ["CourseInstance", "Event"]
+            },
+
+            "conformsTo": { "$ref": "#/$defs/ConformsTo" },
+
+            "name": { "type": "string" },
+
+            "startDate": { "type": "string" },
+            "endDate": { "type": "string" },
+            "duration": { "type": "string" },
+
+            "courseMode": {
+              "oneOf": [
+                { "type": "string" },
+                {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              ]
+            },
+
+            "location": { "$ref": "#/$defs/Location" },
+
+            "maximumAttendeeCapacity": { "type": "number" },
+
+            "audience": {
+              "oneOf": [
+                { "type": "string" },
+                {
+                  "type": "object",
+                  "properties": {
+                    "@type": { "const": "Audience" },
+                    "audienceType": { "type": "string" }
+                  }
+                }
+              ]
+            },
+
+            "organizer": { "$ref": "#/$defs/Agent" }
+          },
+          "required": ["name"]
+        }
+      ]
+    }
+  }
+}
