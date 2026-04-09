@@ -81,18 +81,15 @@ def _register_users_cli(app: Flask) -> None:
     @users.command("list")
     def list_users_command() -> None:
         """List all users."""
-        from app.db.sqlite import get_db
+        from app.models.user import list_users
 
-        db = get_db()
-        rows = db.execute(
-            "SELECT id, created_at, is_admin FROM users ORDER BY id"
-        ).fetchall()
-        if not rows:
+        all_users = list_users()
+        if not all_users:
             click.echo("No users found.")
             return
-        for row in rows:
-            role = "admin" if row["is_admin"] else "user"
-            click.echo(f"id={row['id']}  created={row['created_at']}  role={role}")
+        for user in all_users:
+            role = "admin" if user.is_admin else "user"
+            click.echo(f"id={user.id}  created={user.created_at}  role={role}")
 
     @users.command("revoke")
     @click.argument("token")

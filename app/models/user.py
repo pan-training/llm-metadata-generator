@@ -60,21 +60,35 @@ def create_user(is_admin: bool = False) -> User:
     """
     token = secrets.token_urlsafe(32)
     db = get_db()
-    cursor = db.execute(
+    db.execute(
         "INSERT INTO users (token, is_admin) VALUES (?, ?)",
         (token, int(is_admin)),
     )
     db.commit()
-    row = db.execute(
-        "SELECT id, token, created_at, is_admin FROM users WHERE id = ?",
-        (cursor.lastrowid,),
-    ).fetchone()
-    return User(
-        id=row["id"],
-        token=row["token"],
-        created_at=row["created_at"],
-        is_admin=bool(row["is_admin"]),
-    )
+    user = get_user_by_token(token)
+    assert user is not None  # we just inserted this token
+    return user
+
+
+def list_users() -> list["User"]:
+    """Return all users ordered by id.
+
+    Returns:
+        A list of :class:`User` instances, oldest first.
+    """
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, token, created_at, is_admin FROM users ORDER BY id"
+    ).fetchall()
+    return [
+        User(
+            id=row["id"],
+            token=row["token"],
+            created_at=row["created_at"],
+            is_admin=bool(row["is_admin"]),
+        )
+        for row in rows
+    ]
 
 
 def require_token(f: Callable[..., ResponseReturnValue]) -> Callable[..., ResponseReturnValue]:
@@ -94,8 +108,15 @@ def require_token(f: Callable[..., ResponseReturnValue]) -> Callable[..., Respon
     def decorated(*args: Any, **kwargs: Any) -> ResponseReturnValue:
         auth_header = request.headers.get("Authorization", "")
         if not auth_header.startswith("Bearer "):
-            abort(401)
-        token = auth_header[len("Bearer "):]
+            abort(
+                401,
+                description=(
+                    "Missing or malformed Authorization header. "
+                    "Expected format: Authorization: Bearer <token>"
+                ),
+                www_authenticate='Bearer realm="API"',
+            )
+        token = auth_header.removeprefix("Bearer ")
         user = get_user_by_token(token)
         if user is None:
             abort(401)

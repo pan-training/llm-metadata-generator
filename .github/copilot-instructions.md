@@ -88,6 +88,7 @@ llm-metadata-generator/
 - 📋 **LLM configuration** – all LLM calls go through `app/agents/__init__.py:get_llm_client(task)`, which reads `OPENAI_API_BASE`, `OPENAI_API_KEY`, and looks up the preferred model for the given task from the `model_assignments` table. Tasks are fine-grained: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `ontology_embedding`, `tool_discovery`, `model_selection`.
 - 📋 **Bioschemas / TeSS** – the extraction agent's system prompt includes the Bioschemas TrainingMaterial and CourseInstance profiles and notes about TeSS-specific field usage. Keep this prompt in `app/agents/bioschemas.py`, not in a separate template file.
 - ✅ **File-system paths** – always use `pathlib.Path` for path construction and file I/O; do not use `os.path` or raw string concatenation for paths.
+- ✅ **Modern Python idioms** – prefer built-in modern equivalents over manual workarounds: use `str.removeprefix` / `str.removesuffix` instead of slicing, `X | Y` union types instead of `Optional[X]`, walrus operator where it aids clarity, etc.
 - ✅ **Type annotations** – add type annotations to all public functions and methods. Run `mypy app tests` before finalising any commit to ensure no type errors are introduced.
 
 ---
