@@ -26,6 +26,10 @@ def test_database_url_override(app):
 
 def test_init_db_creates_expected_tables(app):
     """init_db() must create all four tables defined in schema.sql."""
+    # app.app_context() pushes a Flask application context, which is required
+    # by get_db() and init_db() because they rely on flask.g and current_app.
+    # Flask pushes this context automatically for each HTTP request; here we
+    # do it manually because there is no real request in a unit test.
     with app.app_context():
         from app.db.sqlite import get_db, init_db
 
@@ -44,7 +48,7 @@ def test_init_db_creates_expected_tables(app):
 
 def test_db_init_is_idempotent(app):
     """Calling init_db() twice must not raise (IF NOT EXISTS guards)."""
-    with app.app_context():
+    with app.app_context():  # see comment in test_init_db_creates_expected_tables
         from app.db.sqlite import init_db
 
         init_db()
