@@ -13,7 +13,7 @@ Files are marked **📋 planned** (not yet created) or **✅ exists**.
 ```
 llm-metadata-generator/
 ├── app/
-│   ├── __init__.py          📋  Flask application factory (create_app)
+│   ├── __init__.py          ✅  Flask application factory (create_app)
 │   ├── api/
 │   │   ├── __init__.py      📋
 │   │   ├── collection.py    📋  GET /metadata  – returns JSON-LD list for a training collection
@@ -30,9 +30,9 @@ llm-metadata-generator/
 │   │   ├── session.py       📋  Session model – tracks generation state per (user, url)
 │   │   └── metadata.py      📋  Cached Bioschemas metadata per URL
 │   ├── db/
-│   │   ├── __init__.py      📋
-│   │   ├── sqlite.py        📋  SQLite init + sqlite-vector extension loading
-│   │   └── schema.sql       📋  Plain-SQL CREATE TABLE statements (all schema migrations live here)
+│   │   ├── __init__.py      ✅
+│   │   ├── sqlite.py        ✅  SQLite init + sqlite-vector extension loading
+│   │   └── schema.sql       ✅  Plain-SQL CREATE TABLE statements (all schema migrations live here)
 │   ├── cron/
 │   │   ├── __init__.py      📋
 │   │   ├── metadata.py      📋  Cron: trigger metadata refresh for tracked URLs
@@ -44,20 +44,26 @@ llm-metadata-generator/
 ├── templates/
 │   └── sessions.html        📋  HTML session viewer (login via POST /sessions/login)
 ├── tests/
-│   ├── __init__.py          📋
+│   ├── __init__.py          ✅
+│   ├── test_app.py          ✅  Smoke tests: app factory, db init
 │   ├── test_api.py          📋
 │   ├── test_agents.py       📋
 │   └── test_auth.py         📋
-├── config.py                📋  All config read from environment variables
-├── pyproject.toml           📋  Poetry project + dependency definitions
+├── config.py                ✅  All config read from environment variables
+├── pyproject.toml           ✅  Poetry project + dependency definitions
+├── .env.example             ✅  Placeholder values for all environment variables
 ├── TODO.md                  ✅  Ordered issue-ready todo list
 ├── .gitignore               ✅
 ├── LICENSE                  ✅
 └── .github/
+    ├── workflows/
+    │   └── ci.yml           ✅  GitHub Actions: pytest + mypy on every push
     └── copilot-instructions.md   ✅  ← this file
 ```
 
-**Schema migrations** will live in `app/db/schema.sql` (📋 not yet created) as plain `CREATE TABLE IF NOT EXISTS` statements. There is no migration framework (no Alembic). When the schema changes, update `schema.sql` and re-run `flask db init` (which re-applies the file idempotently).
+**Schema migrations** will live in `app/db/schema.sql` as plain `CREATE TABLE IF NOT EXISTS` statements. There is no migration framework (no Alembic). When the schema changes, update `schema.sql` and re-run `flask db init` (which re-applies the file idempotently).
+
+> ⚠️ **Introduce Alembic at the first migration.** The plain-SQL approach only supports adding new tables and nullable columns. As soon as any destructive migration is needed (renaming a column, moving data, removing a column, etc.) **switch to Alembic immediately** — do not accumulate ad-hoc migration scripts. Introduce it early; retrofitting Alembic onto a live database with many ad-hoc changes is painful.
 
 ---
 
@@ -69,9 +75,9 @@ llm-metadata-generator/
 - 📋 **Blueprints** – each sub-package under `app/` that serves HTTP routes registers its own `Blueprint` and is registered in `create_app`.
 - 📋 **Authentication** – every API request must carry `Authorization: Bearer <token>`. The `@require_token` decorator (defined in `app/models/user.py`) validates the token against the database. There are no usernames or passwords. Tokens must **never** be passed as a URL query parameter in GET requests (security risk); browser-facing pages use a POST `/sessions/login` endpoint that sets a session cookie instead.
 - 📋 **Admin CLI** – Flask CLI commands (registered via `@app.cli.command`) under the `users` group handle token creation. Example: `flask users create`.
-- 📋 **Database** – SQLite file path comes from `DATABASE_URL` env var (default: `data/metadata.db`). All schema migrations are plain SQL in `app/db/schema.sql` (no Alembic). The sqlite-vector extension is loaded at connection time in `app/db/sqlite.py` **only after the ontology feature is implemented** (see TODO item 6).
+- ✅ **Database** – SQLite file path comes from `DATABASE_URL` env var (default: `data/metadata.db`). All schema migrations are plain SQL in `app/db/schema.sql` (no Alembic). **Introduce Alembic at the first migration that goes beyond adding a table or nullable column** (i.e. rename, data move, column drop). The sqlite-vector extension is loaded at connection time in `app/db/sqlite.py` **only after the ontology feature is implemented** (see TODO item 6).
 - 📋 **Agents** – agents are plain Python classes with a `run(**kwargs)` method. They accept an `llm_client` argument so they can be tested with a mock. Agent code must never import Flask directly.
-- 📋 **Cron** – APScheduler (background scheduler) is started inside `create_app`. Each cron module exposes a `register(scheduler)` function that adds its jobs.
+- ✅ **Cron / background jobs** – APScheduler (background scheduler) is started inside `create_app`. Each cron module exposes a `register(scheduler)` function that adds its jobs. APScheduler jobs have no Flask request context; always push the app context manually: `with app.app_context(): ...`. Use `get_db()` inside that context just as in a normal request.
 - 📋 **Generation flow** – on first call for a URL the API returns the current cached result (empty list if none) and enqueues a background generation task. On subsequent calls the latest completed result is returned and a new generation is enqueued. The session model tracks state.
 - 📋 **Update levels** – determined by comparing a hash of the fetched web content against the stored hash:
   - **Level 0 – No update:** hash matches stored hash → skip entirely.
@@ -81,6 +87,8 @@ llm-metadata-generator/
 - 📋 **Semantic tools** – tools (bio.tools, FAIRsharing, …) are **globally admin-managed** (not per-user). A short one-line description of every configured tool is always included in the extraction agent's system prompt so it is aware of available tools. When the agent decides to use a specific tool, it requests the full detailed description on demand. Tool descriptions are stored in the `semantic_tools` table and refreshed by a cron job.
 - 📋 **LLM configuration** – all LLM calls go through `app/agents/__init__.py:get_llm_client(task)`, which reads `OPENAI_API_BASE`, `OPENAI_API_KEY`, and looks up the preferred model for the given task from the `model_assignments` table. Tasks are fine-grained: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `ontology_embedding`, `tool_discovery`, `model_selection`.
 - 📋 **Bioschemas / TeSS** – the extraction agent's system prompt includes the Bioschemas TrainingMaterial and CourseInstance profiles and notes about TeSS-specific field usage. Keep this prompt in `app/agents/bioschemas.py`, not in a separate template file.
+- ✅ **File-system paths** – always use `pathlib.Path` for path construction and file I/O; do not use `os.path` or raw string concatenation for paths.
+- ✅ **Type annotations** – add type annotations to all public functions and methods. Run `mypy app tests` before finalising any commit to ensure no type errors are introduced.
 
 ---
 
@@ -92,9 +100,9 @@ llm-metadata-generator/
 | `OPENAI_API_KEY` | API key |
 | `DATABASE_URL` | SQLite file path (default: `data/metadata.db`) |
 | `SECRET_KEY` | Flask secret key |
-| `CRON_METADATA_INTERVAL` | Minutes between metadata refresh runs (default 60) |
-| `CRON_ONTOLOGY_INTERVAL` | Hours between ontology index refreshes (default 24) |
-| `CRON_TOOLS_INTERVAL` | Hours between semantic-tool description refreshes (default 12) |
+| `CRON_METADATA_INTERVAL` | **Minutes** between metadata refresh runs (default 1440 = daily) |
+| `CRON_ONTOLOGY_INTERVAL` | **Hours** between ontology index refreshes (default 720 = monthly) |
+| `CRON_TOOLS_INTERVAL` | **Hours** between semantic-tool description refreshes (default 168 = weekly) |
 
 ---
 
@@ -103,6 +111,14 @@ llm-metadata-generator/
 ```bash
 pytest tests/
 ```
+
+## Type checking
+
+```bash
+mypy app tests
+```
+
+Run this before finalising any commit.
 
 ---
 
