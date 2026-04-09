@@ -5,187 +5,211 @@ Work through the list from top to bottom – later items depend on earlier ones.
 
 ---
 
-## 1. Project scaffolding – Flask app factory, config, requirements
+## 1. Project scaffolding – Flask app factory, config, and database setup
 
-Create the initial Python project layout:
+Create the initial Python project layout including the database schema (without the sqlite-vector extension, which is deferred to the ontology issue):
 
-- `app/__init__.py` with `create_app(config=None)` application factory
-- `config.py` reading all settings from environment variables (`OPENAI_API_BASE`, `OPENAI_API_KEY`, `DATABASE_URL`, `SECRET_KEY`, cron intervals)
-- `requirements.txt` with pinned versions: Flask, APScheduler, requests, openai, pytest
-- `tests/__init__.py` and a minimal smoke test (`test_app.py`) that confirms `create_app()` returns a Flask app
+- `pyproject.toml` using [Poetry](https://python-poetry.org/) with pinned dependencies: Flask, APScheduler, requests, openai, pytest
 - `.env.example` listing all required environment variables with placeholder values
-
-Acceptance: `flask run` starts without errors; `pytest tests/` passes.
-
----
-
-## 2. SQLite database setup with sqlite-vector extension
-
-Set up the database layer:
-
+- `app/__init__.py` with `create_app(config=None)` application factory
+- `config.py` reading all settings from environment variables (`OPENAI_API_BASE`, `OPENAI_API_KEY`, `DATABASE_URL` defaulting to `data/metadata.db`, `SECRET_KEY`, cron intervals)
 - `app/db/__init__.py` and `app/db/sqlite.py`:
-  - Load the [sqlite-vector](https://github.com/sqliteai/sqlite-vector/blob/main/packages/python/README.md) extension at connection time
-  - Expose `get_db()` (returns a connection) and `init_db()` (runs schema SQL)
-  - `vector_search(query_embedding, top_k)` helper for nearest-neighbour ontology lookup
-- `app/db/schema.sql` with `CREATE TABLE IF NOT EXISTS` statements for `users`, `sessions`, `metadata_cache`, `ontology_terms`, `semantic_tools`
+  - Expose `get_db()` (returns a connection) and `init_db()` (runs `schema.sql`)
+  - **Do not** load the sqlite-vector extension yet – that is done when ontologies are implemented
+- `app/db/schema.sql` with `CREATE TABLE IF NOT EXISTS` for `users`, `sessions`, `metadata_cache`, `semantic_tools` (no `ontology_terms` table yet)
 - `flask db init` CLI command that calls `init_db()`
+- `tests/__init__.py` and a smoke test `tests/test_app.py` confirming `create_app()` returns a Flask app
 
-Acceptance: running `flask db init` creates all tables; `vector_search` returns results without error.
+Acceptance: `flask run` starts without errors; `pytest tests/` passes; `flask db init` creates all tables.
 
 ---
 
-## 3. User model and Bearer-token authentication
+## 2. User model and Bearer-token authentication
 
 Implement user accounts with token-only authentication:
 
 - `app/models/user.py`:
   - `User` model with `id`, `token` (random URL-safe string), `created_at`, `is_admin` fields
-  - `@require_token` decorator that reads `Authorization: Bearer <token>`, looks up the user, and aborts with 401 if missing or invalid
-- Admin CLI commands (`flask users create`, `flask users list`, `flask users revoke <token>`)
+  - `@require_token` decorator that reads `Authorization: Bearer <token>`, looks up the user, and aborts with `401` if missing or invalid
+- Admin CLI commands: `flask users create`, `flask users list`, `flask users revoke <token>`
 - No username or password – tokens are the only credential
+- Add a simple `GET /health` endpoint (no auth required) and a `GET /whoami` endpoint (auth required) to allow easy manual and automated testing of the decorator without needing a full feature endpoint
 
-Acceptance: `flask users create` prints a new token; a request without a valid token returns 401.
-
----
-
-## 4. HTML session viewer
-
-Create a simple browser-accessible page for inspecting generation sessions:
-
-- `templates/sessions.html` – lists all sessions for the authenticated user, shows status, URL, generated JSON-LD, and log messages
-- `app/admin/routes.py` registers a `GET /sessions` route protected by Bearer token (passed as a query param `?token=` for browser convenience)
-- `app/models/session.py` – `Session` model with `id`, `user_id`, `url`, `status` (pending / running / done / error), `log`, `result_json`, `created_at`, `updated_at`
-
-Acceptance: opening `/sessions?token=<token>` in a browser shows the user's sessions.
+Acceptance: `flask users create` prints a new token; `GET /whoami` with a valid token returns user info; without a token it returns `401`.
 
 ---
 
-## 5. Bioschemas extraction agent
+## 3. Core working system: Bioschemas extraction agent and API endpoints
 
-Implement the core LLM agent that extracts Bioschemas metadata from a training-material website:
+Implement the minimum end-to-end working system: both API endpoints, the extraction agent, and session tracking, plus the session viewer so results can be inspected immediately.
 
-- `app/agents/bioschemas.py` – `BioschemasExtractorAgent` class with `run(url, prompt=None, llm_client=None)`
-  - Fetches web content (respects robots.txt)
+### Extraction agent (`app/agents/bioschemas.py`)
+
+- `BioschemasExtractorAgent` class with `run(url, prompt=None, update_level=1, structural_summary=None, llm_client=None)`
+  - Fetches web content (respects `robots.txt`; raises `AccessDeniedError` if the crawl of the primary source is blocked)
   - Decides which links to follow (up to a configurable depth/limit)
   - Performs a self-critical review pass on the draft JSON-LD
   - Validates JSON-LD syntax and required Bioschemas fields
-  - Applies TeSS-specific field conventions (in system prompt)
-  - Uses `vector_search` for ontology term candidates (EDAM, PaNET)
-  - Returns `400`-style signal (raises `NotTrainingContentError`) when the page has no recognisable training content (events or learning materials)
-- Unit tests in `tests/test_agents.py` using a mock LLM client and mock HTTP responses
+  - Applies TeSS-specific field conventions (defined in the system prompt inside this file)
+  - Raises `NotTrainingContentError` when no recognisable training content (events or learning materials) is found
+  - Note: ontology vector search is **not** included yet – add a placeholder comment referencing the ontology issue; it will be wired in when that feature is implemented
 
-Acceptance: agent returns valid Bioschemas JSON-LD for a sample training URL; raises `NotTrainingContentError` for a non-training URL.
+### API endpoints (`app/api/collection.py`, `app/api/resource.py`)
 
----
+Both endpoints share the same lazy-generation flow and differ only in whether they return a list or a single object:
 
-## 6. Collection metadata API endpoint
+- `GET /metadata?url=<url>[&prompt=<prompt>]` – Bioschemas JSON-LD list for a training collection
+- `GET /metadata/single?url=<url>[&prompt=<prompt>]` – single Bioschemas JSON-LD object for one resource
+- Both require Bearer token (`@require_token`)
+- Flow: return the latest cached result immediately (empty list / `{}` if none), then enqueue a background generation task if none is already running for this `(user, url)` pair
+- Return `400` with a plain-text explanation for `NotTrainingContentError`
+- Return `403` with a plain-text explanation for `AccessDeniedError` (e.g. blocked by `robots.txt`)
+- Response: `Content-Type: application/ld+json`
 
-Expose the main endpoint for training collections:
+### Session model and viewer
 
-- `app/api/collection.py` – Flask blueprint with `GET /metadata`
-  - Query parameters: `url` (required), `prompt` (optional)
-  - Requires Bearer token (`@require_token`)
-  - Implements the lazy-generation flow:
-    1. Return the latest cached result immediately (empty list `[]` if none exists)
-    2. Enqueue a background generation task if no task is currently running for this `(user, url)` pair
-  - Returns `400` with a plain-text explanation when the URL does not contain training content
-  - Response: `Content-Type: application/ld+json`, body is a JSON array of Bioschemas objects
+- `app/models/session.py` – `Session` model: `id`, `user_id`, `url`, `status` (pending / running / done / error), `log`, `result_json`, `created_at`, `updated_at`
+- `templates/sessions.html` – lists the authenticated user's sessions with status, URL, generated JSON-LD and log messages; designed with the agent output in mind so useful fields are visible at a glance
+- `POST /sessions/login` – accepts a JSON body `{"token": "..."}` and sets a signed session cookie (tokens must **never** appear in GET query parameters)
+- `GET /sessions` – protected by session cookie; shows the session viewer
 
-Acceptance: first `GET /metadata?url=<url>` returns `[]`; second call (after generation) returns JSON-LD list; non-training URL returns 400.
+### Tests
 
----
+- `tests/test_api.py` – test lazy-generation flow, 400/403 responses, auth
+- `tests/test_agents.py` – mock LLM client + mock HTTP, test happy path and `NotTrainingContentError`
 
-## 7. Single-resource metadata API endpoint
-
-Expose the endpoint for individual training resources:
-
-- `app/api/resource.py` – Flask blueprint with `GET /metadata/single`
-  - Same query parameters and auth as the collection endpoint
-  - Same lazy-generation and caching flow
-  - Response: `Content-Type: application/ld+json`, body is a single Bioschemas JSON object (not a list)
-  - Returns `400` for non-training content
-
-Acceptance: `GET /metadata/single?url=<url>` returns a single JSON-LD object.
+Acceptance: end-to-end: first `GET /metadata?url=<url>` returns `[]`; after background generation completes, second call returns JSON-LD list; non-training URL returns `400`; robots.txt-blocked URL returns `403`; session viewer shows the result.
 
 ---
 
-## 8. Three-level update logic
+## 4. Three-level update logic
 
 Add smart update triggering to avoid unnecessary LLM calls:
 
 - In `app/agents/bioschemas.py` and the cron job (`app/cron/metadata.py`):
-  - **Level 0 – No update:** hash of fetched content matches stored hash → skip entirely
-  - **Level 1 – Incremental update:** content changed → agent receives a summary of the website structure and a diff-hint; focuses only on new/changed items
-  - **Level 2 – Full refresh:** triggered by `?force_refresh=true` query param, missing stored hash, or when the agent decides a full re-crawl is needed → metadata regenerated from scratch
-- Store content hash and `last_crawled_at` in `metadata_cache` table
+  - **Level 0 – No update:** hash of fetched content matches stored hash → skip entirely.
+  - **Level 1 – Incremental update:** hash changed → agent receives the stored structural summary of the site and focuses only on new/changed items; records the timestamp of the last semantic-tool search used during extraction so the agent can decide whether a new tool search is warranted on future runs.
+  - **Level 2 – Full refresh:** triggered (a) randomly at a very low probability (~1 % of cron runs) to catch long-term drift, (b) when the agent itself reports that the site structure has fundamentally changed since the stored structural summary was produced, or (c) when no stored hash exists. The `force_refresh` query parameter is available for admin/debugging use only — computer agents never set it.
+- Store content hash, `last_crawled_at`, and a `structural_summary` in `metadata_cache`
 
-Acceptance: unchanged URL skips LLM call; changed URL triggers incremental update; `force_refresh=true` triggers full refresh.
+Acceptance: unchanged URL skips LLM call; changed URL triggers incremental; ~1 % of runs and agent-detected structure changes trigger full refresh.
 
 ---
 
-## 9. Semantic-tool support (bio.tools, FAIRsharing, …)
+## 5. Semantic-tool support (bio.tools, FAIRsharing, …)
 
-Allow the extraction agent to query specialised search-interface websites:
+Allow the extraction agent to query specialised search-interface websites. Tools are **globally admin-managed** (not per-user).
 
-- `app/agents/semantic_tool.py` – `SemanticToolDiscoveryAgent` with `run(tool_url_or_description, user_id, llm_client=None)`:
-  - Figures out the API/query format for the given tool (may involve following documentation links)
-  - Produces a plain-text _tool description_ (how to construct GET requests, what parameters to use, how to parse results)
-  - Stores the description in the `semantic_tools` table (per-user, to avoid leaking info between users)
+### Discovery agent (`app/agents/semantic_tool.py`)
+
+- `SemanticToolDiscoveryAgent` with `run(description, llm_client=None)` where `description` is a free-text admin-provided description that may contain links to tool documentation, direct tool API descriptions, or links to the tool itself
+  - Figures out how to construct GET requests to the tool (parameters, URL format, response parsing)
+  - Produces a structured output:
+    - **Short summary** (one sentence) – always included in the extraction agent's system prompt so it is aware of all available tools
+    - **Full detailed description** – stored separately; provided to the agent only when it explicitly decides to use this tool
+  - Stores both in the `semantic_tools` table
+
+### Integration with extraction agent
+
+- The extraction agent's system prompt always includes the short summary of every configured tool
+- When the agent decides to use a tool, it requests the full detailed description (on demand, not upfront)
+
+### Admin UI (added to `app/admin/routes.py`)
+
+- `GET/POST /admin/tools` – list and add tools (admin-provided description field; may include URLs or direct API docs)
+- `GET/POST /admin/tools/<id>/delete`
+- `POST /admin/tools/<id>/rediscover` – trigger immediate re-discovery
+- Keep a history of tool description versions for each tool so the admin can roll back to a previous description if a re-discovery produces worse results
+- Simple HTML templates (`templates/admin_tools.html`)
+
+### Cron
+
 - `app/cron/tools.py` – periodic job that refreshes stale tool descriptions
-- The `BioschemasExtractorAgent` includes relevant tool descriptions in its system prompt when the target URL matches a known tool domain
-- Admin UI in `app/admin/routes.py` to add/edit/remove tools per user (URL, description or link to docs)
 
-Acceptance: after running the discovery agent for `https://bio.tools`, the main extraction agent can use bio.tools search in its workflow.
+Acceptance: after running the discovery agent for bio.tools, the main extraction agent is aware of it (short summary in prompt) and can request the full description to perform a search.
 
 ---
 
-## 10. Ontology support (EDAM, PaNET, …)
+## 6. Ontology support (EDAM, PaNET, …)
 
-Index ontology terms in the vector database for fast candidate lookup:
+Index ontology terms in the vector database for fast candidate lookup. **This is the issue where the sqlite-vector extension is set up.**
 
-- `app/agents/ontology.py` – `OntologyIndexerAgent` with `run(ontology_url_or_rdf, llm_client=None)`:
-  - Fetches RDF/OWL or API data for the ontology
-  - Extracts terms (label, description, URI) and embeds them with the configured embedding model
-  - Upserts into the `ontology_terms` table using sqlite-vector
-- `app/cron/ontologies.py` – periodic job that refreshes ontology indexes
-- The `BioschemasExtractorAgent`:
-  - Calls `vector_search` to get top-K candidate terms before filling ontology fields
-  - Tracks _missing_ ontology terms (label + suggested source URL) in a separate `missing_ontology_terms` table for future curation
-- Admin UI to add/remove ontology sources (URL to RDF, SPARQL endpoint, or direct description)
+### Database changes
 
-Acceptance: after indexing EDAM, `vector_search("sequence analysis")` returns relevant EDAM terms; missing terms are recorded.
+- Load the [sqlite-vector](https://github.com/sqliteai/sqlite-vector/blob/main/packages/python/README.md) extension in `app/db/sqlite.py`
+- Add `ontology_terms` and `missing_ontology_terms` tables to `app/db/schema.sql`
+- Add `vector_search(query_embedding, top_k)` helper to `app/db/sqlite.py`
+- `missing_ontology_terms` schema: `id`, `label`, `description`, `ontology_name`, `suggested_source_url`, plus a many-to-many join table linking each missing term to one or more `metadata_cache` records (training materials / events) that would benefit from it. Before inserting a new missing term, check whether a matching label already exists and if so just add the new training-material link.
+
+### Ontology indexer agent (`app/agents/ontology.py`)
+
+- `OntologyIndexerAgent` with `run(description, llm_client=None)` where `description` is a free-text admin-provided field that may contain links to RDF/OWL files, SPARQL endpoints, or a direct textual description of the ontology
+  - Fetches and parses ontology terms (label, description, URI)
+  - Embeds terms using the `ontology_embedding` task model
+  - Upserts into `ontology_terms` using sqlite-vector
+  - Keeps a versioned index history so the admin can roll back to a previous index snapshot if needed (e.g. if a re-index produces worse results)
+- **Important:** if the embedding model changes, all existing `ontology_terms` must be re-indexed before any metadata extraction runs. Add a startup check in `create_app` that detects embedding model changes and triggers an automatic re-index.
+
+### Integration with extraction agent
+
+- Add vector-search capability to `BioschemasExtractorAgent` (wiring in the placeholder left in issue 3): call `vector_search` to get top-K candidate ontology terms before filling ontology fields
+- The agent also tracks missing ontology terms: if a concept clearly belongs in an ontology but no matching term is found, record it in `missing_ontology_terms` (label, description, which ontology it would belong to, link to the training material)
+
+### Admin UI (added to `app/admin/routes.py`)
+
+- `GET/POST /admin/ontologies` – list and add ontology sources (admin-provided description field)
+- `GET/POST /admin/ontologies/<id>/delete`
+- `POST /admin/ontologies/<id>/reindex` – trigger immediate re-indexing; previous index version is kept for rollback
+- `GET /admin/ontologies/<id>/history` – view index version history and roll back
+- `GET /admin/missing-terms` – browse missing ontology term suggestions grouped by ontology, with links to the training materials that need them
+- Simple HTML templates (`templates/admin_ontologies.html`, `templates/admin_missing_terms.html`)
+
+### Cron
+
+- `app/cron/ontologies.py` – periodic job that refreshes stale ontology indexes (respects index version history)
+
+Acceptance: after indexing EDAM, `vector_search("sequence analysis")` returns relevant EDAM terms; the extraction agent uses them; missing terms are recorded with training-material links.
 
 ---
 
-## 11. OpenAI-compatible API flexibility and model-selector agent
+## 7. OpenAI-compatible API flexibility and model-selector agent
 
-Make LLM backend fully configurable and self-updating:
+Make the LLM backend fully configurable and self-updating.
 
-- `app/agents/__init__.py` – `get_llm_client(task=None)`:
-  - Returns an `openai.OpenAI`-compatible client pointing at `OPENAI_API_BASE`
-  - Looks up the preferred model for `task` (e.g. `"extraction"`, `"ontology"`, `"embedding"`) from a `model_assignments` table
-  - Falls back to a configurable default model if no assignment exists
-- `app/agents/model_selector.py` – `ModelSelectorAgent` with `run(llm_client=None)`:
+### LLM client (`app/agents/__init__.py`)
+
+- `get_llm_client(task)` looks up the preferred model for the given fine-grained task from the `model_assignments` table. Tasks: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `ontology_embedding`, `tool_discovery`, `model_selection`. Falls back to a configurable default model.
+- The `model_assignments` table includes a version history so previous assignments can be restored if a new selection is worse (e.g. a previously available model disappears).
+
+### Model-selector agent (`app/agents/model_selector.py`)
+
+- `ModelSelectorAgent` with `run(llm_client=None)`:
   - Lists all models available at the configured API endpoint
-  - Assigns the best available model to each task type based on name heuristics or a brief capability probe
-  - Updates the `model_assignments` table
-- `app/cron/metadata.py` (or a new `app/cron/models.py`) – periodic job that runs `ModelSelectorAgent`
+  - Optionally queries a public model-information source to gather capability metadata
+  - Runs brief, timed capability probes for each task type and records latency alongside quality
+  - Assigns the best available model to each task type
+  - Updates the `model_assignments` table; previous assignment snapshot is kept for rollback
+- A cron job (`app/cron/models.py`) runs `ModelSelectorAgent` periodically
 
-Acceptance: changing `OPENAI_API_BASE` to a different provider and restarting updates model assignments automatically on next cron run.
+### Admin UI (added to `app/admin/routes.py`)
+
+- `GET /admin/models` – overview of current model assignments, latency data, and version history
+- Admin can manually override any task → model assignment and add a free-text admin note per model/assignment (useful for flagging known issues)
+- Rollback to a previous assignment snapshot
+- Simple HTML template (`templates/admin_models.html`)
+
+Acceptance: changing `OPENAI_API_BASE` to a different provider and restarting updates model assignments automatically on the next cron run; admin can see latency, override assignments, and roll back.
 
 ---
 
-## 12. Admin interface for ontologies and semantic tools
+## 8. Admin interface refinements
 
-Build a simple web admin UI (HTML, no JS framework needed):
+Polish and unify the admin UI built incrementally across issues 5–7:
 
-- Routes in `app/admin/routes.py` (Bearer token required, admin flag checked):
-  - `GET/POST /admin/ontologies` – list and add ontology sources (URL, description, direct RDF link)
-  - `GET/POST /admin/ontologies/<id>/delete`
-  - `GET/POST /admin/tools` – list and add semantic-tool sources per user
-  - `GET/POST /admin/tools/<id>/delete`
-  - `POST /admin/ontologies/<id>/reindex` – trigger immediate re-indexing
-  - `POST /admin/tools/<id>/rediscover` – trigger immediate tool-description refresh
-- Simple `templates/admin_*.html` templates (plain HTML forms, no JS framework)
+- Consistent navigation across all admin pages
+- Admin dashboard at `GET /admin` summarising system status: last cron run times, pending sessions, ontology index ages, model assignment age
+- Improve UX of existing admin pages (ontologies, tools, models, missing terms, sessions)
+- Add pagination where needed
+- Ensure all admin routes check `is_admin` flag
 
-Acceptance: an admin user can add EDAM ontology and bio.tools via the browser UI and trigger immediate re-indexing.
+Acceptance: an admin user can navigate all admin pages from a single dashboard and see system health at a glance.
