@@ -18,13 +18,15 @@ CREATE TABLE IF NOT EXISTS sessions (
     updated_at  TEXT    NOT NULL DEFAULT (datetime('now'))
 );
 
--- metadata_cache: cached Bioschemas metadata per URL
+-- metadata_cache: URL-level crawl state shared across users.
+-- Stores only the content hash and structural summary used by the three-level
+-- update logic.  Per-user results (which may differ because of individual
+-- prompts) are stored in sessions.result_json, not here.
 CREATE TABLE IF NOT EXISTS metadata_cache (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     url                TEXT    NOT NULL UNIQUE,
     content_hash       TEXT,
     structural_summary TEXT,
-    result_json        TEXT,
     last_crawled_at    TEXT,
     created_at         TEXT    NOT NULL DEFAULT (datetime('now')),
     updated_at         TEXT    NOT NULL DEFAULT (datetime('now'))
