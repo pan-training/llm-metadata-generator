@@ -92,15 +92,17 @@ def _register_users_cli(app: Flask) -> None:
             click.echo(f"id={user.id}  created={user.created_at}  role={role}")
 
     @users.command("revoke")
-    @click.argument("token")
-    def revoke_user_command(token: str) -> None:
-        """Revoke a user token (delete the user row)."""
-        from app.db.sqlite import get_db
+    @click.argument("token_or_hash")
+    def revoke_user_command(token_or_hash: str) -> None:
+        """Revoke a user token.
 
-        db = get_db()
-        result = db.execute("DELETE FROM users WHERE token = ?", (token,))
-        db.commit()
-        if result.rowcount:
+        TOKEN_OR_HASH may be the plaintext Bearer token or its SHA-256 hex
+        digest (64 lowercase hex characters).  The command auto-detects which
+        form was supplied.
+        """
+        from app.models.user import revoke_user
+
+        if revoke_user(token_or_hash):
             click.echo("Token revoked.")
         else:
             click.echo("Token not found.", err=True)
