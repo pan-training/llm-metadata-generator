@@ -1,11 +1,13 @@
 -- users: one row per API user; authentication is Bearer-token only (no password).
 -- is_admin=1 grants access to admin routes (tool management, user creation).
+-- token_hash stores the SHA-256 hex digest of the raw Bearer token; the plaintext
+-- token is never stored so a database leak does not expose usable credentials.
 -- Typical queries:
---   Validate a request:  SELECT id, is_admin FROM users WHERE token = ?
---   Create a user:       INSERT INTO users (token) VALUES (?)
+--   Validate a request:  SELECT id, is_admin FROM users WHERE token_hash = ?
+--   Create a user:       INSERT INTO users (token_hash) VALUES (?)
 CREATE TABLE IF NOT EXISTS users (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    token      TEXT    NOT NULL UNIQUE,
+    token_hash TEXT    NOT NULL UNIQUE,
     created_at TEXT    NOT NULL DEFAULT (datetime('now')),
     is_admin   INTEGER NOT NULL DEFAULT 0
 );
