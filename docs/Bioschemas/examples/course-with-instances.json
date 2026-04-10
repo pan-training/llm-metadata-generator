@@ -1,0 +1,125 @@
+[
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "Course",
+    "@id": "https://example.org/courses/applied-genomics",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/Course/1.0-RELEASE",
+      "@type": "CreativeWork"
+    },
+    "url": "https://example.org/courses/applied-genomics",
+    "name": "Applied Genomics",
+    "description": "A comprehensive module introducing applied genomics to life scientists, covering genome assembly, annotation, and comparative genomics.",
+    "keywords": ["genomics", "assembly", "annotation", "comparative genomics"],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Genomics",
+        "url": "http://edamontology.org/topic_0622"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Genome assembly",
+        "url": "http://edamontology.org/topic_0196"
+      }
+    ],
+    "educationalLevel": "intermediate",
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "provider": [
+      {
+        "@type": "Organization",
+        "name": "Example University Bioinformatics Core",
+        "@id": "https://example.edu/bioinformatics"
+      }
+    ],
+    "coursePrerequisites": ["Basic Unix shell skills", "Familiarity with Python or R"],
+    "teaches": [
+      "Perform de novo genome assembly using SPAdes",
+      "Annotate genomic features using Prokka",
+      "Compare genomes across species using BLAST+"
+    ],
+    "timeRequired": "P3D",
+    "hasCourseInstance": [
+      {
+        "@context": {
+          "@vocab": "https://schema.org/",
+          "dct": "http://purl.org/dc/terms/"
+        },
+        "@type": "CourseInstance",
+        "@id": "https://example.org/courses/applied-genomics/2026-autumn",
+        "dct:conformsTo": {
+          "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+          "@type": "CreativeWork"
+        },
+        "courseMode": ["onsite"],
+        "startDate": "2026-09-14T09:00:00+01:00",
+        "endDate": "2026-09-16T17:00:00+01:00",
+        "url": "https://example.org/courses/applied-genomics/2026-autumn",
+        "location": {
+          "@type": "Place",
+          "name": "Life Sciences Building, Room 101",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "1 Science Road",
+            "addressLocality": "Cambridge",
+            "addressRegion": "Cambridgeshire",
+            "postalCode": "CB2 1TN",
+            "addressCountry": "GB"
+          }
+        },
+        "instructor": [
+          {
+            "@type": "Person",
+            "name": "Dr Alice Researcher",
+            "@id": "https://orcid.org/0000-0001-2345-6789"
+          }
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "GBP"
+        },
+        "inLanguage": "en",
+        "maximumAttendeeCapacity": 20
+      },
+      {
+        "@context": {
+          "@vocab": "https://schema.org/",
+          "dct": "http://purl.org/dc/terms/"
+        },
+        "@type": "CourseInstance",
+        "@id": "https://example.org/courses/applied-genomics/2026-spring-online",
+        "dct:conformsTo": {
+          "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+          "@type": "CreativeWork"
+        },
+        "courseMode": ["online", "synchronous"],
+        "startDate": "2026-03-10T09:00:00Z",
+        "endDate": "2026-03-12T17:00:00Z",
+        "url": "https://example.org/courses/applied-genomics/2026-spring-online",
+        "location": {
+          "@type": "VirtualLocation",
+          "name": "Zoom meeting",
+          "url": "https://zoom.example/meet/genomics2026spring"
+        },
+        "instructor": [
+          {
+            "@type": "Person",
+            "name": "Dr Bob Scientist",
+            "@id": "https://orcid.org/0000-0002-3456-7890"
+          }
+        ],
+        "offers": {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "EUR"
+        },
+        "inLanguage": "en",
+        "maximumAttendeeCapacity": 50
+      }
+    ]
+  }
+]

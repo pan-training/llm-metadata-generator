@@ -1,0 +1,63 @@
+[
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "CourseInstance",
+    "@id": "https://example.org/events/genomics-workshop-onsite-2026-07",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+      "@type": "CreativeWork"
+    },
+    "courseMode": ["onsite"],
+    "startDate": "2026-07-06T09:30:00+01:00",
+    "endDate": "2026-07-08T17:00:00+01:00",
+    "url": "https://example.org/events/genomics-workshop-onsite-2026-07",
+    "location": {
+      "@type": "Place",
+      "name": "Wellcome Genome Campus Conference Centre",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Wellcome Genome Campus",
+        "addressLocality": "Hinxton",
+        "addressRegion": "Cambridgeshire",
+        "postalCode": "CB10 1SD",
+        "addressCountry": "GB"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "52.0794",
+        "longitude": "0.1855"
+      }
+    },
+    "instructor": [
+      {
+        "@type": "Person",
+        "name": "Dr Alice Researcher",
+        "@id": "https://orcid.org/0000-0001-2345-6789"
+      },
+      {
+        "@type": "Person",
+        "name": "Bob Scientist",
+        "@id": "https://orcid.org/0000-0002-3456-7890"
+      }
+    ],
+    "organizer": [
+      {
+        "@type": "Organization",
+        "name": "EMBL-EBI Training",
+        "@id": "https://www.ebi.ac.uk/training/"
+      }
+    ],
+    "offers": {
+      "@type": "Offer",
+      "price": "150.00",
+      "priceCurrency": "GBP",
+      "url": "https://example.org/events/genomics-workshop-onsite-2026-07/register"
+    },
+    "inLanguage": "en",
+    "maximumAttendeeCapacity": 24,
+    "name": "Practical Genomics Workshop — July 2026"
+  }
+]
