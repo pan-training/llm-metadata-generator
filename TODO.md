@@ -77,6 +77,16 @@ Future improvements (not yet implemented — see items below):
   result to skip re-extraction of unchanged items (builds on issue 4).
 - **3e** Try `response_format={"type":"json_schema",…}` for backends that support
   OpenAI structured outputs; fall back to `json_object` if unsupported (issue 7).
+- **3f** ✅ Done (baked into issue 3 implementation): HTML→Markdown conversion via
+  `markdownify` so tables become row-structured Markdown tables, heading hierarchy
+  is preserved, and scripts/styles are removed entirely before chunking.
+- **3g** ✅ Done: Chain-of-thought "reasoning scratchpad" step before JSON-LD
+  extraction — the LLM writes free-text notes about observable metadata fields
+  (step 2a) before producing structured JSON (step 2b), improving accuracy for
+  smaller models.
+- **3h** Table-aware chunking: improve `_chunk_text` to prefer splitting at
+  Markdown table row boundaries (between ``|…|`` lines) so that table rows
+  are never cut mid-row by the fixed-size chunker.
 
 ### API endpoints (`app/api/collection.py`, `app/api/resource.py`)
 
@@ -212,7 +222,7 @@ Currently three env-var tiers are used: `LLM_MODEL_SMALL`, `LLM_MODEL_LARGE`, `L
 (defaults: `qwen2.5-coder-7b-instruct`, `gemma-3-27b-it`, `qwen3-embedding-8b`).
 This issue replaces the three-tier approach with per-task model assignments stored in the DB:
 
-- `get_llm_client(task)` looks up the preferred model for the given fine-grained task from the `model_assignments` table. Tasks: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `ontology_embedding`, `tool_discovery`, `model_selection`. Falls back to `LLM_MODEL_LARGE` env var.
+- `get_llm_client(task)` looks up the preferred model for the given fine-grained task from the `model_assignments` table. Tasks: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `metadata_analysis` (chain-of-thought reasoning scratchpad), `ontology_embedding`, `tool_discovery`, `model_selection`. Falls back to `LLM_MODEL_LARGE` env var.
 - The `model_assignments` table includes a version history so previous assignments can be restored if a new selection is worse (e.g. a previously available model disappears).
 
 ### Model-selector agent (`app/agents/model_selector.py`)

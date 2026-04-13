@@ -8,10 +8,19 @@ websites without overflowing the LLM context window.
 ### Phase 1 – CRAWL + DISCOVER  (tree-like, chunk-by-chunk)
 
 1. Fetch the primary URL (respecting robots.txt).
-2. Strip JavaScript/CSS → clean text with inline link annotations
-   (e.g. "Introduction to RNA-seq [→ https://example.com/rna-seq]").
-3. Split the text into overlapping chunks (CHUNK_SIZE chars, CHUNK_OVERLAP
+2. Convert HTML to Markdown (via markdownify / BeautifulSoup4):
+   - Scripts, styles, noscript, and template tags are stripped entirely.
+   - Tables become standard Markdown tables (each row on its own line),
+     making tabular training-material catalogues structurally accessible to
+     the LLM without table rows being mangled by the HTML serialisation.
+   - Links appear as ``[anchor text](https://absolute-url)`` so the LLM
+     sees link context (surrounding text + anchor) together.
+   - Heading hierarchy is preserved as ATX-style ``#`` headers.
+3. Split the Markdown into overlapping chunks (CHUNK_SIZE chars, CHUNK_OVERLAP
    overlap) so context is never lost across chunk boundaries.
+   # TODO (issue #3 follow-up 3h): add a table-aware split that prefers to
+   #   break at Markdown table row boundaries (between ``|…|`` lines) rather
+   #   than mid-row when a table exceeds CHUNK_SIZE.
 4. For each chunk, call a fast LLM (content_relevance task) to:
    a) decide if the chunk is relevant to training content;
    b) list any training items found in the chunk (title, URL, type);
@@ -25,12 +34,18 @@ context (source URL, surrounding text excerpt) to drive the extraction phase.
 
 ### Phase 2 – EXTRACT  (per item, separate context windows)
 
-For each discovered item:
-- Gather the most relevant crawled content (item's own URL if available;
-  otherwise the source page).
-- Strip and chunk that content.
-- Call the quality LLM (json_ld_review task) to produce a Bioschemas JSON-LD
-  object, given the item's title/URL/type and the relevant text.
+For each discovered item a two-step chain-of-thought extraction is performed
+to improve accuracy, especially for smaller LLM models:
+
+**Step 2a – Reasoning scratchpad** (free-text, no JSON mode):
+The LLM reads the item's page content and writes concise notes about every
+metadata field it can identify (type, title, dates, authors, topics, …).
+This separates "what information is here?" from "format it as JSON-LD",
+reducing the cognitive load on the model.
+
+**Step 2b – Extraction** (JSON mode):
+The model produces the Bioschemas JSON-LD object, with the scratchpad from
+step 2a included as additional context in the prompt.
 
 # TODO (issue #6): pass candidate ontology terms to the extraction prompt once
 #   ontology vector search is implemented (see TODO.md item 6).
@@ -78,12 +93,13 @@ import pathlib
 import re
 import urllib.robotparser
 from dataclasses import dataclass, field
-from html.parser import HTMLParser
 from typing import Any, Callable
 from urllib.parse import urljoin, urlparse
 
 import requests
+from bs4 import BeautifulSoup
 from jsonschema import Draft202012Validator
+from markdownify import markdownify as _md_convert
 
 from app.agents import get_model_for_task
 
@@ -239,92 +255,78 @@ class _CrawlState:
 # ---------------------------------------------------------------------------
 
 
-class _TextExtractor(HTMLParser):
-    """Strips scripts/styles and builds readable text with inline link refs.
-
-    Links appear as ``anchor text [→ https://target.example.com]`` so the
-    LLM can see link context without losing surrounding text.
-    """
-
-    _SKIP_TAGS = frozenset({"script", "style", "noscript", "template"})
-    _BLOCK_TAGS = frozenset(
-        {"p", "div", "li", "h1", "h2", "h3", "h4", "h5", "h6",
-         "br", "tr", "td", "th", "dt", "dd", "blockquote", "section",
-         "article", "header", "footer", "nav", "aside", "figure"}
-    )
-
-    def __init__(self, base_url: str) -> None:
-        super().__init__()
-        self._base_url = base_url
-        self._skip_depth = 0
-        self._buf: list[str] = []
-        self._current_href: str | None = None
-        self._link_text: list[str] = []
-        self.links: list[tuple[str, str]] = []  # (absolute_url, anchor_text)
-
-    def handle_starttag(
-        self, tag: str, attrs: list[tuple[str, str | None]]
-    ) -> None:
-        if tag in self._SKIP_TAGS:
-            self._skip_depth += 1
-            return
-        if self._skip_depth:
-            return
-        if tag in self._BLOCK_TAGS:
-            self._buf.append("\n")
-        if tag == "a":
-            for name, value in attrs:
-                if name == "href" and value:
-                    href = value.strip()
-                    # Skip anchors, mailto, and javascript: links
-                    if href.startswith(("#", "mailto:", "javascript:")):
-                        continue
-                    absolute = urljoin(self._base_url, href)
-                    # Only follow http/https links; urljoin can produce other
-                    # schemes (data:, ftp:, …) if the page contains them.
-                    if urlparse(absolute).scheme in ("http", "https"):
-                        self._current_href = absolute
-                        self._link_text = []
-
-    def handle_endtag(self, tag: str) -> None:
-        if tag in self._SKIP_TAGS:
-            if self._skip_depth > 0:
-                self._skip_depth -= 1
-            return
-        if self._skip_depth:
-            return
-        if tag == "a" and self._current_href:
-            anchor = " ".join(self._link_text).strip()
-            if anchor:
-                self._buf.append(f" [→ {self._current_href}]")
-                self.links.append((self._current_href, anchor))
-            self._current_href = None
-            self._link_text = []
-
-    def handle_data(self, data: str) -> None:
-        if self._skip_depth:
-            return
-        text = data.strip()
-        if text:
-            self._buf.append(text + " ")
-            if self._current_href is not None:
-                self._link_text.append(text)
-
-    def get_text(self) -> str:
-        raw = "".join(self._buf)
-        # Collapse excessive whitespace / newlines
-        raw = re.sub(r" {2,}", " ", raw)
-        raw = re.sub(r"\n{3,}", "\n\n", raw)
-        return raw.strip()
+# ---------------------------------------------------------------------------
+# HTML → Markdown with inline link annotations
+# ---------------------------------------------------------------------------
 
 
-def _html_to_text(
+def _html_to_markdown(
     html: str, base_url: str
 ) -> tuple[str, list[tuple[str, str]]]:
-    """Return (clean_text, [(absolute_url, anchor_text), ...]) from HTML."""
-    extractor = _TextExtractor(base_url)
-    extractor.feed(html)
-    return extractor.get_text(), extractor.links
+    """Convert HTML to Markdown and return absolute link list.
+
+    Uses BeautifulSoup4 + markdownify to produce clean, structured Markdown:
+
+    * ``<script>``, ``<style>``, ``<noscript>``, and ``<template>`` tags are
+      **removed entirely** (content and tag) before conversion.
+    * Tables become standard Markdown table syntax — each row is on its own
+      line, which allows the LLM to understand catalogue/listing pages that
+      present multiple training items in table format.
+    * Headings are preserved as ATX-style ``#`` headers.
+    * Links appear as ``[anchor text](https://absolute-url)`` so the LLM
+      always sees link context and destination together.
+    * Images are removed (noise).
+    * Relative URLs are resolved to absolute using *base_url*.
+
+    Returns:
+        ``(markdown_text, [(absolute_url, anchor_text), ...])``
+    """
+    # Remove noise tags entirely (content stripped, not just the tag).
+    soup = BeautifulSoup(html, "html.parser")
+    for noise_tag in soup.find_all(
+        ["script", "style", "noscript", "template"]
+    ):
+        noise_tag.decompose()
+
+    # Convert to Markdown.
+    md = _md_convert(
+        str(soup),
+        heading_style="ATX",
+        bullets="-",
+    )
+
+    # Normalise excessive blank lines produced by block-level elements.
+    md = re.sub(r"\n{3,}", "\n\n", md).strip()
+
+    # Resolve relative link URLs to absolute and build the link list.
+    links: list[tuple[str, str]] = []
+    seen_urls: set[str] = set()
+
+    def _resolve_link(m: re.Match[str]) -> str:
+        anchor = m.group(1)
+        href = m.group(2).strip()
+        if href.startswith(("#", "mailto:", "javascript:")):
+            # Non-navigable — keep anchor text, drop the link syntax.
+            return anchor
+        absolute = urljoin(base_url, href)
+        if urlparse(absolute).scheme not in ("http", "https"):
+            return anchor
+        if absolute not in seen_urls:
+            seen_urls.add(absolute)
+            links.append((absolute, anchor))
+        return f"[{anchor}]({absolute})"
+
+    md = re.sub(r"\[([^\]]*)\]\(([^)]+)\)", _resolve_link, md)
+
+    # Remove image markdown (noise for LLM consumption).
+    md = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", md)
+    md = re.sub(r"\n{3,}", "\n\n", md).strip()
+
+    return md, links
+
+
+# Backward-compatible alias — existing code and tests may import _html_to_text.
+_html_to_text = _html_to_markdown
 
 
 # ---------------------------------------------------------------------------
@@ -458,6 +460,25 @@ def _call_llm(
             except json.JSONDecodeError:
                 pass
         return {}
+
+
+def _call_llm_text(
+    client: Any,
+    model: str,
+    messages: list[dict[str, str]],
+) -> str:
+    """Call the LLM chat completions API and return the raw text response.
+
+    Unlike :func:`_call_llm`, this function does **not** set
+    ``response_format=json_object`` — it is intended for reasoning /
+    chain-of-thought passes where free-form text is more appropriate than
+    structured JSON output.
+    """
+    response = client.chat.completions.create(
+        model=model,
+        messages=messages,
+    )
+    return (response.choices[0].message.content or "").strip()
 
 
 # ---------------------------------------------------------------------------
@@ -705,13 +726,27 @@ class BioschemasExtractorAgent:
                 except requests.RequestException as exc:
                     log(f"  Could not fetch detail page: {exc}")
 
-            item_text, _ = _html_to_text(item_html or "", item_info.url or url)
+            item_text, _ = _html_to_markdown(item_html or "", item_info.url or url)
             content_for_extraction = item_text[:MAX_EXTRACTION_CONTENT]
 
+            # --- Chain-of-thought reasoning pass (step 2a) ---
+            # The LLM writes free-text notes about what metadata it can
+            # find before committing to a structured JSON format.  This
+            # improves accuracy for smaller models by separating "what
+            # information is here?" from "format it as JSON-LD".
+            log(f"  Reasoning about {item_info.title!r}")
+            reasoning = self._reason_about_item(
+                item_info=item_info,
+                content=content_for_extraction,
+                llm_client=llm_client,
+            )
+
+            # --- Extraction (step 2b) ---
             extracted = self._extract_item(
                 item_info=item_info,
                 content=content_for_extraction,
                 prompt=prompt,
+                reasoning=reasoning,
                 llm_client=llm_client,
                 log=log,
             )
@@ -815,9 +850,9 @@ class BioschemasExtractorAgent:
             f"{len(html)} chars, hash={page_hash[:12]}…"
         )
 
-        # Convert HTML → clean text with inline link annotations
-        text, _ = _html_to_text(html, start_url)
-        chunks = _chunk_text(text)
+        # Convert HTML → Markdown (strips noise, preserves table row structure)
+        md_text, _ = _html_to_markdown(html, start_url)
+        chunks = _chunk_text(md_text)
         total_chunks = len(chunks)
         log(f"  Processing {total_chunks} chunk(s)")
 
@@ -924,16 +959,76 @@ class BioschemasExtractorAgent:
         ]
         return _call_llm(llm_client, get_model_for_task("content_relevance"), messages)
 
+    def _reason_about_item(
+        self,
+        item_info: DiscoveredItem,
+        content: str,
+        llm_client: Any,
+    ) -> str:
+        """Produce a chain-of-thought reasoning scratchpad for a single item.
+
+        The LLM is asked to read the page content and write concise free-text
+        notes about every metadata field it can identify — **without** producing
+        JSON.  This separates "what information is here?" from "format it as
+        JSON-LD", reducing cognitive load and improving accuracy for smaller
+        models.
+
+        The resulting notes are passed as additional context to the subsequent
+        :meth:`_extract_item` call (step 2b of the extraction phase).
+        """
+        messages: list[dict[str, str]] = [
+            {
+                "role": "user",
+                "content": (
+                    "You are about to extract Bioschemas JSON-LD metadata for "
+                    "a training item. First, carefully read the page content "
+                    "below and write brief notes on what metadata you can find. "
+                    "Cover:\n"
+                    "- Type (LearningResource for training material / tutorial, "
+                    "CourseInstance for scheduled event / workshop)\n"
+                    "- Title (exact wording from the page)\n"
+                    "- Description (key points in 2–5 sentences)\n"
+                    "- Authors / instructors (and ORCIDs if visible)\n"
+                    "- Dates (start/end; note if absent)\n"
+                    "- Location or mode (online / onsite / blended)\n"
+                    "- Scientific topics / keywords\n"
+                    "- Educational level and target audience\n"
+                    "- License\n"
+                    "- Language\n"
+                    "- Any other fields evident in the content\n\n"
+                    "Write concise notes in plain text. "
+                    "Do NOT produce JSON yet.\n\n"
+                    f"Item: {item_info.title} ({item_info.item_type})\n"
+                    f"URL: {item_info.url}\n"
+                    f"Context hint: {item_info.context}\n\n"
+                    f"Page content:\n{content}"
+                ),
+            },
+        ]
+        return _call_llm_text(llm_client, get_model_for_task("metadata_analysis"), messages)
+
     def _extract_item(
         self,
         item_info: DiscoveredItem,
         content: str,
         prompt: str | None,
+        reasoning: str | None,
         llm_client: Any,
         log: Callable[[str], None],
     ) -> dict[str, Any]:
-        """Extract Bioschemas JSON-LD for a single discovered item."""
+        """Extract Bioschemas JSON-LD for a single discovered item.
+
+        *reasoning* is the chain-of-thought scratchpad produced by
+        :meth:`_reason_about_item` (step 2a).  When provided it is included
+        in the prompt as additional context so the model does not need to
+        re-analyse the page from scratch.
+        """
         extra = f"\nAdditional instructions: {prompt}\n" if prompt else ""
+        reasoning_section = (
+            f"\n\nYour prior analysis of this item:\n{reasoning}\n"
+            if reasoning
+            else ""
+        )
 
         # TODO (issue #6): insert candidate ontology terms here once ontology
         #   vector search is implemented (see TODO.md item 6).
@@ -943,12 +1038,12 @@ class BioschemasExtractorAgent:
             {
                 "role": "user",
                 "content": (
-                    f"Extract Bioschemas JSON-LD for this training item.\n\n"
+                    f"Extract Bioschemas JSON-LD for this training item."
+                    f"{reasoning_section}{extra}\n\n"
                     f"Title: {item_info.title}\n"
                     f"URL: {item_info.url}\n"
                     f"Type: {item_info.item_type}\n"
-                    f"Context: {item_info.context}\n"
-                    f"{extra}\n"
+                    f"Context: {item_info.context}\n\n"
                     "Output a single valid Bioschemas JSON-LD object.\n\n"
                     f"Page content:\n{content}"
                 ),

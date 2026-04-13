@@ -211,8 +211,9 @@ def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -
 
     # LLM responses in order:
     # 1. chunk classification (1 chunk for small HTML)
-    # 2. extraction
-    # 3. review
+    # 2. reasoning scratchpad (chain-of-thought, free text)
+    # 3. extraction
+    # 4. review
     chunk_classification = json.dumps(
         {
             "relevant": True,
@@ -226,6 +227,10 @@ def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -
             ],
             "follow_links": [],
         }
+    )
+    reasoning_text = (
+        "Type: LearningResource. Title: Bioinformatics Workshop. "
+        "Description: An introduction to bioinformatics tools and techniques."
     )
     extraction = json.dumps(
         {
@@ -242,7 +247,7 @@ def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -
     )
     review = extraction  # reviewed version same as extracted
 
-    client = MockLLMClient([chunk_classification, extraction, review])
+    client = MockLLMClient([chunk_classification, reasoning_text, extraction, review])
 
     logs: list[str] = []
     agent = BioschemasExtractorAgent()
@@ -271,6 +276,10 @@ def test_agent_validates_required_fields(monkeypatch: pytest.MonkeyPatch) -> Non
     monkeypatch.setattr("requests.get", lambda *args, **kwargs: mock_response)
 
     # 1. chunk classification
+    # 2. reasoning scratchpad (chain-of-thought, free text)
+    # 3. Extraction missing required fields (name, description, keywords)
+    # 4. Review doesn't fix it
+    # 5. Fix call returns a valid object
     chunk_class = json.dumps(
         {
             "relevant": True,
@@ -285,16 +294,17 @@ def test_agent_validates_required_fields(monkeypatch: pytest.MonkeyPatch) -> Non
             "follow_links": [],
         }
     )
-    # 2. Extraction missing required fields (name, description, keywords)
+    reasoning_text = "Type: LearningResource. Title: Workshop. No dates visible."
+    # 3. Extraction missing required fields (name, description, keywords)
     bad_extraction = json.dumps(
         {
             "@context": "https://schema.org",
             "@type": "LearningResource",
         }
     )
-    # 3. Review doesn't fix it
+    # 4. Review doesn't fix it
     reviewed_still_bad = bad_extraction
-    # 4. Fix call returns a valid object
+    # 5. Fix call returns a valid object
     fixed = json.dumps(
         {
             "@context": {"@vocab": "https://schema.org/", "dct": "http://purl.org/dc/terms/"},
@@ -309,7 +319,7 @@ def test_agent_validates_required_fields(monkeypatch: pytest.MonkeyPatch) -> Non
         }
     )
 
-    client = MockLLMClient([chunk_class, bad_extraction, reviewed_still_bad, fixed])
+    client = MockLLMClient([chunk_class, reasoning_text, bad_extraction, reviewed_still_bad, fixed])
 
     agent = BioschemasExtractorAgent()
     result = agent.run(
@@ -334,6 +344,10 @@ def test_agent_applies_tess_conventions(monkeypatch: pytest.MonkeyPatch) -> None
     monkeypatch.setattr("requests.get", lambda *args, **kwargs: _make_response(page_html))
 
     # 1. chunk classification
+    # 2. reasoning scratchpad (chain-of-thought, free text)
+    # 3. Extraction: missing dct:conformsTo, simple @context string
+    # 4. Review returns same
+    # 5. Fix (in case schema validation triggers it) — returns same valid item
     chunk_class = json.dumps(
         {
             "relevant": True,
@@ -348,7 +362,8 @@ def test_agent_applies_tess_conventions(monkeypatch: pytest.MonkeyPatch) -> None
             "follow_links": [],
         }
     )
-    # 2. Extraction: missing dct:conformsTo, simple @context string
+    reasoning_text = "Type: LearningResource. Title: Course. A great course."
+    # 3. Extraction: missing dct:conformsTo, simple @context string
     extraction = json.dumps(
         {
             "@context": "https://schema.org",
@@ -358,12 +373,12 @@ def test_agent_applies_tess_conventions(monkeypatch: pytest.MonkeyPatch) -> None
             "keywords": ["course"],
         }
     )
-    # 3. Review returns same
+    # 4. Review returns same
     review = extraction
-    # 4. Fix (in case schema validation triggers it) — returns same valid item
+    # 5. Fix (in case schema validation triggers it) — returns same valid item
     fix = extraction
 
-    client = MockLLMClient([chunk_class, extraction, review, fix])
+    client = MockLLMClient([chunk_class, reasoning_text, extraction, review, fix])
 
     agent = BioschemasExtractorAgent()
     result = agent.run(
