@@ -727,12 +727,12 @@ class BioschemasExtractorAgent:
             # validate them (dct:conformsTo, @context, @id).
             reviewed = _apply_tess_conventions(reviewed, item_info.url or url)
             errors = _validate_with_schema(reviewed)
-            for _attempt in range(MAX_FIX_ATTEMPTS):
+            for attempt in range(MAX_FIX_ATTEMPTS):
                 if not errors:
                     break
                 log(
                     f"  Validation errors ({len(errors)}); requesting fix from LLM"
-                    f" (attempt {_attempt + 1}/{MAX_FIX_ATTEMPTS})"
+                    f" (attempt {attempt + 1}/{MAX_FIX_ATTEMPTS})"
                 )
                 fixed = self._fix_item(
                     item=reviewed,

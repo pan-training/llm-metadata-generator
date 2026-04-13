@@ -317,6 +317,9 @@ def _register_integration_test_cli(app: Flask) -> None:
 
             error: str | None = None
             try:
+                # items is populated incrementally via on_item so that partial
+                # results are written to result.json even if the agent raises
+                # an exception mid-run (e.g. rate-limit error after N items).
                 agent.run(
                     url=site_url,
                     prompt=site_prompt,  # type: ignore[arg-type]
