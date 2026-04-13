@@ -13,9 +13,8 @@ from app.agents.bioschemas import (
     BioschemasExtractorAgent,
     NotTrainingContentError,
     _content_hash,
-    _extract_links,
+    _html_to_markdown,
     _chunk_text,
-    _html_to_text,
 )
 
 
@@ -87,44 +86,45 @@ def test_content_hash_differs_for_different_inputs() -> None:
     assert _content_hash("abc") != _content_hash("def")
 
 
-def test_extract_links_finds_absolute_links() -> None:
-    html = '<a href="https://example.com/page">Link</a>'
-    links = _extract_links(html, "https://example.com")
-    assert "https://example.com/page" in links
-
-
-def test_extract_links_resolves_relative_links() -> None:
-    html = '<a href="/courses/intro">Intro</a>'
-    links = _extract_links(html, "https://example.com")
-    assert "https://example.com/courses/intro" in links
-
-
-def test_extract_links_skips_hash_and_mailto() -> None:
-    html = '<a href="#top">Top</a><a href="mailto:a@b.com">Email</a>'
-    links = _extract_links(html, "https://example.com")
-    assert links == []
-
-
-def test_extract_links_deduplicates() -> None:
-    html = '<a href="/page">A</a><a href="/page">B</a>'
-    links = _extract_links(html, "https://example.com")
-    assert links.count("https://example.com/page") == 1
-
-
-def test_html_to_text_strips_scripts() -> None:
+def test_html_to_markdown_strips_scripts() -> None:
     html = "<html><head><script>var x=1;</script></head><body><p>Hello</p></body></html>"
-    text, _ = _html_to_text(html, "https://example.com")
+    text, _ = _html_to_markdown(html, "https://example.com")
     assert "Hello" in text
     assert "var x" not in text
 
 
-def test_html_to_text_includes_link_context() -> None:
+def test_html_to_markdown_includes_link_context() -> None:
     html = '<a href="https://example.com/course">RNA-Seq Tutorial</a>'
-    text, links = _html_to_text(html, "https://example.com")
+    text, links = _html_to_markdown(html, "https://example.com")
     assert "RNA-Seq Tutorial" in text
     assert "https://example.com/course" in text
     assert len(links) == 1
     assert links[0][0] == "https://example.com/course"
+
+
+def test_html_to_markdown_resolves_relative_links() -> None:
+    html = '<a href="/courses/intro">Intro</a>'
+    _, links = _html_to_markdown(html, "https://example.com")
+    assert any(url == "https://example.com/courses/intro" for url, _ in links)
+
+
+def test_html_to_markdown_skips_hash_and_mailto() -> None:
+    html = '<a href="#top">Top</a><a href="mailto:a@b.com">Email</a>'
+    _, links = _html_to_markdown(html, "https://example.com")
+    assert links == []
+
+
+def test_html_to_markdown_deduplicates_links() -> None:
+    html = '<a href="/page">A</a><a href="/page">B</a>'
+    _, links = _html_to_markdown(html, "https://example.com")
+    assert len([u for u, _ in links if u == "https://example.com/page"]) == 1
+
+
+def test_html_to_markdown_keeps_images() -> None:
+    """Images are kept (TeSS displays them in training material descriptions)."""
+    html = '<img src="https://example.com/img.png" alt="diagram">'
+    text, _ = _html_to_markdown(html, "https://example.com")
+    assert "img.png" in text
 
 
 def test_chunk_text_returns_single_chunk_for_short_text() -> None:
@@ -412,3 +412,122 @@ def test_agent_handles_http_403_as_access_denied(monkeypatch: pytest.MonkeyPatch
             url="https://example.com/protected",
             llm_client=MockLLMClient([]),
         )
+
+
+def test_agent_discovers_multiple_items_from_single_chunk(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Chunk classification can return multiple items; all are extracted."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+
+    # Page listing two courses in one paragraph (or one table chunk)
+    page_html = """
+    <html><body>
+      <p>
+        Join <strong>Intro to Python</strong> (https://example.com/python) or
+        <strong>Advanced R</strong> (https://example.com/r) this semester.
+      </p>
+    </body></html>
+    """
+    monkeypatch.setattr("requests.get", lambda *args, **kwargs: _make_response(page_html))
+
+    # Chunk classification returns TWO items from the single chunk
+    chunk_classification = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Intro to Python",
+                    "url": "https://example.com/python",
+                    "item_type": "TrainingMaterial",
+                    "context": "Intro to Python course",
+                },
+                {
+                    "title": "Advanced R",
+                    "url": "https://example.com/r",
+                    "item_type": "TrainingMaterial",
+                    "context": "Advanced R course",
+                },
+            ],
+            "follow_links": [],
+        }
+    )
+
+    def _make_item(title: str, url: str) -> str:
+        return json.dumps(
+            {
+                "@type": "LearningResource",
+                "name": title,
+                "description": f"A course on {title}.",
+                "keywords": ["course"],
+                "url": url,
+            }
+        )
+
+    item1 = _make_item("Intro to Python", "https://example.com/python")
+    item2 = _make_item("Advanced R", "https://example.com/r")
+
+    # Responses: classify, reason1, extract1, review1, reason2, extract2, review2
+    reasoning = "Type: LearningResource. Title visible. No dates."
+    client = MockLLMClient(
+        [chunk_classification, reasoning, item1, item1, reasoning, item2, item2]
+    )
+
+    agent = BioschemasExtractorAgent()
+    result = agent.run(url="https://example.com/courses", llm_client=client)
+
+    assert len(result) == 2
+    names = {r["name"] for r in result}
+    assert names == {"Intro to Python", "Advanced R"}
+
+
+def test_agent_on_item_callback_called_per_item(monkeypatch: pytest.MonkeyPatch) -> None:
+    """on_item callback is invoked once per extracted item."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+    monkeypatch.setattr(
+        "requests.get",
+        lambda *a, **kw: _make_response("<html><body>Workshop</body></html>"),
+    )
+
+    chunk_class = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Workshop",
+                    "url": "https://example.com/ws",
+                    "item_type": "TrainingMaterial",
+                    "context": "Workshop",
+                }
+            ],
+            "follow_links": [],
+        }
+    )
+    item = json.dumps(
+        {
+            "@type": "LearningResource",
+            "name": "Workshop",
+            "description": "A workshop.",
+            "keywords": ["workshop"],
+        }
+    )
+    reasoning = "Type: LearningResource. Title: Workshop."
+    client = MockLLMClient([chunk_class, reasoning, item, item])
+
+    received: list[dict[str, Any]] = []
+    agent = BioschemasExtractorAgent()
+    result = agent.run(
+        url="https://example.com/ws",
+        llm_client=client,
+        on_item=received.append,
+    )
+
+    assert len(received) == 1
+    assert received[0]["name"] == "Workshop"
+    assert result == received

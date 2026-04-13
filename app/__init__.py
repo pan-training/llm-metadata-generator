@@ -296,20 +296,34 @@ def _register_integration_test_cli(app: Flask) -> None:
             )
 
             log_entries: list[str] = []
+            log_file = run_dir / "log.txt"
+            log_fh = log_file.open("w", encoding="utf-8")
 
             def _log(msg: str) -> None:
                 log_entries.append(msg)
                 click.echo(f"  {msg}")
+                log_fh.write(msg + "\n")
+                log_fh.flush()
 
             items: list[dict[str, object]] = []
+
+            def _on_item(item: dict[str, object]) -> None:
+                """Write partial result.json after each item is extracted."""
+                items.append(item)
+                (run_dir / "result.json").write_text(
+                    json.dumps(items, indent=2, ensure_ascii=False),
+                    encoding="utf-8",
+                )
+
             error: str | None = None
             try:
-                items = agent.run(
+                agent.run(
                     url=site_url,
                     prompt=site_prompt,  # type: ignore[arg-type]
                     structural_summary=None,
                     llm_client=client,
                     log_fn=_log,
+                    on_item=_on_item,
                 )
             except AccessDeniedError as exc:
                 error = f"AccessDeniedError: {exc}"
@@ -320,14 +334,11 @@ def _register_integration_test_cli(app: Flask) -> None:
             except Exception as exc:  # Note: Exception intentionally excludes BaseException
                 error = f"{type(exc).__name__}: {exc}"
                 click.echo(f"  UNEXPECTED ERROR: {error}", err=True)
+            finally:
+                log_fh.close()
 
-            # Save agent log.
-            (run_dir / "log.txt").write_text(
-                "\n".join(log_entries),
-                encoding="utf-8",
-            )
-
-            # Validate items (annotates in-place with _validation key) and save.
+            # Validate items (annotates in-place with _validation key) and
+            # overwrite result.json with the annotated version.
             validation_lines = _format_validation_errors(items, schema)
             (run_dir / "result.json").write_text(
                 json.dumps(items, indent=2, ensure_ascii=False),

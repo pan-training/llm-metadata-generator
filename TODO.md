@@ -69,24 +69,11 @@ page hashes and URL patterns — used on next run to skip unchanged content.
 - Raises `NotTrainingContentError` when no training content found.
 
 Future improvements (not yet implemented — see items below):
-- **3a** Persist robots.txt cache across cron runs for frequently-crawled domains.
-- **3b** Multi-depth paginated link following (e.g. `/courses/?page=N`).
 - **3c** Structured agent logger with typed events (info/warn/llm_call/…) for
   richer display in the session viewer (replaces the current string-based `log_fn`).
+  See issue 8 below.
 - **3d** Per-item incremental updates: compare per-item content hash against stored
   result to skip re-extraction of unchanged items (builds on issue 4).
-- **3e** Try `response_format={"type":"json_schema",…}` for backends that support
-  OpenAI structured outputs; fall back to `json_object` if unsupported (issue 7).
-- **3f** ✅ Done (baked into issue 3 implementation): HTML→Markdown conversion via
-  `markdownify` so tables become row-structured Markdown tables, heading hierarchy
-  is preserved, and scripts/styles are removed entirely before chunking.
-- **3g** ✅ Done: Chain-of-thought "reasoning scratchpad" step before JSON-LD
-  extraction — the LLM writes free-text notes about observable metadata fields
-  (step 2a) before producing structured JSON (step 2b), improving accuracy for
-  smaller models.
-- **3h** Table-aware chunking: improve `_chunk_text` to prefer splitting at
-  Markdown table row boundaries (between ``|…|`` lines) so that table rows
-  are never cut mid-row by the fixed-size chunker.
 
 ### API endpoints (`app/api/collection.py`, `app/api/resource.py`)
 
@@ -224,6 +211,7 @@ This issue replaces the three-tier approach with per-task model assignments stor
 
 - `get_llm_client(task)` looks up the preferred model for the given fine-grained task from the `model_assignments` table. Tasks: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `metadata_analysis` (chain-of-thought reasoning scratchpad), `ontology_embedding`, `tool_discovery`, `model_selection`. Falls back to `LLM_MODEL_LARGE` env var.
 - The `model_assignments` table includes a version history so previous assignments can be restored if a new selection is worse (e.g. a previously available model disappears).
+- Try `response_format={"type":"json_schema",…}` for backends that support OpenAI structured outputs; fall back to `json_object` if unsupported.
 
 ### Model-selector agent (`app/agents/model_selector.py`)
 
@@ -257,3 +245,17 @@ Polish and unify the admin UI built incrementally across issues 5–7:
 - Ensure all admin routes check `is_admin` flag
 
 Acceptance: an admin user can navigate all admin pages from a single dashboard and see system health at a glance.
+
+---
+
+## 9. Structured agent logger
+
+Replace the current string-based `log_fn` callback in `BioschemasExtractorAgent.run()` with a
+structured logger that emits typed events:
+
+- Define a typed event hierarchy: `InfoEvent`, `WarnEvent`, `LLMCallEvent` (task, model, prompt preview, response preview, latency ms), `FetchEvent` (url, status_code, content_length), `ItemFoundEvent`, `ValidationEvent`.
+- The session viewer (`templates/sessions.html`) renders each event type with appropriate formatting and colour-coding: LLM calls show expandable prompts/responses, fetch events show HTTP status, validation events highlight errors.
+- Keep backward compatibility by providing a `LegacyLogFn` adapter that wraps a plain `Callable[[str], None]` for the integration test runner.
+- Add per-LLM-call timing statistics to the structured log so the integration test summary can report chunk classification counts, relevance rates, and total LLM call durations.
+
+Acceptance: session viewer shows colour-coded event timeline; integration test summary includes per-phase timing statistics.

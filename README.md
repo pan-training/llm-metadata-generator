@@ -44,6 +44,16 @@ Authentication uses **Bearer tokens** (`Authorization: Bearer <token>`). Tokens 
 
 ---
 
+## Session viewer
+
+Browse extraction results and agent logs in a browser without needing `curl` or an API client:
+
+1. Navigate to `http://localhost:5000/sessions`
+2. Log in with your Bearer token (POST form — token never appears in the URL)
+3. See a colour-coded table of sessions with expandable JSON-LD and full agent logs
+
+---
+
 ## Extraction agent architecture
 
 The extraction agent (`app/agents/bioschemas.py`) uses a four-phase pipeline designed to handle arbitrarily large websites without overflowing the LLM context window.
@@ -112,12 +122,16 @@ flask run
 
 ### Without Poetry (pip)
 
+If you cannot use Poetry, install the runtime dependencies with pip:
+
 ```bash
-pip install flask apscheduler requests "openai>=2.0" python-dotenv jsonschema
+pip install flask apscheduler requests "openai>=2.0" python-dotenv jsonschema markdownify beautifulsoup4
 flask db init
 flask users create
 flask run
 ```
+
+> Prefer Poetry — it ensures exact dependency versions as tested in CI.
 
 ### Environment variables
 
@@ -143,12 +157,25 @@ The database is stored in `data/metadata.db` by default. Override with `DATABASE
 ## Running tests
 
 ```bash
-# Install dev dependencies
-pip install flask apscheduler requests "openai>=2.0" python-dotenv pytest mypy "jsonschema>=4.18"
-
-pytest tests/ -v
-mypy app tests
+poetry run pytest tests/ -v
+poetry run mypy app tests
 ```
+
+---
+
+## Integration tests
+
+Run the extraction agent against real websites to evaluate output quality:
+
+```bash
+# Run all pre-configured sites
+flask integration-test run
+
+# Single ad-hoc URL
+flask integration-test run --url https://example.com/training/
+```
+
+Results are saved to `integration_test/results/<site>__<timestamp>/` with a live-updating `log.txt` and incrementally-written `result.json` (partial results visible even if the run is interrupted).  See [`integration_test/README.md`](integration_test/README.md) for full documentation.
 
 ---
 

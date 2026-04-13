@@ -67,18 +67,6 @@ llm-metadata-generator/
     │   └── ci.yml           ✅  GitHub Actions: pytest + mypy on every push
     └── copilot-instructions.md   ✅  ← this file
 ```
-│   └── test_auth.py         📋
-├── config.py                ✅  All config read from environment variables
-├── pyproject.toml           ✅  Poetry project + dependency definitions
-├── .env.example             ✅  Placeholder values for all environment variables
-├── TODO.md                  ✅  Ordered issue-ready todo list
-├── .gitignore               ✅
-├── LICENSE                  ✅
-└── .github/
-    ├── workflows/
-    │   └── ci.yml           ✅  GitHub Actions: pytest + mypy on every push
-    └── copilot-instructions.md   ✅  ← this file
-```
 
 **Schema migrations** will live in `app/db/schema.sql` as plain `CREATE TABLE IF NOT EXISTS` statements. There is no migration framework (no Alembic). When the schema changes, update `schema.sql` and re-run `flask db init` (which re-applies the file idempotently).
 
@@ -106,10 +94,10 @@ llm-metadata-generator/
 - 📋 **Semantic tools** – tools (bio.tools, FAIRsharing, …) are **globally admin-managed** (not per-user). A short one-line description of every configured tool is always included in the extraction agent's system prompt so it is aware of available tools. When the agent decides to use a specific tool, it requests the full detailed description on demand. Tool descriptions are stored in the `semantic_tools` table and refreshed by a cron job.
 - 📋 **LLM configuration** – all LLM calls go through `app/agents/__init__.py:get_llm_client(task)`, which reads `OPENAI_API_BASE`, `OPENAI_API_KEY`, and looks up the preferred model for the given task from the `model_assignments` table. Tasks are fine-grained: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `metadata_analysis` (chain-of-thought reasoning scratchpad before extraction), `ontology_embedding`, `tool_discovery`, `model_selection`.
 - 📋 **Bioschemas / TeSS** – the extraction agent's system prompt includes the Bioschemas TrainingMaterial and CourseInstance profiles and notes about TeSS-specific field usage. Keep this prompt in `app/agents/bioschemas.py`, not in a separate template file.
-- ✅ **File-system paths** – always use `pathlib.Path` for path construction and file I/O; do not use `os.path` or raw string concatenation for paths.
-- ✅ **Modern Python idioms** – prefer built-in modern equivalents over manual workarounds: use `str.removeprefix` / `str.removesuffix` instead of slicing, `X | Y` union types instead of `Optional[X]`, walrus operator where it aids clarity, etc.
-- ✅ **Type annotations** – add type annotations to all public functions and methods. Run `mypy app tests` before finalising any commit to ensure no type errors are introduced.
-- ✅ **TODO.md** – whenever code introduces a `# TODO:` placeholder comment, it must be accompanied by a concrete item in `TODO.md` (added to an existing future issue or a new issue). Mark completed issues in `TODO.md` with **✅ Done** so it is clear which items are future work. When a new `# TODO:` comment is added in code that does not map to an existing future issue, create a new issue entry in `TODO.md` with sufficient detail to become a GitHub issue.
+- ✅ **File-system paths** *(PR #3)* – always use `pathlib.Path` for path construction and file I/O; do not use `os.path` or raw string concatenation for paths.
+- ✅ **Modern Python idioms** *(PR #3)* – prefer built-in modern equivalents over manual workarounds: use `str.removeprefix` / `str.removesuffix` instead of slicing, `X | Y` union types instead of `Optional[X]`, walrus operator where it aids clarity, etc.
+- ✅ **Type annotations** *(PR #3)* – add type annotations to all public functions and methods. Run `mypy app tests` before finalising any commit to ensure no type errors are introduced.
+- ✅ **TODO.md** *(PR #3)* – whenever code introduces a `# TODO:` placeholder comment, it must be accompanied by a concrete item in `TODO.md` (added to an existing future issue or a new issue). Mark completed issues in `TODO.md` with **✅ Done** so it is clear which items are future work. When a new `# TODO:` comment is added in code that does not map to an existing future issue, create a new issue entry in `TODO.md` with sufficient detail to become a GitHub issue.
 
 ---
 

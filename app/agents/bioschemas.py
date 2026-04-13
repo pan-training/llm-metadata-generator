@@ -10,22 +10,18 @@ websites without overflowing the LLM context window.
 1. Fetch the primary URL (respecting robots.txt).
 2. Convert HTML to Markdown (via markdownify / BeautifulSoup4):
    - Scripts, styles, noscript, and template tags are stripped entirely.
-   - Tables become standard Markdown tables (each row on its own line),
-     making tabular training-material catalogues structurally accessible to
-     the LLM without table rows being mangled by the HTML serialisation.
-   - Links appear as ``[anchor text](https://absolute-url)`` so the LLM
-     sees link context (surrounding text + anchor) together.
+   - Tables become standard Markdown tables, links become ``[anchor](url)``.
    - Heading hierarchy is preserved as ATX-style ``#`` headers.
 3. Split the Markdown into overlapping chunks (CHUNK_SIZE chars, CHUNK_OVERLAP
    overlap) so context is never lost across chunk boundaries.
-   # TODO (issue #3 follow-up 3h): add a table-aware split that prefers to
-   #   break at Markdown table row boundaries (between ``|…|`` lines) rather
-   #   than mid-row when a table exceeds CHUNK_SIZE.
 4. For each chunk, call a fast LLM (content_relevance task) to:
    a) decide if the chunk is relevant to training content;
    b) list any training items found in the chunk (title, URL, type);
    c) list any links worth following (with a short reason).
-   All three outputs come from one LLM call per chunk.
+   All three outputs come from one LLM call per chunk.  A single chunk may
+   contain multiple training items (e.g. a table row per item, or a prose
+   paragraph describing two events), and the LLM is expected to return all
+   of them in the ``items`` array.
 5. Recursively follow the identified links up to MAX_FOLLOW_DEPTH, repeating
    steps 2–4 for each new page (up to MAX_TOTAL_PAGES total).
 
@@ -60,11 +56,10 @@ programmatically afterwards (not the model's concern).
 ### Phase 4 – VALIDATE + FIX
 
 JSON schema validation against docs/Bioschemas/bioschemas-training-schema.json
-(Draft 2020-12, via jsonschema).  Validation errors are formatted as a concise
-list and fed back to the LLM for a single fixing pass.
-
-After the fix pass, programmatic TeSS conventions are applied (@context with
-dct namespace, dct:conformsTo, @id) — these are constants, not LLM concerns.
+(Draft 2020-12, via jsonschema).  TeSS programmatic conventions are applied
+first (@context with dct namespace, dct:conformsTo, @id) so that the schema
+can validate them.  Validation errors are then formatted as a concise list
+and fed back to the LLM for up to MAX_FIX_ATTEMPTS fixing passes.
 
 ### Structural summary
 
@@ -114,10 +109,10 @@ CHUNK_OVERLAP = 400  # overlap between consecutive chunks (preserves context)
 # Crawl limits.
 MAX_TOTAL_PAGES = 20     # total pages fetched in one agent run
 MAX_FOLLOW_DEPTH = 2     # maximum link-following depth from the primary URL
-MAX_LINKS_PER_CHUNK = 5  # links the LLM may nominate per chunk
-# TODO (issue #3 follow-up): add a separate higher limit for paginated links
-# (e.g. /courses/?page=N) once multi-depth crawling is implemented.
-MAX_PAGINATED_LINKS = 20  # reserved for future paginated crawl support
+MAX_LINKS_PER_CHUNK = 10  # links the LLM may nominate per chunk
+
+# Validation fix loop.
+MAX_FIX_ATTEMPTS = 1  # maximum schema-fix LLM passes per item
 
 # Maximum characters of item content sent to the extraction LLM.
 MAX_EXTRACTION_CONTENT = 8000
@@ -136,25 +131,19 @@ _SCHEMA_PATH = (
 )
 
 # ---------------------------------------------------------------------------
-# Embedded system prompt  (content guidance only — structural boilerplate such
-# as @context, @id and dct:conformsTo is added programmatically, so the model
-# does not need to worry about it)
+# Embedded system prompt  (used for extraction, review, and fix phases)
 # ---------------------------------------------------------------------------
 
 _SYSTEM_PROMPT = """\
-You are an expert metadata extractor for training materials, courses, and events
-in life sciences and related research domains.
+You are an expert metadata extractor for scientific training materials, courses,
+and events — including life sciences, physical sciences, and related research
+and education domains.
 Your job is to extract high-quality Bioschemas/Schema.org JSON-LD metadata from
 web-page text.
 
 ## Output a single JSON-LD object
 
-Focus entirely on *content* — the technical boilerplate (@context, @id,
-dct:conformsTo) is added automatically after your output.
-
 ### For TrainingMaterial / LearningResource
-Required:
-- @type: "LearningResource"
 - name: full title (string)
 - description: 2–5 sentence description (string)
 - keywords: array of lowercase keyword strings
@@ -199,6 +188,16 @@ Strongly recommended:
 - inLanguage: language subtag only ("en", not "English")
 - courseMode: TeSS maps "online" → virtual flag; use exact values listed above
 - organizer vs provider: for events, prefer organizer; provider is the institution
+"""
+
+# ---------------------------------------------------------------------------
+# Chunk classification system prompt  (simpler; not for JSON-LD extraction)
+# ---------------------------------------------------------------------------
+
+_CLASSIFY_SYSTEM_PROMPT = """\
+You are an expert at identifying scientific training content on web pages.
+Your task is to classify a text chunk from a website and identify any training
+materials, courses, or events it describes.  You do NOT produce JSON-LD here.
 """
 
 # ---------------------------------------------------------------------------
@@ -251,11 +250,6 @@ class _CrawlState:
 
 
 # ---------------------------------------------------------------------------
-# HTML → clean text with inline link annotations
-# ---------------------------------------------------------------------------
-
-
-# ---------------------------------------------------------------------------
 # HTML → Markdown with inline link annotations
 # ---------------------------------------------------------------------------
 
@@ -270,12 +264,14 @@ def _html_to_markdown(
     * ``<script>``, ``<style>``, ``<noscript>``, and ``<template>`` tags are
       **removed entirely** (content and tag) before conversion.
     * Tables become standard Markdown table syntax — each row is on its own
-      line, which allows the LLM to understand catalogue/listing pages that
-      present multiple training items in table format.
+      line, preserving the column-per-attribute structure that many training
+      catalogues use.  A single chunk may contain multiple training items,
+      and the LLM is expected to return all of them.
     * Headings are preserved as ATX-style ``#`` headers.
     * Links appear as ``[anchor text](https://absolute-url)`` so the LLM
       always sees link context and destination together.
-    * Images are removed (noise).
+    * Images are kept as ``![alt](url)`` — TeSS displays images embedded in
+      training-material descriptions.
     * Relative URLs are resolved to absolute using *base_url*.
 
     Returns:
@@ -317,28 +313,9 @@ def _html_to_markdown(
         return f"[{anchor}]({absolute})"
 
     md = re.sub(r"\[([^\]]*)\]\(([^)]+)\)", _resolve_link, md)
-
-    # Remove image markdown (noise for LLM consumption).
-    md = re.sub(r"!\[[^\]]*\]\([^)]*\)", "", md)
     md = re.sub(r"\n{3,}", "\n\n", md).strip()
 
     return md, links
-
-
-# Backward-compatible alias — existing code and tests may import _html_to_text.
-_html_to_text = _html_to_markdown
-
-
-# ---------------------------------------------------------------------------
-# Legacy helper kept for backward compatibility with existing tests
-# ---------------------------------------------------------------------------
-
-
-def _extract_links(html: str, base_url: str) -> list[str]:
-    """Return deduplicated absolute URLs extracted from <a> tags in *html*."""
-    _, links = _html_to_text(html, base_url)
-    # dict.fromkeys preserves insertion order while deduplicating
-    return list(dict.fromkeys(url for url, _ in links))
 
 
 # ---------------------------------------------------------------------------
@@ -392,8 +369,6 @@ def _check_robots(
     *cache* is a per-crawl-session dict keyed by netloc; pass the same dict
     across all calls in one agent run to avoid re-fetching robots.txt for the
     same domain.
-    # TODO (issue #3 follow-up): persist the robots cache across cron runs to
-    #   reduce repeated fetches for frequently-crawled domains.
     """
     if cache is None:
         cache = {}
@@ -571,13 +546,10 @@ def compute_structural_summary(
 ) -> str:
     """Produce a compact site-structure summary for future incremental runs.
 
-    The summary describes *how to navigate* the site (crawled pages and their
-    content hashes, URL patterns) — not the content of each item (which is
-    already stored in sessions.result_json).  On the next run the agent
-    compares page hashes to identify changed pages and focuses only on those.
-
-    TODO (issue #4): when multi-depth crawling is implemented, also record
-      pagination patterns (e.g. ``?page=N``) and per-item URL templates.
+    The summary describes *how to navigate* the site — not the content of each
+    item (which is already stored in sessions.result_json).  On the next run
+    the agent compares page hashes to identify changed pages and focuses only
+    on those.
     """
     from datetime import datetime, timezone
 
@@ -588,18 +560,6 @@ def compute_structural_summary(
         if i.get("url") or i.get("@id")
     ]
 
-    # Derive a common URL path prefix as a simple navigation hint
-    paths = [urlparse(u).path for u in item_urls if u]
-    common_prefix = ""
-    if len(paths) > 1:
-        # Find longest common prefix of paths
-        common_prefix = paths[0]
-        for p in paths[1:]:
-            while common_prefix and not p.startswith(common_prefix):
-                common_prefix = common_prefix.rsplit("/", 1)[0] + "/"
-            if not common_prefix:
-                break
-
     return json.dumps(
         {
             "source_url": source_url,
@@ -607,7 +567,6 @@ def compute_structural_summary(
             "last_extracted": datetime.now(timezone.utc).isoformat(),
             "item_count": len(items),
             "item_urls": item_urls[:100],  # cap to avoid huge payloads
-            "item_url_common_prefix": common_prefix,
             "crawled_page_hashes": crawled_page_hashes or {},
         },
         ensure_ascii=False,
@@ -642,6 +601,7 @@ class BioschemasExtractorAgent:
         structural_summary: str | None = None,
         llm_client: Any = None,
         log_fn: Callable[[str], None] | None = None,
+        on_item: Callable[[dict[str, Any]], None] | None = None,
     ) -> list[dict[str, Any]]:
         """Extract Bioschemas JSON-LD from the given URL.
 
@@ -654,9 +614,9 @@ class BioschemasExtractorAgent:
                 Pass ``None`` for a full refresh.
             llm_client: An OpenAI-compatible client instance (required).
             log_fn: Optional callable that receives progress messages.
-                # TODO (issue #3 follow-up): replace with a structured logger
-                #   class that can emit typed events (info/warning/llm_call/…)
-                #   for richer display in the session viewer HTML template.
+            on_item: Optional callback invoked with each fully processed
+                JSON-LD item as it is produced (before the final list is
+                returned).  Useful for streaming / partial result persistence.
 
         Returns:
             List of Bioschemas JSON-LD dicts.
@@ -763,21 +723,29 @@ class BioschemasExtractorAgent:
             )
 
             # --- Validate + fix ---
+            # Apply programmatic TeSS conventions first so the schema can
+            # validate them (dct:conformsTo, @context, @id).
+            reviewed = _apply_tess_conventions(reviewed, item_info.url or url)
             errors = _validate_with_schema(reviewed)
-            if errors:
+            for _attempt in range(MAX_FIX_ATTEMPTS):
+                if not errors:
+                    break
                 log(
                     f"  Validation errors ({len(errors)}); requesting fix from LLM"
+                    f" (attempt {_attempt + 1}/{MAX_FIX_ATTEMPTS})"
                 )
                 fixed = self._fix_item(
                     item=reviewed,
                     errors=errors,
                     llm_client=llm_client,
                 )
-                reviewed = fixed if fixed else reviewed
+                if fixed:
+                    reviewed = _apply_tess_conventions(fixed, item_info.url or url)
+                    errors = _validate_with_schema(reviewed)
 
-            # Apply programmatic TeSS conventions (constants, not LLM concern)
-            final = _apply_tess_conventions(reviewed, item_info.url or url)
-            final_items.append(final)
+            final_items.append(reviewed)
+            if on_item:
+                on_item(reviewed)
 
         log(f"Extraction complete: {len(final_items)} item(s)")
         return final_items
@@ -842,16 +810,19 @@ class BioschemasExtractorAgent:
             return
 
         html = response.text
-        page_hash = _content_hash(html)
         state.pages[start_url] = html
-        state.page_hashes[start_url] = page_hash
         log(
             f"  Page {len(state.pages)}/{MAX_TOTAL_PAGES}: "
-            f"{len(html)} chars, hash={page_hash[:12]}…"
+            f"{len(html)} chars"
         )
 
-        # Convert HTML → Markdown (strips noise, preserves table row structure)
+        # Convert HTML → Markdown first; hash the stable Markdown content so
+        # that cosmetic HTML changes (whitespace, inline styles, CDN URLs)
+        # don't trigger unnecessary re-extraction.
         md_text, _ = _html_to_markdown(html, start_url)
+        page_hash = _content_hash(md_text)
+        state.page_hashes[start_url] = page_hash
+        log(f"  Markdown hash={page_hash[:12]}…")
         chunks = _chunk_text(md_text)
         total_chunks = len(chunks)
         log(f"  Processing {total_chunks} chunk(s)")
@@ -939,7 +910,7 @@ class BioschemasExtractorAgent:
                 pass
 
         messages: list[dict[str, str]] = [
-            {"role": "system", "content": _SYSTEM_PROMPT},
+            {"role": "system", "content": _CLASSIFY_SYSTEM_PROMPT},
             {
                 "role": "user",
                 "content": (
@@ -1067,8 +1038,6 @@ class BioschemasExtractorAgent:
                     "Focus on: completeness of metadata fields, correct @type, accurate "
                     "keywords array, valid courseMode values, ORCID in author/@id when "
                     "available, ISO 8601 dates.\n"
-                    "Do NOT worry about @context or dct:conformsTo — those are added "
-                    "automatically after your output.\n\n"
                     "Return the complete improved JSON-LD object.\n\n"
                     f"Source content (excerpt):\n{content[:2000]}\n\n"
                     f"Current JSON-LD:\n{json.dumps(item, indent=2)}"
