@@ -5,7 +5,6 @@ GET /sessions         – session viewer protected by signed cookie
 GET /sessions/login   – show the login form
 """
 
-import flask
 from flask import Blueprint, Response, redirect, render_template, request, session, url_for
 from flask.typing import ResponseReturnValue
 

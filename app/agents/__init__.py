@@ -1,7 +1,7 @@
 """LLM client factory and task-to-model mapping."""
 
-from openai import OpenAI
 from flask import current_app
+from openai import OpenAI
 
 # Task-to-model default mapping. In future these will be looked up from model_assignments table.
 TASK_MODELS: dict[str, str] = {
