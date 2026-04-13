@@ -1,0 +1,47 @@
+[
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "@id": "https://example.org/materials/neutron-training",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "url": "https://example.org/materials/neutron-training",
+    "name": "Introduction to Neutron Scattering Techniques",
+    "description": "An introductory e-learning module covering the fundamentals of neutron scattering for materials science, including small-angle neutron scattering (SANS), diffraction, and reflectometry.",
+    "keywords": ["neutron scattering", "SANS", "diffraction", "large-scale facility", "materials science"],
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Dr Elena Physicist",
+        "@id": "https://orcid.org/0000-0001-9876-5432"
+      }
+    ],
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron scattering",
+        "url": "https://pan-ontologies.github.io/PaNET/PaNET01160"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Small angle scattering",
+        "url": "https://pan-ontologies.github.io/PaNET/PaNET01124"
+      }
+    ],
+    "learningResourceType": ["e-Learning module"],
+    "educationalLevel": "beginner",
+    "teaches": [
+      "Understand the principles of neutron scattering",
+      "Choose the appropriate neutron technique for a given materials science problem",
+      "Interpret small-angle neutron scattering (SANS) data"
+    ],
+    "timeRequired": "PT2H"
+  }
+]

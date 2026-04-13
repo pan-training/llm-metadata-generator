@@ -1,0 +1,2313 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bioschemas.org/schemas/bioschemas-training-complete.json",
+  "title": "Bioschemas Life Sciences Training — Complete Schema",
+  "description": "A comprehensive JSON Schema covering all three Bioschemas training profiles: TrainingMaterial (v1.1-DRAFT), Course (v1.0-RELEASE), and CourseInstance (v1.0-RELEASE). Each profile definition includes full property descriptions, marginality annotations (Minimum/Recommended/Optional), cardinality, controlled-vocabulary guidance, TeSS-ingestion notes, and concrete examples. Use this schema both for validation of JSON-LD payloads and as authoritative documentation when generating Bioschemas markup.",
+  "$comment": "Sources: bioschemas.org profile pages for TrainingMaterial/1.1-DRAFT, Course/1.0-RELEASE, CourseInstance/1.0-RELEASE; TeSS RDF extractor documentation. Best-practice summary: (1) Always include @context, @type, @id, name, description, keywords, dct:conformsTo. (2) Use ORCID URIs in author/@id. (3) Use ontology URIs in about[].url — EDAM (http://edamontology.org/) is the primary ontology for life-science topics, but other domain ontologies are equally valid: PaNET (https://pan-ontologies.github.io/PaNET/) covers photon/neutron and large-scale facility science, and further ontologies (e.g. NCI Thesaurus, MeSH, OBI) may be used for their respective domains. The llm-metadata-generator is designed to support multiple configurable ontologies — see TODO.md item 6. (4) Use DOIs in identifier. (5) Use ISO 8601 for all dates and durations. (6) Use SPDX short identifiers or CC-BY URLs for license. (7) Use IETF BCP 47 language codes (e.g. 'en', 'en-GB') for inLanguage. (8) Link Course to its CourseInstance(s) via hasCourseInstance.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "oneOf": [
+      {
+        "$ref": "#/$defs/TrainingMaterial"
+      },
+      {
+        "$ref": "#/$defs/Course"
+      },
+      {
+        "$ref": "#/$defs/CourseInstance"
+      }
+    ]
+  },
+  "examples": [
+    [
+      {
+        "@context": {
+          "@vocab": "https://schema.org/",
+          "dct": "http://purl.org/dc/terms/"
+        },
+        "@type": "LearningResource",
+        "@id": "https://example.org/materials/rl1",
+        "dct:conformsTo": {
+          "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+          "@type": "CreativeWork"
+        },
+        "url": "https://example.org/materials/rl1",
+        "name": "Introduction to Bioinformatics",
+        "description": "A short guide to basic bioinformatics concepts.",
+        "keywords": "bioinformatics, sequencing, tutorial",
+        "identifier": "https://doi.org/10.1234/example.doi",
+        "author": [
+          {
+            "@type": "Person",
+            "name": "Dr Alice Example",
+            "@id": "https://orcid.org/0000-0001-2345-6789"
+          },
+          {
+            "@type": "Person",
+            "name": "Bob Researcher"
+          }
+        ],
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "inLanguage": "en",
+        "about": [
+          {
+            "@type": "DefinedTerm",
+            "name": "Bioinformatics",
+            "url": "http://edamontology.org/topic_0091"
+          }
+        ],
+        "learningResourceType": [
+          "Tutorial"
+        ],
+        "educationalLevel": "beginner",
+        "teaches": [
+          "Understand FASTA format",
+          "Run basic BLAST searches"
+        ]
+      }
+    ],
+    [
+      {
+        "@context": {
+          "@vocab": "https://schema.org/",
+          "dct": "http://purl.org/dc/terms/"
+        },
+        "@type": "Course",
+        "@id": "https://example.org/courses/c1",
+        "dct:conformsTo": {
+          "@id": "https://bioschemas.org/profiles/Course/1.0-RELEASE",
+          "@type": "CreativeWork"
+        },
+        "url": "https://example.org/courses/c1",
+        "name": "Applied Genomics",
+        "description": "A semester-long module on applied genomics.",
+        "keywords": "genomics, assembly, annotation",
+        "about": [
+          {
+            "@type": "DefinedTerm",
+            "name": "Genomics",
+            "url": "http://edamontology.org/topic_0622"
+          }
+        ],
+        "educationalLevel": "intermediate",
+        "license": "https://creativecommons.org/licenses/by/4.0/",
+        "provider": [
+          {
+            "@type": "Organization",
+            "name": "Example University"
+          }
+        ],
+        "hasCourseInstance": [
+          {
+            "@type": "CourseInstance",
+            "@id": "https://example.org/courses/c1/inst1",
+            "dct:conformsTo": {
+              "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+              "@type": "CreativeWork"
+            },
+            "courseMode": [
+              "online"
+            ],
+            "startDate": "2026-09-01",
+            "endDate": "2026-12-15",
+            "location": {
+              "@type": "VirtualLocation",
+              "name": "Zoom",
+              "url": "https://zoom.example/meet/abc123"
+            }
+          }
+        ]
+      }
+    ]
+  ],
+  "$defs": {
+    "Context": {
+      "title": "@context",
+      "description": "Used to provide the context (namespaces) for the JSON-LD file. Not needed in other serialisations. Marginality: Minimum.",
+      "$comment": "Best practice: use {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'} to support both schema.org properties and the Dublin Core dct:conformsTo declaration required by Bioschemas.",
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://schema.org/"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "@vocab": {
+              "type": "string",
+              "format": "uri"
+            },
+            "dct": {
+              "type": "string",
+              "const": "http://purl.org/dc/terms/"
+            }
+          },
+          "examples": [
+            {
+              "@vocab": "https://schema.org/",
+              "dct": "http://purl.org/dc/terms/"
+            }
+          ]
+        }
+      ]
+    },
+    "ConformsTo": {
+      "title": "dct:conformsTo",
+      "description": "Used to state the Bioschemas profile that the markup relates to. The versioned URL of the profile must be used. Use the full Dublin Core URI http://purl.org/dc/terms/conformsTo as the property name in markup. Marginality: Minimum.",
+      "$comment": "Best practice: always include dct:conformsTo so that TeSS and other ingestors can determine which Bioschemas profile the resource conforms to and apply the correct extraction logic. Use the object form {'@id': 'https://bioschemas.org/profiles/X/Y', '@type': 'CreativeWork'} for maximum compatibility. TeSS uses this value to select the correct extractor and for validation reporting.\n\nComprehensive list of Bioschemas training-related profile versions (use the most recent release for new markup):\n\nTrainingMaterial versions:\n  https://bioschemas.org/profiles/TrainingMaterial/0.1-DRAFT-2018_11_09\n  https://bioschemas.org/profiles/TrainingMaterial/0.2-DRAFT-2019_02_25\n  https://bioschemas.org/profiles/TrainingMaterial/0.3-DRAFT-2020_03_10\n  https://bioschemas.org/profiles/TrainingMaterial/0.4-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.5-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.6-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.7-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.8-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/0.9-DRAFT\n  https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE\n  https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT  (latest — recommended for new markup)\n\nCourse versions:\n  https://bioschemas.org/profiles/Course/0.1-DRAFT-2018_11_09\n  https://bioschemas.org/profiles/Course/0.2-DRAFT-2019_02_25\n  https://bioschemas.org/profiles/Course/0.3-DRAFT-2019_06_14\n  https://bioschemas.org/profiles/Course/0.4-DRAFT\n  https://bioschemas.org/profiles/Course/0.5-DRAFT\n  https://bioschemas.org/profiles/Course/0.6-DRAFT\n  https://bioschemas.org/profiles/Course/0.7-DRAFT\n  https://bioschemas.org/profiles/Course/0.8-DRAFT\n  https://bioschemas.org/profiles/Course/0.9-DRAFT\n  https://bioschemas.org/profiles/Course/0.10-DRAFT\n  https://bioschemas.org/profiles/Course/1.0-RELEASE  (latest — recommended for new markup)\n\nCourseInstance versions:\n  https://bioschemas.org/profiles/CourseInstance/0.1-DRAFT-2018_11_09\n  https://bioschemas.org/profiles/CourseInstance/0.2-DRAFT-2019_02_25\n  https://bioschemas.org/profiles/CourseInstance/0.3-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.4-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.5-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.6-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.7-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.8-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/0.9-DRAFT\n  https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE  (latest — recommended for new markup)\n\nOther notable Bioschemas profiles (not covered by this schema but may appear in linked resources):\n  https://bioschemas.org/profiles/ComputationalTool/1.0-RELEASE\n  https://bioschemas.org/profiles/ComputationalWorkflow/1.0-RELEASE\n  https://bioschemas.org/profiles/Dataset/1.0-RELEASE\n  https://bioschemas.org/profiles/Gene/1.0-RELEASE\n  https://bioschemas.org/profiles/Protein/0.11-RELEASE\n  https://bioschemas.org/profiles/Sample/0.3-RELEASE\n  https://bioschemas.org/profiles/BioChemEntity/0.7-RELEASE\n  https://bioschemas.org/profiles/Taxon/0.6-RELEASE",
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^https://bioschemas\\.org/profiles/",
+          "examples": [
+            "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+            "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE",
+            "https://bioschemas.org/profiles/Course/1.0-RELEASE",
+            "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "@id": {
+              "type": "string",
+              "pattern": "^https://bioschemas\\.org/profiles/"
+            },
+            "@type": {
+              "type": "string",
+              "const": "CreativeWork"
+            }
+          },
+          "required": [
+            "@id"
+          ],
+          "examples": [
+            {
+              "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+              "@type": "CreativeWork"
+            },
+            {
+              "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE",
+              "@type": "CreativeWork"
+            },
+            {
+              "@id": "https://bioschemas.org/profiles/Course/1.0-RELEASE",
+              "@type": "CreativeWork"
+            },
+            {
+              "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+              "@type": "CreativeWork"
+            }
+          ]
+        }
+      ]
+    },
+    "Person": {
+      "title": "Person",
+      "description": "A person, typically an author, instructor, contributor, or organizer.",
+      "$comment": "Best practice: always include @id with the ORCID URI (https://orcid.org/...) when the ORCID is known. TeSS extracts ORCID from @id by regex. Use identifier for legacy ORCID placement. The @type field should be 'Person'.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Person"
+        },
+        "name": {
+          "type": "string",
+          "description": "Full name of the person.",
+          "examples": [
+            "Dr Alice Example",
+            "Bob Researcher"
+          ]
+        },
+        "@id": {
+          "type": "string",
+          "format": "uri",
+          "description": "ORCID URI or other persistent identifier for this person.",
+          "$comment": "Best practice: use ORCID URI (https://orcid.org/XXXX-XXXX-XXXX-XXXX). TeSS extracts ORCID from @id by regex pattern matching.",
+          "examples": [
+            "https://orcid.org/0000-0001-2345-6789"
+          ]
+        },
+        "identifier": {
+          "type": "string",
+          "description": "ORCID or other identifier (legacy location; prefer @id).",
+          "examples": [
+            "https://orcid.org/0000-0001-2345-6789"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "examples": [
+        {
+          "@type": "Person",
+          "name": "Dr Alice Example",
+          "@id": "https://orcid.org/0000-0001-2345-6789"
+        },
+        {
+          "@type": "Person",
+          "name": "Bob Researcher"
+        }
+      ]
+    },
+    "Organization": {
+      "title": "Organization",
+      "description": "An organization, typically a provider, publisher, funder, or organizer.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Organization"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the organization.",
+          "examples": [
+            "European Bioinformatics Institute",
+            "The Carpentries"
+          ]
+        },
+        "@id": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI identifying this organization.",
+          "examples": [
+            "https://www.ebi.ac.uk/"
+          ]
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "examples": [
+        {
+          "@type": "Organization",
+          "name": "European Bioinformatics Institute",
+          "@id": "https://www.ebi.ac.uk/"
+        },
+        {
+          "@type": "Organization",
+          "name": "The Carpentries"
+        }
+      ]
+    },
+    "Agent": {
+      "title": "Person or Organization",
+      "description": "A person or organization involved in creating, contributing to, or delivering the resource.",
+      "$comment": "TeSS uses extract_people() to parse agent nodes. ORCID is detected by regex from @id or identifier. For arrays, supply one object per person/organisation.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Person"
+        },
+        {
+          "$ref": "#/$defs/Organization"
+        },
+        {
+          "type": "string",
+          "$comment": "Plain strings are supported by TeSS but do not allow ORCID or organisation URI attachment. Use structured objects where possible.",
+          "examples": [
+            "Alice Example"
+          ]
+        }
+      ]
+    },
+    "AgentOrArray": {
+      "title": "Person, Organization, or array thereof",
+      "description": "One or more persons or organizations.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Agent"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Agent"
+          },
+          "minItems": 1
+        }
+      ]
+    },
+    "DefinedTerm": {
+      "title": "DefinedTerm",
+      "description": "A term from a controlled vocabulary, used to describe topics, skills, or learning objectives. Multiple ontologies are supported; choose the most appropriate for your domain.",
+      "$comment": "Several ontologies can be used for about[], teaches, and related properties. Choose the ontology most appropriate for the resource's domain:\n\n- EDAM (http://edamontology.org/): the primary ontology for life-science / bioinformatics topics and operations. Use topic_XXXX for subject areas and operation_XXXX for methods. TeSS captures EDAM URIs specially into scientific_topic_uris for faceted browsing. Browse at https://edamontology.github.io/edam-browser/ .\n\n- PaNET (https://pan-ontologies.github.io/PaNET/): covers photon, neutron, and large-scale research-facility (synchrotron, free-electron laser, neutron source) training topics. Used by PaN training platforms. Browse at https://pan-ontologies.github.io/PaNET/index-en.html .\n\n- NCI Thesaurus (http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#): broad biomedical and clinical vocabulary.\n\n- MeSH (https://id.nlm.nih.gov/mesh/): NLM Medical Subject Headings — useful for clinical/health topics.\n\n- OBI (http://purl.obolibrary.org/obo/): Ontology for Biomedical Investigations.\n\nThe llm-metadata-generator is designed to support multiple configurable ontologies — see TODO.md item 6. The 'name' field should match the canonical label in the chosen ontology.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "DefinedTerm"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable label for the term, matching the canonical label in the source ontology.",
+          "examples": [
+            "Bioinformatics",
+            "Sequence alignment",
+            "Genome assembly",
+            "Neutron scattering",
+            "Synchrotron radiation",
+            "X-ray diffraction"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI of the term in its defining ontology. Use EDAM URIs for life-science topics, PaNET URIs for photon/neutron science topics, or terms from other domain-appropriate ontologies.",
+          "examples": [
+            "http://edamontology.org/topic_0091",
+            "http://edamontology.org/topic_0622",
+            "http://edamontology.org/topic_0097",
+            "https://pan-ontologies.github.io/PaNET/PaNET01160",
+            "https://pan-ontologies.github.io/PaNET/PaNET01130",
+            "https://pan-ontologies.github.io/PaNET/PaNET01131"
+          ]
+        },
+        "@id": {
+          "type": "string",
+          "format": "uri",
+          "description": "Alternative location for the ontology term URI."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "examples": [
+        {
+          "@type": "DefinedTerm",
+          "name": "Bioinformatics",
+          "url": "http://edamontology.org/topic_0091"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Genomics",
+          "url": "http://edamontology.org/topic_0622"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Sequence alignment",
+          "url": "http://edamontology.org/topic_0182"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Neutron scattering",
+          "url": "https://pan-ontologies.github.io/PaNET/PaNET01160"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "Synchrotron radiation",
+          "url": "https://pan-ontologies.github.io/PaNET/PaNET01130"
+        },
+        {
+          "@type": "DefinedTerm",
+          "name": "X-ray diffraction",
+          "url": "https://pan-ontologies.github.io/PaNET/PaNET01131"
+        }
+      ]
+    },
+    "ThingOrArray": {
+      "title": "Thing, DefinedTerm, URI, or array thereof",
+      "description": "A subject, topic, skill, or learning outcome. Can be a DefinedTerm with ontology URI, a plain string, or a URI. MANY cardinality: use an array when multiple values apply.",
+      "$comment": "Best practice: use DefinedTerm with ontology URIs for machine-readable topic tagging. Use EDAM URIs (http://edamontology.org/) for life-science topics — TeSS captures these as scientific_topic_uris for faceted browsing. Use PaNET URIs (https://pan-ontologies.github.io/PaNET/) for photon/neutron science topics. Plain text strings are also accepted and stored as free-text tags.",
+      "oneOf": [
+        {
+          "type": "string",
+          "examples": [
+            "Bioinformatics",
+            "http://edamontology.org/topic_0091"
+          ]
+        },
+        {
+          "$ref": "#/$defs/DefinedTerm"
+        },
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/DefinedTerm"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "TextOrArray": {
+      "title": "Text or array of Text",
+      "description": "A text value or array of text values.",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        }
+      ]
+    },
+    "Identifier": {
+      "title": "Identifier",
+      "description": "An identifier for the resource. Can be a DOI URL, a plain string, or a PropertyValue object.",
+      "$comment": "Best practice: use a full DOI URL (https://doi.org/10.XXXX/...) when available. TeSS detects DOI patterns by regex (10.\\d+/...) and stores them in the :doi field for special treatment. The PropertyValue form is also supported with propertyID='doi' and value='10.XXXX/...'.",
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "DOI URL or other identifier string.",
+          "examples": [
+            "https://doi.org/10.1234/example.doi",
+            "https://zenodo.org/record/123456"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "@type": {
+              "type": "string",
+              "const": "PropertyValue"
+            },
+            "propertyID": {
+              "type": "string",
+              "description": "The property identifier type, e.g. 'doi'.",
+              "examples": [
+                "doi",
+                "isbn"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "description": "The actual identifier value.",
+              "examples": [
+                "10.5678/example.cookbook"
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "examples": [
+            {
+              "@type": "PropertyValue",
+              "propertyID": "doi",
+              "value": "10.5678/example.cookbook"
+            }
+          ]
+        }
+      ]
+    },
+    "AlignmentObject": {
+      "title": "AlignmentObject",
+      "description": "An alignment object describing a prerequisite competency or educational alignment using a structured reference.",
+      "$comment": "Used in coursePrerequisites and competencyRequired. alignmentType should be 'requires' or 'educationalLevel'. targetUrl should point to a term in a competency framework.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "AlignmentObject"
+        },
+        "alignmentType": {
+          "type": "string",
+          "description": "The alignment type, e.g. 'requires', 'educationalLevel'.",
+          "examples": [
+            "requires",
+            "educationalLevel"
+          ]
+        },
+        "educationalFramework": {
+          "type": "string",
+          "description": "The educational framework the alignment is defined within.",
+          "examples": [
+            "QAA",
+            "EQF"
+          ]
+        },
+        "targetName": {
+          "type": "string",
+          "description": "Name of the target alignment.",
+          "examples": [
+            "Intro to Statistics",
+            "Higher Education Credit Framework"
+          ]
+        },
+        "targetUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the target alignment in its framework."
+        }
+      },
+      "examples": [
+        {
+          "@type": "AlignmentObject",
+          "alignmentType": "requires",
+          "targetName": "Intro to Statistics",
+          "targetUrl": "http://example.org/competency/stats-101"
+        },
+        {
+          "@type": "AlignmentObject",
+          "alignmentType": "educationalLevel",
+          "educationalFramework": "QAA",
+          "targetName": "Higher Education Credit Framework For England",
+          "targetUrl": "https://www.qaa.ac.uk/docs/qaa/quality-code/academic-credit-framework.pdf"
+        }
+      ]
+    },
+    "License": {
+      "title": "License",
+      "description": "A license document that applies to this content. Use a CC-BY URL or SPDX short identifier (e.g. 'CC-BY-4.0') when possible.",
+      "$comment": "Best practice: use a canonical Creative Commons URL (https://creativecommons.org/licenses/by/4.0/) or an SPDX short identifier string. Avoid the sentinel value 'notspecified' — TeSS drops this value during ingestion. TeSS resolves license values via LicenceDictionary. A missing or 'notspecified' license reduces discoverability and reuse.",
+      "oneOf": [
+        {
+          "type": "string",
+          "examples": [
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by-sa/4.0/",
+            "CC-BY-4.0",
+            "MIT",
+            "Apache-2.0"
+          ]
+        },
+        {
+          "type": "object",
+          "description": "CreativeWork describing the license.",
+          "properties": {
+            "@type": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      ]
+    },
+    "PostalAddress": {
+      "title": "PostalAddress",
+      "description": "A postal address for a physical location.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "PostalAddress"
+        },
+        "streetAddress": {
+          "type": "string",
+          "description": "Street address.",
+          "examples": [
+            "1 Science Road"
+          ]
+        },
+        "addressLocality": {
+          "type": "string",
+          "description": "City or locality.",
+          "examples": [
+            "Cambridge",
+            "Berlin"
+          ]
+        },
+        "addressRegion": {
+          "type": "string",
+          "description": "Region, state or county.",
+          "examples": [
+            "Cambridgeshire"
+          ]
+        },
+        "postalCode": {
+          "type": "string",
+          "description": "Postal or ZIP code.",
+          "examples": [
+            "CB2 1TN"
+          ]
+        },
+        "addressCountry": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code.",
+          "$comment": "Best practice: use ISO 3166-1 alpha-2 two-letter country codes (e.g. 'GB', 'DE', 'US') for interoperability.",
+          "examples": [
+            "GB",
+            "DE",
+            "FR",
+            "US"
+          ]
+        }
+      },
+      "examples": [
+        {
+          "@type": "PostalAddress",
+          "streetAddress": "Wellcome Genome Campus",
+          "addressLocality": "Hinxton",
+          "addressRegion": "Cambridgeshire",
+          "postalCode": "CB10 1SD",
+          "addressCountry": "GB"
+        }
+      ]
+    },
+    "GeoCoordinates": {
+      "title": "GeoCoordinates",
+      "description": "Geographic coordinates for a location.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "GeoCoordinates"
+        },
+        "latitude": {
+          "type": "string",
+          "description": "Latitude in decimal degrees.",
+          "examples": [
+            "52.0833",
+            "52.1"
+          ]
+        },
+        "longitude": {
+          "type": "string",
+          "description": "Longitude in decimal degrees.",
+          "examples": [
+            "0.1833",
+            "-1.2"
+          ]
+        }
+      },
+      "examples": [
+        {
+          "@type": "GeoCoordinates",
+          "latitude": "52.0833",
+          "longitude": "0.1833"
+        }
+      ]
+    },
+    "Place": {
+      "title": "Place",
+      "description": "A physical place where the event is held.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Place"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the venue.",
+          "examples": [
+            "Wellcome Genome Campus Conference Centre",
+            "Main Lecture Hall"
+          ]
+        },
+        "address": {
+          "$ref": "#/$defs/PostalAddress"
+        },
+        "geo": {
+          "$ref": "#/$defs/GeoCoordinates"
+        }
+      },
+      "examples": [
+        {
+          "@type": "Place",
+          "name": "Conference Centre",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Wellcome Genome Campus",
+            "addressLocality": "Hinxton",
+            "addressCountry": "GB"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": "52.0833",
+            "longitude": "0.1833"
+          }
+        }
+      ]
+    },
+    "VirtualLocation": {
+      "title": "VirtualLocation",
+      "description": "A virtual location for an online event, with a connection URL.",
+      "$comment": "Use VirtualLocation when courseMode contains 'online'. TeSS merges VirtualLocation into the venue text field and sets :online true. Always include a url for participants to join.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "VirtualLocation"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name for the virtual venue.",
+          "examples": [
+            "Zoom meeting",
+            "Teams call",
+            "Webinar platform"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Connection URL for the virtual location.",
+          "examples": [
+            "https://zoom.example/meet/12345"
+          ]
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "examples": [
+        {
+          "@type": "VirtualLocation",
+          "name": "Zoom meeting",
+          "url": "https://zoom.example/meet/12345"
+        }
+      ]
+    },
+    "Location": {
+      "title": "location",
+      "description": "The location of the event. Use a Place with PostalAddress for in-person events; a VirtualLocation for online events. Both may be supplied for hybrid events.",
+      "$comment": "TeSS extract_location() merges Place, PostalAddress and VirtualLocation fields. For hybrid events, supply both a Place and a VirtualLocation. TeSS sets :online=true when a VirtualLocation is present. Use ISO 3166-1 alpha-2 codes for addressCountry.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/Place"
+        },
+        {
+          "$ref": "#/$defs/VirtualLocation"
+        },
+        {
+          "type": "string",
+          "description": "Free-text location description (fallback).",
+          "examples": [
+            "Online",
+            "Cambridge, UK"
+          ]
+        }
+      ]
+    },
+    "Offer": {
+      "title": "Offer",
+      "description": "Pricing information for the course instance.",
+      "$comment": "Use ISO 4217 currency codes for priceCurrency (e.g. 'GBP', 'EUR', 'USD'). Use ISO 8601 date for validFrom/validThrough.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "const": "Offer"
+        },
+        "price": {
+          "type": "string",
+          "description": "Price as a string, e.g. '0.00' for free or '100.00'.",
+          "examples": [
+            "0.00",
+            "50.00",
+            "100.00"
+          ]
+        },
+        "priceCurrency": {
+          "type": "string",
+          "description": "ISO 4217 currency code.",
+          "examples": [
+            "GBP",
+            "EUR",
+            "USD",
+            "CHF"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL where registration or payment occurs."
+        }
+      },
+      "examples": [
+        {
+          "@type": "Offer",
+          "price": "0.00",
+          "priceCurrency": "GBP"
+        },
+        {
+          "@type": "Offer",
+          "price": "100.00",
+          "priceCurrency": "EUR",
+          "url": "https://registration.example.org/event"
+        }
+      ]
+    },
+    "Mention": {
+      "title": "Mention",
+      "description": "A tool, dataset, or other resource referenced or actively used in this training.",
+      "$comment": "TeSS maps mentions to :external_resources as {title:, url:} objects. Use @type 'SoftwareApplication' or a bio.tools URL for software tools, 'Dataset' for datasets. Include url for discoverability.",
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "Schema.org type of the mentioned resource.",
+          "examples": [
+            "SoftwareApplication",
+            "Dataset",
+            "WebPage",
+            "Tool"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the resource.",
+          "examples": [
+            "Galaxy",
+            "European Genome-phenome Archive",
+            "BLAST"
+          ]
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the resource.",
+          "examples": [
+            "https://bio.tools/galaxy",
+            "https://www.ebi.ac.uk/ega/home"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "description": "Brief description of the resource."
+        }
+      },
+      "examples": [
+        {
+          "@type": "SoftwareApplication",
+          "name": "Galaxy",
+          "url": "https://bio.tools/galaxy",
+          "description": "Open, web-based platform for data intensive biomedical research"
+        },
+        {
+          "@type": "Dataset",
+          "name": "European Genome-phenome Archive",
+          "url": "https://www.ebi.ac.uk/ega/home"
+        }
+      ]
+    },
+    "TrainingMaterial": {
+      "title": "TrainingMaterial / LearningResource",
+      "description": "A Bioschemas TrainingMaterial (v1.1-DRAFT) describes bioscience training material on the Web. Schema.org type: LearningResource (Thing > CreativeWork > LearningResource). A training material is a single document, slide deck, video, or dataset used for educational purposes. It differs from Course (which describes a recurring programme) and CourseInstance (a specific run). Profile URL: https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "$comment": "Minimum required: @context, @type, @id, dct:conformsTo, name, description, keywords. Strongly recommended: url, author (with ORCID @id), license (CC URL or SPDX), about (EDAM DefinedTerm), teaches, learningResourceType, inLanguage, educationalLevel, identifier (DOI). TeSS extracts: name->:title, description, keywords, author, contributor, license, inLanguage, learningResourceType, teaches, about (EDAM), identifier (DOI), version, dateCreated/Modified/Published, educationalLevel, competencyRequired, mentions, url.",
+      "type": "object",
+      "required": [
+        "@context",
+        "@type",
+        "@id",
+        "name",
+        "description",
+        "keywords"
+      ],
+      "properties": {
+        "@context": {
+          "$ref": "#/$defs/Context"
+        },
+        "@type": {
+          "title": "@type",
+          "description": "Schema.org/Bioschemas class. Use 'LearningResource' (preferred), 'TrainingMaterial', or 'CreativeWork'. Marginality: Minimum. Cardinality: MANY.",
+          "$comment": "TeSS queries for RDF::Vocab::SCHEMA.LearningResource to find training materials. 'TrainingMaterial' is a Bioschemas extension type. Both are recognised.",
+          "type": "string",
+          "enum": [
+            "LearningResource",
+            "TrainingMaterial",
+            "CreativeWork"
+          ],
+          "examples": [
+            "LearningResource"
+          ]
+        },
+        "@id": {
+          "title": "@id",
+          "description": "Globally unique IRI identifying this training material. Should be a stable, persistent URI (e.g. DOI URL or canonical page URL). Marginality: Minimum. Cardinality: ONE.",
+          "$comment": "Best practice: use the canonical URL of the resource page, or a DOI URL. TeSS uses @id as a fallback for :url when url is absent.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://example.org/materials/intro-bioinformatics",
+            "https://doi.org/10.1234/example"
+          ]
+        },
+        "dct:conformsTo": {
+          "$ref": "#/$defs/ConformsTo"
+        },
+        "name": {
+          "title": "name",
+          "description": "The name / title of the training material. Marginality: Minimum. Cardinality: ONE.",
+          "$comment": "TeSS maps name to :title. Keep the title concise and descriptive.",
+          "type": "string",
+          "examples": [
+            "Introduction to Bioinformatics",
+            "RNA-Seq Analysis Tutorial",
+            "Data Carpentry for Genomics"
+          ]
+        },
+        "description": {
+          "title": "description",
+          "description": "A description of the training material. May contain plain text or HTML (TeSS converts HTML to Markdown during ingestion). Marginality: Minimum. Cardinality: ONE.",
+          "$comment": "TeSS normalises descriptions via convert_description (HTML-to-Markdown). Include enough detail for discoverability. Avoid very short single-sentence descriptions.",
+          "type": "string",
+          "examples": [
+            "A comprehensive tutorial covering the fundamentals of RNA-Seq analysis using standard bioinformatics tools."
+          ]
+        },
+        "keywords": {
+          "title": "keywords",
+          "description": "Keywords or tags describing the content. May be a comma-separated string or an array. Marginality: Minimum. Cardinality: MANY.",
+          "$comment": "TeSS splits comma-separated strings using extract_keyword_like. Best practice: prefer an array of strings. Use controlled vocabulary terms where possible. EDAM topic names make good keywords.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "bioinformatics, sequencing, RNA-Seq, tutorial"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "examples": [
+                [
+                  "bioinformatics",
+                  "sequencing",
+                  "RNA-Seq"
+                ]
+              ]
+            }
+          ]
+        },
+        "url": {
+          "title": "url",
+          "description": "The preferred URL of the training material. You must provide this value if it is known. Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "TeSS uses url as the canonical resource URL. If absent, TeSS may fall back to @id. Providing a stable URL is essential for deduplication across scrapes.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://carpentries.org/lessons/genomics/"
+          ]
+        },
+        "about": {
+          "title": "about",
+          "description": "The subject of this training material. Use DefinedTerm with EDAM ontology URIs for machine-readable topic tagging. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: use EDAM topic URIs (http://edamontology.org/topic_XXXX). TeSS captures these as :scientific_topic_uris for faceted browsing. Plain text strings are also stored but not linked to ontology terms.",
+          "$ref": "#/$defs/ThingOrArray"
+        },
+        "abstract": {
+          "title": "abstract",
+          "description": "A short abstract summarising the training material. Marginality: Recommended. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "This tutorial introduces the RNA-Seq analysis workflow from raw reads to differential expression."
+          ]
+        },
+        "audience": {
+          "title": "audience",
+          "description": "A succinct description of the intended target audience, e.g., graduates, postgraduates, clinicians. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS maps to :target_audience. Use plain strings (e.g. 'PhD students', 'Bioinformaticians', 'Wet-lab researchers') or Audience objects.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "PhD students",
+                "Bioinformaticians",
+                "Wet-lab researchers"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "const": "Audience"
+                },
+                "audienceType": {
+                  "type": "string",
+                  "examples": [
+                    "Researchers",
+                    "Clinicians"
+                  ]
+                }
+              }
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "author": {
+          "title": "author",
+          "description": "Those involved in the preparation, creation and/or presentation of the published work, specifically writing the initial draft. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: supply structured Person objects with @id set to the ORCID URI. TeSS uses extract_people() to parse ORCID from @id. Include all principal authors; use contributor for secondary contributors.",
+          "$ref": "#/$defs/AgentOrArray"
+        },
+        "competencyRequired": {
+          "title": "competencyRequired",
+          "description": "Knowledge, skill, ability or personal attribute that must be demonstrated in order to understand this learning resource. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS normalises to strings or markdown-formatted lists via markdownify_list. Can be a plain string, array of strings, or AlignmentObject.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "Basic Unix shell skills",
+                "Familiarity with R"
+              ]
+            },
+            {
+              "$ref": "#/$defs/AlignmentObject"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/AlignmentObject"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "educationalLevel": {
+          "title": "educationalLevel",
+          "description": "The students' level of ability in the topic being taught. Use 'beginner', 'intermediate', or 'advanced'. Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "Best practice: use one of the three standard values — 'beginner', 'intermediate', 'advanced'. TeSS stores this as :difficulty_level and omits the field in output when value is 'notspecified'. Providing this field improves searchability.",
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "beginner",
+                "intermediate",
+                "advanced"
+              ],
+              "examples": [
+                "beginner",
+                "intermediate",
+                "advanced"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "@type": {
+                  "type": "string",
+                  "const": "DefinedTerm"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          ]
+        },
+        "identifier": {
+          "title": "identifier",
+          "description": "An identifier for this resource such as a DOI. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: use a full DOI URL (https://doi.org/10.XXXX/...). TeSS detects DOI patterns by regex and stores them separately. Use PropertyValue for structured identifier forms.",
+          "$ref": "#/$defs/Identifier"
+        },
+        "inLanguage": {
+          "title": "inLanguage",
+          "description": "The language of the training material. Defaults to English if not specified. Use IETF BCP 47 language codes. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: use IETF BCP 47 subtags, e.g. 'en', 'en-GB', 'de', 'fr'. TeSS extract_language() returns the first subtag before '-'. For multilingual resources, supply an array.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "en",
+                "en-GB",
+                "de",
+                "fr",
+                "es"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "examples": [
+                [
+                  "en",
+                  "es"
+                ]
+              ]
+            }
+          ]
+        },
+        "learningResourceType": {
+          "title": "learningResourceType",
+          "description": "The type/kind characterising the learning resource, e.g. 'Tutorial', 'Slides', 'Video', 'e-Learning module'. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS maps to :resource_type. Use recognised values for interoperability. Commonly used values: 'Tutorial', 'Slides', 'Video', 'e-Learning module', 'Script', 'Workflow', 'Vignette', 'Reference guide'.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "Tutorial",
+                "Slides",
+                "Video",
+                "e-Learning module",
+                "Handout",
+                "Workflow",
+                "Reference guide"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "examples": [
+                [
+                  "Tutorial",
+                  "Slides"
+                ]
+              ]
+            }
+          ]
+        },
+        "license": {
+          "title": "license",
+          "description": "The license under which the training material is published. If there is a licence it must be added. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: use a canonical CC URL or SPDX identifier. Avoid 'notspecified' — TeSS drops this sentinel. Open licensing (CC-BY or CC0) is strongly encouraged for FAIR reuse.",
+          "$ref": "#/$defs/License"
+        },
+        "mentions": {
+          "title": "mentions",
+          "description": "Datasets, tools, technologies, or entities referred to or actively used in this training material. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS maps to :external_resources as {title:, url:} objects. Use @type 'SoftwareApplication' for software tools with bio.tools URLs. Include description for context.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Mention"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Mention"
+              }
+            }
+          ]
+        },
+        "sameAs": {
+          "title": "sameAs",
+          "description": "URL of a reference Web page that unambiguously indicates the item's identity, e.g. a Wikipedia page, Wikidata entry, or bio.tools entry. Marginality: Recommended. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uri"
+              }
+            }
+          ],
+          "examples": [
+            "https://bio.tools/galaxy",
+            "https://www.wikidata.org/wiki/Q123456"
+          ]
+        },
+        "teaches": {
+          "title": "teaches",
+          "description": "The competencies or learning outcomes that this training material is intended to teach. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS normalises via markdownify_list. Can be plain strings or DefinedTerm objects. Best practice: phrase as learner-centred outcomes starting with action verbs (e.g. 'Understand de novo assembly', 'Run BLAST searches').",
+          "$ref": "#/$defs/ThingOrArray"
+        },
+        "timeRequired": {
+          "title": "timeRequired",
+          "description": "The estimated time it takes to work through this resource. Use ISO 8601 duration format (e.g. 'PT30M', 'PT1H30M', 'P1D'). Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "Best practice: use ISO 8601 duration strings. Examples: 'PT30M' = 30 minutes, 'PT1H30M' = 1.5 hours, 'P1D' = 1 day, 'P3D' = 3 days.",
+          "type": "string",
+          "examples": [
+            "PT30M",
+            "PT1H30M",
+            "PT2H",
+            "P1D",
+            "P3D"
+          ]
+        },
+        "accessibilitySummary": {
+          "title": "accessibilitySummary",
+          "description": "A human-readable summary of specific accessibility features or deficiencies of this material. Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "Visual elements are not described.",
+            "Subtitles available in English and French."
+          ]
+        },
+        "contributor": {
+          "title": "contributor",
+          "description": "Contributors who made non-authorship contributions, e.g., critical review, commentary, or revision. Marginality: Optional. Cardinality: MANY.",
+          "$ref": "#/$defs/AgentOrArray"
+        },
+        "creativeWorkStatus": {
+          "title": "creativeWorkStatus",
+          "description": "The lifecycle status of this training material. Use 'Active', 'Under development', or 'Archived'. Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "enum": [
+            "Active",
+            "Under development",
+            "Archived"
+          ],
+          "examples": [
+            "Active"
+          ]
+        },
+        "dateCreated": {
+          "title": "dateCreated",
+          "description": "The date on which the training material was created. Use ISO 8601 format (YYYY-MM-DD). Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "2024-11-01",
+            "2024-11-01T09:00:00Z"
+          ]
+        },
+        "dateModified": {
+          "title": "dateModified",
+          "description": "The date on which the training material was most recently modified. Use ISO 8601 format. Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "2026-01-15",
+            "2026-01-15T14:30:00Z"
+          ]
+        },
+        "datePublished": {
+          "title": "datePublished",
+          "description": "The date the training material was first published. Use ISO 8601 format. Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "2025-02-20"
+          ]
+        },
+        "hasPart": {
+          "title": "hasPart",
+          "description": "A sub-training material or externally referenced training material that is part of this resource. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "isPartOf": {
+          "title": "isPartOf",
+          "description": "The Course or other training material that this training material is a part of. Use to reference the containing Course. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "recordedAt": {
+          "title": "recordedAt",
+          "description": "The CourseInstance or event where this training material was or will be featured. Marginality: Optional. Cardinality: MANY.",
+          "type": "object"
+        },
+        "version": {
+          "title": "version",
+          "description": "The version of this training material. Strongly recommended if versioned. Marginality: Optional. Cardinality: ONE.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "1.0",
+                "2.1",
+                "v3"
+              ]
+            },
+            {
+              "type": "number",
+              "examples": [
+                1.0,
+                2.1
+              ]
+            }
+          ]
+        },
+        "workTranslation": {
+          "title": "workTranslation",
+          "description": "A work that is a translation of this training material into another language. Marginality: Optional. Cardinality: MANY.",
+          "type": "object"
+        }
+      },
+      "examples": [
+        {
+          "@context": {
+            "@vocab": "https://schema.org/",
+            "dct": "http://purl.org/dc/terms/"
+          },
+          "@type": "LearningResource",
+          "@id": "https://example.org/materials/intro-bioinformatics",
+          "dct:conformsTo": {
+            "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+            "@type": "CreativeWork"
+          },
+          "url": "https://example.org/materials/intro-bioinformatics",
+          "name": "Introduction to Bioinformatics",
+          "description": "A short guide to basic bioinformatics concepts covering sequence analysis, BLAST and genome browsers.",
+          "keywords": [
+            "bioinformatics",
+            "sequencing",
+            "tutorial"
+          ],
+          "identifier": "https://doi.org/10.1234/example.doi",
+          "author": [
+            {
+              "@type": "Person",
+              "name": "Dr Alice Example",
+              "@id": "https://orcid.org/0000-0001-2345-6789"
+            }
+          ],
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "inLanguage": "en",
+          "about": [
+            {
+              "@type": "DefinedTerm",
+              "name": "Bioinformatics",
+              "url": "http://edamontology.org/topic_0091"
+            }
+          ],
+          "learningResourceType": [
+            "Tutorial"
+          ],
+          "educationalLevel": "beginner",
+          "teaches": [
+            "Understand FASTA format",
+            "Run basic BLAST searches"
+          ],
+          "timeRequired": "PT2H"
+        }
+      ]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "A Bioschemas Course (v1.0-RELEASE) describes the broad, common aspects of a recurring training programme. Schema.org type: Course (Thing > CreativeWork > Course). A Course captures stable information valid across all runs — use CourseInstance for location/time-specific details. Must be used in tandem with CourseInstance. Profile URL: https://bioschemas.org/profiles/Course/1.0-RELEASE",
+      "$comment": "Minimum required: @context, @type, @id, dct:conformsTo, name, description, keywords. Strongly recommended: url, about (EDAM), educationalLevel, hasCourseInstance (with at least one CourseInstance), license, provider (Organisation with @id), teaches, timeRequired. TeSS merges Course-level metadata with CourseInstance metadata. hasCourseInstance is output as an inlined CourseInstance in TeSS exports.",
+      "type": "object",
+      "required": [
+        "@context",
+        "@type",
+        "@id",
+        "name",
+        "description",
+        "keywords"
+      ],
+      "properties": {
+        "@context": {
+          "$ref": "#/$defs/Context"
+        },
+        "@type": {
+          "title": "@type",
+          "description": "Schema.org/Bioschemas class. Must be 'Course'. Marginality: Minimum. Cardinality: MANY.",
+          "type": "string",
+          "const": "Course",
+          "examples": [
+            "Course"
+          ]
+        },
+        "@id": {
+          "title": "@id",
+          "description": "Globally unique IRI identifying this course. Use a persistent URI such as the canonical page URL. Marginality: Minimum. Cardinality: ONE.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://example.org/courses/applied-genomics"
+          ]
+        },
+        "dct:conformsTo": {
+          "$ref": "#/$defs/ConformsTo"
+        },
+        "name": {
+          "title": "name",
+          "description": "The name/title of the course. Marginality: Minimum. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "Applied Genomics",
+            "Data Carpentry for Biologists",
+            "RNA-Seq Workshop"
+          ]
+        },
+        "description": {
+          "title": "description",
+          "description": "A description of the course. May be plain text or HTML. Marginality: Minimum. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "This course introduces applied genomics techniques for life scientists."
+          ]
+        },
+        "keywords": {
+          "title": "keywords",
+          "description": "Free text keywords delimited by commas describing the Course content. Marginality: Minimum. Cardinality: ONE.",
+          "$comment": "Best practice: prefer an array. Use EDAM topic labels as keywords for cross-referencing.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "genomics, assembly, annotation"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ]
+        },
+        "url": {
+          "title": "url",
+          "description": "The preferred URL of the course page. You must provide this value if it is known. Marginality: Recommended. Cardinality: ONE.",
+          "type": "string",
+          "format": "uri"
+        },
+        "about": {
+          "title": "about",
+          "description": "The subject of this Course. Use DefinedTerm with EDAM Topic URIs for machine-readable topic tagging. Controlled vocabulary: EDAM term. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: use EDAM topic URIs. TeSS captures these as scientific_topic_uris for faceted browsing.",
+          "$ref": "#/$defs/ThingOrArray"
+        },
+        "abstract": {
+          "title": "abstract",
+          "description": "A short abstract summarising the course. Marginality: Recommended. Cardinality: ONE.",
+          "type": "string"
+        },
+        "aggregateRating": {
+          "title": "aggregateRating",
+          "description": "The overall rating of the course, based on a collection of reviews or ratings. Marginality: Recommended. Cardinality: ONE.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "4/5"
+              ]
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "citation": {
+          "title": "citation",
+          "description": "A citation or reference to another creative work, such as another publication or web page, that is relevant to this course. Marginality: Recommended. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "coursePrerequisites": {
+          "title": "coursePrerequisites",
+          "description": "Requirements for taking the Course. May be completion of another Course, an AlignmentObject, or a textual description like 'Basic Unix skills'. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS normalises via markdownify_list. Best practice: list prerequisites clearly so learners can self-assess readiness.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "Basic Unix shell skills"
+              ]
+            },
+            {
+              "$ref": "#/$defs/AlignmentObject"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/$defs/AlignmentObject"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "educationalLevel": {
+          "title": "educationalLevel",
+          "description": "The level expected to participate in the course. Use 'beginner', 'intermediate', or 'advanced'. Controlled vocabulary: Beginner, Intermediate, Advanced. Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "Best practice: use 'beginner', 'intermediate', or 'advanced' for maximum interoperability with TeSS and other registries.",
+          "oneOf": [
+            {
+              "type": "string",
+              "enum": [
+                "beginner",
+                "intermediate",
+                "advanced"
+              ]
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "examples": [
+            "beginner",
+            "intermediate",
+            "advanced"
+          ]
+        },
+        "hasCourseInstance": {
+          "title": "hasCourseInstance",
+          "description": "An offering of this course at a specific time and place or through a specific mode of delivery. A course may have multiple instances. Use this to link to CourseInstance objects. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: always provide at least one CourseInstance with courseMode, startDate, and location. TeSS inlines the CourseInstance into the course record. For multiple instances supply an array.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/CourseInstance"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CourseInstance"
+              },
+              "minItems": 1
+            }
+          ]
+        },
+        "license": {
+          "title": "license",
+          "description": "A license document for this course. Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "Best practice: use CC-BY URL or SPDX identifier. Open licensing is strongly encouraged for FAIR training resources.",
+          "$ref": "#/$defs/License"
+        },
+        "mentions": {
+          "title": "mentions",
+          "description": "Datasets, tools, technologies, entities etc., which are actively used by and/or referred to by this course. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS maps to :external_resources. Use @type 'SoftwareApplication' with bio.tools URLs for software.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Mention"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Mention"
+              }
+            }
+          ]
+        },
+        "provider": {
+          "title": "provider",
+          "description": "The organization responsible for providing the educational input for the course, e.g. content, assessments, accreditation. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "TeSS maps to :node_names (provider organisation names) and :content_provider. Best practice: use Organisation objects with @id set to the organisation's persistent URI.",
+          "$ref": "#/$defs/AgentOrArray"
+        },
+        "teaches": {
+          "title": "teaches",
+          "description": "Statements describing what knowledge, skills or abilities students should acquire on completion of this Course. Controlled vocabulary: Bloom's taxonomy recommended. Marginality: Recommended. Cardinality: MANY.",
+          "$ref": "#/$defs/ThingOrArray"
+        },
+        "timeRequired": {
+          "title": "timeRequired",
+          "description": "Approximate or typical time it takes to work through this course, in ISO 8601 duration format (e.g. 'P3D', 'P1W'). Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "Use ISO 8601 durations: P3D = 3 days, P1W = 1 week, PT6H = 6 hours.",
+          "type": "string",
+          "examples": [
+            "PT3H",
+            "P1D",
+            "P3D",
+            "P1W",
+            "P6W"
+          ]
+        },
+        "accessibilitySummary": {
+          "title": "accessibilitySummary",
+          "description": "A human-readable summary of accessibility features or deficiencies of this course. Marginality: Optional. Cardinality: ONE.",
+          "type": "string"
+        },
+        "alternateName": {
+          "title": "alternateName",
+          "description": "An alias or alternative name for this course, e.g. a course code. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "audience": {
+          "title": "audience",
+          "description": "The type of audience intended for this course. A succinct description of the attendees. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "comment": {
+          "title": "comment",
+          "description": "Comments from users about this course. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "commentCount": {
+          "title": "commentCount",
+          "description": "The number of comments this course has received. Marginality: Optional. Cardinality: ONE.",
+          "type": "integer"
+        },
+        "courseCode": {
+          "title": "courseCode",
+          "description": "The identifier for the course used by the course provider, e.g. 'CS101'. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "examples": [
+            "CS101",
+            "BIOL-301"
+          ]
+        },
+        "creator": {
+          "title": "creator",
+          "description": "The creator/author of the course content. May differ from the instructor (in CourseInstance) or the provider. Marginality: Optional. Cardinality: MANY.",
+          "$ref": "#/$defs/AgentOrArray"
+        },
+        "dateCreated": {
+          "title": "dateCreated",
+          "description": "The date on which the course was created. ISO 8601 format. Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "2023-09-01"
+          ]
+        },
+        "dateModified": {
+          "title": "dateModified",
+          "description": "The date on which the course was most recently modified. ISO 8601 format. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "educationalCredentialAwarded": {
+          "title": "educationalCredentialAwarded",
+          "description": "A description of the qualification, award, certificate, or credential awarded on successful completion. Marginality: Optional. Cardinality: ONE.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ],
+          "examples": [
+            "Certificate of Completion",
+            "Certified Software Carpentry Instructor"
+          ]
+        },
+        "hasPart": {
+          "title": "hasPart",
+          "description": "Training materials used in the course such as slides or handouts. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "image": {
+          "title": "image",
+          "description": "An image of or representing the course. Marginality: Optional. Cardinality: ONE.",
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "isBasedOn": {
+          "title": "isBasedOn",
+          "description": "A course, book or other resource on which this Course is based. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "thumbnailUrl": {
+          "title": "thumbnailUrl",
+          "description": "A thumbnail image URL relevant to this course. Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "examples": [
+        {
+          "@context": {
+            "@vocab": "https://schema.org/",
+            "dct": "http://purl.org/dc/terms/"
+          },
+          "@type": "Course",
+          "@id": "https://example.org/courses/applied-genomics",
+          "dct:conformsTo": {
+            "@id": "https://bioschemas.org/profiles/Course/1.0-RELEASE",
+            "@type": "CreativeWork"
+          },
+          "url": "https://example.org/courses/applied-genomics",
+          "name": "Applied Genomics",
+          "description": "A semester-long module introducing applied genomics to life scientists.",
+          "keywords": [
+            "genomics",
+            "assembly",
+            "annotation"
+          ],
+          "about": [
+            {
+              "@type": "DefinedTerm",
+              "name": "Genomics",
+              "url": "http://edamontology.org/topic_0622"
+            }
+          ],
+          "educationalLevel": "intermediate",
+          "license": "https://creativecommons.org/licenses/by/4.0/",
+          "provider": [
+            {
+              "@type": "Organization",
+              "name": "Example University",
+              "@id": "https://example.edu"
+            }
+          ],
+          "teaches": [
+            "Perform de novo genome assembly",
+            "Annotate genomic features using standard tools"
+          ],
+          "hasCourseInstance": [
+            {
+              "@type": "CourseInstance",
+              "@id": "https://example.org/courses/applied-genomics/2026",
+              "dct:conformsTo": {
+                "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+                "@type": "CreativeWork"
+              },
+              "courseMode": [
+                "online"
+              ],
+              "startDate": "2026-09-01",
+              "endDate": "2026-12-15",
+              "location": {
+                "@type": "VirtualLocation",
+                "name": "Zoom",
+                "url": "https://zoom.example/meet/genomics2026"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "CourseInstance": {
+      "title": "CourseInstance",
+      "description": "A Bioschemas CourseInstance (v1.0-RELEASE) describes a specific run of a Course at a particular time and place. Schema.org type: CourseInstance (Thing > Event > CourseInstance). Use CourseInstance to capture the when, where, and who of a specific training event. Must be used in tandem with a Course. Profile URL: https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+      "$comment": "Minimum required: @context, @type, @id, dct:conformsTo, courseMode, location. Strongly recommended: startDate, endDate, url, instructor (with ORCID), inLanguage, offers. TeSS maps CourseInstance to :events with :event_types = [:workshops_and_courses]. courseMode values 'online'/'onsite' determine the :online boolean in TeSS. Virtual events must include a VirtualLocation with a connection URL.",
+      "type": "object",
+      "required": [
+        "@context",
+        "@type",
+        "@id",
+        "courseMode",
+        "location"
+      ],
+      "properties": {
+        "@context": {
+          "$ref": "#/$defs/Context"
+        },
+        "@type": {
+          "title": "@type",
+          "description": "Schema.org class. Must be 'CourseInstance'. Marginality: Minimum. Cardinality: MANY.",
+          "type": "string",
+          "const": "CourseInstance",
+          "examples": [
+            "CourseInstance"
+          ]
+        },
+        "@id": {
+          "title": "@id",
+          "description": "Globally unique IRI identifying this course instance. Should include a run identifier (e.g. year). Marginality: Minimum. Cardinality: ONE.",
+          "type": "string",
+          "format": "uri",
+          "examples": [
+            "https://example.org/courses/applied-genomics/2026-autumn"
+          ]
+        },
+        "dct:conformsTo": {
+          "$ref": "#/$defs/ConformsTo"
+        },
+        "courseMode": {
+          "title": "courseMode",
+          "description": "The medium or means of delivery of the course instance. Use 'online', 'onsite', 'hybrid', 'blended', 'synchronous', 'asynchronous', 'full-time', or 'part-time'. Marginality: Minimum. Cardinality: MANY.",
+          "$comment": "TeSS detects 'online' (case-insensitive) in courseMode values to set :online=true. For virtual events supply 'online'; for in-person supply 'onsite'; for hybrid supply both. See also: https://ceds.ed.gov/element/001311 for standardised values.",
+          "oneOf": [
+            {
+              "type": "string",
+              "examples": [
+                "online",
+                "onsite",
+                "hybrid",
+                "blended",
+                "synchronous",
+                "asynchronous"
+              ]
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "examples": [
+                [
+                  "online",
+                  "synchronous"
+                ],
+                [
+                  "onsite"
+                ],
+                [
+                  "online",
+                  "asynchronous"
+                ]
+              ]
+            }
+          ]
+        },
+        "location": {
+          "title": "location",
+          "description": "The location of this course instance. For in-person events use Place with PostalAddress. For online events use VirtualLocation with a connection URL. For hybrid events both can be supplied. Marginality: Minimum. Cardinality: ONE.",
+          "$ref": "#/$defs/Location"
+        },
+        "startDate": {
+          "title": "startDate",
+          "description": "The start date and time of this course instance in ISO 8601 format. Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "Best practice: use full ISO 8601 datetime with timezone (e.g. '2026-09-01T09:00:00Z' or '2026-09-01T09:00:00+01:00'). TeSS stores as :start and can compute :end from :start + :duration if end is absent.",
+          "type": "string",
+          "examples": [
+            "2026-09-01",
+            "2026-09-01T09:00:00Z",
+            "2026-09-01T09:00:00+01:00"
+          ]
+        },
+        "endDate": {
+          "title": "endDate",
+          "description": "The end date and time of this course instance in ISO 8601 format. Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "Best practice: always provide endDate. If absent and duration is present, TeSS can compute it. Provide full ISO 8601 datetime with timezone.",
+          "type": "string",
+          "examples": [
+            "2026-09-05",
+            "2026-09-05T17:00:00Z"
+          ]
+        },
+        "url": {
+          "title": "url",
+          "description": "The preferred URL of this course instance event page. Marginality: Recommended. Cardinality: ONE.",
+          "type": "string",
+          "format": "uri"
+        },
+        "inLanguage": {
+          "title": "inLanguage",
+          "description": "The language in which the course instance is delivered. Use IETF BCP 47 language codes. Marginality: Recommended. Cardinality: ONE.",
+          "$comment": "TeSS extract_language() returns the first subtag before '-'. Use 'en', 'de', 'fr' etc.",
+          "type": "string",
+          "examples": [
+            "en",
+            "en-GB",
+            "de",
+            "fr"
+          ]
+        },
+        "instructor": {
+          "title": "instructor",
+          "description": "A person assigned to instruct or provide instructional assistance for the CourseInstance. May include main teachers, training assistants, and helpers. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: include @id with ORCID URI for each instructor. TeSS uses extract_people() to parse ORCID.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Person"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Person"
+              },
+              "minItems": 1
+            }
+          ]
+        },
+        "offers": {
+          "title": "offers",
+          "description": "The price an attendee would pay to attend this CourseInstance. Use priceCurrency with ISO 4217 currency code. A price of '0.00' indicates a free event. Marginality: Recommended. Cardinality: MANY.",
+          "$comment": "Best practice: always include offers even for free events (price: '0.00') to indicate registration information. Use ISO 4217 currency codes: 'GBP', 'EUR', 'USD'.",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/Offer"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Offer"
+              }
+            }
+          ]
+        },
+        "alternateName": {
+          "title": "alternateName",
+          "description": "An alias or alternative name for this course instance. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "contributor": {
+          "title": "contributor",
+          "description": "Secondary contributors to this course instance, e.g. critical reviewers or helpers. Marginality: Optional. Cardinality: MANY.",
+          "$ref": "#/$defs/AgentOrArray"
+        },
+        "description": {
+          "title": "description",
+          "description": "A description specific to this CourseInstance. Overrides the Course-level description for this run. Marginality: Optional. Cardinality: ONE.",
+          "type": "string"
+        },
+        "duration": {
+          "title": "duration",
+          "description": "The duration of this course instance in ISO 8601 duration format. Overrides Course-level timeRequired for this run. Marginality: Optional. Cardinality: ONE.",
+          "$comment": "TeSS can compute :end from :start + :duration when endDate is absent. Use ISO 8601: P2D = 2 days, PT6H = 6 hours.",
+          "type": "string",
+          "examples": [
+            "P2D",
+            "P1W",
+            "PT6H",
+            "PT3H"
+          ]
+        },
+        "eventStatus": {
+          "title": "eventStatus",
+          "description": "The status of this course instance, e.g. 'postponed', 'cancelled', 'registration closed'. Marginality: Optional. Cardinality: ONE.",
+          "type": "string",
+          "examples": [
+            "postponed",
+            "cancelled",
+            "date TBC",
+            "application open",
+            "registration closed"
+          ]
+        },
+        "funder": {
+          "title": "funder",
+          "description": "A person or organization that financially supports this course instance. Marginality: Optional. Cardinality: MANY.",
+          "$ref": "#/$defs/AgentOrArray"
+        },
+        "image": {
+          "title": "image",
+          "description": "An image of or representing this course instance. Marginality: Optional. Cardinality: ONE.",
+          "oneOf": [
+            {
+              "type": "string",
+              "format": "uri"
+            },
+            {
+              "type": "object"
+            }
+          ]
+        },
+        "maximumAttendeeCapacity": {
+          "title": "maximumAttendeeCapacity",
+          "description": "The maximum number of individuals who may attend. Marginality: Optional. Cardinality: ONE.",
+          "type": "integer",
+          "examples": [
+            20,
+            30,
+            50
+          ]
+        },
+        "name": {
+          "title": "name",
+          "description": "The name of this specific course instance. Can override the Course name for variation-specific titles. Marginality: Optional. Cardinality: ONE.",
+          "$comment": "Use name only when this instance has a different name from the parent Course (e.g. 'Applied Genomics — Autumn 2026 cohort').",
+          "type": "string"
+        },
+        "organizer": {
+          "title": "organizer",
+          "description": "An organizer of this course instance event. Marginality: Optional. Cardinality: MANY.",
+          "$ref": "#/$defs/AgentOrArray"
+        },
+        "subEvent": {
+          "title": "subEvent",
+          "description": "An event that is part of this course instance, e.g. a guest lecture within a workshop. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "superEvent": {
+          "title": "superEvent",
+          "description": "An event that this course instance is a part of, e.g. a conference. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          ]
+        },
+        "workFeatured": {
+          "title": "workFeatured",
+          "description": "The training material used in or produced for this specific course instance. Use to override Course hasPart for instance-specific materials. Marginality: Optional. Cardinality: MANY.",
+          "oneOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          ]
+        }
+      },
+      "examples": [
+        {
+          "@context": {
+            "@vocab": "https://schema.org/",
+            "dct": "http://purl.org/dc/terms/"
+          },
+          "@type": "CourseInstance",
+          "@id": "https://example.org/courses/applied-genomics/2026-autumn",
+          "dct:conformsTo": {
+            "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+            "@type": "CreativeWork"
+          },
+          "courseMode": [
+            "onsite"
+          ],
+          "startDate": "2026-09-01T09:00:00+01:00",
+          "endDate": "2026-12-15T17:00:00Z",
+          "url": "https://example.org/courses/applied-genomics/2026-autumn/register",
+          "location": {
+            "@type": "Place",
+            "name": "University Conference Centre",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "1 Science Road",
+              "addressLocality": "Cambridge",
+              "addressCountry": "GB"
+            }
+          },
+          "instructor": [
+            {
+              "@type": "Person",
+              "name": "Dr Alice Example",
+              "@id": "https://orcid.org/0000-0001-2345-6789"
+            }
+          ],
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "GBP"
+          },
+          "inLanguage": "en",
+          "maximumAttendeeCapacity": 30
+        },
+        {
+          "@context": {
+            "@vocab": "https://schema.org/",
+            "dct": "http://purl.org/dc/terms/"
+          },
+          "@type": "CourseInstance",
+          "@id": "https://example.org/courses/applied-genomics/2026-spring-online",
+          "dct:conformsTo": {
+            "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+            "@type": "CreativeWork"
+          },
+          "courseMode": [
+            "online",
+            "synchronous"
+          ],
+          "startDate": "2026-03-10T09:00:00Z",
+          "endDate": "2026-03-12T17:00:00Z",
+          "url": "https://example.org/courses/applied-genomics/2026-spring-online",
+          "location": {
+            "@type": "VirtualLocation",
+            "name": "Zoom meeting",
+            "url": "https://zoom.example/meet/abc123"
+          },
+          "instructor": [
+            {
+              "@type": "Person",
+              "name": "Dr Bob Researcher",
+              "@id": "https://orcid.org/0000-0002-9876-5432"
+            }
+          ],
+          "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "EUR"
+          },
+          "inLanguage": "en",
+          "maximumAttendeeCapacity": 50
+        }
+      ]
+    }
+  }
+}
