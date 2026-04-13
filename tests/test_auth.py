@@ -11,7 +11,7 @@ from flask.testing import FlaskClient
 
 from app import create_app
 from app.db.sqlite import init_db
-from app.models.user import User, create_user, delete_user, delete_user_by_hash, get_user_by_token, revoke_user
+from app.models.user import User, create_user, delete_user, delete_user_by_hash, delete_user_by_id, get_user_by_token, revoke_user
 
 
 @pytest.fixture
@@ -44,45 +44,49 @@ def client(app: Flask) -> FlaskClient:
 
 def test_create_user_returns_user(app: Flask) -> None:
     with app.app_context():
-        user = create_user()
+        user, token = create_user()
     assert isinstance(user, User)
     assert user.id is not None
-    assert user.token is not None
-    assert len(user.token) > 0
+    assert len(token) > 0
     assert user.is_admin is False
+
+
+def test_create_user_token_not_on_user_object(app: Flask) -> None:
+    """The User object must not carry the plaintext token."""
+    with app.app_context():
+        user, _token = create_user()
+    assert not hasattr(user, "token")
 
 
 def test_create_user_stores_hash_not_plaintext(app: Flask) -> None:
     """The plaintext token must not appear in the database; only its hash should."""
     with app.app_context():
-        user = create_user()
-        assert user.token is not None
-        expected_hash = hashlib.sha256(user.token.encode()).hexdigest()
+        user, token = create_user()
+        expected_hash = hashlib.sha256(token.encode()).hexdigest()
         assert user.token_hash == expected_hash
         # Verify that get_user_by_token uses the stored hash, not plaintext.
-        found = get_user_by_token(user.token)
+        found = get_user_by_token(token)
     assert found is not None
     assert found.token_hash == expected_hash
 
 
 def test_create_admin_user(app: Flask) -> None:
     with app.app_context():
-        user = create_user(is_admin=True)
+        user, _token = create_user(is_admin=True)
     assert user.is_admin is True
 
 
 def test_create_user_token_is_unique(app: Flask) -> None:
     with app.app_context():
-        u1 = create_user()
-        u2 = create_user()
-    assert u1.token != u2.token
+        _u1, t1 = create_user()
+        _u2, t2 = create_user()
+    assert t1 != t2
 
 
 def test_get_user_by_token_found(app: Flask) -> None:
     with app.app_context():
-        user = create_user()
-        assert user.token is not None
-        found = get_user_by_token(user.token)
+        user, token = create_user()
+        found = get_user_by_token(token)
     assert found is not None
     assert found.id == user.id
 
@@ -95,10 +99,9 @@ def test_get_user_by_token_not_found(app: Flask) -> None:
 
 def test_delete_user_returns_true_when_found(app: Flask) -> None:
     with app.app_context():
-        user = create_user()
-        assert user.token is not None
-        deleted = delete_user(user.token)
-        still_there = get_user_by_token(user.token)
+        _user, token = create_user()
+        deleted = delete_user(token)
+        still_there = get_user_by_token(token)
     assert deleted is True
     assert still_there is None
 
@@ -111,10 +114,9 @@ def test_delete_user_returns_false_when_not_found(app: Flask) -> None:
 
 def test_delete_user_by_hash(app: Flask) -> None:
     with app.app_context():
-        user = create_user()
-        assert user.token is not None
+        user, token = create_user()
         deleted = delete_user_by_hash(user.token_hash)
-        still_there = get_user_by_token(user.token)
+        still_there = get_user_by_token(token)
     assert deleted is True
     assert still_there is None
 
@@ -125,22 +127,53 @@ def test_delete_user_by_hash_returns_false_when_not_found(app: Flask) -> None:
     assert deleted is False
 
 
+def test_delete_user_by_id(app: Flask) -> None:
+    with app.app_context():
+        user, token = create_user()
+        deleted = delete_user_by_id(user.id)
+        still_there = get_user_by_token(token)
+    assert deleted is True
+    assert still_there is None
+
+
+def test_delete_user_by_id_returns_false_when_not_found(app: Flask) -> None:
+    with app.app_context():
+        deleted = delete_user_by_id(99999)
+    assert deleted is False
+
+
 def test_revoke_user_with_plaintext_token(app: Flask) -> None:
     with app.app_context():
-        user = create_user()
-        assert user.token is not None
-        revoked = revoke_user(user.token)
-        still_there = get_user_by_token(user.token)
+        _user, token = create_user()
+        revoked = revoke_user(token)
+        still_there = get_user_by_token(token)
     assert revoked is True
     assert still_there is None
 
 
 def test_revoke_user_with_hash(app: Flask) -> None:
     with app.app_context():
-        user = create_user()
+        user, token = create_user()
         revoked = revoke_user(user.token_hash)
-        assert user.token is not None
-        still_there = get_user_by_token(user.token)
+        still_there = get_user_by_token(token)
+    assert revoked is True
+    assert still_there is None
+
+
+def test_revoke_user_with_int_id(app: Flask) -> None:
+    with app.app_context():
+        user, token = create_user()
+        revoked = revoke_user(user.id)
+        still_there = get_user_by_token(token)
+    assert revoked is True
+    assert still_there is None
+
+
+def test_revoke_user_with_string_id(app: Flask) -> None:
+    with app.app_context():
+        user, token = create_user()
+        revoked = revoke_user(str(user.id))
+        still_there = get_user_by_token(token)
     assert revoked is True
     assert still_there is None
 
@@ -189,10 +222,9 @@ def test_whoami_with_malformed_header_returns_401(client: FlaskClient) -> None:
 
 def test_whoami_with_valid_token_returns_user_info(app: Flask, client: FlaskClient) -> None:
     with app.app_context():
-        user = create_user()
+        user, token = create_user()
 
-    assert user.token is not None
-    response = client.get("/whoami", headers={"Authorization": f"Bearer {user.token}"})
+    response = client.get("/whoami", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     data = response.get_json()
     assert data["id"] == user.id
@@ -204,9 +236,8 @@ def test_whoami_with_valid_token_returns_user_info(app: Flask, client: FlaskClie
 
 def test_whoami_admin_flag_is_correct(app: Flask, client: FlaskClient) -> None:
     with app.app_context():
-        admin = create_user(is_admin=True)
+        _admin, token = create_user(is_admin=True)
 
-    assert admin.token is not None
-    response = client.get("/whoami", headers={"Authorization": f"Bearer {admin.token}"})
+    response = client.get("/whoami", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     assert response.get_json()["is_admin"] is True

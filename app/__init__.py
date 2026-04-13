@@ -73,10 +73,10 @@ def _register_users_cli(app: Flask) -> None:
         """Create a new user and print their Bearer token."""
         from app.models.user import create_user
 
-        user = create_user(is_admin=admin)
+        user, token = create_user(is_admin=admin)
         role = "admin" if user.is_admin else "user"
         click.echo(f"Created {role} (id={user.id}).")
-        click.echo(f"Token: {user.token}")
+        click.echo(f"Token: {token}")
 
     @users.command("list")
     def list_users_command() -> None:
@@ -92,17 +92,17 @@ def _register_users_cli(app: Flask) -> None:
             click.echo(f"id={user.id}  created={user.created_at}  role={role}")
 
     @users.command("revoke")
-    @click.argument("token_or_hash")
-    def revoke_user_command(token_or_hash: str) -> None:
-        """Revoke a user token.
+    @click.argument("identifier")
+    def revoke_user_command(identifier: str) -> None:
+        """Revoke a user account.
 
-        TOKEN_OR_HASH may be the plaintext Bearer token or its SHA-256 hex
-        digest (64 lowercase hex characters).  The command auto-detects which
-        form was supplied.
+        IDENTIFIER may be the numeric user id (shown by ``flask users
+        list``), the plaintext Bearer token, or its SHA-256 hex digest
+        (64 lowercase hex characters).
         """
         from app.models.user import revoke_user
 
-        if revoke_user(token_or_hash):
+        if revoke_user(identifier):
             click.echo("Token revoked.")
         else:
             click.echo("Token not found.", err=True)

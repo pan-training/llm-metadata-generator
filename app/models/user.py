@@ -37,19 +37,13 @@ def _hash_token(token: str) -> str:
 class User:
     """Represents a row in the ``users`` table.
 
-    ``token`` holds the plaintext Bearer token.  It is populated whenever
-    the raw token is known (immediately after creation, or after a
-    successful :func:`get_user_by_token` lookup).  It is ``None`` when the
-    user record is loaded without knowing the plaintext (e.g. via
-    :func:`list_users`).
-
-    ``token_hash`` is the SHA-256 hex digest that is stored in the database
-    and is always available.
+    The plaintext Bearer token is **never** stored here (or anywhere on
+    disk).  Only its SHA-256 hex digest (``token_hash``) is persisted and
+    carried by this object.
     """
 
     id: int
-    token: str | None  # plaintext; None when raw token is not known
-    token_hash: str    # SHA-256 hex digest; always stored in DB
+    token_hash: str  # SHA-256 hex digest; always stored in DB
     created_at: str
     is_admin: bool
 
@@ -60,8 +54,8 @@ def get_user_by_token(token: str) -> "User | None":
     Hashes *token* before querying so the plaintext is never sent to the
     database layer.
 
-    Returns the :class:`User` (with ``token`` set to the plaintext) if
-    found, or ``None`` if the token is unknown or has been revoked.
+    Returns the :class:`User` if found, or ``None`` if the token is unknown
+    or has been revoked.
     """
     token_hash = _hash_token(token)
     db = get_db()
@@ -73,26 +67,27 @@ def get_user_by_token(token: str) -> "User | None":
         return None
     return User(
         id=row["id"],
-        token=token,
         token_hash=row["token_hash"],
         created_at=row["created_at"],
         is_admin=bool(row["is_admin"]),
     )
 
 
-def create_user(is_admin: bool = False) -> "User":
+def create_user(is_admin: bool = False) -> "tuple[User, str]":
     """Create a new user with a freshly generated token.
 
-    A random plaintext token is generated, its SHA-256 hash is stored in
-    the database, and the :class:`User` returned contains the plaintext
-    token so the caller can hand it to the new user.  The plaintext is
-    **not** retained after this call.
+    A random plaintext token is generated and its SHA-256 hash is stored in
+    the database.  The plaintext token is returned alongside the
+    :class:`User` so the caller can hand it to the new user.  It is
+    **not** stored anywhere after this call.
 
     Args:
         is_admin: When ``True`` the new user is granted admin privileges.
 
     Returns:
-        The newly created :class:`User` (``token`` contains the plaintext).
+        A ``(user, token)`` tuple.  *user* is the newly created
+        :class:`User`; *token* is the one-time plaintext Bearer token that
+        must be shown to the user immediately.
     """
     token = secrets.token_urlsafe(32)
     token_hash = _hash_token(token)
@@ -104,14 +99,11 @@ def create_user(is_admin: bool = False) -> "User":
     db.commit()
     user = get_user_by_token(token)
     assert user is not None  # we just inserted this token_hash
-    return user
+    return user, token
 
 
 def list_users() -> list["User"]:
     """Return all users ordered by id.
-
-    The plaintext tokens are not stored in the database, so each returned
-    :class:`User` has ``token=None``.
 
     Returns:
         A list of :class:`User` instances, oldest first.
@@ -123,7 +115,6 @@ def list_users() -> list["User"]:
     return [
         User(
             id=row["id"],
-            token=None,
             token_hash=row["token_hash"],
             created_at=row["created_at"],
             is_admin=bool(row["is_admin"]),
@@ -159,23 +150,45 @@ def delete_user_by_hash(token_hash: str) -> bool:
     return bool(result.rowcount)
 
 
-def revoke_user(token_or_hash: str) -> bool:
-    """Delete the user identified by a plaintext token or its SHA-256 hash.
-
-    The argument is interpreted as a token hash when it is exactly 64
-    lowercase hexadecimal characters (the format produced by
-    :func:`_hash_token`); otherwise it is treated as a plaintext token and
-    hashed before the lookup.
+def delete_user_by_id(user_id: int) -> bool:
+    """Delete the user identified by their numeric database id.
 
     Args:
-        token_or_hash: The raw Bearer token **or** its SHA-256 hex digest.
+        user_id: The primary key of the user row.
+
+    Returns:
+        ``True`` if a user was deleted, ``False`` if the id was not found.
+    """
+    db = get_db()
+    result = db.execute("DELETE FROM users WHERE id = ?", (user_id,))
+    db.commit()
+    return bool(result.rowcount)
+
+
+def revoke_user(identifier: "str | int") -> bool:
+    """Delete the user identified by a plaintext token, token hash, or user id.
+
+    *identifier* is interpreted as follows (in order):
+
+    * **int** or **numeric string** – treated as a database user id.
+    * **64-char lowercase hex string** – treated as a SHA-256 token hash.
+    * **anything else** – treated as a plaintext Bearer token and hashed
+      before the lookup.
+
+    Args:
+        identifier: The raw Bearer token, its SHA-256 hex digest, the
+            user id as an integer, or the user id as a decimal string.
 
     Returns:
         ``True`` if a user was deleted, ``False`` if not found.
     """
-    if _SHA256_RE.fullmatch(token_or_hash):
-        return delete_user_by_hash(token_or_hash)
-    return delete_user(token_or_hash)
+    if isinstance(identifier, int):
+        return delete_user_by_id(identifier)
+    if identifier.isdigit():
+        return delete_user_by_id(int(identifier))
+    if _SHA256_RE.fullmatch(identifier):
+        return delete_user_by_hash(identifier)
+    return delete_user(identifier)
 
 
 def require_token(f: Callable[..., ResponseReturnValue]) -> Callable[..., ResponseReturnValue]:
