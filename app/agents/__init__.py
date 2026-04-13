@@ -1,19 +1,22 @@
-"""LLM client factory and task-to-model mapping."""
+"""LLM client factory and task-to-model mapping.
+
+Model defaults are read from environment variables (LLM_MODEL_SMALL,
+LLM_MODEL_LARGE, LLM_MODEL_EMBEDDING) so the same code works against any
+OpenAI-compatible backend (OpenAI, LocalAI, Ollama, …).
+
+TODO (issue #7): look up per-task model overrides from the model_assignments
+  DB table instead of using the three-tier env-var approach.
+"""
+
+import os
 
 from flask import current_app
 from openai import OpenAI
 
-# Task-to-model default mapping. In future these will be looked up from model_assignments table.
-TASK_MODELS: dict[str, str] = {
-    "content_relevance": "gpt-4o-mini",
-    "content_summary": "gpt-4o",
-    "link_decision": "gpt-4o-mini",
-    "json_ld_review": "gpt-4o",
-    "ontology_embedding": "text-embedding-3-small",
-    "tool_discovery": "gpt-4o-mini",
-    "model_selection": "gpt-4o-mini",
-    "default": "gpt-4o",
-}
+# Task categories: each task maps to one of three tiers.
+_SMALL_TASKS = {"content_relevance", "link_decision", "model_selection"}
+_EMBEDDING_TASKS = {"ontology_embedding"}
+# All other tasks (content_summary, json_ld_review, tool_discovery, …) use the large model.
 
 
 def get_llm_client(task: str = "default") -> OpenAI:
@@ -26,6 +29,23 @@ def get_llm_client(task: str = "default") -> OpenAI:
 def get_model_for_task(task: str = "default") -> str:
     """Return the preferred model name for the given task.
 
-    TODO: In future, look up the model_assignments table for per-task overrides.
+    Reads from environment variables so no Flask application context is
+    required — agents can call this at any time, even in background threads.
+
+    Task tiers:
+      small  – LLM_MODEL_SMALL (default: qwen2.5-coder-7b-instruct)
+               Fast, cheap: content_relevance, link_decision, model_selection.
+      large  – LLM_MODEL_LARGE (default: gemma-3-27b-it)
+               Quality: content_summary, json_ld_review, tool_discovery, default.
+      embed  – LLM_MODEL_EMBEDDING (default: qwen3-embedding-8b)
+               Embedding: ontology_embedding.
     """
-    return TASK_MODELS.get(task, TASK_MODELS["default"])
+    small = os.environ.get("LLM_MODEL_SMALL", "qwen2.5-coder-7b-instruct")
+    large = os.environ.get("LLM_MODEL_LARGE", "gemma-3-27b-it")
+    embedding = os.environ.get("LLM_MODEL_EMBEDDING", "qwen3-embedding-8b")
+
+    if task in _SMALL_TASKS:
+        return small
+    if task in _EMBEDDING_TASKS:
+        return embedding
+    return large

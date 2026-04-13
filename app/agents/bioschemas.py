@@ -1,107 +1,188 @@
 """Bioschemas extraction agent.
 
-Reads web pages, follows links, and produces Bioschemas JSON-LD for training
-materials and course instances.  This module must NOT import Flask.
+## Extraction pipeline
+
+The agent uses a four-phase pipeline designed to handle arbitrarily large
+websites without overflowing the LLM context window.
+
+### Phase 1 – CRAWL + DISCOVER  (tree-like, chunk-by-chunk)
+
+1. Fetch the primary URL (respecting robots.txt).
+2. Strip JavaScript/CSS → clean text with inline link annotations
+   (e.g. "Introduction to RNA-seq [→ https://example.com/rna-seq]").
+3. Split the text into overlapping chunks (CHUNK_SIZE chars, CHUNK_OVERLAP
+   overlap) so context is never lost across chunk boundaries.
+4. For each chunk, call a fast LLM (content_relevance task) to:
+   a) decide if the chunk is relevant to training content;
+   b) list any training items found in the chunk (title, URL, type);
+   c) list any links worth following (with a short reason).
+   All three outputs come from one LLM call per chunk.
+5. Recursively follow the identified links up to MAX_FOLLOW_DEPTH, repeating
+   steps 2–4 for each new page (up to MAX_TOTAL_PAGES total).
+
+Result: a deduplicated list of DiscoveredItem objects, each carrying enough
+context (source URL, surrounding text excerpt) to drive the extraction phase.
+
+### Phase 2 – EXTRACT  (per item, separate context windows)
+
+For each discovered item:
+- Gather the most relevant crawled content (item's own URL if available;
+  otherwise the source page).
+- Strip and chunk that content.
+- Call the quality LLM (json_ld_review task) to produce a Bioschemas JSON-LD
+  object, given the item's title/URL/type and the relevant text.
+
+# TODO (issue #6): pass candidate ontology terms to the extraction prompt once
+#   ontology vector search is implemented (see TODO.md item 6).
+
+### Phase 3 – REVIEW  (per item)
+
+Self-critical review: the LLM is asked to improve the extracted JSON-LD, check
+for omissions, and verify field values against TeSS conventions.  The prompt
+focuses on *content* quality — @context, @id, and dct:conformsTo are added
+programmatically afterwards (not the model's concern).
+
+### Phase 4 – VALIDATE + FIX
+
+JSON schema validation against docs/Bioschemas/bioschemas-training-schema.json
+(Draft 2020-12, via jsonschema).  Validation errors are formatted as a concise
+list and fed back to the LLM for a single fixing pass.
+
+After the fix pass, programmatic TeSS conventions are applied (@context with
+dct namespace, dct:conformsTo, @id) — these are constants, not LLM concerns.
+
+### Structural summary
+
+After each successful crawl, a compact JSON summary is computed describing the
+site's navigation structure (crawled URLs + content hashes, item count,
+URL path patterns).  This is stored in metadata_cache.structural_summary and
+passed back to the agent on subsequent runs so incremental updates know which
+pages changed and which items are likely new.
+
+### Update modes
+
+- **Full refresh** (`structural_summary=None`): crawl everything from scratch.
+- **Incremental** (`structural_summary` provided): the LLM is shown the
+  previous summary and the page-hash map so it can skip unchanged content and
+  focus on new or changed items.  Level-0 "no-op" is handled by the caller
+  (compare content hashes before calling the agent).
+
+This module must NOT import Flask.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import pathlib
 import re
 import urllib.robotparser
+from dataclasses import dataclass, field
 from html.parser import HTMLParser
 from typing import Any, Callable
 from urllib.parse import urljoin, urlparse
 
 import requests
+from jsonschema import Draft202012Validator
+
+from app.agents import get_model_for_task
 
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
 
-MAX_FOLLOW_LINKS = 5
-# Maximum links to follow for paginated content (e.g. "page 2", "next page").
-# TODO: differentiate paginated vs non-paginated in the link-decision prompt
-#       once the agent supports multi-depth crawling.
-MAX_PAGINATED_LINKS = 20
-# Maximum recursion depth when following links.
-# TODO: implement recursive link following (currently only depth-1 is used).
-MAX_FOLLOW_DEPTH = 2
-# Maximum number of characters from page HTML sent to the LLM per call.
-MAX_PAGE_CONTENT_SIZE = 8000
+# Chunk parameters for the HTML→text → LLM discovery pass.
+CHUNK_SIZE = 4000   # characters per chunk sent to the LLM
+CHUNK_OVERLAP = 400  # overlap between consecutive chunks (preserves context)
 
-_USER_AGENT = "BioschemasMetadataGenerator/1.0 (+https://github.com/pan-training/llm-metadata-generator)"
+# Crawl limits.
+MAX_TOTAL_PAGES = 20     # total pages fetched in one agent run
+MAX_FOLLOW_DEPTH = 2     # maximum link-following depth from the primary URL
+MAX_LINKS_PER_CHUNK = 5  # links the LLM may nominate per chunk
+# TODO (issue #3 follow-up): add a separate higher limit for paginated links
+# (e.g. /courses/?page=N) once multi-depth crawling is implemented.
+MAX_PAGINATED_LINKS = 20  # reserved for future paginated crawl support
+
+# Maximum characters of item content sent to the extraction LLM.
+MAX_EXTRACTION_CONTENT = 8000
+
+_USER_AGENT = (
+    "BioschemasMetadataGenerator/1.0 "
+    "(+https://github.com/pan-training/llm-metadata-generator)"
+)
+
+# Path to the Bioschemas JSON schema (relative to this file).
+_SCHEMA_PATH = (
+    pathlib.Path(__file__).parent.parent.parent
+    / "docs"
+    / "Bioschemas"
+    / "bioschemas-training-schema.json"
+)
 
 # ---------------------------------------------------------------------------
-# Embedded system prompt
+# Embedded system prompt  (content guidance only — structural boilerplate such
+# as @context, @id and dct:conformsTo is added programmatically, so the model
+# does not need to worry about it)
 # ---------------------------------------------------------------------------
 
 _SYSTEM_PROMPT = """\
-You are an expert at extracting structured metadata from web pages about training \
-materials and courses, following the Bioschemas and Schema.org standards as used \
-by TeSS (Training eSupport System).
+You are an expert metadata extractor for training materials, courses, and events
+in life sciences and related research domains.
+Your job is to extract high-quality Bioschemas/Schema.org JSON-LD metadata from
+web-page text.
 
-## Bioschemas profiles you must follow
+## Output a single JSON-LD object
 
-### TrainingMaterial (LearningResource)
-Required fields:
-- @context: "https://schema.org" (plus optional dct namespace)
+Focus entirely on *content* — the technical boilerplate (@context, @id,
+dct:conformsTo) is added automatically after your output.
+
+### For TrainingMaterial / LearningResource
+Required:
 - @type: "LearningResource"
-- @id: canonical URL of the resource (IRI)
-- name: human-readable title (string)
-- description: plain text or HTML description (string)
-- keywords: list of relevant keywords (array of strings)
-- dct:conformsTo: {"@id": "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE"}
-
-Strongly recommended fields:
-- url: canonical URL (string)
-- author: array of Person/Organization objects
-- license: URL or CreativeWork
-- inLanguage: language code (e.g. "en")
-- audience: array of EducationalAudience objects with audienceType
-- teaches: array of strings or DefinedTerms (learning outcomes)
-- about: array of DefinedTerms for scientific topics (EDAM preferred)
-- mentions: array of Tool objects (bio.tools entries when relevant)
-
-### CourseInstance
-Required fields:
-- @context: "https://schema.org"
-- @type: "CourseInstance"
-- @id: canonical IRI of the instance
-- name: title
-- description: text description
-- courseMode: array — use "online", "onsite", "blended" (TeSS accepted values)
-- location: Place object with PostalAddress, or VirtualLocation for online events
-- dct:conformsTo: {"@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE"}
+- name: full title (string)
+- description: 2–5 sentence description (string)
+- keywords: array of lowercase keyword strings
 
 Strongly recommended:
-- startDate, endDate: ISO 8601 date/datetime strings
 - url: canonical URL
-- organizer / provider: Organization or Person
+- author: [{"@type": "Person", "name": "...", "@id": "https://orcid.org/..."}]
+  (include ORCID in @id whenever available)
+- license: SPDX identifier (e.g. "CC-BY-4.0") or full CC URL
+- inLanguage: IETF BCP 47 code (e.g. "en", "de", "fr")
+- audience: [{"@type": "Audience", "audienceType": "beginner|intermediate|advanced"}]
+- teaches: array of learning outcome strings
+- educationalLevel: "beginner" | "intermediate" | "advanced"
+- learningResourceType: array, e.g. ["tutorial", "video", "slides", "e-learning"]
+- about: scientific topics as DefinedTerms
+  (use EDAM URIs for life science: {"@type":"DefinedTerm","name":"Bioinformatics","url":"http://edamontology.org/topic_0091"}
+   use PaNET for photon/neutron: {"@type":"DefinedTerm","name":"Tomography","url":"https://w3id.org/pan-training/PaNET01203"})
+- timeRequired: ISO 8601 duration (e.g. "PT2H" = 2 hours, "P3D" = 3 days)
+- identifier: DOI URL when present (e.g. "https://doi.org/10.1234/...")
+
+### For CourseInstance (training event / workshop)
+Required:
+- @type: "CourseInstance"
+- name: event title
+- description: 2–5 sentence description
+- courseMode: array — use exactly "online", "onsite", or "blended"
+- location: for onsite: {"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"...","addressCountry":"..."}}
+             for online: {"@type":"VirtualLocation","url":"..."}
+
+Strongly recommended:
+- startDate, endDate: ISO 8601 datetime ("2024-03-15T09:00:00" or "2024-03-15")
+- url: canonical URL
+- organizer: [{"@type": "Organization", "name": "..."}]
 - maximumAttendeeCapacity: integer
+- offers: [{"@type": "Offer", "price": 0, "priceCurrency": "EUR", "url": "..."}]
 
-## TeSS-specific conventions
-
-- Always include `dct:conformsTo` so TeSS can identify the profile version.
-  Use namespace prefix in @context: {"@vocab": "https://schema.org/", "dct": "http://purl.org/dc/terms/"}
-- For people with ORCID, use the ORCID URL as @id:
-  {"@type": "Person", "@id": "https://orcid.org/0000-0001-2345-6789", "name": "..."}
-- For keywords: provide an array of lowercase strings (TeSS splits on commas if given as one string).
-- For scientific topics: use EDAM ontology DefinedTerms when possible:
-  {"@type": "DefinedTerm", "@id": "http://edamontology.org/topic_0091", "name": "Bioinformatics"}
-- DOIs: include as @id when available (e.g. "https://doi.org/10.12345/...").
-- courseMode values: "online" (virtual), "onsite" (in-person), "blended" (hybrid).
-- TeSS normalises HTTPS schema.org URIs to HTTP — use "https://schema.org/" as @context.
-
-## Output format
-
-Always output valid JSON (no markdown fences, no explanatory text around JSON).
-For discovery tasks: output {"training_items": [{"title": "...", "url": "...", "type": "TrainingMaterial|CourseInstance"}]}
-For link decisions: output {"follow": ["url1", "url2", ...]}
-For extraction: output a single JSON-LD object.
-For review: output the improved JSON-LD object (full, not a diff).
-For structural summaries: output {"summary": "...", "items": [...]}
+## TeSS ingestion conventions
+- keywords: use an array, not a comma-separated string
+- author/@id: use ORCID URI when known (TeSS extracts ORCID by regex)
+- about: EDAM is primary for life science; PaNET for photon/neutron science
+- identifier: include DOI as full URL; TeSS deduplicates on identifier
+- inLanguage: language subtag only ("en", not "English")
+- courseMode: TeSS maps "online" → virtual flag; use exact values listed above
+- organizer vs provider: for events, prefer organizer; provider is the institution
 """
 
 # ---------------------------------------------------------------------------
@@ -110,11 +191,11 @@ For structural summaries: output {"summary": "...", "items": [...]}
 
 
 class AccessDeniedError(Exception):
-    """Raised when robots.txt blocks crawling of the primary source URL."""
+    """Raised when robots.txt or the server blocks crawling the primary URL."""
 
 
 class NotTrainingContentError(Exception):
-    """Raised when no training content is found on the page."""
+    """Raised when no training content is found after crawling."""
 
 
 class MultipleTrainingContentError(Exception):
@@ -122,54 +203,220 @@ class MultipleTrainingContentError(Exception):
 
 
 # ---------------------------------------------------------------------------
-# HTML link parser
+# Internal data structures
 # ---------------------------------------------------------------------------
 
 
-class _LinkParser(HTMLParser):
-    """Minimal HTML parser that collects href values from <a> tags."""
+@dataclass
+class DiscoveredItem:
+    """A training item discovered during the crawl phase."""
 
-    def __init__(self) -> None:
+    title: str
+    url: str        # item's own URL if known, else the page where it was found
+    item_type: str  # "TrainingMaterial" | "CourseInstance" | "Course"
+    source_url: str  # page URL where this item was first mentioned
+    context: str    # text excerpt surrounding the mention
+
+
+@dataclass
+class _CrawlState:
+    """Mutable state accumulated during the crawl+discover phase."""
+
+    # url → raw HTML text (stripped of scripts/styles)
+    pages: dict[str, str] = field(default_factory=dict)
+    # url → SHA-256 hash of the raw HTML
+    page_hashes: dict[str, str] = field(default_factory=dict)
+    # Deduplicated discovered items
+    discovered: list[DiscoveredItem] = field(default_factory=list)
+    # robots.txt cache: netloc → RobotFileParser (per-run cache)
+    robots_cache: dict[str, urllib.robotparser.RobotFileParser] = field(
+        default_factory=dict
+    )
+
+
+# ---------------------------------------------------------------------------
+# HTML → clean text with inline link annotations
+# ---------------------------------------------------------------------------
+
+
+class _TextExtractor(HTMLParser):
+    """Strips scripts/styles and builds readable text with inline link refs.
+
+    Links appear as ``anchor text [→ https://target.example.com]`` so the
+    LLM can see link context without losing surrounding text.
+    """
+
+    _SKIP_TAGS = frozenset({"script", "style", "noscript", "template"})
+    _BLOCK_TAGS = frozenset(
+        {"p", "div", "li", "h1", "h2", "h3", "h4", "h5", "h6",
+         "br", "tr", "td", "th", "dt", "dd", "blockquote", "section",
+         "article", "header", "footer", "nav", "aside", "figure"}
+    )
+
+    def __init__(self, base_url: str) -> None:
         super().__init__()
-        self.links: list[str] = []
+        self._base_url = base_url
+        self._skip_depth = 0
+        self._buf: list[str] = []
+        self._current_href: str | None = None
+        self._link_text: list[str] = []
+        self.links: list[tuple[str, str]] = []  # (absolute_url, anchor_text)
 
-    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+    def handle_starttag(
+        self, tag: str, attrs: list[tuple[str, str | None]]
+    ) -> None:
+        if tag in self._SKIP_TAGS:
+            self._skip_depth += 1
+            return
+        if self._skip_depth:
+            return
+        if tag in self._BLOCK_TAGS:
+            self._buf.append("\n")
         if tag == "a":
             for name, value in attrs:
                 if name == "href" and value:
-                    self.links.append(value)
+                    href = value.strip()
+                    # Skip anchors, mailto, and javascript: links
+                    if href.startswith(("#", "mailto:", "javascript:")):
+                        continue
+                    absolute = urljoin(self._base_url, href)
+                    # Only follow http/https links; urljoin can produce other
+                    # schemes (data:, ftp:, …) if the page contains them.
+                    if urlparse(absolute).scheme in ("http", "https"):
+                        self._current_href = absolute
+                        self._link_text = []
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag in self._SKIP_TAGS:
+            if self._skip_depth > 0:
+                self._skip_depth -= 1
+            return
+        if self._skip_depth:
+            return
+        if tag == "a" and self._current_href:
+            anchor = " ".join(self._link_text).strip()
+            if anchor:
+                self._buf.append(f" [→ {self._current_href}]")
+                self.links.append((self._current_href, anchor))
+            self._current_href = None
+            self._link_text = []
+
+    def handle_data(self, data: str) -> None:
+        if self._skip_depth:
+            return
+        text = data.strip()
+        if text:
+            self._buf.append(text + " ")
+            if self._current_href is not None:
+                self._link_text.append(text)
+
+    def get_text(self) -> str:
+        raw = "".join(self._buf)
+        # Collapse excessive whitespace / newlines
+        raw = re.sub(r" {2,}", " ", raw)
+        raw = re.sub(r"\n{3,}", "\n\n", raw)
+        return raw.strip()
 
 
-def _extract_links(html: str, base_url: str) -> list[str]:
-    """Return absolute URLs extracted from <a href="..."> tags in *html*."""
-    parser = _LinkParser()
-    parser.feed(html)
-    links: list[str] = []
-    for href in parser.links:
-        href = href.strip()
-        if href.startswith(("#", "mailto:", "javascript:")):
-            continue
-        absolute = urljoin(base_url, href)
-        # Only keep http/https links
-        if urlparse(absolute).scheme in ("http", "https"):
-            links.append(absolute)
-    # Deduplicate while preserving order
-    seen: set[str] = set()
-    unique: list[str] = []
-    for link in links:
-        if link not in seen:
-            seen.add(link)
-            unique.append(link)
-    return unique
+def _html_to_text(
+    html: str, base_url: str
+) -> tuple[str, list[tuple[str, str]]]:
+    """Return (clean_text, [(absolute_url, anchor_text), ...]) from HTML."""
+    extractor = _TextExtractor(base_url)
+    extractor.feed(html)
+    return extractor.get_text(), extractor.links
 
 
 # ---------------------------------------------------------------------------
-# Helper utilities
+# Legacy helper kept for backward compatibility with existing tests
+# ---------------------------------------------------------------------------
+
+
+def _extract_links(html: str, base_url: str) -> list[str]:
+    """Return deduplicated absolute URLs extracted from <a> tags in *html*."""
+    _, links = _html_to_text(html, base_url)
+    # dict.fromkeys preserves insertion order while deduplicating
+    return list(dict.fromkeys(url for url, _ in links))
+
+
+# ---------------------------------------------------------------------------
+# Text chunking
+# ---------------------------------------------------------------------------
+
+
+def _chunk_text(
+    text: str,
+    chunk_size: int = CHUNK_SIZE,
+    overlap: int = CHUNK_OVERLAP,
+) -> list[str]:
+    """Split *text* into overlapping chunks, preferring paragraph/sentence breaks."""
+    if len(text) <= chunk_size:
+        return [text]
+
+    chunks: list[str] = []
+    start = 0
+    while start < len(text):
+        end = start + chunk_size
+        if end >= len(text):
+            chunks.append(text[start:])
+            break
+        # Prefer paragraph boundary
+        para_break = text.rfind("\n\n", start, end)
+        if para_break > start + chunk_size // 2:
+            end = para_break
+        else:
+            # Fall back to sentence boundary
+            for sep in (". ", ".\n", "? ", "! "):
+                sent_break = text.rfind(sep, start, end)
+                if sent_break > start + chunk_size // 2:
+                    end = sent_break + len(sep)
+                    break
+        chunks.append(text[start:end])
+        start = max(start + 1, end - overlap)
+    return chunks
+
+
+# ---------------------------------------------------------------------------
+# robots.txt with per-run caching
+# ---------------------------------------------------------------------------
+
+
+def _check_robots(
+    url: str,
+    cache: dict[str, urllib.robotparser.RobotFileParser] | None = None,
+) -> bool:
+    """Return True if crawling *url* is allowed by robots.txt.
+
+    *cache* is a per-crawl-session dict keyed by netloc; pass the same dict
+    across all calls in one agent run to avoid re-fetching robots.txt for the
+    same domain.
+    # TODO (issue #3 follow-up): persist the robots cache across cron runs to
+    #   reduce repeated fetches for frequently-crawled domains.
+    """
+    if cache is None:
+        cache = {}
+    parsed = urlparse(url)
+    netloc = parsed.netloc
+    if netloc not in cache:
+        robots_url = f"{parsed.scheme}://{netloc}/robots.txt"
+        rp = urllib.robotparser.RobotFileParser()
+        rp.set_url(robots_url)
+        try:
+            rp.read()
+        except Exception:
+            # Treat unreachable robots.txt as "allow all"
+            rp.allow_all = True  # type: ignore[attr-defined]
+        cache[netloc] = rp
+    return cache[netloc].can_fetch(_USER_AGENT, url)
+
+
+# ---------------------------------------------------------------------------
+# HTTP fetch
 # ---------------------------------------------------------------------------
 
 
 def _fetch(url: str) -> requests.Response:
-    """Fetch a URL and return the response."""
+    """GET *url* with the agent's User-Agent header, 15-second timeout."""
     return requests.get(
         url,
         headers={"User-Agent": _USER_AGENT},
@@ -177,23 +424,9 @@ def _fetch(url: str) -> requests.Response:
     )
 
 
-def _check_robots(url: str) -> bool:
-    """Return True if crawling *url* is allowed, False if blocked."""
-    parsed = urlparse(url)
-    robots_url = f"{parsed.scheme}://{parsed.netloc}/robots.txt"
-    rp = urllib.robotparser.RobotFileParser()
-    rp.set_url(robots_url)
-    try:
-        rp.read()
-    except Exception:
-        # If robots.txt can't be fetched, assume allowed
-        return True
-    return rp.can_fetch(_USER_AGENT, url)
-
-
-def _content_hash(text: str) -> str:
-    """Return a stable SHA-256 hex digest for the given text."""
-    return hashlib.sha256(text.encode()).hexdigest()
+# ---------------------------------------------------------------------------
+# LLM call helper
+# ---------------------------------------------------------------------------
 
 
 def _call_llm(
@@ -201,7 +434,13 @@ def _call_llm(
     model: str,
     messages: list[dict[str, str]],
 ) -> dict[str, Any]:
-    """Call the LLM chat completions API and parse the JSON response."""
+    """Call the LLM chat completions API and parse the JSON response.
+
+    Uses response_format={"type": "json_object"} which is supported by all
+    major OpenAI-compatible backends (OpenAI, LocalAI, Ollama, …).
+    # TODO (issue #7): try response_format={"type": "json_schema", ...} for
+    #   backends that support structured outputs (better schema adherence).
+    """
     response = client.chat.completions.create(
         model=model,
         messages=messages,
@@ -211,7 +450,7 @@ def _call_llm(
     try:
         return json.loads(content)  # type: ignore[no-any-return]
     except json.JSONDecodeError:
-        # Try to extract JSON from the response if it contains extra text
+        # Try to salvage JSON if the model leaked extra text
         match = re.search(r"\{.*\}", content, re.DOTALL)
         if match:
             try:
@@ -221,53 +460,147 @@ def _call_llm(
         return {}
 
 
-def _apply_tess_conventions(item: dict[str, Any], url: str) -> dict[str, Any]:
-    """Ensure TeSS-required fields are set on a JSON-LD item."""
-    # Ensure proper @context with dct namespace
-    if "@context" not in item or item["@context"] == "https://schema.org":
-        item["@context"] = {
-            "@vocab": "https://schema.org/",
-            "dct": "http://purl.org/dc/terms/",
-        }
+# ---------------------------------------------------------------------------
+# JSON schema validation (uses docs/Bioschemas/bioschemas-training-schema.json)
+# ---------------------------------------------------------------------------
 
-    # Ensure dct:conformsTo is set based on @type
+_SCHEMA: dict[str, Any] | None = None
+
+
+def _get_schema() -> dict[str, Any]:
+    global _SCHEMA
+    if _SCHEMA is None:
+        _SCHEMA = json.loads(_SCHEMA_PATH.read_text())
+    return _SCHEMA
+
+
+def _validate_with_schema(item: dict[str, Any]) -> list[str]:
+    """Validate *item* against the Bioschemas training JSON schema.
+
+    Returns a list of human-readable error strings (empty = valid).
+    The schema expects an array at the top level, so the item is wrapped.
+
+    # TODO (issue #3 follow-up): surface richer schema descriptions to the LLM
+    #   (e.g. include the "$comment" field of the failing property from the
+    #   schema) to provide more actionable fix instructions.
+    """
+    try:
+        schema = _get_schema()
+        validator = Draft202012Validator(schema)
+        errors = []
+        for err in validator.iter_errors([item]):
+            path = " → ".join(str(p) for p in err.absolute_path) or "(root)"
+            errors.append(f"{path}: {err.message}")
+        return errors
+    except Exception as exc:
+        # Validation should never crash the pipeline
+        return [f"Schema validation error: {exc}"]
+
+
+# ---------------------------------------------------------------------------
+# TeSS programmatic conventions  (applied after LLM output, not in the prompt)
+# ---------------------------------------------------------------------------
+
+_TESS_CONTEXT: dict[str, str] = {
+    "@vocab": "https://schema.org/",
+    "dct": "http://purl.org/dc/terms/",
+}
+
+_PROFILE_IRI: dict[str, str] = {
+    "CourseInstance": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+    "Course": "https://bioschemas.org/profiles/Course/1.0-RELEASE",
+}
+_DEFAULT_PROFILE_IRI = "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT"
+
+
+def _apply_tess_conventions(item: dict[str, Any], fallback_url: str) -> dict[str, Any]:
+    """Ensure TeSS-required structural fields are present.
+
+    These are added programmatically so the LLM can focus on content.
+    """
+    # @context: always use the expanded form with dct namespace
+    if not isinstance(item.get("@context"), dict):
+        item["@context"] = _TESS_CONTEXT
+
+    # dct:conformsTo: select profile IRI by @type
     if "dct:conformsTo" not in item:
         item_type = item.get("@type", "")
-        if "CourseInstance" in item_type:
-            profile_iri = "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE"
-        else:
-            profile_iri = "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE"
-        item["dct:conformsTo"] = {"@id": profile_iri}
+        profile = next(
+            (iri for t, iri in _PROFILE_IRI.items() if t in item_type),
+            _DEFAULT_PROFILE_IRI,
+        )
+        item["dct:conformsTo"] = {"@id": profile, "@type": "CreativeWork"}
 
-    # Ensure @id is set
-    if "@id" not in item:
-        item["@id"] = item.get("url", url)
+    # @id: fall back to url field or the source URL
+    if not item.get("@id"):
+        item["@id"] = item.get("url") or fallback_url
 
     return item
 
 
-def _validate_required_fields(item: dict[str, Any]) -> list[str]:
-    """Return a list of validation error messages for the given JSON-LD item."""
-    errors: list[str] = []
-    item_type = item.get("@type", "")
+# ---------------------------------------------------------------------------
+# Structural summary  (stored in metadata_cache for incremental runs)
+# ---------------------------------------------------------------------------
 
-    if not item_type:
-        errors.append("Missing required field: @type (must be LearningResource or CourseInstance)")
 
-    if not item.get("name"):
-        errors.append("Missing required field: name")
+def compute_structural_summary(
+    items: list[dict[str, Any]],
+    source_url: str,
+    crawled_page_hashes: dict[str, str] | None = None,
+) -> str:
+    """Produce a compact site-structure summary for future incremental runs.
 
-    if not item.get("description"):
-        errors.append("Missing required field: description")
+    The summary describes *how to navigate* the site (crawled pages and their
+    content hashes, URL patterns) — not the content of each item (which is
+    already stored in sessions.result_json).  On the next run the agent
+    compares page hashes to identify changed pages and focuses only on those.
 
-    if not item.get("keywords"):
-        errors.append("Missing required field: keywords")
+    TODO (issue #4): when multi-depth crawling is implemented, also record
+      pagination patterns (e.g. ``?page=N``) and per-item URL templates.
+    """
+    from datetime import datetime, timezone
 
-    if "CourseInstance" in item_type:
-        if not item.get("courseMode"):
-            errors.append("Missing required field for CourseInstance: courseMode")
+    parsed = urlparse(source_url)
+    item_urls = [
+        i.get("url") or i.get("@id") or ""
+        for i in items
+        if i.get("url") or i.get("@id")
+    ]
 
-    return errors
+    # Derive a common URL path prefix as a simple navigation hint
+    paths = [urlparse(u).path for u in item_urls if u]
+    common_prefix = ""
+    if len(paths) > 1:
+        # Find longest common prefix of paths
+        common_prefix = paths[0]
+        for p in paths[1:]:
+            while common_prefix and not p.startswith(common_prefix):
+                common_prefix = common_prefix.rsplit("/", 1)[0] + "/"
+            if not common_prefix:
+                break
+
+    return json.dumps(
+        {
+            "source_url": source_url,
+            "source_domain": parsed.netloc,
+            "last_extracted": datetime.now(timezone.utc).isoformat(),
+            "item_count": len(items),
+            "item_urls": item_urls[:100],  # cap to avoid huge payloads
+            "item_url_common_prefix": common_prefix,
+            "crawled_page_hashes": crawled_page_hashes or {},
+        },
+        ensure_ascii=False,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Content hash
+# ---------------------------------------------------------------------------
+
+
+def _content_hash(text: str) -> str:
+    """Return a stable SHA-256 hex digest for the given text."""
+    return hashlib.sha256(text.encode()).hexdigest()
 
 
 # ---------------------------------------------------------------------------
@@ -276,13 +609,15 @@ def _validate_required_fields(item: dict[str, Any]) -> list[str]:
 
 
 class BioschemasExtractorAgent:
-    """Extracts Bioschemas JSON-LD from web pages about training materials."""
+    """Extracts Bioschemas JSON-LD from web pages about training materials.
+
+    See the module docstring for a description of the four-phase pipeline.
+    """
 
     def run(
         self,
         url: str,
         prompt: str | None = None,
-        update_level: int = 1,
         structural_summary: str | None = None,
         llm_client: Any = None,
         log_fn: Callable[[str], None] | None = None,
@@ -290,20 +625,24 @@ class BioschemasExtractorAgent:
         """Extract Bioschemas JSON-LD from the given URL.
 
         Args:
-            url: The source URL to extract from.
-            prompt: Optional additional instructions for the extraction agent.
-            update_level: 0=no update, 1=incremental, 2=full refresh.
-            structural_summary: Summary of the last crawl (used at level 1).
-            llm_client: An OpenAI-compatible client.  If None a real client
-                must be provided via the Flask app config.
-            log_fn: Optional callable to receive progress log messages.
+            url: Primary source URL to crawl and extract from.
+            prompt: Optional additional extraction instructions.
+            structural_summary: JSON string produced by a previous run of
+                ``compute_structural_summary``.  When provided, the agent runs
+                in incremental mode and focuses on changed/new content.
+                Pass ``None`` for a full refresh.
+            llm_client: An OpenAI-compatible client instance (required).
+            log_fn: Optional callable that receives progress messages.
+                # TODO (issue #3 follow-up): replace with a structured logger
+                #   class that can emit typed events (info/warning/llm_call/…)
+                #   for richer display in the session viewer HTML template.
 
         Returns:
-            A list of Bioschemas JSON-LD dicts.
+            List of Bioschemas JSON-LD dicts.
 
         Raises:
-            AccessDeniedError: If robots.txt blocks the primary URL.
-            NotTrainingContentError: If no training content found.
+            AccessDeniedError: Primary URL blocked by robots.txt or HTTP 401/403.
+            NotTrainingContentError: No training content found after crawling.
         """
 
         def log(msg: str) -> None:
@@ -313,253 +652,357 @@ class BioschemasExtractorAgent:
         if llm_client is None:
             raise ValueError("llm_client must be provided")
 
-        from app.agents import get_model_for_task
+        state = _CrawlState()
 
         # ----------------------------------------------------------------
-        # Step 1: Check robots.txt
+        # Phase 1: CRAWL + DISCOVER
         # ----------------------------------------------------------------
-        log(f"Checking robots.txt for {url}")
-        if not _check_robots(url):
-            raise AccessDeniedError(f"Crawling blocked by robots.txt for {url}")
-
-        # ----------------------------------------------------------------
-        # Step 2: Fetch primary page
-        # ----------------------------------------------------------------
-        log(f"Fetching {url}")
-        try:
-            response = _fetch(url)
-        except requests.RequestException as exc:
-            raise AccessDeniedError(f"Failed to fetch {url}: {exc}") from exc
-
-        if response.status_code in (401, 403):
-            raise AccessDeniedError(
-                f"Access denied (HTTP {response.status_code}) for {url}"
-            )
-        if not response.ok:
-            raise AccessDeniedError(
-                f"HTTP {response.status_code} fetching {url}"
-            )
-
-        page_html = response.text
-        page_hash = _content_hash(page_html)
-        log(f"Fetched {len(page_html)} chars, hash={page_hash[:12]}…")
-
-        # ----------------------------------------------------------------
-        # Step 3: DISCOVERY – identify training items
-        # ----------------------------------------------------------------
-        log("Starting DISCOVERY phase")
-        discovery_messages: list[dict[str, str]] = [
-            {"role": "system", "content": _SYSTEM_PROMPT},
-        ]
-
-        discovery_user_content = (
-            f"Analyse the following web page content from {url} and identify ALL "
-            "training materials and courses listed on it.\n\n"
-            "Output JSON with this structure:\n"
-            '{"training_items": [{"title": "...", "url": "...", "type": "TrainingMaterial|CourseInstance"}]}\n\n'
+        log("Phase 1: crawl + discover")
+        self._crawl_and_discover(
+            start_url=url,
+            structural_summary=structural_summary,
+            llm_client=llm_client,
+            state=state,
+            log=log,
+            is_primary=True,
         )
-        if update_level == 1 and structural_summary:
-            discovery_user_content += (
-                "Previous crawl structural summary (focus on changed/new items):\n"
-                f"{structural_summary}\n\n"
-            )
-        if prompt:
-            discovery_user_content += f"Additional instructions: {prompt}\n\n"
-        discovery_user_content += f"Page content:\n{page_html[:MAX_PAGE_CONTENT_SIZE]}"
 
-        discovery_messages.append({"role": "user", "content": discovery_user_content})
-
-        log("Calling LLM for discovery")
-        discovery_result = _call_llm(
-            llm_client,
-            get_model_for_task("content_summary"),
-            discovery_messages,
-        )
-        training_items: list[dict[str, Any]] = discovery_result.get("training_items", [])
-        log(f"Discovered {len(training_items)} training item(s)")
-
-        if not training_items:
+        if not state.discovered:
             raise NotTrainingContentError(
-                f"No training content found on {url}"
+                f"No training content found at {url} (crawled "
+                f"{len(state.pages)} page(s))"
             )
 
-        # ----------------------------------------------------------------
-        # Step 4: LINK FOLLOWING – decide which additional links to crawl
-        # ----------------------------------------------------------------
-        all_links = _extract_links(page_html, url)
-        log(f"Found {len(all_links)} links on page")
-
-        followed_content: dict[str, str] = {}
-        if all_links:
-            log("Calling LLM for link decision")
-            link_messages: list[dict[str, str]] = [
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {
-                    "role": "user",
-                    "content": (
-                        f"Source page: {url}\n"
-                        f"Training items found: {json.dumps(training_items)}\n\n"
-                        "From the following links found on the page, decide which ones "
-                        f"(at most {MAX_FOLLOW_LINKS}) are worth following to get more detail "
-                        "about the training items listed above. Only follow links that are "
-                        "direct detail pages for the items above or pagination links.\n\n"
-                        "Output JSON: {\"follow\": [\"url1\", \"url2\", ...]}\n\n"
-                        f"Links:\n" + "\n".join(all_links[:100])
-                    ),
-                },
-            ]
-            link_result = _call_llm(
-                llm_client,
-                get_model_for_task("link_decision"),
-                link_messages,
-            )
-            follow_urls: list[str] = link_result.get("follow", [])[:MAX_FOLLOW_LINKS]
-            log(f"Following {len(follow_urls)} additional links")
-
-            for follow_url in follow_urls:
-                if not _check_robots(follow_url):
-                    log(f"Skipping {follow_url} (blocked by robots.txt)")
-                    continue
-                try:
-                    follow_resp = _fetch(follow_url)
-                    if follow_resp.ok:
-                        followed_content[follow_url] = follow_resp.text
-                        log(f"Fetched follow link: {follow_url}")
-                except requests.RequestException as exc:
-                    log(f"Failed to fetch {follow_url}: {exc}")
+        log(
+            f"Discovery complete: {len(state.discovered)} item(s) found "
+            f"across {len(state.pages)} page(s)"
+        )
 
         # ----------------------------------------------------------------
-        # Step 5: EXTRACTION – extract JSON-LD for each item
-        # ----------------------------------------------------------------
-        # TODO: ontology vector search will be added here when ontology indexing
-        # is implemented (see ontology issue). For now, no ontology context is
-        # provided to the extraction prompt.
-
-        extracted_items: list[dict[str, Any]] = []
-        for item_info in training_items:
-            item_url = item_info.get("url", url)
-            item_title = item_info.get("title", "")
-            item_type = item_info.get("type", "TrainingMaterial")
-            log(f"Extracting JSON-LD for: {item_title}")
-
-            # Gather content for this item
-            item_html = followed_content.get(item_url, page_html)
-            if item_url != url and item_url not in followed_content:
-                # Try to fetch the detail page if not already fetched
-                if _check_robots(item_url):
-                    try:
-                        detail_resp = _fetch(item_url)
-                        if detail_resp.ok:
-                            item_html = detail_resp.text
-                            log(f"Fetched detail page: {item_url}")
-                    except requests.RequestException as exc:
-                        log(f"Could not fetch detail page {item_url}: {exc}")
-
-            extraction_user_content = (
-                f"Extract Bioschemas JSON-LD metadata for the training item below.\n\n"
-                f"Item title: {item_title}\n"
-                f"Item URL: {item_url}\n"
-                f"Item type: {item_type}\n\n"
-                "Output a single valid JSON-LD object (no markdown, no extra text).\n"
-            )
-            if prompt:
-                extraction_user_content += f"Additional instructions: {prompt}\n\n"
-            extraction_user_content += f"Page content:\n{item_html[:MAX_PAGE_CONTENT_SIZE]}"
-
-            extraction_messages: list[dict[str, str]] = [
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": extraction_user_content},
-            ]
-
-            extracted = _call_llm(
-                llm_client,
-                get_model_for_task("json_ld_review"),
-                extraction_messages,
-            )
-
-            if extracted:
-                extracted_items.append(extracted)
-
-        log(f"Extracted {len(extracted_items)} JSON-LD item(s)")
-
-        # ----------------------------------------------------------------
-        # Step 6: REVIEW – self-critical review of each item
-        # ----------------------------------------------------------------
-        reviewed_items: list[dict[str, Any]] = []
-        for item in extracted_items:
-            log(f"Reviewing: {item.get('name', 'unnamed')}")
-            review_messages: list[dict[str, str]] = [
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {
-                    "role": "user",
-                    "content": (
-                        "Critically review the following Bioschemas JSON-LD object and improve it. "
-                        "Check for: missing required fields, incorrect @type values, "
-                        "missing dct:conformsTo, malformed keywords (should be an array), "
-                        "missing @context, and other issues.\n\n"
-                        "Return the complete improved JSON-LD object.\n\n"
-                        f"Current JSON-LD:\n{json.dumps(item, indent=2)}"
-                    ),
-                },
-            ]
-            reviewed = _call_llm(
-                llm_client,
-                get_model_for_task("json_ld_review"),
-                review_messages,
-            )
-            reviewed_items.append(reviewed if reviewed else item)
-
-        # ----------------------------------------------------------------
-        # Step 7: VALIDATION + re-prompting
+        # Phase 2 + 3 + 4: EXTRACT, REVIEW, VALIDATE per item
         # ----------------------------------------------------------------
         final_items: list[dict[str, Any]] = []
-        for item in reviewed_items:
-            errors = _validate_required_fields(item)
+        for item_info in state.discovered:
+            log(f"Extracting: {item_info.title!r} ({item_info.item_type})")
+
+            # Gather best available content for this item
+            item_html = state.pages.get(
+                item_info.url,
+                state.pages.get(item_info.source_url, ""),
+            )
+
+            # If the item has its own URL and it's not yet crawled, fetch it
+            if (
+                item_info.url != url
+                and item_info.url not in state.pages
+                and _check_robots(item_info.url, state.robots_cache)
+            ):
+                try:
+                    resp = _fetch(item_info.url)
+                    if resp.ok:
+                        item_html = resp.text
+                        log(f"  Fetched detail page: {item_info.url}")
+                except requests.RequestException as exc:
+                    log(f"  Could not fetch detail page: {exc}")
+
+            item_text, _ = _html_to_text(item_html or "", item_info.url or url)
+            content_for_extraction = item_text[:MAX_EXTRACTION_CONTENT]
+
+            extracted = self._extract_item(
+                item_info=item_info,
+                content=content_for_extraction,
+                prompt=prompt,
+                llm_client=llm_client,
+                log=log,
+            )
+            if not extracted:
+                log(f"  Skipping (extraction returned empty result)")
+                continue
+
+            # --- Review ---
+            log(f"  Reviewing: {extracted.get('name', 'unnamed')}")
+            reviewed = self._review_item(
+                item=extracted,
+                content=content_for_extraction,
+                llm_client=llm_client,
+            )
+
+            # --- Validate + fix ---
+            errors = _validate_with_schema(reviewed)
             if errors:
-                log(f"Validation errors for '{item.get('name', 'unnamed')}': {errors}")
-                fix_messages: list[dict[str, str]] = [
-                    {"role": "system", "content": _SYSTEM_PROMPT},
-                    {
-                        "role": "user",
-                        "content": (
-                            "The following JSON-LD object has validation errors. "
-                            "Fix ALL of them and return the corrected JSON-LD object.\n\n"
-                            f"Errors:\n" + "\n".join(f"- {e}" for e in errors) + "\n\n"
-                            f"Current JSON-LD:\n{json.dumps(item, indent=2)}"
-                        ),
-                    },
-                ]
-                fixed = _call_llm(
-                    llm_client,
-                    get_model_for_task("json_ld_review"),
-                    fix_messages,
+                log(
+                    f"  Validation errors ({len(errors)}); requesting fix from LLM"
                 )
-                item = fixed if fixed else item
+                fixed = self._fix_item(
+                    item=reviewed,
+                    errors=errors,
+                    llm_client=llm_client,
+                )
+                reviewed = fixed if fixed else reviewed
 
-            # Step 8: Apply TeSS conventions
-            item = _apply_tess_conventions(item, url)
-            final_items.append(item)
+            # Apply programmatic TeSS conventions (constants, not LLM concern)
+            final = _apply_tess_conventions(reviewed, item_info.url or url)
+            final_items.append(final)
 
-        log(f"Completed extraction: {len(final_items)} item(s) ready")
+        log(f"Extraction complete: {len(final_items)} item(s)")
         return final_items
 
+    # ------------------------------------------------------------------
+    # Private helpers
+    # ------------------------------------------------------------------
 
-def compute_structural_summary(
-    training_items: list[dict[str, Any]],
-    url: str,
-) -> str:
-    """Produce a compact structural summary for the incremental update cache."""
-    return json.dumps(
-        {
-            "source_url": url,
-            "item_count": len(training_items),
-            "items": [
-                {
-                    "title": item.get("name", item.get("title", "")),
-                    "url": item.get("url", item.get("@id", "")),
-                    "type": item.get("@type", ""),
-                }
-                for item in training_items
-            ],
-        }
-    )
+    def _crawl_and_discover(
+        self,
+        start_url: str,
+        structural_summary: str | None,
+        llm_client: Any,
+        state: _CrawlState,
+        log: Callable[[str], None],
+        is_primary: bool = False,
+        depth: int = 0,
+    ) -> None:
+        """Recursively crawl pages and populate *state.discovered*."""
+        if start_url in state.pages:
+            return
+        if len(state.pages) >= MAX_TOTAL_PAGES:
+            log(f"  Crawl limit ({MAX_TOTAL_PAGES} pages) reached")
+            return
+
+        # robots.txt check (raises for primary URL, logs and skips otherwise)
+        if not _check_robots(start_url, state.robots_cache):
+            if is_primary:
+                raise AccessDeniedError(
+                    f"Crawling blocked by robots.txt for {start_url}"
+                )
+            log(f"  Skipping {start_url} (blocked by robots.txt)")
+            return
+
+        log(f"  Fetching {'primary' if is_primary else f'depth-{depth}'} URL: {start_url}")
+        try:
+            response = _fetch(start_url)
+        except requests.RequestException as exc:
+            if is_primary:
+                raise AccessDeniedError(f"Failed to fetch {start_url}: {exc}") from exc
+            log(f"  Skipping {start_url}: {exc}")
+            return
+
+        if response.status_code in (401, 403):
+            if is_primary:
+                raise AccessDeniedError(
+                    f"Access denied (HTTP {response.status_code}) for {start_url}"
+                )
+            log(f"  Skipping {start_url} (HTTP {response.status_code})")
+            return
+
+        if not response.ok:
+            msg = (
+                f"Could not retrieve {start_url} "
+                f"(HTTP {response.status_code} — the URL may be incorrect, "
+                "the server may be temporarily unavailable, or access may be "
+                "restricted)"
+            )
+            if is_primary:
+                raise AccessDeniedError(msg)
+            log(f"  Skipping: {msg}")
+            return
+
+        html = response.text
+        page_hash = _content_hash(html)
+        state.pages[start_url] = html
+        state.page_hashes[start_url] = page_hash
+        log(
+            f"  Page {len(state.pages)}/{MAX_TOTAL_PAGES}: "
+            f"{len(html)} chars, hash={page_hash[:12]}…"
+        )
+
+        # Convert HTML → clean text with inline link annotations
+        text, _ = _html_to_text(html, start_url)
+        chunks = _chunk_text(text)
+        total_chunks = len(chunks)
+        log(f"  Processing {total_chunks} chunk(s)")
+
+        links_to_follow: list[str] = []
+
+        for chunk_idx, chunk_text in enumerate(chunks):
+            result = self._classify_chunk(
+                chunk_text=chunk_text,
+                chunk_index=chunk_idx,
+                total_chunks=total_chunks,
+                source_url=start_url,
+                structural_summary=structural_summary if depth == 0 else None,
+                llm_client=llm_client,
+            )
+
+            if not result.get("relevant", False):
+                continue
+
+            # Collect newly discovered items from this chunk
+            for item_data in result.get("items", []):
+                item_url = item_data.get("url", start_url)
+                item_title = item_data.get("title", "")
+                if not item_title:
+                    continue
+                # Deduplicate by (title, url)
+                already_known = any(
+                    d.title == item_title and d.url == item_url
+                    for d in state.discovered
+                )
+                if not already_known:
+                    state.discovered.append(
+                        DiscoveredItem(
+                            title=item_title,
+                            url=item_url,
+                            item_type=item_data.get("item_type", "TrainingMaterial"),
+                            source_url=start_url,
+                            context=item_data.get("context", ""),
+                        )
+                    )
+
+            # Collect follow-links (deduplicated, capped)
+            if depth < MAX_FOLLOW_DEPTH:
+                for link_data in result.get("follow_links", [])[:MAX_LINKS_PER_CHUNK]:
+                    link_url = link_data.get("url", "")
+                    if (
+                        link_url
+                        and link_url not in state.pages
+                        and link_url not in links_to_follow
+                    ):
+                        links_to_follow.append(link_url)
+
+        # Recursively follow identified links
+        for follow_url in links_to_follow:
+            self._crawl_and_discover(
+                start_url=follow_url,
+                structural_summary=None,  # only used at depth 0
+                llm_client=llm_client,
+                state=state,
+                log=log,
+                depth=depth + 1,
+            )
+
+    def _classify_chunk(
+        self,
+        chunk_text: str,
+        chunk_index: int,
+        total_chunks: int,
+        source_url: str,
+        structural_summary: str | None,
+        llm_client: Any,
+    ) -> dict[str, Any]:
+        """Ask the LLM to classify a text chunk and extract items + links."""
+        incremental_note = ""
+        if structural_summary:
+            try:
+                summary = json.loads(structural_summary)
+                prev_count = summary.get("item_count", "unknown")
+                item_urls = summary.get("item_urls", [])
+                incremental_note = (
+                    f"\nPrevious crawl found {prev_count} item(s). "
+                    f"Focus on items NOT in this list: {item_urls[:20]}\n"
+                )
+            except (json.JSONDecodeError, AttributeError):
+                pass
+
+        messages: list[dict[str, str]] = [
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": (
+                    f"Analyse this text chunk ({chunk_index + 1}/{total_chunks}) "
+                    f"from {source_url}.{incremental_note}\n\n"
+                    "Identify:\n"
+                    "1. Training materials, courses, or events mentioned\n"
+                    "2. Links worth following to find more training content\n\n"
+                    "Output JSON:\n"
+                    '{"relevant": true/false, "items": [{"title": "...", '
+                    '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
+                    '"context": "excerpt mentioning this item"}], '
+                    '"follow_links": [{"url": "...", "reason": "..."}]}\n\n'
+                    f"Text chunk:\n{chunk_text}"
+                ),
+            },
+        ]
+        return _call_llm(llm_client, get_model_for_task("content_relevance"), messages)
+
+    def _extract_item(
+        self,
+        item_info: DiscoveredItem,
+        content: str,
+        prompt: str | None,
+        llm_client: Any,
+        log: Callable[[str], None],
+    ) -> dict[str, Any]:
+        """Extract Bioschemas JSON-LD for a single discovered item."""
+        extra = f"\nAdditional instructions: {prompt}\n" if prompt else ""
+
+        # TODO (issue #6): insert candidate ontology terms here once ontology
+        #   vector search is implemented (see TODO.md item 6).
+
+        messages: list[dict[str, str]] = [
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": (
+                    f"Extract Bioschemas JSON-LD for this training item.\n\n"
+                    f"Title: {item_info.title}\n"
+                    f"URL: {item_info.url}\n"
+                    f"Type: {item_info.item_type}\n"
+                    f"Context: {item_info.context}\n"
+                    f"{extra}\n"
+                    "Output a single valid Bioschemas JSON-LD object.\n\n"
+                    f"Page content:\n{content}"
+                ),
+            },
+        ]
+        return _call_llm(llm_client, get_model_for_task("json_ld_review"), messages)
+
+    def _review_item(
+        self,
+        item: dict[str, Any],
+        content: str,
+        llm_client: Any,
+    ) -> dict[str, Any]:
+        """Self-critical review pass; returns improved JSON-LD."""
+        messages: list[dict[str, str]] = [
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": (
+                    "Critically review the following Bioschemas JSON-LD and improve it.\n"
+                    "Focus on: completeness of metadata fields, correct @type, accurate "
+                    "keywords array, valid courseMode values, ORCID in author/@id when "
+                    "available, ISO 8601 dates.\n"
+                    "Do NOT worry about @context or dct:conformsTo — those are added "
+                    "automatically after your output.\n\n"
+                    "Return the complete improved JSON-LD object.\n\n"
+                    f"Source content (excerpt):\n{content[:2000]}\n\n"
+                    f"Current JSON-LD:\n{json.dumps(item, indent=2)}"
+                ),
+            },
+        ]
+        result = _call_llm(llm_client, get_model_for_task("json_ld_review"), messages)
+        return result if result else item
+
+    def _fix_item(
+        self,
+        item: dict[str, Any],
+        errors: list[str],
+        llm_client: Any,
+    ) -> dict[str, Any]:
+        """Fix schema validation errors via a targeted LLM call."""
+        error_list = "\n".join(f"- {e}" for e in errors[:20])
+        messages: list[dict[str, str]] = [
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": (
+                    "The following Bioschemas JSON-LD has validation errors. "
+                    "Fix ALL of them and return the corrected JSON-LD object.\n\n"
+                    f"Validation errors:\n{error_list}\n\n"
+                    f"Current JSON-LD:\n{json.dumps(item, indent=2)}"
+                ),
+            },
+        ]
+        result = _call_llm(llm_client, get_model_for_task("json_ld_review"), messages)
+        return result if result else item
+

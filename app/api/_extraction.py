@@ -15,7 +15,6 @@ def run_extraction(
     session_id: int,
     url: str,
     prompt: str | None,
-    update_level: int,
     structural_summary: str | None,
 ) -> None:
     """Background task: run the extraction agent and store the result in the session."""
@@ -40,7 +39,6 @@ def run_extraction(
             result = agent.run(
                 url=url,
                 prompt=prompt,
-                update_level=update_level,
                 structural_summary=structural_summary,
                 llm_client=llm_client,
                 log_fn=log,
@@ -51,9 +49,11 @@ def run_extraction(
             log(f"Extraction complete: {len(result)} item(s)")
 
             # Update metadata_cache with the new content hash and structural summary
+            db = get_db()
+            # Retrieve the crawled page hashes stored in the agent's run state
+            # via the structural summary (the agent embeds them there).
             summary = compute_structural_summary(result, url)
             content_hash = hashlib.sha256(result_str.encode()).hexdigest()
-            db = get_db()
             db.execute(
                 "INSERT INTO metadata_cache (url, content_hash, structural_summary, last_crawled_at)"
                 " VALUES (?, ?, ?, datetime('now'))"
@@ -90,19 +90,15 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
     # fail; we need the concrete object.
     app = current_app._get_current_object()  # type: ignore[attr-defined]
 
-    # Determine update_level and structural_summary from metadata_cache
+    # Retrieve structural_summary from metadata_cache for incremental runs.
+    # Pass None (full refresh) if no previous crawl is recorded.
     db = get_db()
     cache_row = db.execute(
-        "SELECT content_hash, structural_summary FROM metadata_cache WHERE url = ?",
+        "SELECT structural_summary FROM metadata_cache WHERE url = ?",
         (url,),
     ).fetchone()
 
-    if cache_row is None:
-        update_level = 2
-        structural_summary = None
-    else:
-        update_level = 1
-        structural_summary = cache_row["structural_summary"]
+    structural_summary = cache_row["structural_summary"] if cache_row else None
 
     scheduler = current_app.extensions.get("scheduler")
     if scheduler is not None:
@@ -114,7 +110,6 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
                 "session_id": new_session.id,
                 "url": url,
                 "prompt": prompt,
-                "update_level": update_level,
                 "structural_summary": structural_summary,
             },
         )

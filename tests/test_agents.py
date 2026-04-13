@@ -14,6 +14,8 @@ from app.agents.bioschemas import (
     NotTrainingContentError,
     _content_hash,
     _extract_links,
+    _chunk_text,
+    _html_to_text,
 )
 
 
@@ -61,7 +63,9 @@ class MockLLMClient:
 # ---------------------------------------------------------------------------
 
 
-def _make_response(text: str = "<html><body>Test page</body></html>", status_code: int = 200) -> MagicMock:
+def _make_response(
+    text: str = "<html><body>Test page</body></html>", status_code: int = 200
+) -> MagicMock:
     mock = MagicMock()
     mock.text = text
     mock.status_code = status_code
@@ -107,18 +111,51 @@ def test_extract_links_deduplicates() -> None:
     assert links.count("https://example.com/page") == 1
 
 
+def test_html_to_text_strips_scripts() -> None:
+    html = "<html><head><script>var x=1;</script></head><body><p>Hello</p></body></html>"
+    text, _ = _html_to_text(html, "https://example.com")
+    assert "Hello" in text
+    assert "var x" not in text
+
+
+def test_html_to_text_includes_link_context() -> None:
+    html = '<a href="https://example.com/course">RNA-Seq Tutorial</a>'
+    text, links = _html_to_text(html, "https://example.com")
+    assert "RNA-Seq Tutorial" in text
+    assert "https://example.com/course" in text
+    assert len(links) == 1
+    assert links[0][0] == "https://example.com/course"
+
+
+def test_chunk_text_returns_single_chunk_for_short_text() -> None:
+    text = "Short text."
+    chunks = _chunk_text(text, chunk_size=100)
+    assert chunks == [text]
+
+
+def test_chunk_text_splits_long_text() -> None:
+    # Build text definitely longer than chunk_size
+    text = "This is a sentence. " * 300  # ~6000 chars
+    chunks = _chunk_text(text, chunk_size=500, overlap=50)
+    assert len(chunks) > 1
+    # Each chunk should be at most chunk_size + some tolerance
+    for chunk in chunks:
+        assert len(chunk) <= 600  # chunk_size + some flexibility
+
+
 # ---------------------------------------------------------------------------
 # Agent tests
 # ---------------------------------------------------------------------------
 
 
-def test_agent_raises_access_denied_for_blocked_robots(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_agent_raises_access_denied_for_blocked_robots(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Blocked robots.txt raises AccessDeniedError."""
-    mock_rp = MagicMock()
-    mock_rp.can_fetch.return_value = False
-
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
-    monkeypatch.setattr("urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: False)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: False
+    )
 
     agent = BioschemasExtractorAgent()
     client = MockLLMClient([])
@@ -131,18 +168,21 @@ def test_agent_raises_access_denied_for_blocked_robots(monkeypatch: pytest.Monke
 
 
 def test_agent_raises_not_training_content(monkeypatch: pytest.MonkeyPatch) -> None:
-    """LLM returning empty training_items raises NotTrainingContentError."""
+    """LLM finding no items in any chunk raises NotTrainingContentError."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
-    monkeypatch.setattr("urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
 
     mock_response = _make_response("<html><body>Some unrelated page</body></html>")
     monkeypatch.setattr("requests.get", lambda *args, **kwargs: mock_response)
 
-    # Discovery returns no items; link decision has no links to decide on
-    discovery_response = json.dumps({"training_items": []})
-    link_response = json.dumps({"follow": []})
+    # Chunk classification: not relevant, no items, no links to follow
+    chunk_classification = json.dumps(
+        {"relevant": False, "items": [], "follow_links": []}
+    )
 
-    client = MockLLMClient([discovery_response, link_response])
+    client = MockLLMClient([chunk_classification])
 
     agent = BioschemasExtractorAgent()
     with pytest.raises(NotTrainingContentError):
@@ -155,42 +195,54 @@ def test_agent_raises_not_training_content(monkeypatch: pytest.MonkeyPatch) -> N
 def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -> None:
     """Happy path: agent returns a list of JSON-LD dicts."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
-    monkeypatch.setattr("urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
 
+    # Simple HTML with no links to follow (simplifies mock call count)
     page_html = """
     <html><body>
       <h1>Bioinformatics Workshop</h1>
-      <p>An introduction to bioinformatics tools.</p>
-      <a href="https://example.com/module1">Module 1</a>
+      <p>An introduction to bioinformatics tools and techniques.</p>
     </body></html>
     """
     mock_response = _make_response(page_html)
     monkeypatch.setattr("requests.get", lambda *args, **kwargs: mock_response)
 
     # LLM responses in order:
-    # 1. discovery
-    # 2. link decision
-    # 3. extraction (for the one item)
-    # 4. review
-    # 5. validation fix (none needed, but we provide extra for safety)
-    discovery = json.dumps({
-        "training_items": [
-            {"title": "Bioinformatics Workshop", "url": "https://example.com/training", "type": "TrainingMaterial"}
-        ]
-    })
-    link_decision = json.dumps({"follow": []})
-    extraction = json.dumps({
-        "@context": {"@vocab": "https://schema.org/", "dct": "http://purl.org/dc/terms/"},
-        "@type": "LearningResource",
-        "@id": "https://example.com/training",
-        "name": "Bioinformatics Workshop",
-        "description": "An introduction to bioinformatics tools.",
-        "keywords": ["bioinformatics", "workshop"],
-        "dct:conformsTo": {"@id": "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE"},
-    })
+    # 1. chunk classification (1 chunk for small HTML)
+    # 2. extraction
+    # 3. review
+    chunk_classification = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Bioinformatics Workshop",
+                    "url": "https://example.com/training",
+                    "item_type": "TrainingMaterial",
+                    "context": "An introduction to bioinformatics tools.",
+                }
+            ],
+            "follow_links": [],
+        }
+    )
+    extraction = json.dumps(
+        {
+            "@context": {"@vocab": "https://schema.org/", "dct": "http://purl.org/dc/terms/"},
+            "@type": "LearningResource",
+            "@id": "https://example.com/training",
+            "name": "Bioinformatics Workshop",
+            "description": "An introduction to bioinformatics tools and techniques.",
+            "keywords": ["bioinformatics", "workshop"],
+            "dct:conformsTo": {
+                "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT"
+            },
+        }
+    )
     review = extraction  # reviewed version same as extracted
 
-    client = MockLLMClient([discovery, link_decision, extraction, review])
+    client = MockLLMClient([chunk_classification, extraction, review])
 
     logs: list[str] = []
     agent = BioschemasExtractorAgent()
@@ -210,37 +262,54 @@ def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -
 def test_agent_validates_required_fields(monkeypatch: pytest.MonkeyPatch) -> None:
     """If extracted JSON-LD is missing required fields, agent re-prompts to fix them."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
-    monkeypatch.setattr("urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
 
     page_html = "<html><body><h1>Workshop</h1></body></html>"
     mock_response = _make_response(page_html)
     monkeypatch.setattr("requests.get", lambda *args, **kwargs: mock_response)
 
-    discovery = json.dumps({
-        "training_items": [
-            {"title": "Workshop", "url": "https://example.com/workshop", "type": "TrainingMaterial"}
-        ]
-    })
-    # No links on page → no link_decision call
-    # Extraction missing required fields
-    bad_extraction = json.dumps({
-        "@context": "https://schema.org",
-        "@type": "LearningResource",
-    })
-    # Review doesn't fix it
+    # 1. chunk classification
+    chunk_class = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Workshop",
+                    "url": "https://example.com/workshop",
+                    "item_type": "TrainingMaterial",
+                    "context": "Workshop",
+                }
+            ],
+            "follow_links": [],
+        }
+    )
+    # 2. Extraction missing required fields (name, description, keywords)
+    bad_extraction = json.dumps(
+        {
+            "@context": "https://schema.org",
+            "@type": "LearningResource",
+        }
+    )
+    # 3. Review doesn't fix it
     reviewed_still_bad = bad_extraction
-    # Fix call returns a valid object
-    fixed = json.dumps({
-        "@context": {"@vocab": "https://schema.org/", "dct": "http://purl.org/dc/terms/"},
-        "@type": "LearningResource",
-        "@id": "https://example.com/workshop",
-        "name": "Workshop",
-        "description": "A hands-on workshop.",
-        "keywords": ["workshop"],
-        "dct:conformsTo": {"@id": "https://bioschemas.org/profiles/TrainingMaterial/1.0-RELEASE"},
-    })
+    # 4. Fix call returns a valid object
+    fixed = json.dumps(
+        {
+            "@context": {"@vocab": "https://schema.org/", "dct": "http://purl.org/dc/terms/"},
+            "@type": "LearningResource",
+            "@id": "https://example.com/workshop",
+            "name": "Workshop",
+            "description": "A hands-on workshop.",
+            "keywords": ["workshop"],
+            "dct:conformsTo": {
+                "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT"
+            },
+        }
+    )
 
-    client = MockLLMClient([discovery, bad_extraction, reviewed_still_bad, fixed])
+    client = MockLLMClient([chunk_class, bad_extraction, reviewed_still_bad, fixed])
 
     agent = BioschemasExtractorAgent()
     result = agent.run(
@@ -257,28 +326,44 @@ def test_agent_validates_required_fields(monkeypatch: pytest.MonkeyPatch) -> Non
 def test_agent_applies_tess_conventions(monkeypatch: pytest.MonkeyPatch) -> None:
     """Agent should ensure dct:conformsTo and proper @context are set."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
-    monkeypatch.setattr("urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
 
     page_html = "<html><body><h1>Course</h1></body></html>"
     monkeypatch.setattr("requests.get", lambda *args, **kwargs: _make_response(page_html))
 
-    discovery = json.dumps({
-        "training_items": [
-            {"title": "Course", "url": "https://example.com/course", "type": "TrainingMaterial"}
-        ]
-    })
-    # No links on page → no link_decision call
-    # Missing dct:conformsTo and using simple @context
-    extraction = json.dumps({
-        "@context": "https://schema.org",
-        "@type": "LearningResource",
-        "name": "Course",
-        "description": "A great course.",
-        "keywords": ["course"],
-    })
+    # 1. chunk classification
+    chunk_class = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Course",
+                    "url": "https://example.com/course",
+                    "item_type": "TrainingMaterial",
+                    "context": "A course.",
+                }
+            ],
+            "follow_links": [],
+        }
+    )
+    # 2. Extraction: missing dct:conformsTo, simple @context string
+    extraction = json.dumps(
+        {
+            "@context": "https://schema.org",
+            "@type": "LearningResource",
+            "name": "Course",
+            "description": "A great course.",
+            "keywords": ["course"],
+        }
+    )
+    # 3. Review returns same
     review = extraction
+    # 4. Fix (in case schema validation triggers it) — returns same valid item
+    fix = extraction
 
-    client = MockLLMClient([discovery, extraction, review])
+    client = MockLLMClient([chunk_class, extraction, review, fix])
 
     agent = BioschemasExtractorAgent()
     result = agent.run(
@@ -299,7 +384,9 @@ def test_agent_applies_tess_conventions(monkeypatch: pytest.MonkeyPatch) -> None
 def test_agent_handles_http_403_as_access_denied(monkeypatch: pytest.MonkeyPatch) -> None:
     """HTTP 403 on the primary URL raises AccessDeniedError."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
-    monkeypatch.setattr("urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
 
     mock_response = _make_response(status_code=403)
     monkeypatch.setattr("requests.get", lambda *args, **kwargs: mock_response)
