@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Session Viewer</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #f5f7fa; color: #333; }
+    header { background: #1a73e8; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 1.4rem; }
+    header small { opacity: 0.85; font-size: 0.85rem; }
+    .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+    th { background: #f0f4ff; padding: 12px 16px; text-align: left; font-size: 0.8rem; text-transform: uppercase; color: #555; letter-spacing: .05em; }
+    td { padding: 12px 16px; border-top: 1px solid #eee; vertical-align: top; font-size: 0.9rem; }
+    tr.data-row:hover td { background: #f9fbff; }
+    tr.data-row { cursor: pointer; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 600; }
+    .badge-pending  { background: #fff3cd; color: #856404; }
+    .badge-running  { background: #cce5ff; color: #004085; }
+    .badge-done     { background: #d4edda; color: #155724; }
+    .badge-error    { background: #f8d7da; color: #721c24; }
+    .detail-row td { padding: 0; }
+    .detail-inner { padding: 16px 24px; background: #fafbff; border-top: 2px solid #dde4f0; display: none; }
+    .detail-inner.open { display: block; }
+    .detail-inner h4 { margin: 0 0 8px; font-size: 0.85rem; color: #555; text-transform: uppercase; letter-spacing: .05em; }
+    pre { background: #1e1e2e; color: #cdd6f4; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.82rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin: 0 0 16px; }
+    .url-cell { max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .url-cell a { color: #1a73e8; text-decoration: none; }
+    .url-cell a:hover { text-decoration: underline; }
+    .no-sessions { text-align: center; padding: 48px; color: #888; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Session Viewer</h1>
+  <small>User ID: {{ user_id }}</small>
+</header>
+
+<div class="container">
+  {% if sessions %}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>URL</th>
+        <th>Status</th>
+        <th>Created</th>
+        <th>Updated</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in sessions %}
+      <tr class="data-row" onclick="toggleDetail({{ s.id }})">
+        <td>{{ s.id }}</td>
+        <td class="url-cell" title="{{ s.url }}">
+          <a href="{{ s.url }}" target="_blank" onclick="event.stopPropagation()">{{ s.url }}</a>
+        </td>
+        <td>
+          <span class="badge badge-{{ s.status }}">{{ s.status }}</span>
+        </td>
+        <td>{{ s.created_at }}</td>
+        <td>{{ s.updated_at }}</td>
+      </tr>
+      <tr class="detail-row" id="detail-{{ s.id }}">
+        <td colspan="5">
+          <div class="detail-inner" id="detail-inner-{{ s.id }}">
+            {% if s.log %}
+            <h4>Log</h4>
+            <pre>{{ s.log }}</pre>
+            {% endif %}
+            {% if s.result_json %}
+            <h4>Generated JSON-LD</h4>
+            <pre id="json-{{ s.id }}">{{ s.result_json }}</pre>
+            {% else %}
+            <p style="color:#888; font-size:.9rem;">No result yet.</p>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="no-sessions">
+    <p>No sessions found for your account.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function toggleDetail(id) {
+    const inner = document.getElementById('detail-inner-' + id);
+    if (!inner) return;
+    inner.classList.toggle('open');
+    // Pretty-print JSON if present
+    const jsonPre = document.getElementById('json-' + id);
+    if (jsonPre && inner.classList.contains('open') && !jsonPre.dataset.pretty) {
+      try {
+        const obj = JSON.parse(jsonPre.textContent);
+        jsonPre.textContent = JSON.stringify(obj, null, 2);
+        jsonPre.dataset.pretty = '1';
+      } catch(e) {}
+    }
+  }
+</script>
+</body>
+</html>

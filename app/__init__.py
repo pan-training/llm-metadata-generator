@@ -1,8 +1,12 @@
 import atexit
+from pathlib import Path
 
 import click
 from apscheduler.schedulers.background import BackgroundScheduler
 from flask import Flask
+
+# Templates live at the repo root, one level above the app package.
+_TEMPLATE_FOLDER = str(Path(__file__).parent.parent / "templates")
 
 
 def create_app(config=None) -> Flask:
@@ -14,7 +18,7 @@ def create_app(config=None) -> Flask:
     Returns:
         A configured Flask application instance.
     """
-    app = Flask(__name__)
+    app = Flask(__name__, template_folder=_TEMPLATE_FOLDER)
 
     # Load default config from config.py, then apply any overrides.
     app.config.from_object("config")
@@ -35,10 +39,19 @@ def create_app(config=None) -> Flask:
 
     app.register_blueprint(health_bp)
 
+    from app.api.collection import bp as collection_bp
+    from app.api.resource import bp as resource_bp
+    from app.api.sessions import bp as sessions_bp
+
+    app.register_blueprint(collection_bp)
+    app.register_blueprint(resource_bp)
+    app.register_blueprint(sessions_bp)
+
     # Start the background scheduler unless we are in testing mode.
     if not app.config.get("TESTING"):
         scheduler = BackgroundScheduler()
         scheduler.start()
+        app.extensions["scheduler"] = scheduler
         atexit.register(lambda: scheduler.shutdown(wait=False))
 
     return app
