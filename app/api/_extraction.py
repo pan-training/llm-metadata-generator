@@ -84,6 +84,10 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
 
     new_session = create_session(user_id, url)
 
+    # _get_current_object() unwraps the Flask application proxy so the real
+    # app instance can be passed to a background thread.  APScheduler jobs
+    # run outside the request context, so passing the proxy directly would
+    # fail; we need the concrete object.
     app = current_app._get_current_object()  # type: ignore[attr-defined]
 
     # Determine update_level and structural_summary from metadata_cache

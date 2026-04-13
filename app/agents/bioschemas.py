@@ -21,8 +21,15 @@ import requests
 # ---------------------------------------------------------------------------
 
 MAX_FOLLOW_LINKS = 5
+# Maximum links to follow for paginated content (e.g. "page 2", "next page").
+# TODO: differentiate paginated vs non-paginated in the link-decision prompt
+#       once the agent supports multi-depth crawling.
 MAX_PAGINATED_LINKS = 20
+# Maximum recursion depth when following links.
+# TODO: implement recursive link following (currently only depth-1 is used).
 MAX_FOLLOW_DEPTH = 2
+# Maximum number of characters from page HTML sent to the LLM per call.
+MAX_PAGE_CONTENT_SIZE = 8000
 
 _USER_AGENT = "BioschemasMetadataGenerator/1.0 (+https://github.com/pan-training/llm-metadata-generator)"
 
@@ -358,7 +365,7 @@ class BioschemasExtractorAgent:
             )
         if prompt:
             discovery_user_content += f"Additional instructions: {prompt}\n\n"
-        discovery_user_content += f"Page content:\n{page_html[:8000]}"
+        discovery_user_content += f"Page content:\n{page_html[:MAX_PAGE_CONTENT_SIZE]}"
 
         discovery_messages.append({"role": "user", "content": discovery_user_content})
 
@@ -457,7 +464,7 @@ class BioschemasExtractorAgent:
             )
             if prompt:
                 extraction_user_content += f"Additional instructions: {prompt}\n\n"
-            extraction_user_content += f"Page content:\n{item_html[:8000]}"
+            extraction_user_content += f"Page content:\n{item_html[:MAX_PAGE_CONTENT_SIZE]}"
 
             extraction_messages: list[dict[str, str]] = [
                 {"role": "system", "content": _SYSTEM_PROMPT},
