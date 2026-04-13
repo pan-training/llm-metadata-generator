@@ -1,0 +1,34 @@
+{
+  "sites": [
+    {
+      "url": "https://training.galaxyproject.org/training-material/",
+      "description": "Galaxy Training Network – large catalogue of bioinformatics tutorials",
+      "prompt": null,
+      "notes": "Catalogue page; expect many TrainingMaterial items. Good test for pagination / large sites."
+    },
+    {
+      "url": "https://www.ebi.ac.uk/training/",
+      "description": "EMBL-EBI Training – life science courses and upcoming events",
+      "prompt": null,
+      "notes": "Mix of LearningResource and CourseInstance; tests both @types in one run."
+    },
+    {
+      "url": "https://www.cecam.org/workshops",
+      "description": "CECAM – computational science workshops and schools",
+      "prompt": "Focus on upcoming workshops and schools. Extract each event as a CourseInstance.",
+      "notes": "Event-heavy catalogue; good test for CourseInstance extraction and date handling."
+    },
+    {
+      "url": "https://www.software.ac.uk/programmes-and-events/training",
+      "description": "Software Sustainability Institute – research software training events",
+      "prompt": null,
+      "notes": "UK-focused events; tests location handling and organizer extraction."
+    },
+    {
+      "url": "https://missing.csail.mit.edu/",
+      "description": "MIT – The Missing Semester of Your CS Education",
+      "prompt": null,
+      "notes": "Single multi-session course; tests extraction of a self-contained learning resource with lecture pages."
+    }
+  ]
+}
