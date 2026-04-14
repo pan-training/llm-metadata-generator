@@ -1,6 +1,12 @@
 {
   "sites": [
     {
+      "url": "https://test.tesshub.hzdr.de/",
+      "description": "TESSHUB – training events and materials",
+      "prompt": null,
+      "notes": null
+    },
+    {
       "url": "https://training.galaxyproject.org/training-material/",
       "description": "Galaxy Training Network – large catalogue of bioinformatics tutorials",
       "prompt": null,
