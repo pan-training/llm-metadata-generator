@@ -1,5 +1,6 @@
 """Session viewer routes.
 
+GET /                 – navigation index
 POST /sessions/login  – accepts JSON {token: ...} or form data, sets signed cookie
 GET /sessions         – session viewer protected by signed cookie
 GET /sessions/login   – show the login form
@@ -18,6 +19,12 @@ bp = Blueprint("sessions_viewer", __name__)
 
 # Path to integration test results relative to the repo root.
 _INTEGRATION_RESULTS_DIR = Path(__file__).parent.parent.parent / "integration_test" / "results"
+
+
+@bp.get("/")
+def index() -> ResponseReturnValue:
+    """Simple navigation index listing all endpoints."""
+    return render_template("index.html")
 
 
 @bp.get("/sessions/login")
