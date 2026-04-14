@@ -390,7 +390,6 @@ def _register_integration_test_cli(app: Flask) -> None:
                 timing_lines.append(
                     f"  {task_name}: {stats['count']} call(s), {stats['total_ms']:.0f} ms"
                 )
-            from app.agents.logger import InfoEvent, WarnEvent
             log_entries = [
                 ev.message
                 for ev in run_logger.events

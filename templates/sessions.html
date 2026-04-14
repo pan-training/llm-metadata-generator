@@ -243,7 +243,8 @@ function renderEvent(ev, childMap) {
     const childListId = 'ch-' + (_evCounter++);
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'ev-toggle';
-    toggleBtn.textContent = `▶ ${children.length}`;
+    const startCollapsed = children.length > 3;
+    toggleBtn.textContent = startCollapsed ? `▶ ${children.length}` : `▼ ${children.length}`;
     toggleBtn.onclick = (e) => {
       e.stopPropagation();
       const childList = document.getElementById(childListId);
@@ -255,9 +256,8 @@ function renderEvent(ev, childMap) {
 
     // Render children recursively in a nested list (collapsed by default if many)
     const childUl = document.createElement('ul');
-    childUl.className = 'ev-children' + (children.length > 3 ? ' collapsed' : '');
+    childUl.className = 'ev-children' + (startCollapsed ? ' collapsed' : '');
     childUl.id = childListId;
-    if (children.length > 3) toggleBtn.textContent = `▶ ${children.length}`;
     children.forEach(child => childUl.appendChild(renderEvent(child, childMap)));
     body.appendChild(childUl);
   }

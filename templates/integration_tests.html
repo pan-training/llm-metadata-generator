@@ -244,6 +244,7 @@ function renderEvent(ev, childMap) {
     const childListId = 'ch-' + (_evCounter++);
     const btn = document.createElement('button');
     btn.className = 'ev-toggle';
+    const startCollapsed = children.length > 3;
     btn.textContent = `▶ ${children.length}`;
     btn.onclick = (e) => {
       e.stopPropagation();
@@ -252,11 +253,11 @@ function renderEvent(ev, childMap) {
       const collapsed = cl.classList.toggle('collapsed');
       btn.textContent = (collapsed ? '▶ ' : '▼ ') + children.length;
     };
+    if (!startCollapsed) btn.textContent = `▼ ${children.length}`;
     body.appendChild(btn);
     const childUl = document.createElement('ul');
-    childUl.className = 'ev-children' + (children.length > 3 ? ' collapsed' : '');
+    childUl.className = 'ev-children' + (startCollapsed ? ' collapsed' : '');
     childUl.id = childListId;
-    if (children.length > 3) btn.textContent = `▶ ${children.length}`;
     children.forEach(c => childUl.appendChild(renderEvent(c, childMap)));
     body.appendChild(childUl);
   }
