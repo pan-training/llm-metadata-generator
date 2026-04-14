@@ -217,7 +217,12 @@ function renderEventBody(ev, body) {
       `<button class="llm-toggle" onclick="toggleLlm('${uid}', event)">${llmBtnLabel(false)}</button>`;
     const detail = document.createElement('div');
     detail.id = uid; detail.className = 'llm-detail';
-    detail.innerHTML = `<span class="llm-label">PROMPT</span>${escHtml(ev.prompt_preview)}<hr class="llm-sep"><span class="llm-label">RESPONSE</span>${escHtml(ev.response_preview)}`;
+    let detailHtml = `<span class="llm-label">PROMPT</span>${escHtml(ev.prompt_preview)}`;
+    if (ev.chunk) {
+      detailHtml += `<hr class="llm-sep"><span class="llm-label">CHUNK</span>${escHtml(ev.chunk)}`;
+    }
+    detailHtml += `<hr class="llm-sep"><span class="llm-label">RESPONSE</span>${escHtml(ev.response_preview)}`;
+    detail.innerHTML = detailHtml;
     body.appendChild(detail);
   }
 }

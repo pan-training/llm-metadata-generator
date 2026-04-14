@@ -416,6 +416,7 @@ def _call_llm(
     logger: AgentLogger | None = None,
     task: str = "",
     parent_id: int | None = None,
+    chunk: str = "",
 ) -> dict[str, Any]:
     """Call the LLM chat completions API and parse the JSON response.
 
@@ -440,6 +441,7 @@ def _call_llm(
             prompt=prompt_text,
             response=content,
             latency_ms=latency_ms,
+            chunk=chunk,
             parent=parent_id,
         )
     try:
@@ -462,6 +464,7 @@ def _call_llm_text(
     logger: AgentLogger | None = None,
     task: str = "",
     parent_id: int | None = None,
+    chunk: str = "",
 ) -> str:
     """Call the LLM chat completions API and return the raw text response.
 
@@ -485,6 +488,7 @@ def _call_llm_text(
             prompt=prompt_text,
             response=content,
             latency_ms=latency_ms,
+            chunk=chunk,
             parent=parent_id,
         )
     return content
@@ -1043,6 +1047,7 @@ class BioschemasExtractorAgent:
             logger=self._logger,
             task="content_relevance",
             parent_id=parent_id,
+            chunk=chunk_text,
         )
 
     def _reason_about_item(
@@ -1099,6 +1104,7 @@ class BioschemasExtractorAgent:
             logger=self._logger,
             task="metadata_analysis",
             parent_id=parent_id,
+            chunk=content,
         )
 
     def _extract_item(
@@ -1150,6 +1156,7 @@ class BioschemasExtractorAgent:
             logger=self._logger,
             task="json_ld_extraction",
             parent_id=parent_id,
+            chunk=content,
         )
 
     def _review_item(

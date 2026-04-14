@@ -82,17 +82,20 @@ def test_logger_llm_call_adds_event() -> None:
 
 def test_logger_llm_call_truncates_prompt_preview() -> None:
     logger = AgentLogger()
-    long_prompt = "x" * 1000
+    long_prompt = "x" * 5000
+    long_chunk = "y" * 10000
     logger.llm_call(
         task="test",
         model="m",
         prompt=long_prompt,
         response="ok",
         latency_ms=0,
+        chunk=long_chunk,
     )
     ev = logger.events[0]
     assert isinstance(ev, LLMCallEvent)
-    assert len(ev.prompt_preview) <= 600
+    assert len(ev.prompt_preview) <= 4000
+    assert len(ev.chunk) <= 8000
 
 
 def test_logger_validation_event_passed() -> None:

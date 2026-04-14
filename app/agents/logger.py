@@ -36,8 +36,12 @@ from dataclasses import asdict, dataclass, field
 from typing import Any, Callable, Union
 
 # Maximum characters stored for prompt/response previews in LLMCallEvent.
-# The full text is deliberately capped so that the DB log column stays compact.
-PREVIEW_LENGTH = 600
+# Set large enough to capture the full instruction section of typical prompts.
+PREVIEW_LENGTH = 4000
+
+# Maximum characters stored for the chunk/content field in LLMCallEvent.
+# Page content can be very long; we cap it separately from the instruction.
+CHUNK_PREVIEW_LENGTH = 8000
 
 
 # ---------------------------------------------------------------------------
@@ -69,13 +73,19 @@ class WarnEvent:
 
 @dataclass
 class LLMCallEvent:
-    """One LLM completion call with prompt preview, response preview, and latency."""
+    """One LLM completion call with prompt preview, response preview, and latency.
+
+    The optional ``chunk`` field holds the content/page-text that was submitted
+    for analysis, stored separately from the instruction part of the prompt so
+    that the viewer can display them in distinct panels.
+    """
 
     task: str
     model: str
     prompt_preview: str
     response_preview: str
     latency_ms: float
+    chunk: str = ""
     id: int = 0
     parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
@@ -189,9 +199,23 @@ class AgentLogger:
         prompt: str,
         response: str,
         latency_ms: float,
+        chunk: str = "",
         parent: int | None = None,
     ) -> int:
         """Emit a record of one LLM completion call.
+
+        Args:
+            task: Short task identifier (e.g. ``"content_relevance"``).
+            model: Model name used for the call.
+            prompt: The full instruction/system prompt text.  Capped to
+                ``PREVIEW_LENGTH`` characters for storage.
+            response: The raw response text.  Capped to ``PREVIEW_LENGTH``.
+            latency_ms: Wall-clock time for the API call in milliseconds.
+            chunk: The content/page-text submitted for analysis, stored
+                separately from the instruction prompt so the viewer can
+                display them in distinct panels.  Capped to
+                ``CHUNK_PREVIEW_LENGTH`` characters.
+            parent: Parent event ID for tree nesting.
 
         Returns the new event's ``id``.
         """
@@ -200,6 +224,7 @@ class AgentLogger:
             model=model,
             prompt_preview=prompt[:PREVIEW_LENGTH],
             response_preview=response[:PREVIEW_LENGTH],
+            chunk=chunk[:CHUNK_PREVIEW_LENGTH],
             latency_ms=round(latency_ms, 1),
             id=self._next_id(),
             parent_id=parent,
