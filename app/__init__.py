@@ -298,14 +298,66 @@ def _register_integration_test_cli(app: Flask) -> None:
             log_file = run_dir / "log.txt"
             log_fh = log_file.open("w", encoding="utf-8")
 
-            from app.agents.logger import AgentLogger
+            from app.agents.logger import (
+                AgentEvent,
+                AgentLogger,
+                FetchEvent,
+                InfoEvent,
+                ItemFoundEvent,
+                LLMCallEvent,
+                ValidationEvent,
+                WarnEvent,
+            )
 
-            run_logger = AgentLogger()
+            # Track parent depths so child events are indented on the console.
+            _depth_cache: dict[int, int] = {}
 
-            def _on_info(msg: str) -> None:
-                click.echo(f"  {msg}")
-                log_fh.write(msg + "\n")
-                log_fh.flush()
+            def _event_depth(ev: AgentEvent) -> int:
+                if ev.parent_id is None:
+                    depth = 0
+                else:
+                    depth = _depth_cache.get(ev.parent_id, 0) + 1
+                _depth_cache[ev.id] = depth
+                return depth
+
+            def _format_console_line(ev: AgentEvent, depth: int) -> str | None:
+                """Return a human-readable console line for *ev*, or None to skip."""
+                indent = "  " * depth
+                if isinstance(ev, InfoEvent):
+                    return f"{indent}{ev.message}"
+                if isinstance(ev, WarnEvent):
+                    return f"{indent}⚠  {ev.message}"
+                if isinstance(ev, LLMCallEvent):
+                    return (
+                        f"{indent}[LLM:{ev.task}] {ev.latency_ms:.0f} ms"
+                    )
+                if isinstance(ev, FetchEvent):
+                    return f"{indent}↓ {ev.url} [{ev.status_code}]"
+                if isinstance(ev, ItemFoundEvent):
+                    return f"{indent}★ {ev.title!r} ({ev.item_type})"
+                if isinstance(ev, ValidationEvent):
+                    status = "✓" if ev.passed else "✗"
+                    errs = f" – {len(ev.errors)} error(s)" if ev.errors else ""
+                    return f"{indent}{status} {ev.item_name}{errs}"
+                return None
+
+            # This will be assigned after run_logger is created (closure).
+            run_logger: AgentLogger  # forward declaration for type checker
+
+            def _on_event(ev: AgentEvent) -> None:
+                """Stream each event to console + log.txt immediately."""
+                depth = _event_depth(ev)
+                line = _format_console_line(ev, depth)
+                if line:
+                    click.echo(f"  {line}")
+                    log_fh.write(line + "\n")
+                    log_fh.flush()
+                # Incrementally update log.json so the web viewer sees live progress.
+                (run_dir / "log.json").write_text(
+                    run_logger.to_json(), encoding="utf-8"
+                )
+
+            run_logger = AgentLogger(on_event=_on_event)
 
             items: list[dict[str, object]] = []
 
@@ -340,13 +392,9 @@ def _register_integration_test_cli(app: Flask) -> None:
                 error = f"{type(exc).__name__}: {exc}"
                 click.echo(f"  UNEXPECTED ERROR: {error}", err=True)
             finally:
-                # Write structured log and a simple console summary from events
-                from app.agents.logger import InfoEvent, WarnEvent
-                for ev in run_logger.events:
-                    if isinstance(ev, (InfoEvent, WarnEvent)):
-                        _on_info(ev.message)
                 log_fh.close()
-                # Write structured log.json for the session viewer UI
+                # Write the final log.json (events were already written
+                # incrementally, but this ensures a complete flush at the end).
                 (run_dir / "log.json").write_text(
                     run_logger.to_json(), encoding="utf-8"
                 )

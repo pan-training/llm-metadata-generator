@@ -33,7 +33,7 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import asdict, dataclass, field
-from typing import Any, Union
+from typing import Any, Callable, Union
 
 # Maximum characters stored for prompt/response previews in LLMCallEvent.
 # The full text is deliberately capped so that the DB log column stays compact.
@@ -138,11 +138,24 @@ class AgentLogger:
     so callers can pass it as ``parent`` to child events.  The session viewer
     renders children as collapsible sub-items, giving a clean top-level view
     with details available on demand.
+
+    Args:
+        on_event: Optional callback invoked immediately after each event is
+            recorded.  Use this to stream events to a console or file in
+            real-time instead of processing them in bulk after the run.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, on_event: Callable[[AgentEvent], None] | None = None) -> None:
         self._events: list[AgentEvent] = []
         self._counter: int = 0
+        self._on_event = on_event
+
+    def _record(self, ev: AgentEvent) -> int:
+        """Append *ev* to the internal list, fire the callback, return its id."""
+        self._events.append(ev)
+        if self._on_event is not None:
+            self._on_event(ev)
+        return ev.id
 
     def _next_id(self) -> int:
         self._counter += 1
@@ -156,8 +169,7 @@ class AgentLogger:
         Returns the new event's ``id`` for use as ``parent`` by child events.
         """
         ev = InfoEvent(message=message, id=self._next_id(), parent_id=parent)
-        self._events.append(ev)
-        return ev.id
+        return self._record(ev)
 
     def warn(self, message: str, parent: int | None = None) -> int:
         """Emit a non-fatal warning.
@@ -165,8 +177,7 @@ class AgentLogger:
         Returns the new event's ``id`` for use as ``parent`` by child events.
         """
         ev = WarnEvent(message=message, id=self._next_id(), parent_id=parent)
-        self._events.append(ev)
-        return ev.id
+        return self._record(ev)
 
     def llm_call(
         self,
@@ -191,8 +202,7 @@ class AgentLogger:
             id=self._next_id(),
             parent_id=parent,
         )
-        self._events.append(ev)
-        return ev.id
+        return self._record(ev)
 
     def fetch(
         self,
@@ -212,8 +222,7 @@ class AgentLogger:
             id=self._next_id(),
             parent_id=parent,
         )
-        self._events.append(ev)
-        return ev.id
+        return self._record(ev)
 
     def item_found(
         self,
@@ -229,8 +238,7 @@ class AgentLogger:
         ev = ItemFoundEvent(
             title=title, url=url, item_type=item_type, id=self._next_id(), parent_id=parent
         )
-        self._events.append(ev)
-        return ev.id
+        return self._record(ev)
 
     def validation(
         self,
@@ -250,8 +258,7 @@ class AgentLogger:
             id=self._next_id(),
             parent_id=parent,
         )
-        self._events.append(ev)
-        return ev.id
+        return self._record(ev)
 
     # -- Read-only access ------------------------------------------------------
 
