@@ -148,13 +148,15 @@ class AgentLogger:
     def __init__(self, on_event: Callable[[AgentEvent], None] | None = None) -> None:
         self._events: list[AgentEvent] = []
         self._counter: int = 0
-        self._on_event = on_event
+        #: Optional callback invoked after each event is recorded.  Assign or
+        #: replace at any time; set to ``None`` to disable.
+        self.on_event = on_event
 
     def _record(self, ev: AgentEvent) -> int:
         """Append *ev* to the internal list, fire the callback, return its id."""
         self._events.append(ev)
-        if self._on_event is not None:
-            self._on_event(ev)
+        if self.on_event is not None:
+            self.on_event(ev)
         return ev.id
 
     def _next_id(self) -> int:
