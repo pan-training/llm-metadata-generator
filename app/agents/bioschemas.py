@@ -291,6 +291,7 @@ def _html_to_markdown(
         str(soup),
         heading_style="ATX",
         bullets="-",
+        escape_misc=False,
     )
 
     # Normalise excessive blank lines produced by block-level elements.
