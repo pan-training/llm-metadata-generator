@@ -2,12 +2,32 @@
 
 ## Extraction pipeline
 
-The agent uses a four-phase pipeline designed to handle arbitrarily large
+The agent uses a multi-phase pipeline designed to handle arbitrarily large
 websites without overflowing the LLM context window.
+
+### Phase 0 – STRUCTURAL SUMMARY  (computed once, reused across runs)
+
+Before extraction the caller computes a rich structural summary via
+``compute_site_structure_summary``.  This is an expensive but reusable
+operation: it crawls several structural/navigation pages, produces a brief
+LLM summary of each, and then compiles a final JSON document that describes:
+
+- A short description of the website's purpose.
+- The primary training content types found on the site.
+- For each content type: the URL where it lives, navigation patterns
+  (pagination, category links), 2–4 concrete examples, and a note on how
+  items are typically structured on the page.
+
+The structural summary is cached in ``metadata_cache.structural_summary``.
+Phase 0 is **skipped** on subsequent runs when a cached summary exists.
 
 ### Phase 1 – CRAWL + DISCOVER  (tree-like, chunk-by-chunk)
 
-1. Fetch the primary URL (respecting robots.txt).
+When a structural summary (new ``schema_version=2`` format) is available the
+agent **starts from the ``primary_url`` fields** listed under each content
+type rather than from the root URL.  For each start URL:
+
+1. Fetch the page (respecting robots.txt).
 2. Convert HTML to Markdown (via markdownify / BeautifulSoup4):
    - Scripts, styles, noscript, and template tags are stripped entirely.
    - Tables become standard Markdown tables, links become ``[anchor](url)``.
@@ -22,6 +42,9 @@ websites without overflowing the LLM context window.
    contain multiple training items (e.g. a table row per item, or a prose
    paragraph describing two events), and the LLM is expected to return all
    of them in the ``items`` array.
+   When a structural summary is available the chunk prompt includes the site
+   description and examples so the LLM focuses only on the primary training
+   content types described in the summary and ignores secondary content.
 5. Recursively follow the identified links up to MAX_FOLLOW_DEPTH, repeating
    steps 2–4 for each new page (up to MAX_TOTAL_PAGES total).
 
@@ -61,21 +84,38 @@ first (@context with dct namespace, dct:conformsTo, @id) so that the schema
 can validate them.  Validation errors are then formatted as a concise list
 and fed back to the LLM for up to MAX_FIX_ATTEMPTS fixing passes.
 
-### Structural summary
+### Structural summary format (schema_version=2)
 
-After each successful crawl, a compact JSON summary is computed describing the
-site's navigation structure (crawled URLs + content hashes, item count,
-URL path patterns).  This is stored in metadata_cache.structural_summary and
-passed back to the agent on subsequent runs so incremental updates know which
-pages changed and which items are likely new.
+The new structural summary produced by ``compute_site_structure_summary`` is a
+JSON object with the following structure::
 
-### Update modes
-
-- **Full refresh** (`structural_summary=None`): crawl everything from scratch.
-- **Incremental** (`structural_summary` provided): the LLM is shown the
-  previous summary and the page-hash map so it can skip unchanged content and
-  focus on new or changed items.  Level-0 "no-op" is handled by the caller
-  (compare content hashes before calling the agent).
+    {
+        "schema_version": "2",
+        "source_url": "https://example.com",
+        "source_domain": "example.com",
+        "computed_at": "2024-01-01T00:00:00+00:00",
+        "site_description": "A website hosting bioinformatics tutorials …",
+        "content_types": [
+            {
+                "type": "TrainingMaterial",
+                "description": "Online tutorials for bioinformatics tools",
+                "primary_url": "https://example.com/training",
+                "navigation": {
+                    "type": "paginated",
+                    "urls": ["https://example.com/training?page=2"],
+                    "description": "URL pattern ?page=N; 'Next' link present"
+                },
+                "examples": [
+                    {
+                        "title": "Intro to Python",
+                        "description": "Beginner Python tutorial",
+                        "url": "https://example.com/training/python"
+                    }
+                ],
+                "typical_structure": "Title, difficulty badge, topic tags, Start button"
+            }
+        ]
+    }
 
 This module must NOT import Flask.
 """
@@ -90,7 +130,7 @@ import time
 import urllib.robotparser
 from dataclasses import dataclass, field
 from typing import Any, Callable
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, parse_qs
 
 import requests
 from bs4 import BeautifulSoup
@@ -112,6 +152,11 @@ CHUNK_OVERLAP = 400  # overlap between consecutive chunks (preserves context)
 MAX_TOTAL_PAGES = 20     # total pages fetched in one agent run
 MAX_FOLLOW_DEPTH = 2     # maximum link-following depth from the primary URL
 MAX_LINKS_PER_CHUNK = 10  # links the LLM may nominate per chunk
+
+# Structural summary computation limits (Phase 0).
+MAX_STRUCTURE_PAGES = 8    # max pages to crawl when building a structural summary
+# Characters of page content used per page for structure analysis (beginning+end).
+STRUCTURE_CONTENT_SIZE = 3000
 
 # Validation fix loop.
 MAX_FIX_ATTEMPTS = 1  # maximum schema-fix LLM passes per item
@@ -200,6 +245,35 @@ _CLASSIFY_SYSTEM_PROMPT = """\
 You are an expert at identifying scientific training content on web pages.
 Your task is to classify a text chunk from a website and identify any training
 materials, courses, or events it describes.  You do NOT produce JSON-LD here.
+
+IMPORTANT — faceted search / filter interfaces:
+Many training catalogues have filter panels (checkboxes, dropdowns, tag clouds,
+sort controls) that narrow or re-order the *same* list of items without adding
+new content.  These produce URLs like:
+  ?category=bioinformatics  ?sort=date  ?type=online  ?tag=python  ?level=beginner
+These are NOT worth following — they just limit the number of results shown.
+Only include a link in follow_links if it leads to DIFFERENT training content
+(e.g. a next-page link, a genuinely different category landing page, or an
+item detail page), NOT if it merely filters or sorts the current list.
+"""
+
+# ---------------------------------------------------------------------------
+# System prompts for structural summary computation (Phase 0)
+# ---------------------------------------------------------------------------
+
+_STRUCTURE_PAGE_SYSTEM_PROMPT = """\
+You are an expert at analysing training content websites.
+Analyse the provided web page content and describe its structure in JSON.
+Focus on: what type of page this is, what training content is visible,
+and how to navigate to more content (pagination, categories, etc.).
+"""
+
+_STRUCTURE_COMPILE_SYSTEM_PROMPT = """\
+You are an expert at analysing training content websites.
+You have been provided with summaries of several pages from a training website.
+Produce a rich structural summary that will guide a metadata extraction agent
+to focus only on the website's primary training content and ignore secondary
+or peripheral content that merely resembles training materials.
 """
 
 # ---------------------------------------------------------------------------
@@ -356,6 +430,88 @@ def _chunk_text(
         chunks.append(text[start:end])
         start = max(start + 1, end - overlap)
     return chunks
+
+
+# ---------------------------------------------------------------------------
+# Faceted search URL detection
+# ---------------------------------------------------------------------------
+
+# Query-string parameter names that typically represent facet filters / sort
+# controls on a search/listing page.  Links that only differ from the current
+# page by these parameters are just narrowing the same result set and should
+# NOT be followed as new content pages.
+_FILTER_PARAMS: frozenset[str] = frozenset(
+    {
+        # Sorting / ordering
+        "sort", "sort_by", "order", "order_by", "orderby", "direction",
+        # Category / type / format filters
+        "category", "cat", "type", "format", "topic", "subject", "theme",
+        # Tag / keyword filters
+        "tag", "tags", "keyword", "keywords",
+        # Audience / level
+        "audience", "level", "difficulty", "target",
+        # Language / locale
+        "language", "lang", "locale",
+        # Status / date filters
+        "status", "date", "from", "to", "year", "month",
+        # Free-text search within the page
+        "q", "query", "search", "s",
+        # View style (grid vs list, etc.)
+        "view", "display",
+    }
+)
+
+# Parameters that indicate genuine pagination — these should still be followed.
+_PAGINATION_PARAMS: frozenset[str] = frozenset(
+    {"page", "p", "pg", "offset", "start", "skip", "cursor", "after", "before"}
+)
+
+
+def _is_faceted_search_url(url: str, source_url: str) -> bool:
+    """Return True when *url* appears to be a faceted-search / filter variation.
+
+    A URL is considered a faceted-search variant when both of the following
+    hold:
+
+    1. The URL path is identical to *source_url*'s path (same listing page).
+    2. The query string consists **entirely** of known filter/sort parameters
+       (``_FILTER_PARAMS``) — none of the query parameters are pagination
+       parameters (``_PAGINATION_PARAMS``) or path-changing parameters not in
+       the filter list.
+
+    Pagination links (``?page=2``, ``?offset=20``) are explicitly allowed
+    because they genuinely navigate to *different* slices of content.
+
+    Examples that return True (should NOT follow):
+      ``https://example.com/courses?sort=date``
+      ``https://example.com/courses?category=bioinformatics&sort=title``
+      ``https://example.com/events?format=online&level=beginner``
+
+    Examples that return False (safe to follow):
+      ``https://example.com/courses?page=2``          # pagination
+      ``https://example.com/courses/python``           # different path
+      ``https://example.com/courses?category=bio&page=2``  # pagination + filter
+    """
+    parsed_url = urlparse(url)
+    parsed_src = urlparse(source_url)
+
+    # Different path → this is a distinct page, not a faceted variant.
+    if parsed_url.path.rstrip("/") != parsed_src.path.rstrip("/"):
+        return False
+
+    # No query string → not a faceted variant.
+    if not parsed_url.query:
+        return False
+
+    params = parse_qs(parsed_url.query, keep_blank_values=True)
+    param_names = {k.lower() for k in params}
+
+    # If any pagination parameter is present, treat as valid navigation.
+    if param_names & _PAGINATION_PARAMS:
+        return False
+
+    # If ALL parameters are known filter params, it's a faceted-search URL.
+    return bool(param_names) and param_names.issubset(_FILTER_PARAMS)
 
 
 # ---------------------------------------------------------------------------
@@ -577,12 +733,275 @@ def _apply_tess_conventions(item: dict[str, Any], fallback_url: str) -> dict[str
 # ---------------------------------------------------------------------------
 
 
+def _summarise_page_for_structure(
+    url: str,
+    content: str,
+    llm_client: Any,
+) -> dict[str, Any]:
+    """Ask the LLM to summarise a single page's structure and content.
+
+    Returns a dict with keys: page_type, description, training_items,
+    navigation_links.  Used by ``compute_site_structure_summary``.
+    """
+    messages: list[dict[str, str]] = [
+        {"role": "system", "content": _STRUCTURE_PAGE_SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": (
+                f"Analyse this page: {url}\n\n"
+                "Produce a JSON summary with:\n"
+                '{"page_type": "catalog|listing|item|navigation|about|home|other", '
+                '"description": "brief description of page content", '
+                '"training_items": ['
+                '{"title": "...", "description": "one sentence", "url": "..."}], '
+                '"navigation_links": ['
+                '{"url": "...", "type": "next_page|category|all_items|other", '
+                '"description": "..."}]}\n\n'
+                "For catalog/listing pages include the first 2–3 and last 1–2 "
+                "visible training items so we can see the range of content. "
+                "For navigation_links include pagination and category links only.\n\n"
+                f"Page content:\n{content}"
+            ),
+        },
+    ]
+    result = _call_llm(llm_client, get_model_for_task("content_summary"), messages)
+    # Guarantee expected keys even when the model returns a partial response.
+    result.setdefault("page_type", "other")
+    result.setdefault("description", "")
+    result.setdefault("training_items", [])
+    result.setdefault("navigation_links", [])
+    return result
+
+
+def _compile_site_structure(
+    source_url: str,
+    page_summaries: list[dict[str, Any]],
+    llm_client: Any,
+) -> dict[str, Any]:
+    """Ask the LLM to compile page summaries into a final structural summary.
+
+    Returns a dict with keys: site_description, content_types.
+    Used by ``compute_site_structure_summary``.
+    """
+    summaries_text = json.dumps(page_summaries, ensure_ascii=False, indent=2)
+    messages: list[dict[str, str]] = [
+        {"role": "system", "content": _STRUCTURE_COMPILE_SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": (
+                f"Website: {source_url}\n\n"
+                "Based on the following page summaries, produce a structural "
+                "summary that will guide a metadata extraction agent. "
+                "The agent must focus ONLY on the website's primary training "
+                "content and ignore pages that are merely peripheral (e.g. "
+                "'About us', general documentation not primarily about training, "
+                "or blog posts that happen to mention training).\n\n"
+                "Output JSON with exactly this structure:\n"
+                '{"site_description": "one sentence about the website\'s purpose", '
+                '"content_types": [{'
+                '"type": "TrainingMaterial|CourseInstance|Course", '
+                '"description": "what this type of content is on this site", '
+                '"primary_url": "main URL where items of this type are listed", '
+                '"navigation": {'
+                '"type": "paginated|categories|single_list|unknown", '
+                '"urls": ["additional URLs to crawl for more items"], '
+                '"description": "how to find all items, e.g. pagination pattern"}, '
+                '"examples": [{"title": "...", "description": "...", "url": "..."}], '
+                '"typical_structure": "how items of this type look on the page"'
+                '}]}\n\n'
+                "Include 2–4 examples per content type taken from the page "
+                "summaries — these help the extraction agent recognise what "
+                "items to extract.\n\n"
+                f"Page summaries:\n{summaries_text}"
+            ),
+        },
+    ]
+    result = _call_llm(llm_client, get_model_for_task("content_summary"), messages)
+    result.setdefault("site_description", "")
+    result.setdefault("content_types", [])
+    return result
+
+
+def compute_site_structure_summary(
+    url: str,
+    llm_client: Any,
+    logger: "AgentLogger | None" = None,
+) -> str:
+    """Compute a rich structural summary for a training website (Phase 0).
+
+    Crawls the primary URL plus up to ``MAX_STRUCTURE_PAGES - 1`` structural
+    navigation pages (categories, pagination start/end, etc.).  For each page
+    the beginning and end of the content are sent to an LLM to produce a brief
+    page summary.  All page summaries are then compiled into a final structural
+    summary JSON.
+
+    This is an expensive operation but is **reused across extraction runs** —
+    the caller should skip this step when a cached structural summary already
+    exists.
+
+    Args:
+        url: Primary URL of the training website.
+        llm_client: An OpenAI-compatible client instance.
+        logger: Optional :class:`~app.agents.logger.AgentLogger` for structured
+            progress events.
+
+    Returns:
+        JSON string with the structural summary (``schema_version="2"``).
+
+    Raises:
+        AccessDeniedError: If the primary URL is blocked or unreachable.
+    """
+    from datetime import datetime, timezone
+
+    from app.agents.logger import AgentLogger
+
+    _logger: AgentLogger = logger if logger is not None else AgentLogger()
+    robots_cache: dict[str, urllib.robotparser.RobotFileParser] = {}
+
+    # Robots.txt check for the primary URL.
+    if not _check_robots(url, robots_cache):
+        raise AccessDeniedError(f"Crawling blocked by robots.txt for {url}")
+
+    phase0_id = _logger.info("Phase 0: computing structural summary")
+    parsed_primary = urlparse(url)
+    primary_domain = parsed_primary.netloc
+
+    # --- Fetch + summarise primary URL ---
+    _logger.info(f"Fetching primary URL: {url}", parent=phase0_id)
+    try:
+        response = _fetch(url)
+    except requests.RequestException as exc:
+        raise AccessDeniedError(f"Failed to fetch {url}: {exc}") from exc
+
+    if response.status_code in (401, 403):
+        raise AccessDeniedError(
+            f"Access denied (HTTP {response.status_code}) for {url}"
+        )
+    if not response.ok:
+        raise AccessDeniedError(
+            f"Could not retrieve {url} (HTTP {response.status_code})"
+        )
+
+    _logger.fetch(
+        url=url,
+        status_code=response.status_code,
+        content_length=len(response.text),
+        parent=phase0_id,
+    )
+    primary_md, primary_links = _html_to_markdown(response.text, url)
+    _logger.info(f"Primary page: {len(primary_md)} chars", parent=phase0_id)
+
+    # Show beginning + end for large pages so the LLM sees the full range.
+    if len(primary_md) > STRUCTURE_CONTENT_SIZE * 2:
+        primary_content = (
+            primary_md[:STRUCTURE_CONTENT_SIZE]
+            + "\n\n[...middle content omitted...]\n\n"
+            + primary_md[-STRUCTURE_CONTENT_SIZE:]
+        )
+    else:
+        primary_content = primary_md[: STRUCTURE_CONTENT_SIZE * 2]
+
+    _logger.info("Summarising primary page structure", parent=phase0_id)
+    primary_summary = _summarise_page_for_structure(url, primary_content, llm_client)
+    primary_summary["url"] = url
+    page_summaries: list[dict[str, Any]] = [primary_summary]
+
+    # --- Collect structural navigation links to explore ---
+    # Priority 1: links identified by the LLM as navigation links.
+    nav_link_urls: list[str] = [
+        lnk["url"]
+        for lnk in primary_summary.get("navigation_links", [])
+        if lnk.get("url") and urlparse(lnk["url"]).netloc == primary_domain
+    ]
+    # Priority 2: additional same-domain links from the parsed page (as fallback).
+    extra_links: list[str] = [
+        link_url
+        for link_url, _ in primary_links[:30]
+        if urlparse(link_url).netloc == primary_domain and link_url != url
+    ]
+
+    # Deduplicate while preserving priority order.
+    seen: set[str] = {url}
+    links_to_follow: list[str] = []
+    for link_url in nav_link_urls + extra_links:
+        if link_url not in seen:
+            seen.add(link_url)
+            links_to_follow.append(link_url)
+        if len(links_to_follow) >= MAX_STRUCTURE_PAGES - 1:
+            break
+
+    _logger.info(
+        f"Following {len(links_to_follow)} structural navigation link(s)",
+        parent=phase0_id,
+    )
+
+    # --- Fetch + summarise each structural navigation page ---
+    for nav_url in links_to_follow:
+        if not _check_robots(nav_url, robots_cache):
+            _logger.warn(f"Skipping {nav_url} (blocked by robots.txt)", parent=phase0_id)
+            continue
+        try:
+            resp = _fetch(nav_url)
+        except requests.RequestException as exc:
+            _logger.warn(f"Could not fetch {nav_url}: {exc}", parent=phase0_id)
+            continue
+        if not resp.ok:
+            _logger.warn(
+                f"Skipping {nav_url} (HTTP {resp.status_code})", parent=phase0_id
+            )
+            continue
+
+        _logger.fetch(
+            url=nav_url,
+            status_code=resp.status_code,
+            content_length=len(resp.text),
+            parent=phase0_id,
+        )
+        nav_md, _ = _html_to_markdown(resp.text, nav_url)
+        _logger.info(f"Summarising {nav_url} ({len(nav_md)} chars)", parent=phase0_id)
+
+        if len(nav_md) > STRUCTURE_CONTENT_SIZE * 2:
+            nav_content = (
+                nav_md[:STRUCTURE_CONTENT_SIZE]
+                + "\n\n[...middle content omitted...]\n\n"
+                + nav_md[-STRUCTURE_CONTENT_SIZE:]
+            )
+        else:
+            nav_content = nav_md[: STRUCTURE_CONTENT_SIZE * 2]
+
+        page_sum = _summarise_page_for_structure(nav_url, nav_content, llm_client)
+        page_sum["url"] = nav_url
+        page_summaries.append(page_sum)
+
+    # --- Compile into the final structural summary ---
+    _logger.info(
+        f"Compiling structural summary from {len(page_summaries)} page summary/ies",
+        parent=phase0_id,
+    )
+    compiled = _compile_site_structure(url, page_summaries, llm_client)
+    compiled["source_url"] = url
+    compiled["source_domain"] = primary_domain
+    compiled["computed_at"] = datetime.now(timezone.utc).isoformat()
+    compiled["schema_version"] = "2"
+
+    result_str = json.dumps(compiled, ensure_ascii=False)
+    _logger.info(
+        f"Structural summary ready ({len(result_str)} chars)", parent=phase0_id
+    )
+    return result_str
+
+
 def compute_structural_summary(
     items: list[dict[str, Any]],
     source_url: str,
     crawled_page_hashes: dict[str, str] | None = None,
 ) -> str:
     """Produce a compact site-structure summary for future incremental runs.
+
+    .. deprecated::
+        This function produces the legacy (schema_version=1) summary format.
+        Use :func:`compute_site_structure_summary` instead for new code.
+        This function is retained for backward compatibility only.
 
     The summary describes *how to navigate* the site — not the content of each
     item (which is already stored in sessions.result_json).  On the next run
@@ -629,7 +1048,7 @@ def _content_hash(text: str) -> str:
 class BioschemasExtractorAgent:
     """Extracts Bioschemas JSON-LD from web pages about training materials.
 
-    See the module docstring for a description of the four-phase pipeline.
+    See the module docstring for a description of the multi-phase pipeline.
     """
 
     def __init__(self) -> None:
@@ -650,10 +1069,12 @@ class BioschemasExtractorAgent:
         Args:
             url: Primary source URL to crawl and extract from.
             prompt: Optional additional extraction instructions.
-            structural_summary: JSON string produced by a previous run of
-                ``compute_structural_summary``.  When provided, the agent runs
-                in incremental mode and focuses on changed/new content.
-                Pass ``None`` for a full refresh.
+            structural_summary: JSON string produced by
+                ``compute_site_structure_summary`` (schema_version=2) or the
+                legacy ``compute_structural_summary``.  When provided, Phase 1
+                starts from the ``primary_url`` fields listed in the summary
+                and the LLM is focused on the described primary content types.
+                Pass ``None`` to crawl from the root URL without guidance.
             llm_client: An OpenAI-compatible client instance (required).
             logger: Optional structured :class:`AgentLogger`.  A new one is
                 created internally when not provided.
@@ -673,20 +1094,51 @@ class BioschemasExtractorAgent:
         if llm_client is None:
             raise ValueError("llm_client must be provided")
 
+        # Log structural summary for debugging (truncated to avoid log spam).
+        if structural_summary:
+            preview = structural_summary[:500]
+            suffix = "…" if len(structural_summary) > 500 else ""
+            self._logger.info(f"Using structural summary: {preview}{suffix}")
+        else:
+            self._logger.info("No structural summary provided; crawling from root URL")
+
+        # Determine starting URL(s) for Phase 1.
+        # When using the new schema_version=2 format, start from the
+        # primary_url of each listed content type rather than just the root URL.
+        start_urls: list[str] = [url]
+        if structural_summary:
+            try:
+                summary_data = json.loads(structural_summary)
+                if summary_data.get("schema_version") == "2":
+                    content_type_urls = [
+                        ct["primary_url"]
+                        for ct in summary_data.get("content_types", [])
+                        if ct.get("primary_url")
+                    ]
+                    if content_type_urls:
+                        start_urls = content_type_urls
+                        self._logger.info(
+                            f"Phase 1 starting from {len(start_urls)} content-type "
+                            f"URL(s) listed in structural summary"
+                        )
+            except (json.JSONDecodeError, AttributeError, KeyError):
+                pass
+
         state = _CrawlState()
 
         # ----------------------------------------------------------------
         # Phase 1: CRAWL + DISCOVER
         # ----------------------------------------------------------------
         phase1_id = self._logger.info("Phase 1: crawl + discover")
-        self._crawl_and_discover(
-            start_url=url,
-            structural_summary=structural_summary,
-            llm_client=llm_client,
-            state=state,
-            is_primary=True,
-            parent_id=phase1_id,
-        )
+        for start_url in start_urls:
+            self._crawl_and_discover(
+                start_url=start_url,
+                structural_summary=structural_summary,
+                llm_client=llm_client,
+                state=state,
+                is_primary=(start_url == url),
+                parent_id=phase1_id,
+            )
 
         if not state.discovered:
             raise NotTrainingContentError(
@@ -929,7 +1381,7 @@ class BioschemasExtractorAgent:
                 chunk_index=chunk_idx,
                 total_chunks=total_chunks,
                 source_url=start_url,
-                structural_summary=structural_summary if depth == 0 else None,
+                structural_summary=structural_summary,
                 llm_client=llm_client,
                 parent_id=page_id,
             )
@@ -979,18 +1431,22 @@ class BioschemasExtractorAgent:
             if depth < MAX_FOLLOW_DEPTH:
                 for link_data in result.get("follow_links", [])[:MAX_LINKS_PER_CHUNK]:
                     link_url = link_data.get("url", "")
-                    if (
-                        link_url
-                        and link_url not in state.pages
-                        and link_url not in links_to_follow
-                    ):
-                        links_to_follow.append(link_url)
+                    if not link_url or link_url in state.pages or link_url in links_to_follow:
+                        continue
+                    if _is_faceted_search_url(link_url, start_url):
+                        if logger:
+                            logger.warn(
+                                f"Skipping faceted-search URL: {link_url}",
+                                parent=parent_id,
+                            )
+                        continue
+                    links_to_follow.append(link_url)
 
         # Recursively follow identified links
         for follow_url in links_to_follow:
             self._crawl_and_discover(
                 start_url=follow_url,
-                structural_summary=None,  # only used at depth 0
+                structural_summary=structural_summary,
                 llm_client=llm_client,
                 state=state,
                 depth=depth + 1,
@@ -1008,16 +1464,44 @@ class BioschemasExtractorAgent:
         parent_id: int | None = None,
     ) -> dict[str, Any]:
         """Ask the LLM to classify a text chunk and extract items + links."""
-        incremental_note = ""
+        guidance_note = ""
         if structural_summary:
             try:
                 summary = json.loads(structural_summary)
-                prev_count = summary.get("item_count", "unknown")
-                item_urls = summary.get("item_urls", [])
-                incremental_note = (
-                    f"\nPrevious crawl found {prev_count} item(s). "
-                    f"Focus on items NOT in this list: {item_urls[:20]}\n"
-                )
+                if summary.get("schema_version") == "2":
+                    # New rich format: provide site description + content type
+                    # examples so the LLM focuses on primary training content only.
+                    site_desc = summary.get("site_description", "")
+                    content_types = summary.get("content_types", [])
+                    types_text = ""
+                    for ct in content_types:
+                        ct_type = ct.get("type", "")
+                        ct_desc = ct.get("description", "")
+                        ct_struct = ct.get("typical_structure", "")
+                        examples = ct.get("examples", [])
+                        ex_lines = ", ".join(
+                            f'"{e.get("title", "")}"' for e in examples[:3] if e.get("title")
+                        )
+                        types_text += (
+                            f"\n  - {ct_type}: {ct_desc}"
+                            + (f" (e.g. {ex_lines})" if ex_lines else "")
+                            + (f". Structure: {ct_struct}" if ct_struct else "")
+                        )
+                    guidance_note = (
+                        f"\n\nSite description: {site_desc}"
+                        f"\nFocus ONLY on extracting these primary training content types:{types_text}"
+                        "\nIgnore any content that is not of these primary types "
+                        "(e.g. 'About' pages, news, blog posts, general documentation).\n"
+                    )
+                else:
+                    # Legacy format: show previously extracted item URLs so the
+                    # LLM can focus on new/changed items.
+                    prev_count = summary.get("item_count", "unknown")
+                    item_urls = summary.get("item_urls", [])
+                    guidance_note = (
+                        f"\nPrevious crawl found {prev_count} item(s). "
+                        f"Focus on items NOT in this list: {item_urls[:20]}\n"
+                    )
             except (json.JSONDecodeError, AttributeError):
                 pass
 
@@ -1027,10 +1511,17 @@ class BioschemasExtractorAgent:
                 "role": "user",
                 "content": (
                     f"Analyse this text chunk ({chunk_index + 1}/{total_chunks}) "
-                    f"from {source_url}.{incremental_note}\n\n"
+                    f"from {source_url}.{guidance_note}\n\n"
                     "Identify:\n"
                     "1. Training materials, courses, or events mentioned\n"
                     "2. Links worth following to find more training content\n\n"
+                    "For follow_links: include pagination (next page) and links to "
+                    "genuinely different content sections. "
+                    "Do NOT include faceted-search / filter links — these are links "
+                    "that just narrow or re-sort the current list (e.g. filter by "
+                    "topic, sort by date, filter by format) without adding new content. "
+                    "If you see a filter panel, tag cloud, or sort dropdown, ignore "
+                    "all those links.\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '

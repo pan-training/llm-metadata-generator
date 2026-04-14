@@ -218,7 +218,7 @@ def _register_integration_test_cli(app: Flask) -> None:
             AccessDeniedError,
             BioschemasExtractorAgent,
             NotTrainingContentError,
-            compute_structural_summary,
+            compute_site_structure_summary,
         )
 
         root = Path(__file__).parent.parent  # repo root
@@ -376,6 +376,26 @@ def _register_integration_test_cli(app: Flask) -> None:
                 )
 
             error: str | None = None
+            structural_summary: str | None = None
+
+            # Phase 0: compute structural summary before running extraction.
+            try:
+                run_logger.info("Computing structural summary (Phase 0) …")
+                structural_summary = compute_site_structure_summary(
+                    url=site_url,
+                    llm_client=client,
+                    logger=run_logger,
+                )
+                (run_dir / "structural_summary.json").write_text(
+                    structural_summary,
+                    encoding="utf-8",
+                )
+                run_logger.info("Structural summary saved to structural_summary.json")
+            except (AccessDeniedError, Exception) as exc:
+                error = f"Structural summary failed: {exc}"
+                run_logger.warn(f"{error}; proceeding without structural summary")
+                error = None  # don't abort – extraction can still run without it
+
             try:
                 # items is populated incrementally via on_item so that partial
                 # results are written to result.json even if the agent raises
@@ -383,7 +403,7 @@ def _register_integration_test_cli(app: Flask) -> None:
                 agent.run(
                     url=site_url,
                     prompt=site_prompt,  # type: ignore[arg-type]
-                    structural_summary=None,
+                    structural_summary=structural_summary,
                     llm_client=client,
                     logger=run_logger,
                     on_item=_on_item,
@@ -425,14 +445,8 @@ def _register_integration_test_cli(app: Flask) -> None:
                 encoding="utf-8",
             )
 
-            # Save structural summary for future incremental runs.
-            if items:
-                (run_dir / "structural_summary.json").write_text(
-                    compute_structural_summary(items, site_url),
-                    encoding="utf-8",
-                )
-
             # Write human-readable summary (includes per-phase LLM timing).
+            # structural_summary.json was already saved in Phase 0 above.
             run_summary = run_logger.summary()
             timing_lines: list[str] = [
                 "",

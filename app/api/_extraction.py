@@ -24,7 +24,7 @@ def run_extraction(
         AccessDeniedError,
         BioschemasExtractorAgent,
         NotTrainingContentError,
-        compute_structural_summary,
+        compute_site_structure_summary,
     )
 
     with app.app_context():
@@ -35,6 +35,38 @@ def run_extraction(
             logger.info(f"Starting extraction for {url}")
 
             llm_client = get_llm_client("default")
+
+            # Phase 0: compute the structural summary if not already cached.
+            # The structural summary is computed once and reused across runs.
+            if structural_summary is None:
+                logger.info("No structural summary cached; computing now (Phase 0) …")
+                try:
+                    structural_summary = compute_site_structure_summary(
+                        url=url,
+                        llm_client=llm_client,
+                        logger=logger,
+                    )
+                    # Persist immediately so subsequent runs skip Phase 0.
+                    db = get_db()
+                    db.execute(
+                        "INSERT INTO metadata_cache (url, structural_summary)"
+                        " VALUES (?, ?)"
+                        " ON CONFLICT(url) DO UPDATE SET"
+                        "   structural_summary = excluded.structural_summary,"
+                        "   updated_at = datetime('now')",
+                        (url, structural_summary),
+                    )
+                    db.commit()
+                    logger.info("Structural summary stored in cache")
+                except (AccessDeniedError, Exception) as exc:
+                    logger.warn(
+                        f"Could not compute structural summary: {exc};"
+                        " proceeding without it"
+                    )
+                    structural_summary = None
+            else:
+                logger.info("Using cached structural summary")
+
             agent = BioschemasExtractorAgent()
             result = agent.run(
                 url=url,
@@ -47,21 +79,17 @@ def run_extraction(
             result_str = json.dumps(result)
             update_session(session_id, "done", log=logger.to_json(), result_json=result_str)
 
-            # Update metadata_cache with the new content hash and structural summary
-            db = get_db()
-            # Retrieve the crawled page hashes stored in the agent's run state
-            # via the structural summary (the agent embeds them there).
-            summary = compute_structural_summary(result, url)
+            # Update metadata_cache with the new content hash.
             content_hash = hashlib.sha256(result_str.encode()).hexdigest()
+            db = get_db()
             db.execute(
-                "INSERT INTO metadata_cache (url, content_hash, structural_summary, last_crawled_at)"
-                " VALUES (?, ?, ?, datetime('now'))"
+                "INSERT INTO metadata_cache (url, content_hash, last_crawled_at)"
+                " VALUES (?, ?, datetime('now'))"
                 " ON CONFLICT(url) DO UPDATE SET"
                 "   content_hash = excluded.content_hash,"
-                "   structural_summary = excluded.structural_summary,"
                 "   last_crawled_at = excluded.last_crawled_at,"
                 "   updated_at = datetime('now')",
-                (url, content_hash, summary),
+                (url, content_hash),
             )
             db.commit()
 
