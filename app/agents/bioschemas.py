@@ -188,6 +188,21 @@ and education domains.
 Your job is to extract high-quality Bioschemas/Schema.org JSON-LD metadata from
 web-page text.
 
+## STRICT RULES — read carefully
+- ONLY include information that is EXPLICITLY present in the provided page content.
+- NEVER invent, guess, or hallucinate any field value.
+- NEVER include an ORCID unless the full ORCID URL (https://orcid.org/XXXX-XXXX-XXXX-XXXX)
+  is visibly present in the page content for that specific author.
+- NEVER include a DOI unless a full DOI URL (https://doi.org/...) is explicitly
+  present in the page content.
+- NEVER include a license unless it is explicitly stated in the page content.
+- NEVER include an ontology term URL (EDAM, PaNET, etc.) unless you can confirm the
+  exact term name and URI from the page content — do not construct or guess URIs.
+- The training platform or aggregator website (e.g. "PaN-Training", "TeSS", "ELIXIR")
+  is NOT an author. Only list actual individuals or contributing organisations as authors.
+- Do NOT include the collection/listing URL (e.g. /materials, /events) as the item's
+  url — use the item's own detail page URL.
+
 ## Output a single JSON-LD object
 
 ### For TrainingMaterial / LearningResource
@@ -195,21 +210,21 @@ web-page text.
 - description: 2–5 sentence description (string)
 - keywords: array of lowercase keyword strings
 
-Strongly recommended:
-- url: canonical URL
-- author: [{"@type": "Person", "name": "...", "@id": "https://orcid.org/..."}]
-  (include ORCID in @id whenever available)
-- license: SPDX identifier (e.g. "CC-BY-4.0") or full CC URL
+Strongly recommended (only when found in the page):
+- url: canonical URL of the item's own detail page
+- author: [{"@type": "Person", "name": "..."}]  add "@id": "https://orcid.org/..." only if ORCID is explicitly on the page
+- license: SPDX identifier (e.g. "CC-BY-4.0") or full CC URL — ONLY if stated on the page
 - inLanguage: IETF BCP 47 code (e.g. "en", "de", "fr")
 - audience: [{"@type": "Audience", "audienceType": "beginner|intermediate|advanced"}]
 - teaches: array of learning outcome strings
 - educationalLevel: "beginner" | "intermediate" | "advanced"
 - learningResourceType: array, e.g. ["tutorial", "video", "slides", "e-learning"]
-- about: scientific topics as DefinedTerms
-  (use EDAM URIs for life science: {"@type":"DefinedTerm","name":"Bioinformatics","url":"http://edamontology.org/topic_0091"}
-   use PaNET for photon/neutron: {"@type":"DefinedTerm","name":"Tomography","url":"https://w3id.org/pan-training/PaNET01203"})
+- about: scientific topics as DefinedTerms — ONLY use EDAM or PaNET URIs you recognise exactly
+  (EDAM example: {"@type":"DefinedTerm","name":"Bioinformatics","url":"http://edamontology.org/topic_0091"}
+   PaNET example: {"@type":"DefinedTerm","name":"Tomography","url":"https://w3id.org/pan-training/PaNET01203"})
+  If uncertain about the URI, omit the "url" field and just include the name.
 - timeRequired: ISO 8601 duration (e.g. "PT2H" = 2 hours, "P3D" = 3 days)
-- identifier: DOI URL when present (e.g. "https://doi.org/10.1234/...")
+- identifier: DOI URL — ONLY if explicitly present on the page
 
 ### For CourseInstance (training event / workshop)
 Required:
@@ -220,7 +235,7 @@ Required:
 - location: for onsite: {"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"...","addressCountry":"..."}}
              for online: {"@type":"VirtualLocation","url":"..."}
 
-Strongly recommended:
+Strongly recommended (only when found in the page):
 - startDate, endDate: ISO 8601 datetime ("2024-03-15T09:00:00" or "2024-03-15")
 - url: canonical URL
 - organizer: [{"@type": "Organization", "name": "..."}]
@@ -229,12 +244,13 @@ Strongly recommended:
 
 ## TeSS ingestion conventions
 - keywords: use an array, not a comma-separated string
-- author/@id: use ORCID URI when known (TeSS extracts ORCID by regex)
+- author/@id: use ORCID URI ONLY when the full ORCID URL is visible on the page
 - about: EDAM is primary for life science; PaNET for photon/neutron science
 - identifier: include DOI as full URL; TeSS deduplicates on identifier
 - inLanguage: language subtag only ("en", not "English")
 - courseMode: TeSS maps "online" → virtual flag; use exact values listed above
 - organizer vs provider: for events, prefer organizer; provider is the institution
+  hosting the content permanently (not the event organiser)
 """
 
 # ---------------------------------------------------------------------------
@@ -246,15 +262,27 @@ You are an expert at identifying scientific training content on web pages.
 Your task is to classify a text chunk from a website and identify any training
 materials, courses, or events it describes.  You do NOT produce JSON-LD here.
 
+IMPORTANT — follow ONLY the navigation pattern from the structural summary:
+When a structural summary is provided, it describes exactly how to navigate the
+site (e.g. "paginated with ?page=N" or "category pages at /topics/X").
+In follow_links, include ONLY links that match that described navigation pattern.
+Do NOT follow other links even if they look interesting.
+
 IMPORTANT — faceted search / filter interfaces:
 Many training catalogues have filter panels (checkboxes, dropdowns, tag clouds,
 sort controls) that narrow or re-order the *same* list of items without adding
 new content.  These produce URLs like:
   ?category=bioinformatics  ?sort=date  ?type=online  ?tag=python  ?level=beginner
-These are NOT worth following — they just limit the number of results shown.
-Only include a link in follow_links if it leads to DIFFERENT training content
-(e.g. a next-page link, a genuinely different category landing page, or an
-item detail page), NOT if it merely filters or sorts the current list.
+  ?include_broken_links=true  ?across_all_spaces=true  ?include_archived=true
+These are NOT worth following — they just limit or re-sort the result set.
+Only include a link in follow_links if it leads to a DIFFERENT page of content
+(e.g. a next-page pagination link with ?page=N, or a genuinely different content
+section), NOT if it merely filters, re-sorts, or modifies the current list.
+
+IMPORTANT — skip non-content pages:
+Do NOT include links to creation, editing, admin, login, or search pages in
+follow_links.  Examples to skip: /new, /create, /edit, /delete, /admin,
+/sign_in, /login, /register, /search, /api/.
 """
 
 # ---------------------------------------------------------------------------
@@ -271,9 +299,29 @@ and how to navigate to more content (pagination, categories, etc.).
 _STRUCTURE_COMPILE_SYSTEM_PROMPT = """\
 You are an expert at analysing training content websites.
 You have been provided with summaries of several pages from a training website.
-Produce a rich structural summary that will guide a metadata extraction agent
-to focus only on the website's primary training content and ignore secondary
-or peripheral content that merely resembles training materials.
+Produce a rich structural summary that will guide a metadata extraction agent.
+
+IMPORTANT — content type selection:
+- By default ONLY include "TrainingMaterial" and "CourseInstance" content types.
+- DO NOT include Workflows, LearningPaths, Spaces, or other non-standard content
+  types UNLESS the user explicitly provided a URL that points directly to that
+  type of content (e.g. /workflows or /learning_paths was the given entry URL).
+- The simplest, most direct interpretation of the site is preferred.
+
+IMPORTANT — navigation URLs:
+- In each content type's navigation.urls, include ONLY URLs that lead to
+  additional pages of the SAME content type (e.g. pagination URLs like ?page=2,
+  ?page=3, or category landing pages).
+- DO NOT include URLs with filter/facet query parameters (e.g.
+  ?include_broken_links=true, ?across_all_spaces=true, ?include_archived=true,
+  ?sort=date, ?type=online, etc.) unless those parameters were already present
+  in the user-provided entry URL.
+- The navigation description MUST clearly state the URL pattern to follow
+  (e.g. "Append ?page=N (N=2,3,…) to the primary URL; 'Next' link below list").
+
+IMPORTANT — examples:
+- Include 2–4 concrete example items from the page summaries.
+- Keep examples short — they are inserted into every LLM prompt during extraction.
 """
 
 # ---------------------------------------------------------------------------
@@ -517,6 +565,9 @@ _FILTER_PARAMS: frozenset[str] = frozenset(
         "q", "query", "search", "s",
         # View style (grid vs list, etc.)
         "view", "display",
+        # TeSS / TeSS-Hub specific filter parameters
+        "include_broken_links", "across_all_spaces", "include_archived",
+        "space", "event_type", "node",
     }
 )
 
@@ -524,6 +575,28 @@ _FILTER_PARAMS: frozenset[str] = frozenset(
 _PAGINATION_PARAMS: frozenset[str] = frozenset(
     {"page", "p", "pg", "offset", "start", "skip", "cursor", "after", "before"}
 )
+
+# URL path segments that identify non-content pages (admin, auth, CRUD).
+# These paths are never worth following for training content extraction.
+_NON_CONTENT_PATH_SEGMENTS: frozenset[str] = frozenset(
+    {
+        "new", "create", "edit", "update", "delete", "destroy",
+        "admin", "sign_in", "sign_up", "login", "logout", "register",
+        "password", "account", "profile", "settings",
+        "search", "api",
+    }
+)
+
+
+def _is_non_content_url(url: str) -> bool:
+    """Return True when *url* is a non-content page (admin, auth, CRUD, API).
+
+    These URLs are never worth following for training content extraction.
+    The check looks at every segment of the URL path.
+    """
+    path = urlparse(url).path.lower()
+    segments = {seg for seg in path.split("/") if seg}
+    return bool(segments & _NON_CONTENT_PATH_SEGMENTS)
 
 
 def _is_faceted_search_url(url: str, source_url: str) -> bool:
@@ -796,6 +869,8 @@ def _summarise_page_for_structure(
     url: str,
     content: str,
     llm_client: Any,
+    logger: "AgentLogger | None" = None,
+    parent_id: int | None = None,
 ) -> dict[str, Any]:
     """Ask the LLM to summarise a single page's structure and content.
 
@@ -818,12 +893,23 @@ def _summarise_page_for_structure(
                 '"description": "..."}]}\n\n'
                 "For catalog/listing pages include the first 2–3 and last 1–2 "
                 "visible training items so we can see the range of content. "
-                "For navigation_links include pagination and category links only.\n\n"
+                "For navigation_links include ONLY standard pagination links "
+                "(e.g. 'Next page', '?page=2') and genuine category landing pages. "
+                "Do NOT include filter links, sort links, or any URL with query "
+                "parameters like ?include_broken_links, ?across_all_spaces, "
+                "?include_archived, ?sort, ?type, ?tag, ?category.\n\n"
                 f"Page content:\n{content}"
             ),
         },
     ]
-    result = _call_llm(llm_client, get_model_for_task("content_summary"), messages)
+    result = _call_llm(
+        llm_client,
+        get_model_for_task("content_summary"),
+        messages,
+        logger=logger,
+        task="content_summary",
+        parent_id=parent_id,
+    )
     # Guarantee expected keys even when the model returns a partial response.
     result.setdefault("page_type", "other")
     result.setdefault("description", "")
@@ -836,6 +922,8 @@ def _compile_site_structure(
     source_url: str,
     page_summaries: list[dict[str, Any]],
     llm_client: Any,
+    logger: "AgentLogger | None" = None,
+    parent_id: int | None = None,
 ) -> dict[str, Any]:
     """Ask the LLM to compile page summaries into a final structural summary.
 
@@ -850,32 +938,37 @@ def _compile_site_structure(
             "content": (
                 f"Website: {source_url}\n\n"
                 "Based on the following page summaries, produce a structural "
-                "summary that will guide a metadata extraction agent. "
-                "The agent must focus ONLY on the website's primary training "
-                "content and ignore pages that are merely peripheral (e.g. "
-                "'About us', general documentation not primarily about training, "
-                "or blog posts that happen to mention training).\n\n"
+                "summary that will guide a metadata extraction agent.\n\n"
                 "Output JSON with exactly this structure:\n"
-                '{"site_description": "one sentence about the website\'s purpose", '
+                '{"site_description": "2–3 sentences about the website\'s purpose and content", '
                 '"content_types": [{'
                 '"type": "TrainingMaterial|CourseInstance|Course", '
-                '"description": "what this type of content is on this site", '
+                '"description": "what this type of content is on this site (1 sentence)", '
                 '"primary_url": "main URL where items of this type are listed", '
                 '"navigation": {'
                 '"type": "paginated|categories|single_list|unknown", '
-                '"urls": ["additional URLs to crawl for more items"], '
-                '"description": "how to find all items, e.g. pagination pattern"}, '
-                '"examples": [{"title": "...", "description": "...", "url": "..."}], '
-                '"typical_structure": "how items of this type look on the page"'
+                '"urls": ["additional pagination or category URLs to crawl"], '
+                '"description": "exact URL pattern to follow all pages, e.g. '
+                "'Append ?page=N (N=2,3,…) to primary_url; stop when no Next link'"
+                '"}, '
+                '"examples": [{"title": "...", "description": "one sentence", "url": "..."}], '
+                '"typical_structure": "one sentence: how items are laid out on the listing page"'
                 '}]}\n\n'
-                "Include 2–4 examples per content type taken from the page "
-                "summaries — these help the extraction agent recognise what "
-                "items to extract.\n\n"
+                "Include 2–4 short examples per content type.\n"
+                "In navigation.urls include ONLY standard pagination URLs or "
+                "genuine category landing pages — NO filter/sort/facet URLs.\n\n"
                 f"Page summaries:\n{summaries_text}"
             ),
         },
     ]
-    result = _call_llm(llm_client, get_model_for_task("content_summary"), messages)
+    result = _call_llm(
+        llm_client,
+        get_model_for_task("content_summary"),
+        messages,
+        logger=logger,
+        task="content_summary",
+        parent_id=parent_id,
+    )
     result.setdefault("site_description", "")
     result.setdefault("content_types", [])
     return result
@@ -965,7 +1058,9 @@ def compute_site_structure_summary(
         primary_content = primary_content_text[: STRUCTURE_CONTENT_SIZE * 2]
 
     _logger.info("Summarising primary page structure", parent=phase0_id)
-    primary_summary = _summarise_page_for_structure(url, primary_content, llm_client)
+    primary_summary = _summarise_page_for_structure(
+        url, primary_content, llm_client, logger=_logger, parent_id=phase0_id
+    )
     primary_summary["url"] = url
     page_summaries: list[dict[str, Any]] = [primary_summary]
 
@@ -989,7 +1084,8 @@ def compute_site_structure_summary(
     for link_url in nav_link_urls + extra_links:
         if link_url not in seen:
             seen.add(link_url)
-            links_to_follow.append(link_url)
+            if not _is_non_content_url(link_url):
+                links_to_follow.append(link_url)
         if len(links_to_follow) >= MAX_STRUCTURE_PAGES - 1:
             break
 
@@ -1032,7 +1128,9 @@ def compute_site_structure_summary(
         else:
             nav_content = nav_content_text[: STRUCTURE_CONTENT_SIZE * 2]
 
-        page_sum = _summarise_page_for_structure(nav_url, nav_content, llm_client)
+        page_sum = _summarise_page_for_structure(
+            nav_url, nav_content, llm_client, logger=_logger, parent_id=phase0_id
+        )
         page_sum["url"] = nav_url
         page_summaries.append(page_sum)
 
@@ -1041,13 +1139,15 @@ def compute_site_structure_summary(
         f"Compiling structural summary from {len(page_summaries)} page summary/ies",
         parent=phase0_id,
     )
-    compiled = _compile_site_structure(url, page_summaries, llm_client)
+    compiled = _compile_site_structure(
+        url, page_summaries, llm_client, logger=_logger, parent_id=phase0_id
+    )
     compiled["source_url"] = url
     compiled["source_domain"] = primary_domain
     compiled["computed_at"] = datetime.now(timezone.utc).isoformat()
     compiled["schema_version"] = "2"
 
-    result_str = json.dumps(compiled, ensure_ascii=False)
+    result_str = json.dumps(compiled, ensure_ascii=False, indent=2)
     _logger.info(
         f"Structural summary ready ({len(result_str)} chars)", parent=phase0_id
     )
@@ -1512,6 +1612,13 @@ class BioschemasExtractorAgent:
                                 parent=parent_id,
                             )
                         continue
+                    if _is_non_content_url(link_url):
+                        if logger:
+                            logger.warn(
+                                f"Skipping non-content URL: {link_url}",
+                                parent=parent_id,
+                            )
+                        continue
                     links_to_follow.append(link_url)
 
         # Recursively follow identified links
@@ -1537,6 +1644,7 @@ class BioschemasExtractorAgent:
     ) -> dict[str, Any]:
         """Ask the LLM to classify a text chunk and extract items + links."""
         guidance_note = ""
+        nav_guidance = ""
         if structural_summary:
             try:
                 summary = json.loads(structural_summary)
@@ -1546,25 +1654,36 @@ class BioschemasExtractorAgent:
                     site_desc = summary.get("site_description", "")
                     content_types = summary.get("content_types", [])
                     types_text = ""
+                    nav_patterns: list[str] = []
                     for ct in content_types:
                         ct_type = ct.get("type", "")
                         ct_desc = ct.get("description", "")
                         ct_struct = ct.get("typical_structure", "")
                         examples = ct.get("examples", [])
                         ex_lines = ", ".join(
-                            f'"{e.get("title", "")}"' for e in examples[:3] if e.get("title")
+                            f'"{e.get("title", "")}"' for e in examples[:2] if e.get("title")
                         )
                         types_text += (
                             f"\n  - {ct_type}: {ct_desc}"
                             + (f" (e.g. {ex_lines})" if ex_lines else "")
-                            + (f". Structure: {ct_struct}" if ct_struct else "")
+                            + (f". Layout: {ct_struct}" if ct_struct else "")
                         )
+                        nav = ct.get("navigation", {})
+                        nav_desc = nav.get("description", "")
+                        if nav_desc:
+                            nav_patterns.append(f"    {ct_type}: {nav_desc}")
                     guidance_note = (
                         f"\n\nSite description: {site_desc}"
                         f"\nFocus ONLY on extracting these primary training content types:{types_text}"
                         "\nIgnore any content that is not of these primary types "
                         "(e.g. 'About' pages, news, blog posts, general documentation).\n"
                     )
+                    if nav_patterns:
+                        nav_guidance = (
+                            "\n\nNavigation patterns (follow ONLY links matching these):\n"
+                            + "\n".join(nav_patterns)
+                            + "\nDo NOT add any other links to follow_links.\n"
+                        )
                 else:
                     # Legacy format: show previously extracted item URLs so the
                     # LLM can focus on new/changed items.
@@ -1583,17 +1702,17 @@ class BioschemasExtractorAgent:
                 "role": "user",
                 "content": (
                     f"Analyse this text chunk ({chunk_index + 1}/{total_chunks}) "
-                    f"from {source_url}.{guidance_note}\n\n"
+                    f"from {source_url}.{guidance_note}{nav_guidance}\n\n"
                     "Identify:\n"
                     "1. Training materials, courses, or events mentioned\n"
                     "2. Links worth following to find more training content\n\n"
-                    "For follow_links: include pagination (next page) and links to "
-                    "genuinely different content sections. "
-                    "Do NOT include faceted-search / filter links — these are links "
-                    "that just narrow or re-sort the current list (e.g. filter by "
-                    "topic, sort by date, filter by format) without adding new content. "
-                    "If you see a filter panel, tag cloud, or sort dropdown, ignore "
-                    "all those links.\n\n"
+                    "For follow_links: only include pagination links matching the "
+                    "navigation pattern above (if provided), or links to genuinely "
+                    "different content sections when no pattern is given. "
+                    "Do NOT include faceted-search / filter links, creation pages, "
+                    "admin pages, login pages, search pages, or any URL whose path "
+                    "contains /new, /create, /edit, /delete, /admin, /sign_in, "
+                    "/login, /register, /search, /api/.\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
@@ -1638,17 +1757,21 @@ class BioschemasExtractorAgent:
                     "You are about to extract Bioschemas JSON-LD metadata for "
                     "a training item. First, carefully read the page content "
                     "below and write brief notes on what metadata you can find. "
+                    "IMPORTANT: only note information that is EXPLICITLY present "
+                    "in the page — do not invent or assume any details.\n\n"
                     "Cover:\n"
                     "- Type (LearningResource for training material / tutorial, "
                     "CourseInstance for scheduled event / workshop)\n"
                     "- Title (exact wording from the page)\n"
                     "- Description (key points in 2–5 sentences)\n"
-                    "- Authors / instructors (and ORCIDs if visible)\n"
+                    "- Authors / instructors (only if explicitly named on the page; "
+                    "note full ORCID URL only if it appears on the page — do not "
+                    "guess or look up ORCIDs)\n"
                     "- Dates (start/end; note if absent)\n"
                     "- Location or mode (online / onsite / blended)\n"
                     "- Scientific topics / keywords\n"
                     "- Educational level and target audience\n"
-                    "- License\n"
+                    "- License (only if explicitly stated on the page)\n"
                     "- Language\n"
                     "- Any other fields evident in the content\n\n"
                     "Write concise notes in plain text. "
