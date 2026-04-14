@@ -22,7 +22,7 @@ flask integration-test run --prompt "Focus on hands-on workshops only"
 # Limit how long each site may take (here: 10 minutes per site)
 # Timed-out sites save whatever partial results were gathered and the
 # next site in the list starts immediately.
-flask integration-test run --timeout 600
+flask integration-test run --timeout 10
 
 # Use a custom config file or output directory
 flask integration-test run --config /path/to/my-sites.json --output-dir /tmp/results

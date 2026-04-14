@@ -203,7 +203,7 @@ def _register_integration_test_cli(app: Flask) -> None:
         default=None,
         type=int,
         help=(
-            "Per-site timeout in seconds.  When the extraction for a single site"
+            "Per-site timeout in minutes.  When the extraction for a single site"
             " exceeds this limit the run is aborted for that site (partial results"
             " are saved) and the next site is started immediately."
         ),
@@ -446,13 +446,13 @@ def _register_integration_test_cli(app: Flask) -> None:
 
             try:
                 if timeout is not None:
-                    click.echo(f"  Timeout   : {timeout}s per site")
+                    click.echo(f"  Timeout   : {timeout}min per site")
                     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
                         future = executor.submit(_run_extraction)
                         try:
-                            error = future.result(timeout=timeout)
+                            error = future.result(timeout=timeout * 60)
                         except concurrent.futures.TimeoutError:
-                            error = f"Timeout: site exceeded {timeout}s limit"
+                            error = f"Timeout: site exceeded {timeout}min limit"
                             click.echo(f"  TIMEOUT: {error}", err=True)
                 else:
                     error = _run_extraction()
