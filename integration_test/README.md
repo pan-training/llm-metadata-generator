@@ -24,6 +24,10 @@ flask integration-test run --prompt "Focus on hands-on workshops only"
 # next site in the list starts immediately.
 flask integration-test run --timeout 10
 
+# Pass raw HTML to the LLM instead of converting to Markdown first
+# (useful for evaluating whether the model extracts better from HTML)
+flask integration-test run --raw-html
+
 # Use a custom config file or output directory
 flask integration-test run --config /path/to/my-sites.json --output-dir /tmp/results
 ```

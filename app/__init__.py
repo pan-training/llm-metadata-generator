@@ -208,12 +208,24 @@ def _register_integration_test_cli(app: Flask) -> None:
             " are saved) and the next site is started immediately."
         ),
     )
+    @click.option(
+        "--raw-html",
+        is_flag=True,
+        default=False,
+        help=(
+            "Pass cleaned HTML directly to the LLM instead of converting to Markdown"
+            " first.  Hashing for change-detection still uses the Markdown"
+            " representation.  Useful for evaluating whether the LLM performs better"
+            " on raw HTML structure."
+        ),
+    )
     def run_command(
         url: str | None,
         config_path: str | None,
         output_dir: str | None,
         prompt: str | None,
         timeout: int | None,
+        raw_html: bool,
     ) -> None:
         """Run extraction against real websites and save detailed results.
 
@@ -290,6 +302,8 @@ def _register_integration_test_cli(app: Flask) -> None:
             click.echo(f"Site       : {site_url}")
             if description:
                 click.echo(f"Description: {description}")
+            if raw_html:
+                click.echo("Raw HTML   : yes (LLM sees HTML, not Markdown)")
             click.echo(f"Output dir : {run_dir}")
 
             # Persist the inputs used for this run.
@@ -299,6 +313,7 @@ def _register_integration_test_cli(app: Flask) -> None:
                         "url": site_url,
                         "description": description,
                         "prompt": site_prompt,
+                        "raw_html": raw_html,
                         "timestamp": timestamp,
                     },
                     indent=2,
@@ -406,6 +421,7 @@ def _register_integration_test_cli(app: Flask) -> None:
                         url=site_url,
                         llm_client=client,
                         logger=run_logger,
+                        raw_html=raw_html,
                     )
                     (run_dir / "structural_summary.json").write_text(
                         structural_summary,
@@ -429,6 +445,7 @@ def _register_integration_test_cli(app: Flask) -> None:
                         llm_client=client,
                         logger=run_logger,
                         on_item=_on_item,
+                        raw_html=raw_html,
                     )
                 except AccessDeniedError as exc:
                     err = f"AccessDeniedError: {exc}"
