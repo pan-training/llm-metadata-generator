@@ -6,8 +6,9 @@ from typing import Any
 
 from flask import current_app
 
+from app.agents.logger import AgentLogger
 from app.db.sqlite import get_db
-from app.models.session import append_log, create_session, get_active_session, update_session
+from app.models.session import create_session, get_active_session, update_session
 
 
 def run_extraction(
@@ -27,24 +28,23 @@ def run_extraction(
     )
 
     with app.app_context():
-        def log(msg: str) -> None:
-            append_log(session_id, msg)
+        logger = AgentLogger()
 
         try:
-            update_session(session_id, "running")
-            log(f"Starting extraction for {url}")
+            update_session(session_id, "running", log=logger.to_json())
+            logger.info(f"Starting extraction for {url}")
 
             llm_client = get_llm_client("default")
 
             # Phase 0: compute the structural summary if not already cached.
             # The structural summary is computed once and reused across runs.
             if structural_summary is None:
-                log("No structural summary cached; computing now (Phase 0) …")
+                logger.info("No structural summary cached; computing now (Phase 0) …")
                 try:
                     structural_summary = compute_site_structure_summary(
                         url=url,
                         llm_client=llm_client,
-                        log=log,
+                        logger=logger,
                     )
                     # Persist immediately so subsequent runs skip Phase 0.
                     db = get_db()
@@ -57,15 +57,15 @@ def run_extraction(
                         (url, structural_summary),
                     )
                     db.commit()
-                    log("Structural summary stored in cache")
+                    logger.info("Structural summary stored in cache")
                 except (AccessDeniedError, Exception) as exc:
-                    log(
+                    logger.warn(
                         f"Could not compute structural summary: {exc};"
                         " proceeding without it"
                     )
                     structural_summary = None
             else:
-                log("Using cached structural summary")
+                logger.info("Using cached structural summary")
 
             agent = BioschemasExtractorAgent()
             result = agent.run(
@@ -73,12 +73,11 @@ def run_extraction(
                 prompt=prompt,
                 structural_summary=structural_summary,
                 llm_client=llm_client,
-                log_fn=log,
+                logger=logger,
             )
 
             result_str = json.dumps(result)
-            update_session(session_id, "done", result_json=result_str)
-            log(f"Extraction complete: {len(result)} item(s)")
+            update_session(session_id, "done", log=logger.to_json(), result_json=result_str)
 
             # Update metadata_cache with the new content hash.
             content_hash = hashlib.sha256(result_str.encode()).hexdigest()
@@ -95,9 +94,11 @@ def run_extraction(
             db.commit()
 
         except (NotTrainingContentError, AccessDeniedError) as exc:
-            update_session(session_id, "error", log=str(exc))
+            logger.info(f"Extraction stopped: {exc}")
+            update_session(session_id, "error", log=logger.to_json())
         except Exception as exc:
-            update_session(session_id, "error", log=f"Unexpected error: {exc}")
+            logger.warn(f"Unexpected error: {exc}")
+            update_session(session_id, "error", log=logger.to_json())
 
 
 def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> None:

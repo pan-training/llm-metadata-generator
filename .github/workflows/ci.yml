@@ -18,11 +18,14 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install Poetry
+        run: pip install poetry
+
       - name: Install dependencies
-        run: pip install flask apscheduler requests "openai>=2.0" python-dotenv pytest mypy "jsonschema>=4.18"
+        run: poetry install
 
       - name: Run tests
-        run: pytest tests/ -v
+        run: poetry run pytest tests/ -v
 
       - name: Run type checks
-        run: mypy app tests
+        run: poetry run mypy app tests

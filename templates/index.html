@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Metadata Generator</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #f5f7fa; color: #333; }
+    header { background: #1a73e8; color: white; padding: 16px 24px; }
+    header h1 { margin: 0; font-size: 1.4rem; }
+    header p  { margin: 4px 0 0; opacity: .85; font-size: .9rem; }
+    .container { max-width: 900px; margin: 32px auto; padding: 0 16px; }
+    h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: .06em; color: #555; margin: 0 0 12px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .card { background: white; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,.1); padding: 20px 22px; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 6px; transition: box-shadow .15s; }
+    .card:hover { box-shadow: 0 4px 14px rgba(0,0,0,.14); }
+    .card-title { font-size: 1rem; font-weight: 700; color: #1a73e8; display: flex; align-items: center; gap: 8px; }
+    .card-icon { font-size: 1.2rem; }
+    .card-method { display: inline-block; font-size: .72rem; font-weight: 700; border-radius: 4px; padding: 1px 6px; margin-left: 4px; vertical-align: middle; }
+    .get  { background: #e6f4ea; color: #137333; }
+    .post { background: #e8f0fe; color: #1a73e8; }
+    .card-path { font-size: .82rem; font-family: monospace; color: #555; }
+    .card-desc { font-size: .85rem; color: #666; margin-top: 2px; line-height: 1.4; }
+    .card-note { font-size: .78rem; color: #999; margin-top: 4px; }
+    .badge-admin { display: inline-block; font-size: .72rem; font-weight: 600; background: #fce8e6; color: #c5221f; border-radius: 10px; padding: 1px 8px; }
+    .badge-auth  { display: inline-block; font-size: .72rem; font-weight: 600; background: #e8f0fe; color: #1a73e8; border-radius: 10px; padding: 1px 8px; }
+    .section-divider { border: none; border-top: 1px solid #e0e4ea; margin: 8px 0 24px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🔬 LLM Metadata Generator</h1>
+    <p>Bioschemas / TeSS training-metadata extraction service</p>
+  </header>
+
+  <div class="container">
+
+    <!-- Browser UI -->
+    <h2>Browser UI</h2>
+    <div class="card-grid">
+
+      <a class="card" href="/sessions">
+        <div class="card-title"><span class="card-icon">🗂️</span> Session Viewer <span class="badge-auth">auth</span></div>
+        <div class="card-path">GET /sessions</div>
+        <div class="card-desc">View per-URL extraction sessions with structured event log, colour-coded timeline, and JSON-LD result tabs.</div>
+      </a>
+
+      <a class="card" href="/integration-tests">
+        <div class="card-title"><span class="card-icon">🧪</span> Integration Tests <span class="badge-admin">admin</span></div>
+        <div class="card-path">GET /integration-tests</div>
+        <div class="card-desc">Browse past integration test runs with full event timelines, LLM timing stats, and validation results.</div>
+      </a>
+
+      <a class="card" href="/sessions/login">
+        <div class="card-title"><span class="card-icon">🔑</span> Login</div>
+        <div class="card-path">GET /sessions/login</div>
+        <div class="card-desc">Sign in with a Bearer token to access the session viewer and integration test pages.</div>
+      </a>
+
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Extraction API -->
+    <h2>Extraction API <span class="badge-auth" style="text-transform:none;font-size:.8rem">Bearer token required</span></h2>
+    <div class="card-grid">
+
+      <a class="card" href="/metadata?url=https://example.com">
+        <div class="card-title"><span class="card-icon">📋</span> Collection Metadata</div>
+        <div class="card-path">/metadata<span class="card-method get">GET</span></div>
+        <div class="card-desc">Extract a JSON-LD list of Bioschemas TrainingMaterial / CourseInstance objects from a training catalogue URL.</div>
+        <div class="card-note">Query param: <code>url</code> (required), <code>force_refresh</code> (optional)</div>
+      </a>
+
+      <a class="card" href="/metadata/single?url=https://example.com">
+        <div class="card-title"><span class="card-icon">📄</span> Single Resource</div>
+        <div class="card-path">/metadata/single<span class="card-method get">GET</span></div>
+        <div class="card-desc">Like <code>/metadata</code> but returns a single JSON-LD object. Returns 400 if the page contains multiple items.</div>
+        <div class="card-note">Query param: <code>url</code> (required)</div>
+      </a>
+
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- Utility -->
+    <h2>Utility</h2>
+    <div class="card-grid">
+
+      <a class="card" href="/health">
+        <div class="card-title"><span class="card-icon">💚</span> Health Check</div>
+        <div class="card-path">GET /health</div>
+        <div class="card-desc">Returns <code>{"status": "ok"}</code>. No authentication required. Useful for liveness probes.</div>
+      </a>
+
+      <a class="card" href="/whoami">
+        <div class="card-title"><span class="card-icon">👤</span> Who Am I <span class="badge-auth">auth</span></div>
+        <div class="card-path">GET /whoami</div>
+        <div class="card-desc">Returns the authenticated user's ID and admin flag as JSON.</div>
+      </a>
+
+    </div>
+
+  </div>
+</body>
+</html>

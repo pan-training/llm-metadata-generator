@@ -325,19 +325,21 @@ def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -
 
     client = MockLLMClient([chunk_classification, reasoning_text, extraction, review])
 
-    logs: list[str] = []
+    from app.agents.logger import AgentLogger
+
+    run_logger = AgentLogger()
     agent = BioschemasExtractorAgent()
     result = agent.run(
         url="https://example.com/training",
         llm_client=client,
-        log_fn=logs.append,
+        logger=run_logger,
     )
 
     assert isinstance(result, list)
     assert len(result) == 1
     assert result[0]["@type"] == "LearningResource"
     assert result[0]["name"] == "Bioinformatics Workshop"
-    assert len(logs) > 0
+    assert len(run_logger.events) > 0
 
 
 def test_agent_validates_required_fields(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -671,11 +673,13 @@ def test_compute_site_structure_summary_returns_schema_v2(
 
     client = MockLLMClient([page_summary, compiled_summary])
 
-    logs: list[str] = []
+    from app.agents.logger import AgentLogger, InfoEvent, WarnEvent
+
+    agent_logger = AgentLogger()
     result_str = compute_site_structure_summary(
         url="https://example.com/courses",
         llm_client=client,
-        log=logs.append,
+        logger=agent_logger,
     )
 
     result = json.loads(result_str)
@@ -685,6 +689,9 @@ def test_compute_site_structure_summary_returns_schema_v2(
     assert isinstance(result["content_types"], list)
     assert len(result["content_types"]) >= 1
     # Structural summary should be logged
+    logs = [
+        ev.message for ev in agent_logger.events if isinstance(ev, (InfoEvent, WarnEvent))
+    ]
     assert any("structural summary" in msg.lower() for msg in logs)
 
 

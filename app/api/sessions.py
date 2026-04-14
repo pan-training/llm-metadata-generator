@@ -1,9 +1,14 @@
 """Session viewer routes.
 
+GET /                 – navigation index
 POST /sessions/login  – accepts JSON {token: ...} or form data, sets signed cookie
 GET /sessions         – session viewer protected by signed cookie
 GET /sessions/login   – show the login form
+GET /integration-tests – admin-only view of integration test runs
 """
+
+import json
+from pathlib import Path
 
 from flask import Blueprint, Response, redirect, render_template, request, session, url_for
 from flask.typing import ResponseReturnValue
@@ -11,6 +16,15 @@ from flask.typing import ResponseReturnValue
 from app.models.user import get_user_by_token
 
 bp = Blueprint("sessions_viewer", __name__)
+
+# Path to integration test results relative to the repo root.
+_INTEGRATION_RESULTS_DIR = Path(__file__).parent.parent.parent / "integration_test" / "results"
+
+
+@bp.get("/")
+def index() -> ResponseReturnValue:
+    """Simple navigation index listing all endpoints."""
+    return render_template("index.html")
 
 
 @bp.get("/sessions/login")
@@ -62,6 +76,7 @@ def login() -> ResponseReturnValue:
         return Response("Invalid token", status=401)
 
     session["user_id"] = user.id
+    session["is_admin"] = user.is_admin
     return redirect(url_for("sessions_viewer.sessions_view"))
 
 
@@ -75,4 +90,86 @@ def sessions_view() -> ResponseReturnValue:
     from app.models.session import get_sessions_for_user
 
     user_sessions = get_sessions_for_user(user_id)
-    return render_template("sessions.html", sessions=user_sessions, user_id=user_id)
+    is_admin: bool = bool(session.get("is_admin", False))
+    return render_template(
+        "sessions.html",
+        sessions=user_sessions,
+        user_id=user_id,
+        is_admin=is_admin,
+    )
+
+
+@bp.get("/integration-tests")
+def integration_tests_view() -> ResponseReturnValue:
+    """Admin-only view of integration test runs from integration_test/results/."""
+    user_id: int | None = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("sessions_viewer.login_form"))
+
+    if not session.get("is_admin"):
+        return Response("Forbidden – admin access required", status=403)
+
+    runs: list[dict] = []
+    if _INTEGRATION_RESULTS_DIR.is_dir():
+        for run_dir in sorted(_INTEGRATION_RESULTS_DIR.iterdir(), reverse=True):
+            if not run_dir.is_dir():
+                continue
+            cfg_file = run_dir / "config.json"
+            if not cfg_file.exists():
+                continue
+            try:
+                cfg = json.loads(cfg_file.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                cfg = {}
+
+            # Prefer structured log.json; fall back to plain log.txt
+            log_json: str | None = None
+            log_json_path = run_dir / "log.json"
+            log_txt_path = run_dir / "log.txt"
+            if log_json_path.exists():
+                log_json = log_json_path.read_text(encoding="utf-8")
+            elif log_txt_path.exists():
+                log_json = log_txt_path.read_text(encoding="utf-8")
+
+            result_json: str | None = None
+            result_path = run_dir / "result.json"
+            if result_path.exists():
+                result_json = result_path.read_text(encoding="utf-8")
+
+            summary_md: str | None = None
+            summary_path = run_dir / "summary.md"
+            if summary_path.exists():
+                summary_md = summary_path.read_text(encoding="utf-8")
+
+            # Count items and check for errors in summary.md
+            item_count: int | None = None
+            has_error = False
+            if summary_md:
+                for line in summary_md.splitlines():
+                    if line.startswith("Items      :"):
+                        try:
+                            item_count = int(line.split(":")[1].strip())
+                        except (ValueError, IndexError):
+                            pass
+                    if line.startswith("Error      :") and "none" not in line:
+                        has_error = True
+
+            runs.append(
+                {
+                    "run_id": run_dir.name,
+                    "url": cfg.get("url", ""),
+                    "description": cfg.get("description", ""),
+                    "timestamp": cfg.get("timestamp", run_dir.name),
+                    "log": log_json,
+                    "result_json": result_json,
+                    "summary_md": summary_md,
+                    "item_count": item_count,
+                    "has_error": has_error,
+                }
+            )
+
+    return render_template(
+        "integration_tests.html",
+        runs=runs,
+        user_id=user_id,
+    )
