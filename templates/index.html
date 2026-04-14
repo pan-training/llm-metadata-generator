@@ -68,14 +68,14 @@
 
       <a class="card" href="/metadata?url=https://example.com">
         <div class="card-title"><span class="card-icon">📋</span> Collection Metadata</div>
-        <div class="card-path">GET /metadata<span class="card-method get">GET</span></div>
+        <div class="card-path">/metadata<span class="card-method get">GET</span></div>
         <div class="card-desc">Extract a JSON-LD list of Bioschemas TrainingMaterial / CourseInstance objects from a training catalogue URL.</div>
         <div class="card-note">Query param: <code>url</code> (required), <code>force_refresh</code> (optional)</div>
       </a>
 
       <a class="card" href="/metadata/single?url=https://example.com">
         <div class="card-title"><span class="card-icon">📄</span> Single Resource</div>
-        <div class="card-path">GET /metadata/single<span class="card-method get">GET</span></div>
+        <div class="card-path">/metadata/single<span class="card-method get">GET</span></div>
         <div class="card-desc">Like <code>/metadata</code> but returns a single JSON-LD object. Returns 400 if the page contains multiple items.</div>
         <div class="card-note">Query param: <code>url</code> (required)</div>
       </a>
