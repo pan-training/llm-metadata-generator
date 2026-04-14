@@ -15,44 +15,51 @@ llm-metadata-generator/
 ├── app/
 │   ├── __init__.py          ✅  Flask application factory (create_app)
 │   ├── api/
-│   │   ├── __init__.py      📋
-│   │   ├── collection.py    📋  GET /metadata  – returns JSON-LD list for a training collection
-│   │   └── resource.py      📋  GET /metadata/single – returns single JSON-LD object
+│   │   ├── __init__.py      ✅
+│   │   ├── _extraction.py   ✅  Shared background extraction job
+│   │   ├── collection.py    ✅  GET /metadata  – returns JSON-LD list for a training collection
+│   │   ├── resource.py      ✅  GET /metadata/single – returns single JSON-LD object
+│   │   └── sessions.py      ✅  GET /sessions + POST /sessions/login (session viewer)
 │   ├── agents/
-│   │   ├── __init__.py      📋  get_llm_client() + task-to-model mapping
-│   │   ├── bioschemas.py    📋  Main extraction agent: reads web, follows links, validates JSON-LD
+│   │   ├── __init__.py      ✅  get_llm_client() + get_model_for_task() (env-var model config)
+│   │   ├── bioschemas.py    ✅  Main extraction agent: chunk-based crawl, integrated link-follow, JSON schema validation
 │   │   ├── ontology.py      📋  Ontology indexing agent (EDAM, PaNET, …)
 │   │   ├── semantic_tool.py 📋  Semantic-tool discovery agent (bio.tools, FAIRsharing, …)
 │   │   └── model_selector.py📋  Agent that checks available OpenAI-compatible models
 │   ├── models/
-│   │   ├── __init__.py      📋
-│   │   ├── user.py          📋  User model – Bearer token auth, no username/password
-│   │   ├── session.py       📋  Session model – tracks generation state per (user, url)
+│   │   ├── __init__.py      ✅
+│   │   ├── user.py          ✅  User model – Bearer token auth, no username/password
+│   │   ├── session.py       ✅  Session model – tracks generation state per (user, url)
 │   │   └── metadata.py      📋  Cached Bioschemas metadata per URL
 │   ├── db/
 │   │   ├── __init__.py      ✅
 │   │   ├── sqlite.py        ✅  SQLite init + sqlite-vector extension loading
 │   │   └── schema.sql       ✅  Plain-SQL CREATE TABLE statements (all schema migrations live here)
 │   ├── cron/
-│   │   ├── __init__.py      📋
-│   │   ├── metadata.py      📋  Cron: trigger metadata refresh for tracked URLs
+│   │   ├── __init__.py      ✅
+│   │   ├── metadata.py      ✅  Cron: trigger metadata refresh for tracked URLs
 │   │   ├── ontologies.py    📋  Cron: keep ontology vector index up to date
 │   │   └── tools.py         📋  Cron: refresh semantic-tool descriptions
 │   └── admin/
 │       ├── __init__.py      📋
 │       └── routes.py        📋  Admin blueprint: user CLI, ontology/tool admin UI
+├── docs/
+│   └── Bioschemas/
+│       ├── bioschemas-training-schema.json  ✅  JSON Schema (Draft 2020-12) for validation
+│       └── examples/        ✅  Example JSON-LD files used in tests
 ├── templates/
-│   └── sessions.html        📋  HTML session viewer (login via POST /sessions/login)
+│   └── sessions.html        ✅  HTML session viewer (login via POST /sessions/login)
 ├── tests/
 │   ├── __init__.py          ✅
 │   ├── test_app.py          ✅  Smoke tests: app factory, db init
-│   ├── test_api.py          📋
-│   ├── test_agents.py       📋
-│   └── test_auth.py         📋
+│   ├── test_api.py          ✅  API endpoint tests
+│   ├── test_agents.py       ✅  Agent tests with mock LLM client
+│   ├── test_auth.py         ✅  Authentication tests
+│   └── test_bioschemas_examples.py  ✅  Schema validation tests for example JSON-LD files
 ├── config.py                ✅  All config read from environment variables
 ├── pyproject.toml           ✅  Poetry project + dependency definitions
 ├── .env.example             ✅  Placeholder values for all environment variables
-├── TODO.md                  ✅  Ordered issue-ready todo list
+├── TODO.md                  ✅  Ordered issue-ready todo list (✅ = done, no marker = future)
 ├── .gitignore               ✅
 ├── LICENSE                  ✅
 └── .github/
@@ -85,11 +92,12 @@ llm-metadata-generator/
   - **Level 2 – Full refresh:** triggered (a) randomly with a very low probability (e.g. ~1 % of cron runs) to catch drift, (b) when the agent itself reports that the site structure has fundamentally changed since the structural summary was created, or (c) when no stored hash exists. The `force_refresh` query parameter exists for admin/debugging use only — computer agents never set it.
 - 📋 **Ontology search** – the bioschemas agent calls `app.db.sqlite.vector_search(query, top_k)` to find candidate ontology terms. This capability is added to the agent in the same issue that implements ontology indexing (TODO item 6).
 - 📋 **Semantic tools** – tools (bio.tools, FAIRsharing, …) are **globally admin-managed** (not per-user). A short one-line description of every configured tool is always included in the extraction agent's system prompt so it is aware of available tools. When the agent decides to use a specific tool, it requests the full detailed description on demand. Tool descriptions are stored in the `semantic_tools` table and refreshed by a cron job.
-- 📋 **LLM configuration** – all LLM calls go through `app/agents/__init__.py:get_llm_client(task)`, which reads `OPENAI_API_BASE`, `OPENAI_API_KEY`, and looks up the preferred model for the given task from the `model_assignments` table. Tasks are fine-grained: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `ontology_embedding`, `tool_discovery`, `model_selection`.
+- 📋 **LLM configuration** – all LLM calls go through `app/agents/__init__.py:get_llm_client(task)`, which reads `OPENAI_API_BASE`, `OPENAI_API_KEY`, and looks up the preferred model for the given task from the `model_assignments` table. Tasks are fine-grained: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `metadata_analysis` (chain-of-thought reasoning scratchpad before extraction), `ontology_embedding`, `tool_discovery`, `model_selection`.
 - 📋 **Bioschemas / TeSS** – the extraction agent's system prompt includes the Bioschemas TrainingMaterial and CourseInstance profiles and notes about TeSS-specific field usage. Keep this prompt in `app/agents/bioschemas.py`, not in a separate template file.
-- ✅ **File-system paths** – always use `pathlib.Path` for path construction and file I/O; do not use `os.path` or raw string concatenation for paths.
-- ✅ **Modern Python idioms** – prefer built-in modern equivalents over manual workarounds: use `str.removeprefix` / `str.removesuffix` instead of slicing, `X | Y` union types instead of `Optional[X]`, walrus operator where it aids clarity, etc.
-- ✅ **Type annotations** – add type annotations to all public functions and methods. Run `mypy app tests` before finalising any commit to ensure no type errors are introduced.
+- ✅ **File-system paths** *(PR #3)* – always use `pathlib.Path` for path construction and file I/O; do not use `os.path` or raw string concatenation for paths.
+- ✅ **Modern Python idioms** *(PR #3)* – prefer built-in modern equivalents over manual workarounds: use `str.removeprefix` / `str.removesuffix` instead of slicing, `X | Y` union types instead of `Optional[X]`, walrus operator where it aids clarity, etc.
+- ✅ **Type annotations** *(PR #3)* – add type annotations to all public functions and methods. Run `mypy app tests` before finalising any commit to ensure no type errors are introduced.
+- ✅ **TODO.md** *(PR #3)* – whenever code introduces a `# TODO:` placeholder comment, it must be accompanied by a concrete item in `TODO.md` (added to an existing future issue or a new issue). Mark completed issues in `TODO.md` with **✅ Done** so it is clear which items are future work. When a new `# TODO:` comment is added in code that does not map to an existing future issue, create a new issue entry in `TODO.md` with sufficient detail to become a GitHub issue.
 
 ---
 
@@ -104,6 +112,9 @@ llm-metadata-generator/
 | `CRON_METADATA_INTERVAL` | **Minutes** between metadata refresh runs (default 1440 = daily) |
 | `CRON_ONTOLOGY_INTERVAL` | **Hours** between ontology index refreshes (default 720 = monthly) |
 | `CRON_TOOLS_INTERVAL` | **Hours** between semantic-tool description refreshes (default 168 = weekly) |
+| `LLM_MODEL_SMALL` | Fast model for classification/routing tasks (default: `qwen2.5-coder-7b-instruct`) |
+| `LLM_MODEL_LARGE` | Quality model for extraction/review tasks (default: `gemma-3-27b-it`) |
+| `LLM_MODEL_EMBEDDING` | Embedding model for ontology vector search — TODO #6 (default: `qwen3-embedding-8b`) |
 
 ---
 

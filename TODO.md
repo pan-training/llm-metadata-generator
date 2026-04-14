@@ -2,10 +2,11 @@
 
 Each item below is ready to become a GitHub issue (title = bold heading, description = body text).
 Work through the list from top to bottom – later items depend on earlier ones.
+Items marked **✅ Done** have been fully implemented.
 
 ---
 
-## 1. Project scaffolding – Flask app factory, config, and database setup
+## ✅ 1. Project scaffolding – Flask app factory, config, and database setup
 
 Create the initial Python project layout including the database schema (without the sqlite-vector extension, which is deferred to the ontology issue):
 
@@ -24,7 +25,7 @@ Acceptance: `flask run` starts without errors; `pytest tests/` passes; `flask db
 
 ---
 
-## 2. User model and Bearer-token authentication
+## ✅ 2. User model and Bearer-token authentication
 
 Implement user accounts with token-only authentication:
 
@@ -39,20 +40,40 @@ Acceptance: `flask users create` prints a new token; `GET /whoami` with a valid 
 
 ---
 
-## 3. Core working system: Bioschemas extraction agent and API endpoints
+## ✅ 3. Core working system: Bioschemas extraction agent and API endpoints
 
 Implement the minimum end-to-end working system: both API endpoints, the extraction agent, and session tracking, plus the session viewer so results can be inspected immediately.
 
 ### Extraction agent (`app/agents/bioschemas.py`)
 
-- `BioschemasExtractorAgent` class with `run(url, prompt=None, update_level=1, structural_summary=None, llm_client=None)`
-  - Fetches web content (respects `robots.txt`; raises `AccessDeniedError` if the crawl of the primary source is blocked)
-  - Decides which links to follow (up to a configurable depth/limit)
-  - Performs a self-critical review pass on the draft JSON-LD
-  - Validates JSON-LD syntax and required Bioschemas fields
-  - Applies TeSS-specific field conventions (defined in the system prompt inside this file)
-  - Raises `NotTrainingContentError` when no recognisable training content (events or learning materials) is found
-  - Note: ontology vector search is **not** included yet – add a placeholder comment referencing the ontology issue; it will be wired in when that feature is implemented
+The agent uses a four-phase chunk-based pipeline to handle arbitrarily large
+websites without overflowing the LLM context window:
+
+1. **CRAWL + DISCOVER** (tree-like, chunk-by-chunk): Fetch page → strip noise →
+   split into overlapping text chunks → per-chunk LLM call classifies relevance,
+   finds training items, and identifies follow links in one call.  Follows links
+   recursively up to `MAX_FOLLOW_DEPTH`, respecting `robots.txt` (with per-run
+   caching per domain).
+2. **EXTRACT** (per item, separate context windows): For each discovered item,
+   fetch its detail page if available, strip and chunk it, call the quality LLM
+   to extract a full Bioschemas JSON-LD object.
+3. **REVIEW** (per item): Self-critical LLM review pass.
+4. **VALIDATE + FIX**: Validate against `docs/Bioschemas/bioschemas-training-schema.json`
+   (via `jsonschema`), feed errors back to LLM for a single fixing pass.
+   Programmatic TeSS conventions applied last (`@context`, `dct:conformsTo`, `@id`).
+
+Structural summary (stored in `metadata_cache.structural_summary`) records crawled
+page hashes and URL patterns — used on next run to skip unchanged content.
+
+- Raises `AccessDeniedError` if primary URL is blocked by `robots.txt` or returns 401/403.
+- Raises `NotTrainingContentError` when no training content found.
+
+Future improvements (not yet implemented — see items below):
+- **3c** Structured agent logger with typed events (info/warn/llm_call/…) for
+  richer display in the session viewer (replaces the current string-based `log_fn`).
+  See issue 8 below.
+- **3d** Per-item incremental updates: compare per-item content hash against stored
+  result to skip re-extraction of unchanged items (builds on issue 4).
 
 ### API endpoints (`app/api/collection.py`, `app/api/resource.py`)
 
@@ -88,11 +109,17 @@ Add smart update triggering to avoid unnecessary LLM calls:
 
 - In `app/agents/bioschemas.py` and the cron job (`app/cron/metadata.py`):
   - **Level 0 – No update:** hash of fetched content matches stored hash → skip entirely.
-  - **Level 1 – Incremental update:** hash changed → agent receives the stored structural summary of the site and focuses only on new/changed items; records the timestamp of the last semantic-tool search used during extraction so the agent can decide whether a new tool search is warranted on future runs.
-  - **Level 2 – Full refresh:** triggered (a) randomly at a very low probability (~1 % of cron runs) to catch long-term drift, (b) when the agent itself reports that the site structure has fundamentally changed since the stored structural summary was produced, or (c) when no stored hash exists. The `force_refresh` query parameter is available for admin/debugging use only — computer agents never set it.
+  - **Incremental update:** hash changed → agent receives the stored structural summary
+    (crawled page hashes + URL patterns) and skips pages whose hashes match; focuses
+    only on new/changed items.  Records the timestamp of the last semantic-tool search
+    used during extraction so the agent can decide whether a new tool search is warranted
+    on future runs.
+  - **Full refresh:** triggered (a) randomly at a very low probability (~1 % of cron runs)
+    to catch long-term drift, (b) when no stored hash exists. The `force_refresh` query
+    parameter is available for admin/debugging use only — computer agents never set it.
 - Store content hash, `last_crawled_at`, and a `structural_summary` in `metadata_cache`
 
-Acceptance: unchanged URL skips LLM call; changed URL triggers incremental; ~1 % of runs and agent-detected structure changes trigger full refresh.
+Acceptance: unchanged URL skips LLM call; changed URL triggers incremental; ~1 % of runs trigger full refresh.
 
 ---
 
@@ -178,8 +205,13 @@ Make the LLM backend fully configurable and self-updating.
 
 ### LLM client (`app/agents/__init__.py`)
 
-- `get_llm_client(task)` looks up the preferred model for the given fine-grained task from the `model_assignments` table. Tasks: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `ontology_embedding`, `tool_discovery`, `model_selection`. Falls back to a configurable default model.
+Currently three env-var tiers are used: `LLM_MODEL_SMALL`, `LLM_MODEL_LARGE`, `LLM_MODEL_EMBEDDING`
+(defaults: `qwen2.5-coder-7b-instruct`, `gemma-3-27b-it`, `qwen3-embedding-8b`).
+This issue replaces the three-tier approach with per-task model assignments stored in the DB:
+
+- `get_llm_client(task)` looks up the preferred model for the given fine-grained task from the `model_assignments` table. Tasks: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `metadata_analysis` (chain-of-thought reasoning scratchpad), `ontology_embedding`, `tool_discovery`, `model_selection`. Falls back to `LLM_MODEL_LARGE` env var.
 - The `model_assignments` table includes a version history so previous assignments can be restored if a new selection is worse (e.g. a previously available model disappears).
+- Try `response_format={"type":"json_schema",…}` for backends that support OpenAI structured outputs; fall back to `json_object` if unsupported.
 
 ### Model-selector agent (`app/agents/model_selector.py`)
 
@@ -213,3 +245,17 @@ Polish and unify the admin UI built incrementally across issues 5–7:
 - Ensure all admin routes check `is_admin` flag
 
 Acceptance: an admin user can navigate all admin pages from a single dashboard and see system health at a glance.
+
+---
+
+## 9. Structured agent logger
+
+Replace the current string-based `log_fn` callback in `BioschemasExtractorAgent.run()` with a
+structured logger that emits typed events:
+
+- Define a typed event hierarchy: `InfoEvent`, `WarnEvent`, `LLMCallEvent` (task, model, prompt preview, response preview, latency ms), `FetchEvent` (url, status_code, content_length), `ItemFoundEvent`, `ValidationEvent`.
+- The session viewer (`templates/sessions.html`) renders each event type with appropriate formatting and colour-coding: LLM calls show expandable prompts/responses, fetch events show HTTP status, validation events highlight errors.
+- Keep backward compatibility by providing a `LegacyLogFn` adapter that wraps a plain `Callable[[str], None]` for the integration test runner.
+- Add per-LLM-call timing statistics to the structured log so the integration test summary can report chunk classification counts, relevance rates, and total LLM call durations.
+
+Acceptance: session viewer shows colour-coded event timeline; integration test summary includes per-phase timing statistics.
