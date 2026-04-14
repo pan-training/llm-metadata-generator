@@ -129,7 +129,7 @@ import re
 import urllib.robotparser
 from dataclasses import dataclass, field
 from typing import Any, Callable
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, parse_qs
 
 import requests
 from bs4 import BeautifulSoup
@@ -243,6 +243,16 @@ _CLASSIFY_SYSTEM_PROMPT = """\
 You are an expert at identifying scientific training content on web pages.
 Your task is to classify a text chunk from a website and identify any training
 materials, courses, or events it describes.  You do NOT produce JSON-LD here.
+
+IMPORTANT — faceted search / filter interfaces:
+Many training catalogues have filter panels (checkboxes, dropdowns, tag clouds,
+sort controls) that narrow or re-order the *same* list of items without adding
+new content.  These produce URLs like:
+  ?category=bioinformatics  ?sort=date  ?type=online  ?tag=python  ?level=beginner
+These are NOT worth following — they just limit the number of results shown.
+Only include a link in follow_links if it leads to DIFFERENT training content
+(e.g. a next-page link, a genuinely different category landing page, or an
+item detail page), NOT if it merely filters or sorts the current list.
 """
 
 # ---------------------------------------------------------------------------
@@ -417,6 +427,88 @@ def _chunk_text(
         chunks.append(text[start:end])
         start = max(start + 1, end - overlap)
     return chunks
+
+
+# ---------------------------------------------------------------------------
+# Faceted search URL detection
+# ---------------------------------------------------------------------------
+
+# Query-string parameter names that typically represent facet filters / sort
+# controls on a search/listing page.  Links that only differ from the current
+# page by these parameters are just narrowing the same result set and should
+# NOT be followed as new content pages.
+_FILTER_PARAMS: frozenset[str] = frozenset(
+    {
+        # Sorting / ordering
+        "sort", "sort_by", "order", "order_by", "orderby", "direction",
+        # Category / type / format filters
+        "category", "cat", "type", "format", "topic", "subject", "theme",
+        # Tag / keyword filters
+        "tag", "tags", "keyword", "keywords",
+        # Audience / level
+        "audience", "level", "difficulty", "target",
+        # Language / locale
+        "language", "lang", "locale",
+        # Status / date filters
+        "status", "date", "from", "to", "year", "month",
+        # Free-text search within the page
+        "q", "query", "search", "s",
+        # View style (grid vs list, etc.)
+        "view", "display",
+    }
+)
+
+# Parameters that indicate genuine pagination — these should still be followed.
+_PAGINATION_PARAMS: frozenset[str] = frozenset(
+    {"page", "p", "pg", "offset", "start", "skip", "cursor", "after", "before"}
+)
+
+
+def _is_faceted_search_url(url: str, source_url: str) -> bool:
+    """Return True when *url* appears to be a faceted-search / filter variation.
+
+    A URL is considered a faceted-search variant when both of the following
+    hold:
+
+    1. The URL path is identical to *source_url*'s path (same listing page).
+    2. The query string consists **entirely** of known filter/sort parameters
+       (``_FILTER_PARAMS``) — none of the query parameters are pagination
+       parameters (``_PAGINATION_PARAMS``) or path-changing parameters not in
+       the filter list.
+
+    Pagination links (``?page=2``, ``?offset=20``) are explicitly allowed
+    because they genuinely navigate to *different* slices of content.
+
+    Examples that return True (should NOT follow):
+      ``https://example.com/courses?sort=date``
+      ``https://example.com/courses?category=bioinformatics&sort=title``
+      ``https://example.com/events?format=online&level=beginner``
+
+    Examples that return False (safe to follow):
+      ``https://example.com/courses?page=2``          # pagination
+      ``https://example.com/courses/python``           # different path
+      ``https://example.com/courses?category=bio&page=2``  # pagination + filter
+    """
+    parsed_url = urlparse(url)
+    parsed_src = urlparse(source_url)
+
+    # Different path → this is a distinct page, not a faceted variant.
+    if parsed_url.path.rstrip("/") != parsed_src.path.rstrip("/"):
+        return False
+
+    # No query string → not a faceted variant.
+    if not parsed_url.query:
+        return False
+
+    params = parse_qs(parsed_url.query, keep_blank_values=True)
+    param_names = {k.lower() for k in params}
+
+    # If any pagination parameter is present, treat as valid navigation.
+    if param_names & _PAGINATION_PARAMS:
+        return False
+
+    # If ALL parameters are known filter params, it's a faceted-search URL.
+    return bool(param_names) and param_names.issubset(_FILTER_PARAMS)
 
 
 # ---------------------------------------------------------------------------
@@ -1208,12 +1300,12 @@ class BioschemasExtractorAgent:
             if depth < MAX_FOLLOW_DEPTH:
                 for link_data in result.get("follow_links", [])[:MAX_LINKS_PER_CHUNK]:
                     link_url = link_data.get("url", "")
-                    if (
-                        link_url
-                        and link_url not in state.pages
-                        and link_url not in links_to_follow
-                    ):
-                        links_to_follow.append(link_url)
+                    if not link_url or link_url in state.pages or link_url in links_to_follow:
+                        continue
+                    if _is_faceted_search_url(link_url, start_url):
+                        log(f"  Skipping faceted-search URL: {link_url}")
+                        continue
+                    links_to_follow.append(link_url)
 
         # Recursively follow identified links
         for follow_url in links_to_follow:
@@ -1287,6 +1379,13 @@ class BioschemasExtractorAgent:
                     "Identify:\n"
                     "1. Training materials, courses, or events mentioned\n"
                     "2. Links worth following to find more training content\n\n"
+                    "For follow_links: include pagination (next page) and links to "
+                    "genuinely different content sections. "
+                    "Do NOT include faceted-search / filter links — these are links "
+                    "that just narrow or re-sort the current list (e.g. filter by "
+                    "topic, sort by date, filter by format) without adding new content. "
+                    "If you see a filter panel, tag cloud, or sort dropdown, ignore "
+                    "all those links.\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '

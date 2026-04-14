@@ -15,6 +15,7 @@ from app.agents.bioschemas import (
     _content_hash,
     _html_to_markdown,
     _chunk_text,
+    _is_faceted_search_url,
     compute_site_structure_summary,
 )
 
@@ -142,6 +143,80 @@ def test_chunk_text_splits_long_text() -> None:
     # Each chunk should be at most chunk_size + some tolerance
     for chunk in chunks:
         assert len(chunk) <= 600  # chunk_size + some flexibility
+
+
+# ---------------------------------------------------------------------------
+# Tests for _is_faceted_search_url
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "url,source_url,expected",
+    [
+        # Faceted search variants – same path, only filter params
+        (
+            "https://example.com/courses?category=bioinformatics",
+            "https://example.com/courses",
+            True,
+        ),
+        (
+            "https://example.com/courses?sort=date&format=online",
+            "https://example.com/courses",
+            True,
+        ),
+        (
+            "https://example.com/events?level=beginner&tag=python&sort=title",
+            "https://example.com/events",
+            True,
+        ),
+        (
+            "https://example.com/events?q=bioinformatics",
+            "https://example.com/events",
+            True,
+        ),
+        # Pagination links – should NOT be treated as faceted search
+        (
+            "https://example.com/courses?page=2",
+            "https://example.com/courses",
+            False,
+        ),
+        (
+            "https://example.com/courses?category=bio&page=3",
+            "https://example.com/courses",
+            False,
+        ),
+        (
+            "https://example.com/courses?offset=20",
+            "https://example.com/courses",
+            False,
+        ),
+        # Different path – genuinely different page
+        (
+            "https://example.com/courses/python",
+            "https://example.com/courses",
+            False,
+        ),
+        (
+            "https://example.com/about",
+            "https://example.com/courses",
+            False,
+        ),
+        # No query string – plain link, not faceted search
+        (
+            "https://example.com/courses",
+            "https://example.com/courses",
+            False,
+        ),
+        # Unknown param mixed with filter – not purely filter params, safe to follow
+        (
+            "https://example.com/courses?view=grid&myunknown=x",
+            "https://example.com/courses",
+            False,
+        ),
+    ],
+)
+def test_is_faceted_search_url(url: str, source_url: str, expected: bool) -> None:
+    assert _is_faceted_search_url(url, source_url) is expected
 
 
 # ---------------------------------------------------------------------------
