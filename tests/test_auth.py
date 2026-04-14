@@ -241,3 +241,42 @@ def test_whoami_admin_flag_is_correct(app: Flask, client: FlaskClient) -> None:
     response = client.get("/whoami", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200
     assert response.get_json()["is_admin"] is True
+
+
+# ---------------------------------------------------------------------------
+# Integration-tests route (admin-only)
+# ---------------------------------------------------------------------------
+
+
+def test_integration_tests_requires_login(client: FlaskClient) -> None:
+    """GET /integration-tests without a session redirects to login."""
+    response = client.get("/integration-tests")
+    assert response.status_code == 302
+    assert "/sessions/login" in response.headers["Location"]
+
+
+def test_integration_tests_requires_admin(app: Flask, client: FlaskClient) -> None:
+    """Non-admin users are forbidden from /integration-tests."""
+    with app.app_context():
+        _user, token = create_user(is_admin=False)
+
+    # Log in as non-admin
+    resp = client.post("/sessions/login", data={"token": token})
+    assert resp.status_code == 302
+
+    response = client.get("/integration-tests")
+    assert response.status_code == 403
+
+
+def test_integration_tests_admin_can_access(app: Flask, client: FlaskClient) -> None:
+    """Admin users can access /integration-tests."""
+    with app.app_context():
+        _admin, token = create_user(is_admin=True)
+
+    # Log in as admin
+    resp = client.post("/sessions/login", data={"token": token})
+    assert resp.status_code == 302
+
+    response = client.get("/integration-tests")
+    assert response.status_code == 200
+    assert b"Integration Test" in response.data

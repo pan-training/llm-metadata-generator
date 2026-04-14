@@ -414,6 +414,7 @@ def _call_llm(
     messages: list[dict[str, str]],
     logger: AgentLogger | None = None,
     task: str = "",
+    parent_id: int | None = None,
 ) -> dict[str, Any]:
     """Call the LLM chat completions API and parse the JSON response.
 
@@ -438,6 +439,7 @@ def _call_llm(
             prompt=prompt_text,
             response=content,
             latency_ms=latency_ms,
+            parent=parent_id,
         )
     try:
         return json.loads(content)  # type: ignore[no-any-return]
@@ -458,6 +460,7 @@ def _call_llm_text(
     messages: list[dict[str, str]],
     logger: AgentLogger | None = None,
     task: str = "",
+    parent_id: int | None = None,
 ) -> str:
     """Call the LLM chat completions API and return the raw text response.
 
@@ -481,6 +484,7 @@ def _call_llm_text(
             prompt=prompt_text,
             response=content,
             latency_ms=latency_ms,
+            parent=parent_id,
         )
     return content
 
@@ -633,7 +637,6 @@ class BioschemasExtractorAgent:
         prompt: str | None = None,
         structural_summary: str | None = None,
         llm_client: Any = None,
-        log_fn: Callable[[str], None] | None = None,
         logger: AgentLogger | None = None,
         on_item: Callable[[dict[str, Any]], None] | None = None,
     ) -> list[dict[str, Any]]:
@@ -647,13 +650,8 @@ class BioschemasExtractorAgent:
                 in incremental mode and focuses on changed/new content.
                 Pass ``None`` for a full refresh.
             llm_client: An OpenAI-compatible client instance (required).
-            log_fn: Optional plain-string callback for backward compatibility.
-                When *logger* is not provided, a new :class:`AgentLogger` is
-                created with *log_fn* as its ``legacy_fn`` so that existing
-                callers continue to receive progress messages unchanged.
-            logger: Optional structured :class:`AgentLogger`.  Takes priority
-                over *log_fn*.  When both are supplied, *log_fn* also receives
-                ``info`` / ``warn`` message strings.
+            logger: Optional structured :class:`AgentLogger`.  A new one is
+                created internally when not provided.
             on_item: Optional callback invoked with each fully processed
                 JSON-LD item as it is produced (before the final list is
                 returned).  Useful for streaming / partial result persistence.
@@ -665,13 +663,7 @@ class BioschemasExtractorAgent:
             AccessDeniedError: Primary URL blocked by robots.txt or HTTP 401/403.
             NotTrainingContentError: No training content found after crawling.
         """
-        if logger is None:
-            self._logger = AgentLogger(legacy_fn=log_fn)
-        else:
-            # Both logger and log_fn provided – attach log_fn to the logger.
-            if log_fn is not None and logger._legacy_fn is None:
-                logger.set_legacy_fn(log_fn)
-            self._logger = logger
+        self._logger = logger if logger is not None else AgentLogger()
 
         if llm_client is None:
             raise ValueError("llm_client must be provided")
@@ -681,13 +673,14 @@ class BioschemasExtractorAgent:
         # ----------------------------------------------------------------
         # Phase 1: CRAWL + DISCOVER
         # ----------------------------------------------------------------
-        self._logger.info("Phase 1: crawl + discover")
+        phase1_id = self._logger.info("Phase 1: crawl + discover")
         self._crawl_and_discover(
             start_url=url,
             structural_summary=structural_summary,
             llm_client=llm_client,
             state=state,
             is_primary=True,
+            parent_id=phase1_id,
         )
 
         if not state.discovered:
@@ -698,16 +691,19 @@ class BioschemasExtractorAgent:
 
         self._logger.info(
             f"Discovery complete: {len(state.discovered)} item(s) found "
-            f"across {len(state.pages)} page(s)"
+            f"across {len(state.pages)} page(s)",
+            parent=phase1_id,
         )
 
         # ----------------------------------------------------------------
         # Phase 2 + 3 + 4: EXTRACT, REVIEW, VALIDATE per item
         # ----------------------------------------------------------------
+        phase2_id = self._logger.info("Phase 2–4: extract, review, validate")
         final_items: list[dict[str, Any]] = []
         for item_info in state.discovered:
-            self._logger.info(
-                f"Extracting: {item_info.title!r} ({item_info.item_type})"
+            item_id = self._logger.info(
+                f"Item: {item_info.title!r} ({item_info.item_type})",
+                parent=phase2_id,
             )
 
             # Gather best available content for this item
@@ -728,14 +724,15 @@ class BioschemasExtractorAgent:
                         url=item_info.url,
                         status_code=resp.status_code,
                         content_length=len(resp.text),
+                        parent=item_id,
                     )
                     if resp.ok:
                         item_html = resp.text
-                        self._logger.info(
-                            f"  Fetched detail page: {item_info.url}"
-                        )
                 except requests.RequestException as exc:
-                    self._logger.warn(f"Could not fetch detail page: {exc}")
+                    self._logger.warn(
+                        f"Could not fetch detail page: {exc}",
+                        parent=item_id,
+                    )
 
             item_text, _ = _html_to_markdown(item_html or "", item_info.url or url)
             content_for_extraction = item_text[:MAX_EXTRACTION_CONTENT]
@@ -745,11 +742,11 @@ class BioschemasExtractorAgent:
             # find before committing to a structured JSON format.  This
             # improves accuracy for smaller models by separating "what
             # information is here?" from "format it as JSON-LD".
-            self._logger.info(f"  Reasoning about {item_info.title!r}")
             reasoning = self._reason_about_item(
                 item_info=item_info,
                 content=content_for_extraction,
                 llm_client=llm_client,
+                parent_id=item_id,
             )
 
             # --- Extraction (step 2b) ---
@@ -759,19 +756,21 @@ class BioschemasExtractorAgent:
                 prompt=prompt,
                 reasoning=reasoning,
                 llm_client=llm_client,
+                parent_id=item_id,
             )
             if not extracted:
-                self._logger.warn("Skipping item — extraction returned empty result")
+                self._logger.warn(
+                    "Extraction returned empty result — skipping item",
+                    parent=item_id,
+                )
                 continue
 
             # --- Review ---
-            self._logger.info(
-                f"  Reviewing: {extracted.get('name', 'unnamed')}"
-            )
             reviewed = self._review_item(
                 item=extracted,
                 content=content_for_extraction,
                 llm_client=llm_client,
+                parent_id=item_id,
             )
 
             # --- Validate + fix ---
@@ -782,29 +781,31 @@ class BioschemasExtractorAgent:
             item_name = reviewed.get("name", item_info.title)
             if not errors:
                 self._logger.validation(
-                    item_name=item_name, errors=[], passed=True
+                    item_name=item_name, errors=[], passed=True, parent=item_id
                 )
             for attempt in range(MAX_FIX_ATTEMPTS):
                 if not errors:
                     break
                 self._logger.validation(
-                    item_name=item_name, errors=errors, passed=False
+                    item_name=item_name, errors=errors, passed=False, parent=item_id
                 )
                 self._logger.info(
-                    f"  Validation errors ({len(errors)}); requesting fix from LLM"
-                    f" (attempt {attempt + 1}/{MAX_FIX_ATTEMPTS})"
+                    f"Validation: {len(errors)} error(s) — requesting fix"
+                    f" (attempt {attempt + 1}/{MAX_FIX_ATTEMPTS})",
+                    parent=item_id,
                 )
                 fixed = self._fix_item(
                     item=reviewed,
                     errors=errors,
                     llm_client=llm_client,
+                    parent_id=item_id,
                 )
                 if fixed:
                     reviewed = _apply_tess_conventions(fixed, item_info.url or url)
                     errors = _validate_with_schema(reviewed)
                     if not errors:
                         self._logger.validation(
-                            item_name=item_name, errors=[], passed=True
+                            item_name=item_name, errors=[], passed=True, parent=item_id
                         )
 
             final_items.append(reviewed)
@@ -826,6 +827,7 @@ class BioschemasExtractorAgent:
         state: _CrawlState,
         is_primary: bool = False,
         depth: int = 0,
+        parent_id: int | None = None,
     ) -> None:
         """Recursively crawl pages and populate *state.discovered*."""
         logger = self._logger
@@ -833,7 +835,10 @@ class BioschemasExtractorAgent:
             return
         if len(state.pages) >= MAX_TOTAL_PAGES:
             if logger:
-                logger.info(f"  Crawl limit ({MAX_TOTAL_PAGES} pages) reached")
+                logger.info(
+                    f"Crawl limit ({MAX_TOTAL_PAGES} pages) reached",
+                    parent=parent_id,
+                )
             return
 
         # robots.txt check (raises for primary URL, logs and skips otherwise)
@@ -843,20 +848,21 @@ class BioschemasExtractorAgent:
                     f"Crawling blocked by robots.txt for {start_url}"
                 )
             if logger:
-                logger.warn(f"Skipping {start_url} (blocked by robots.txt)")
+                logger.warn(
+                    f"Skipping {start_url} (blocked by robots.txt)",
+                    parent=parent_id,
+                )
             return
 
-        if logger:
-            logger.info(
-                f"  Fetching {'primary' if is_primary else f'depth-{depth}'} URL: {start_url}"
-            )
+        label = "primary" if is_primary else f"depth-{depth}"
+        page_id = logger.info(f"Fetch {label}: {start_url}", parent=parent_id) if logger else None
         try:
             response = _fetch(start_url)
         except requests.RequestException as exc:
             if is_primary:
                 raise AccessDeniedError(f"Failed to fetch {start_url}: {exc}") from exc
             if logger:
-                logger.warn(f"Skipping {start_url}: {exc}")
+                logger.warn(f"Skipping {start_url}: {exc}", parent=parent_id)
             return
 
         if logger:
@@ -864,6 +870,7 @@ class BioschemasExtractorAgent:
                 url=start_url,
                 status_code=response.status_code,
                 content_length=len(response.text),
+                parent=page_id,
             )
 
         if response.status_code in (401, 403):
@@ -873,7 +880,8 @@ class BioschemasExtractorAgent:
                 )
             if logger:
                 logger.warn(
-                    f"Skipping {start_url} (HTTP {response.status_code})"
+                    f"Skipping {start_url} (HTTP {response.status_code})",
+                    parent=parent_id,
                 )
             return
 
@@ -887,16 +895,11 @@ class BioschemasExtractorAgent:
             if is_primary:
                 raise AccessDeniedError(msg)
             if logger:
-                logger.warn(msg)
+                logger.warn(msg, parent=parent_id)
             return
 
         html = response.text
         state.pages[start_url] = html
-        if logger:
-            logger.info(
-                f"  Page {len(state.pages)}/{MAX_TOTAL_PAGES}: "
-                f"{len(html)} chars"
-            )
 
         # Convert HTML → Markdown first; hash the stable Markdown content so
         # that cosmetic HTML changes (whitespace, inline styles, CDN URLs)
@@ -904,12 +907,14 @@ class BioschemasExtractorAgent:
         md_text, _ = _html_to_markdown(html, start_url)
         page_hash = _content_hash(md_text)
         state.page_hashes[start_url] = page_hash
-        if logger:
-            logger.info(f"  Markdown hash={page_hash[:12]}…")
         chunks = _chunk_text(md_text)
         total_chunks = len(chunks)
         if logger:
-            logger.info(f"  Processing {total_chunks} chunk(s)")
+            logger.info(
+                f"Page {len(state.pages)}/{MAX_TOTAL_PAGES}: "
+                f"{len(html)} chars, {total_chunks} chunk(s), hash={page_hash[:12]}…",
+                parent=page_id,
+            )
 
         links_to_follow: list[str] = []
 
@@ -921,13 +926,21 @@ class BioschemasExtractorAgent:
                 source_url=start_url,
                 structural_summary=structural_summary if depth == 0 else None,
                 llm_client=llm_client,
+                parent_id=page_id,
             )
 
             if not result.get("relevant", False):
                 continue
 
             # Collect newly discovered items from this chunk
-            new_items_in_chunk = 0
+            chunk_id = (
+                logger.info(
+                    f"Chunk {chunk_idx + 1}/{total_chunks}: relevant",
+                    parent=page_id,
+                )
+                if logger
+                else None
+            )
             for item_data in result.get("items", []):
                 item_url = item_data.get("url", start_url)
                 item_title = item_data.get("title", "")
@@ -954,14 +967,8 @@ class BioschemasExtractorAgent:
                             title=item_title,
                             url=item_url,
                             item_type=item_type,
+                            parent=chunk_id,
                         )
-                    new_items_in_chunk += 1
-
-            if logger and new_items_in_chunk:
-                logger.info(
-                    f"  Chunk {chunk_idx + 1}/{total_chunks}: "
-                    f"{new_items_in_chunk} new item(s) found (relevant)"
-                )
 
             # Collect follow-links (deduplicated, capped)
             if depth < MAX_FOLLOW_DEPTH:
@@ -982,6 +989,7 @@ class BioschemasExtractorAgent:
                 llm_client=llm_client,
                 state=state,
                 depth=depth + 1,
+                parent_id=parent_id,
             )
 
     def _classify_chunk(
@@ -992,6 +1000,7 @@ class BioschemasExtractorAgent:
         source_url: str,
         structural_summary: str | None,
         llm_client: Any,
+        parent_id: int | None = None,
     ) -> dict[str, Any]:
         """Ask the LLM to classify a text chunk and extract items + links."""
         incremental_note = ""
@@ -1032,6 +1041,7 @@ class BioschemasExtractorAgent:
             messages,
             logger=self._logger,
             task="content_relevance",
+            parent_id=parent_id,
         )
 
     def _reason_about_item(
@@ -1039,6 +1049,7 @@ class BioschemasExtractorAgent:
         item_info: DiscoveredItem,
         content: str,
         llm_client: Any,
+        parent_id: int | None = None,
     ) -> str:
         """Produce a chain-of-thought reasoning scratchpad for a single item.
 
@@ -1086,6 +1097,7 @@ class BioschemasExtractorAgent:
             messages,
             logger=self._logger,
             task="metadata_analysis",
+            parent_id=parent_id,
         )
 
     def _extract_item(
@@ -1095,6 +1107,7 @@ class BioschemasExtractorAgent:
         prompt: str | None,
         reasoning: str | None,
         llm_client: Any,
+        parent_id: int | None = None,
     ) -> dict[str, Any]:
         """Extract Bioschemas JSON-LD for a single discovered item.
 
@@ -1135,6 +1148,7 @@ class BioschemasExtractorAgent:
             messages,
             logger=self._logger,
             task="json_ld_extraction",
+            parent_id=parent_id,
         )
 
     def _review_item(
@@ -1142,6 +1156,7 @@ class BioschemasExtractorAgent:
         item: dict[str, Any],
         content: str,
         llm_client: Any,
+        parent_id: int | None = None,
     ) -> dict[str, Any]:
         """Self-critical review pass; returns improved JSON-LD."""
         messages: list[dict[str, str]] = [
@@ -1165,6 +1180,7 @@ class BioschemasExtractorAgent:
             messages,
             logger=self._logger,
             task="json_ld_review",
+            parent_id=parent_id,
         )
         return result if result else item
 
@@ -1173,6 +1189,7 @@ class BioschemasExtractorAgent:
         item: dict[str, Any],
         errors: list[str],
         llm_client: Any,
+        parent_id: int | None = None,
     ) -> dict[str, Any]:
         """Fix schema validation errors via a targeted LLM call."""
         error_list = "\n".join(f"- {e}" for e in errors[:20])
@@ -1194,6 +1211,7 @@ class BioschemasExtractorAgent:
             messages,
             logger=self._logger,
             task="json_ld_fix",
+            parent_id=parent_id,
         )
         return result if result else item
 

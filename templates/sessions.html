@@ -75,12 +75,22 @@
     .tab-btn.active { background: #1a73e8; color: white; }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
+    /* ---- Child event groups (collapsible sub-trees) ---- */
+    .ev-children { list-style: none; margin: 4px 0 0 24px; padding: 0; border-left: 2px solid #e0e5f0; padding-left: 8px; }
+    .ev-children.collapsed { display: none; }
+    .ev-toggle { background: none; border: 1px solid #c8cfe8; border-radius: 3px; padding: 1px 6px; font-size: 0.7rem; cursor: pointer; color: #555; margin-left: 6px; }
+    .ev-toggle:hover { background: #e8f0fe; }
   </style>
 </head>
 <body>
 <header>
   <h1>Session Viewer</h1>
-  <small>User ID: {{ user_id }}</small>
+  <div style="display:flex;gap:16px;align-items:center;">
+    {% if is_admin %}
+    <a href="/integration-tests" style="color:white;opacity:.85;font-size:.9rem;text-decoration:none;">Integration Tests ↗</a>
+    {% endif %}
+    <small>User ID: {{ user_id }}</small>
+  </div>
 </header>
 
 <div class="container">
@@ -158,26 +168,9 @@ const EV_ICONS = {
   validation: { cls: 'ev-val-ok',  icon: '✓',  label: '' },
 };
 
-let _llmCounter = 0;
+let _evCounter = 0;
 
-function renderEvent(ev) {
-  const li = document.createElement('li');
-  const meta = EV_ICONS[ev.type] || { cls: 'ev-info', icon: '?', label: '' };
-
-  let extraCls = meta.cls;
-  if (ev.type === 'fetch' && ev.status_code >= 400) extraCls += ' err';
-  if (ev.type === 'validation' && !ev.passed) extraCls = 'ev-val-err';
-
-  li.className = extraCls;
-
-  const iconEl = document.createElement('span');
-  iconEl.className = 'ev-icon';
-  iconEl.textContent = ev.type === 'fetch' ? String(ev.status_code || 'GET') : meta.icon;
-  if (ev.type === 'validation') iconEl.textContent = ev.passed ? '✓' : '✗';
-
-  const body = document.createElement('span');
-  body.className = 'ev-body';
-
+function renderEventBody(ev, body) {
   if (ev.type === 'info') {
     body.textContent = ev.message;
 
@@ -199,7 +192,6 @@ function renderEvent(ev) {
     if (ev.passed) {
       body.innerHTML = `<strong>Valid:</strong> ${escHtml(ev.item_name)}`;
     } else {
-      const id = 'val-' + (_llmCounter++);
       body.innerHTML = `<strong>Validation errors</strong> for ${escHtml(ev.item_name)} (${ev.errors.length})`;
       const ul = document.createElement('ul');
       ul.className = 'val-errors';
@@ -212,12 +204,12 @@ function renderEvent(ev) {
     }
 
   } else if (ev.type === 'llm_call') {
-    const id = 'llm-' + (_llmCounter++);
+    const uid = 'llm-' + (_evCounter++);
     const ms = ev.latency_ms ? `${ev.latency_ms.toFixed(0)} ms` : '';
     body.innerHTML = `<strong>${escHtml(ev.task)}</strong> → <code>${escHtml(ev.model)}</code> <span class="ev-meta">${ms}</span>` +
-      `<button class="llm-toggle" onclick="toggleLlm('${id}', event)">${llmBtnLabel(false)}</button>`;
+      `<button class="llm-toggle" onclick="toggleLlm('${uid}', event)">${llmBtnLabel(false)}</button>`;
     const detail = document.createElement('div');
-    detail.id = id;
+    detail.id = uid;
     detail.className = 'llm-detail';
     detail.innerHTML =
       `<span class="llm-label">PROMPT</span>${escHtml(ev.prompt_preview)}` +
@@ -225,10 +217,76 @@ function renderEvent(ev) {
       `<span class="llm-label">RESPONSE</span>${escHtml(ev.response_preview)}`;
     body.appendChild(detail);
   }
+}
+
+function renderEvent(ev, childMap) {
+  const li = document.createElement('li');
+  const meta = EV_ICONS[ev.type] || { cls: 'ev-info', icon: '?', label: '' };
+
+  let extraCls = meta.cls;
+  if (ev.type === 'fetch' && ev.status_code >= 400) extraCls += ' err';
+  if (ev.type === 'validation' && !ev.passed) extraCls = 'ev-val-err';
+  li.className = extraCls;
+
+  const iconEl = document.createElement('span');
+  iconEl.className = 'ev-icon';
+  iconEl.textContent = ev.type === 'fetch' ? String(ev.status_code || 'GET') : meta.icon;
+  if (ev.type === 'validation') iconEl.textContent = ev.passed ? '✓' : '✗';
+
+  const body = document.createElement('span');
+  body.className = 'ev-body';
+  renderEventBody(ev, body);
+
+  // If this event has children, add an expand/collapse toggle button
+  const children = childMap.get(ev.id) || [];
+  if (children.length > 0) {
+    const childListId = 'ch-' + (_evCounter++);
+    const toggleBtn = document.createElement('button');
+    toggleBtn.className = 'ev-toggle';
+    toggleBtn.textContent = `▶ ${children.length}`;
+    toggleBtn.onclick = (e) => {
+      e.stopPropagation();
+      const childList = document.getElementById(childListId);
+      if (!childList) return;
+      const collapsed = childList.classList.toggle('collapsed');
+      toggleBtn.textContent = (collapsed ? '▶ ' : '▼ ') + children.length;
+    };
+    body.appendChild(toggleBtn);
+
+    // Render children recursively in a nested list (collapsed by default if many)
+    const childUl = document.createElement('ul');
+    childUl.className = 'ev-children' + (children.length > 3 ? ' collapsed' : '');
+    childUl.id = childListId;
+    if (children.length > 3) toggleBtn.textContent = `▶ ${children.length}`;
+    children.forEach(child => childUl.appendChild(renderEvent(child, childMap)));
+    body.appendChild(childUl);
+  }
 
   li.appendChild(iconEl);
   li.appendChild(body);
   return li;
+}
+
+/**
+ * Build a map from parent_id → [child events] and return the root events.
+ * Events without a parent_id (or parent_id === null/0) are top-level roots.
+ */
+function buildTree(events) {
+  const byId = new Map();
+  const childMap = new Map();
+  events.forEach(ev => byId.set(ev.id, ev));
+
+  const roots = [];
+  events.forEach(ev => {
+    const pid = ev.parent_id;
+    if (pid && byId.has(pid)) {
+      if (!childMap.has(pid)) childMap.set(pid, []);
+      childMap.get(pid).push(ev);
+    } else {
+      roots.push(ev);
+    }
+  });
+  return { roots, childMap };
 }
 
 function llmBtnLabel(open) {
@@ -301,9 +359,10 @@ function renderLog(container) {
   if (events) {
     container.appendChild(buildStatsBar(events));
 
+    const { roots, childMap } = buildTree(events);
     const ul = document.createElement('ul');
     ul.className = 'event-timeline';
-    events.forEach(ev => ul.appendChild(renderEvent(ev)));
+    roots.forEach(ev => ul.appendChild(renderEvent(ev, childMap)));
     container.appendChild(ul);
   } else {
     // Legacy plain-text log

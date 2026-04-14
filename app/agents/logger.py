@@ -8,18 +8,24 @@ Each agent run emits a sequence of typed events:
   - ItemFoundEvent – a training item discovered during crawl
   - ValidationEvent – Bioschemas schema validation result for an extracted item
 
-Usage in the agent::
+All event-emitting methods return the new event's integer ``id``, which can be
+passed as ``parent`` to later calls to express parent–child relationships::
+
+    logger = AgentLogger()
+    phase_id = logger.info("Phase 1: crawl")
+    page_id  = logger.info("Fetching https://…", parent=phase_id)
+    logger.fetch(url="https://…", …, parent=page_id)
+
+The session viewer renders children as collapsible sub-items under their
+parent event, giving a tree-structured timeline where sub-details can be
+hidden for a cleaner overview.
+
+Usage::
 
     logger = AgentLogger()
     agent.run(url=url, llm_client=client, logger=logger)
     print(logger.to_json())
     print(logger.summary())
-
-Backward compatibility – plain ``log_fn: Callable[[str], None]`` callers::
-
-    logs: list[str] = []
-    agent.run(url=url, llm_client=client, log_fn=logs.append)
-    # logs receives the message string from every InfoEvent / WarnEvent.
 """
 
 from __future__ import annotations
@@ -27,7 +33,7 @@ from __future__ import annotations
 import json
 import time
 from dataclasses import asdict, dataclass, field
-from typing import Any, Callable, Union
+from typing import Any, Union
 
 # Maximum characters stored for prompt/response previews in LLMCallEvent.
 # The full text is deliberately capped so that the DB log column stays compact.
@@ -44,6 +50,8 @@ class InfoEvent:
     """General progress/status message."""
 
     message: str
+    id: int = 0
+    parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
     type: str = "info"
 
@@ -53,6 +61,8 @@ class WarnEvent:
     """Non-fatal warning (skipped page, transient error, …)."""
 
     message: str
+    id: int = 0
+    parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
     type: str = "warn"
 
@@ -66,6 +76,8 @@ class LLMCallEvent:
     prompt_preview: str
     response_preview: str
     latency_ms: float
+    id: int = 0
+    parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
     type: str = "llm_call"
 
@@ -77,6 +89,8 @@ class FetchEvent:
     url: str
     status_code: int
     content_length: int
+    id: int = 0
+    parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
     type: str = "fetch"
 
@@ -88,6 +102,8 @@ class ItemFoundEvent:
     title: str
     url: str
     item_type: str
+    id: int = 0
+    parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
     type: str = "item_found"
 
@@ -99,6 +115,8 @@ class ValidationEvent:
     item_name: str
     errors: list[str]
     passed: bool
+    id: int = 0
+    parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
     type: str = "validation"
 
@@ -116,30 +134,39 @@ AgentEvent = Union[
 class AgentLogger:
     """Collects typed events from one agent run.
 
-    Args:
-        legacy_fn: Optional plain-string callback (``Callable[[str], None]``).
-            When provided, every :meth:`info` and :meth:`warn` call also
-            forwards the message text to *legacy_fn* so that existing callers
-            using ``log_fn`` continue to work without any changes.
+    All event-emitting methods return the new event's ``id`` (an ``int``)
+    so callers can pass it as ``parent`` to child events.  The session viewer
+    renders children as collapsible sub-items, giving a clean top-level view
+    with details available on demand.
     """
 
-    def __init__(self, legacy_fn: Callable[[str], None] | None = None) -> None:
+    def __init__(self) -> None:
         self._events: list[AgentEvent] = []
-        self._legacy_fn = legacy_fn
+        self._counter: int = 0
+
+    def _next_id(self) -> int:
+        self._counter += 1
+        return self._counter
 
     # -- Logging methods -------------------------------------------------------
 
-    def info(self, message: str) -> None:
-        """Emit an informational progress message."""
-        self._events.append(InfoEvent(message=message))
-        if self._legacy_fn:
-            self._legacy_fn(message)
+    def info(self, message: str, parent: int | None = None) -> int:
+        """Emit an informational progress message.
 
-    def warn(self, message: str) -> None:
-        """Emit a non-fatal warning."""
-        self._events.append(WarnEvent(message=message))
-        if self._legacy_fn:
-            self._legacy_fn(f"WARNING: {message}")
+        Returns the new event's ``id`` for use as ``parent`` by child events.
+        """
+        ev = InfoEvent(message=message, id=self._next_id(), parent_id=parent)
+        self._events.append(ev)
+        return ev.id
+
+    def warn(self, message: str, parent: int | None = None) -> int:
+        """Emit a non-fatal warning.
+
+        Returns the new event's ``id`` for use as ``parent`` by child events.
+        """
+        ev = WarnEvent(message=message, id=self._next_id(), parent_id=parent)
+        self._events.append(ev)
+        return ev.id
 
     def llm_call(
         self,
@@ -149,41 +176,82 @@ class AgentLogger:
         prompt: str,
         response: str,
         latency_ms: float,
-    ) -> None:
-        """Emit a record of one LLM completion call."""
-        self._events.append(
-            LLMCallEvent(
-                task=task,
-                model=model,
-                prompt_preview=prompt[:PREVIEW_LENGTH],
-                response_preview=response[:PREVIEW_LENGTH],
-                latency_ms=round(latency_ms, 1),
-            )
-        )
+        parent: int | None = None,
+    ) -> int:
+        """Emit a record of one LLM completion call.
 
-    def fetch(self, url: str, status_code: int, content_length: int) -> None:
-        """Emit a record of one HTTP fetch."""
-        self._events.append(
-            FetchEvent(url=url, status_code=status_code, content_length=content_length)
-        )
-
-    def item_found(self, title: str, url: str, item_type: str) -> None:
-        """Emit a record of a newly discovered training item."""
-        self._events.append(ItemFoundEvent(title=title, url=url, item_type=item_type))
-
-    def validation(self, item_name: str, errors: list[str], passed: bool) -> None:
-        """Emit a schema validation result for one extracted item."""
-        self._events.append(
-            ValidationEvent(item_name=item_name, errors=errors, passed=passed)
-        )
-
-    def set_legacy_fn(self, legacy_fn: Callable[[str], None] | None) -> None:
-        """Set or replace the legacy plain-string callback.
-
-        This is a public alternative to passing *legacy_fn* in the constructor,
-        useful when a caller wants to attach a callback after the logger is created.
+        Returns the new event's ``id``.
         """
-        self._legacy_fn = legacy_fn
+        ev = LLMCallEvent(
+            task=task,
+            model=model,
+            prompt_preview=prompt[:PREVIEW_LENGTH],
+            response_preview=response[:PREVIEW_LENGTH],
+            latency_ms=round(latency_ms, 1),
+            id=self._next_id(),
+            parent_id=parent,
+        )
+        self._events.append(ev)
+        return ev.id
+
+    def fetch(
+        self,
+        url: str,
+        status_code: int,
+        content_length: int,
+        parent: int | None = None,
+    ) -> int:
+        """Emit a record of one HTTP fetch.
+
+        Returns the new event's ``id``.
+        """
+        ev = FetchEvent(
+            url=url,
+            status_code=status_code,
+            content_length=content_length,
+            id=self._next_id(),
+            parent_id=parent,
+        )
+        self._events.append(ev)
+        return ev.id
+
+    def item_found(
+        self,
+        title: str,
+        url: str,
+        item_type: str,
+        parent: int | None = None,
+    ) -> int:
+        """Emit a record of a newly discovered training item.
+
+        Returns the new event's ``id``.
+        """
+        ev = ItemFoundEvent(
+            title=title, url=url, item_type=item_type, id=self._next_id(), parent_id=parent
+        )
+        self._events.append(ev)
+        return ev.id
+
+    def validation(
+        self,
+        item_name: str,
+        errors: list[str],
+        passed: bool,
+        parent: int | None = None,
+    ) -> int:
+        """Emit a schema validation result for one extracted item.
+
+        Returns the new event's ``id``.
+        """
+        ev = ValidationEvent(
+            item_name=item_name,
+            errors=errors,
+            passed=passed,
+            id=self._next_id(),
+            parent_id=parent,
+        )
+        self._events.append(ev)
+        return ev.id
 
     # -- Read-only access ------------------------------------------------------
 

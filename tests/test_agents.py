@@ -249,19 +249,21 @@ def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -
 
     client = MockLLMClient([chunk_classification, reasoning_text, extraction, review])
 
-    logs: list[str] = []
+    from app.agents.logger import AgentLogger
+
+    run_logger = AgentLogger()
     agent = BioschemasExtractorAgent()
     result = agent.run(
         url="https://example.com/training",
         llm_client=client,
-        log_fn=logs.append,
+        logger=run_logger,
     )
 
     assert isinstance(result, list)
     assert len(result) == 1
     assert result[0]["@type"] == "LearningResource"
     assert result[0]["name"] == "Bioinformatics Workshop"
-    assert len(logs) > 0
+    assert len(run_logger.events) > 0
 
 
 def test_agent_validates_required_fields(monkeypatch: pytest.MonkeyPatch) -> None:

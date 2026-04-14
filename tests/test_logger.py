@@ -1,9 +1,8 @@
-"""Tests for AgentLogger – typed event hierarchy and statistics."""
+"""Tests for AgentLogger – typed event hierarchy, parent/child, and statistics."""
 
 from __future__ import annotations
 
 import json
-from typing import Any
 
 import pytest
 
@@ -19,22 +18,25 @@ from app.agents.logger import (
 
 
 # ---------------------------------------------------------------------------
-# Basic event emission
+# Basic event emission and return values
 # ---------------------------------------------------------------------------
 
 
-def test_logger_info_adds_event() -> None:
+def test_logger_info_adds_event_and_returns_id() -> None:
     logger = AgentLogger()
-    logger.info("hello")
+    ev_id = logger.info("hello")
+    assert ev_id == 1
     assert len(logger.events) == 1
     assert isinstance(logger.events[0], InfoEvent)
     assert logger.events[0].message == "hello"
     assert logger.events[0].type == "info"
+    assert logger.events[0].id == 1
 
 
-def test_logger_warn_adds_event() -> None:
+def test_logger_warn_adds_event_and_returns_id() -> None:
     logger = AgentLogger()
-    logger.warn("something wrong")
+    ev_id = logger.warn("something wrong")
+    assert ev_id == 1
     assert len(logger.events) == 1
     assert isinstance(logger.events[0], WarnEvent)
     assert logger.events[0].type == "warn"
@@ -113,31 +115,36 @@ def test_logger_validation_event_failed() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Legacy log_fn backward compatibility
+# Parent / child relationships
 # ---------------------------------------------------------------------------
 
 
-def test_logger_legacy_fn_receives_info_messages() -> None:
-    messages: list[str] = []
-    logger = AgentLogger(legacy_fn=messages.append)
-    logger.info("progress message")
-    assert "progress message" in messages
+def test_logger_parent_child_ids() -> None:
+    logger = AgentLogger()
+    parent_id = logger.info("Phase 1")
+    child_id = logger.info("Fetching page", parent=parent_id)
+    assert logger.events[0].id == parent_id
+    assert logger.events[1].id == child_id
+    assert logger.events[1].parent_id == parent_id
 
 
-def test_logger_legacy_fn_receives_warn_messages() -> None:
-    messages: list[str] = []
-    logger = AgentLogger(legacy_fn=messages.append)
-    logger.warn("something bad")
-    assert any("something bad" in m for m in messages)
+def test_logger_parent_none_by_default() -> None:
+    logger = AgentLogger()
+    logger.info("top level")
+    assert logger.events[0].parent_id is None
 
 
-def test_logger_legacy_fn_not_called_for_llm_or_fetch() -> None:
-    messages: list[str] = []
-    logger = AgentLogger(legacy_fn=messages.append)
-    logger.fetch("https://example.com", 200, 100)
-    logger.llm_call(task="t", model="m", prompt="p", response="r", latency_ms=1.0)
-    # Only info/warn events are forwarded to legacy_fn
-    assert len(messages) == 0
+def test_logger_fetch_with_parent() -> None:
+    logger = AgentLogger()
+    p = logger.info("page")
+    logger.fetch("https://example.com", 200, 100, parent=p)
+    assert logger.events[1].parent_id == p
+
+
+def test_logger_ids_are_sequential() -> None:
+    logger = AgentLogger()
+    ids = [logger.info(f"step {i}") for i in range(5)]
+    assert ids == [1, 2, 3, 4, 5]
 
 
 # ---------------------------------------------------------------------------
@@ -147,14 +154,15 @@ def test_logger_legacy_fn_not_called_for_llm_or_fetch() -> None:
 
 def test_to_json_produces_valid_json() -> None:
     logger = AgentLogger()
-    logger.info("step 1")
-    logger.fetch("https://example.com", 200, 500)
+    p = logger.info("step 1")
+    logger.fetch("https://example.com", 200, 500, parent=p)
     raw = logger.to_json()
     data = json.loads(raw)
     assert isinstance(data, list)
     assert len(data) == 2
     assert data[0]["type"] == "info"
     assert data[1]["type"] == "fetch"
+    assert data[1]["parent_id"] == data[0]["id"]
 
 
 def test_to_json_empty_logger() -> None:
