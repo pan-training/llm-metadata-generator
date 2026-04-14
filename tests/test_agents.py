@@ -15,6 +15,7 @@ from app.agents.bioschemas import (
     _content_hash,
     _html_to_markdown,
     _chunk_text,
+    compute_site_structure_summary,
 )
 
 
@@ -531,3 +532,170 @@ def test_agent_on_item_callback_called_per_item(monkeypatch: pytest.MonkeyPatch)
     assert len(received) == 1
     assert received[0]["name"] == "Workshop"
     assert result == received
+
+
+# ---------------------------------------------------------------------------
+# Tests for compute_site_structure_summary
+# ---------------------------------------------------------------------------
+
+
+def test_compute_site_structure_summary_returns_schema_v2(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """compute_site_structure_summary returns a JSON string with schema_version=2."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+
+    # Use a page with only external links so no additional same-domain pages
+    # are crawled and the mock client only needs two responses.
+    catalog_html = """
+    <html><body>
+      <h1>Training Catalogue</h1>
+      <p>Courses available at this site.</p>
+      <a href="https://other-domain.example/python">External Python course</a>
+    </body></html>
+    """
+    monkeypatch.setattr("requests.get", lambda *a, **kw: _make_response(catalog_html))
+
+    # LLM responses:
+    # 1. _summarise_page_for_structure for the primary URL (navigation_links=[])
+    # 2. _compile_site_structure
+    page_summary = json.dumps(
+        {
+            "page_type": "catalog",
+            "description": "Catalogue of training courses",
+            "training_items": [
+                {"title": "Python course", "description": "Python basics", "url": "https://example.com/courses/python"},
+            ],
+            "navigation_links": [],
+        }
+    )
+    compiled_summary = json.dumps(
+        {
+            "site_description": "A website offering scientific training courses",
+            "content_types": [
+                {
+                    "type": "TrainingMaterial",
+                    "description": "Online training courses",
+                    "primary_url": "https://example.com/courses",
+                    "navigation": {
+                        "type": "single_list",
+                        "urls": [],
+                        "description": "single list",
+                    },
+                    "examples": [
+                        {"title": "Python course", "description": "Python basics", "url": "https://example.com/courses/python"},
+                    ],
+                    "typical_structure": "Title, level badge, Start link",
+                }
+            ],
+        }
+    )
+
+    client = MockLLMClient([page_summary, compiled_summary])
+
+    logs: list[str] = []
+    result_str = compute_site_structure_summary(
+        url="https://example.com/courses",
+        llm_client=client,
+        log=logs.append,
+    )
+
+    result = json.loads(result_str)
+    assert result["schema_version"] == "2"
+    assert result["source_url"] == "https://example.com/courses"
+    assert "site_description" in result
+    assert isinstance(result["content_types"], list)
+    assert len(result["content_types"]) >= 1
+    # Structural summary should be logged
+    assert any("structural summary" in msg.lower() for msg in logs)
+
+
+def test_compute_site_structure_summary_raises_on_access_denied(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """compute_site_structure_summary raises AccessDeniedError when robots.txt blocks."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: False
+    )
+
+    with pytest.raises(AccessDeniedError):
+        compute_site_structure_summary(
+            url="https://blocked.example.com/",
+            llm_client=MockLLMClient([]),
+        )
+
+
+def test_compute_site_structure_summary_raises_on_http_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """compute_site_structure_summary raises AccessDeniedError for HTTP 403."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+    monkeypatch.setattr("requests.get", lambda *a, **kw: _make_response(status_code=403))
+
+    with pytest.raises(AccessDeniedError):
+        compute_site_structure_summary(
+            url="https://example.com/protected",
+            llm_client=MockLLMClient([]),
+        )
+
+
+def test_agent_uses_structural_summary_start_urls(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """With a v2 structural summary, Phase 1 starts from content_type primary_url."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+
+    fetched_urls: list[str] = []
+
+    def _mock_get(url: str, **kwargs: Any) -> MagicMock:
+        fetched_urls.append(url)
+        return _make_response("<html><body><h1>Course Catalogue</h1></body></html>")
+
+    monkeypatch.setattr("requests.get", _mock_get)
+
+    structural_summary = json.dumps(
+        {
+            "schema_version": "2",
+            "source_url": "https://example.com",
+            "source_domain": "example.com",
+            "computed_at": "2024-01-01T00:00:00+00:00",
+            "site_description": "A training website",
+            "content_types": [
+                {
+                    "type": "TrainingMaterial",
+                    "description": "Tutorials",
+                    "primary_url": "https://example.com/catalogue",
+                    "navigation": {"type": "single_list", "urls": [], "description": ""},
+                    "examples": [],
+                    "typical_structure": "title + link",
+                }
+            ],
+        }
+    )
+
+    # Chunk classification returns no items (just to trigger discovery)
+    chunk_classification = json.dumps({"relevant": False, "items": [], "follow_links": []})
+    client = MockLLMClient([chunk_classification])
+
+    agent = BioschemasExtractorAgent()
+    with pytest.raises(NotTrainingContentError):
+        agent.run(
+            url="https://example.com",
+            llm_client=client,
+            structural_summary=structural_summary,
+        )
+
+    # Phase 1 should have fetched the primary_url from the structural summary,
+    # NOT the root URL.
+    assert "https://example.com/catalogue" in fetched_urls
+
