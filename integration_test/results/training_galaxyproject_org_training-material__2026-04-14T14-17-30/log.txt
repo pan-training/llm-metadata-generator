@@ -1,0 +1,3301 @@
+Computing structural summary (Phase 0) …
+Phase 0: computing structural summary
+  Fetching primary URL: https://training.galaxyproject.org/training-material/
+  ↓ https://training.galaxyproject.org/training-material/ [200]
+  Primary page: 42602 chars
+  Summarising primary page structure
+  Following 7 structural navigation link(s)
+  ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html [200]
+  Summarising https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html (63301 chars)
+  ↓ https://training.galaxyproject.org/training-material/topics/introduction/ [200]
+  Summarising https://training.galaxyproject.org/training-material/topics/introduction/ (87602 chars)
+  ↓ https://training.galaxyproject.org/training-material/topics/galaxy-interface/ [200]
+  Summarising https://training.galaxyproject.org/training-material/topics/galaxy-interface/ (155519 chars)
+  ↓ https://training.galaxyproject.org/training-material/assets/images/GTN-60px.png [200]
+  Summarising https://training.galaxyproject.org/training-material/assets/images/GTN-60px.png (464 chars)
+  ⚠  Skipping https://training.galaxyproject.org/training-material/hall-of-fame "Hall of Fame" (HTTP 404)
+  ⚠  Skipping https://training.galaxyproject.org/training-material/learning-pathways "Learning Pathways" (HTTP 404)
+  ⚠  Skipping https://training.galaxyproject.org/training-material/faqs/index.html "Check our FAQs" (HTTP 404)
+  Compiling structural summary from 5 page summary/ies
+  Structural summary ready (3286 chars)
+Structural summary saved to structural_summary.json
+Using structural summary: {"site_description": "The Galaxy Training website provides training materials for the Galaxy bioinformatics platform, covering topics from introductory concepts to advanced data analysis.", "content_types": [{"type": "TrainingMaterial|CourseInstance", "description": "Individual modules or lessons within a learning pathway, often focusing on a specific task or tool.", "primary_url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html", "naviga…
+Phase 1 starting from 2 content-type URL(s) listed in structural summary
+Phase 1: crawl + discover
+  Fetch depth-0: https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html [200]
+    Page 1/20: 146675 chars, 19 chunk(s), hash=dc83234fa883…
+    [LLM:content_relevance] 2111 ms
+    Chunk 1/19: relevant
+      ★ 'Module 1: Introduction to Galaxy' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2233 ms
+    Chunk 2/19: relevant
+      ★ 'A short introduction to Galaxy' (TrainingMaterial)
+    [LLM:content_relevance] 1926 ms
+    Chunk 3/19: relevant
+      ★ 'Galaxy Introduction Short Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 3281 ms
+    Chunk 4/19: relevant
+      ★ 'Galaxy Introduction Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Galaxy Introduction Slides' (TrainingMaterial|CourseInstance)
+      ★ 'Galaxy Introduction Slides (Plain Text)' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2604 ms
+    Chunk 5/19: relevant
+      ★ 'Galaxy Basics for genomics' (TrainingMaterial)
+    [LLM:content_relevance] 2143 ms
+    Chunk 6/19: relevant
+      ★ 'Basics of Genome Sequence Analysis' (TrainingMaterial)
+    [LLM:content_relevance] 2135 ms
+    Chunk 7/19: relevant
+      ★ 'Quality Control' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1423 ms
+    [LLM:content_relevance] 1393 ms
+    [LLM:content_relevance] 3371 ms
+    Chunk 10/19: relevant
+      ★ 'Quality Control Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Mapping Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1409 ms
+    [LLM:content_relevance] 1736 ms
+    [LLM:content_relevance] 1259 ms
+    [LLM:content_relevance] 2138 ms
+    Chunk 14/19: relevant
+      ★ 'An Introduction to Genome Assembly' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1346 ms
+    [LLM:content_relevance] 1902 ms
+    Chunk 16/19: relevant
+      ★ 'General Introduction to Galaxy' (TrainingMaterial)
+    [LLM:content_relevance] 1378 ms
+    [LLM:content_relevance] 1308 ms
+    [LLM:content_relevance] 1302 ms
+  Fetch depth-1: https://training.galaxyproject.org/training-material/search2.html?query=español
+    ↓ https://training.galaxyproject.org/training-material/search2.html?query=español [200]
+    Page 2/20: 994418 chars, 128 chunk(s), hash=1b0f2aabaf41…
+    [LLM:content_relevance] 1263 ms
+    [LLM:content_relevance] 1438 ms
+    [LLM:content_relevance] 4716 ms
+    Chunk 3/128: relevant
+      ★ 'Galaxy Training Academy 2025' (CourseInstance)
+      ★ 'BioNT basic curriculum Round Two' (CourseInstance)
+    [LLM:content_relevance] 1419 ms
+    [LLM:content_relevance] 1296 ms
+    [LLM:content_relevance] 1366 ms
+    [LLM:content_relevance] 1633 ms
+    [LLM:content_relevance] 7121 ms
+    [LLM:content_relevance] 1945 ms
+    [LLM:content_relevance] 1286 ms
+    [LLM:content_relevance] 1362 ms
+    [LLM:content_relevance] 1668 ms
+    [LLM:content_relevance] 1344 ms
+    [LLM:content_relevance] 1356 ms
+    [LLM:content_relevance] 4170 ms
+    Chunk 15/128: relevant
+      ★ 'Single Cell' (Course)
+      ★ 'Galaxy Server administration' (Course)
+      ★ 'Assembly' (Course)
+      ★ 'Development in Galaxy' (Course)
+      ★ 'Epigenetics' (Course)
+      ★ 'Proteomics' (Course)
+      ★ 'Galaxy FAQ' (Course)
+    [LLM:content_relevance] 1434 ms
+    [LLM:content_relevance] 11715 ms
+    Chunk 17/128: relevant
+      ★ 'Erstellen einer gepaarten Sammlung' (TrainingMaterial)
+      ★ 'Creazione di una raccolta accoppiata' (TrainingMaterial)
+      ★ 'Creating a paired collection' (TrainingMaterial)
+      ★ 'Creación de una colección emparejada' (TrainingMaterial)
+      ★ 'Changing the datatype of a collection' (TrainingMaterial)
+      ★ 'Converting the datatype of a collection' (TrainingMaterial)
+      ★ 'Force a tool to process collection jobs one by one instead of using the collection as input' (TrainingMaterial)
+      ★ 'Renaming a collection' (TrainingMaterial)
+      ★ 'I want to use a collection for outputs but it always passes the test even when the script fails. Why?' (TrainingMaterial)
+      ★ 'How can I add my SIG meetings to the Galaxy Community Activities calendar?' (TrainingMaterial)
+      ★ 'How do I find the Community Home pages?' (TrainingMaterial)
+      ★ 'How does one compare metaproteomics measurements from two experimental conditions?' (TrainingMaterial)
+      ★ 'After sequencing with MinKNOW software, we get many fastq files, do these files need to be combined into one file before uploading or is it possible to upload them all at once?' (TrainingMaterial)
+      ★ 'Do we need a contaminant FASTA for MQ in galaxy?' (TrainingMaterial)
+      ★ 'How to Contribute to Galaxy' (TrainingMaterial)
+      ★ 'Contributing a Jupyter Notebook to the GTN' (TrainingMaterial)
+    [LLM:content_relevance] 1425 ms
+    [LLM:content_relevance] 11048 ms
+    Chunk 19/128: relevant
+      ★ 'Convert RAW files to MGF peak lists within Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Converting FASTQ files into a protein FASTA file for metaproteomics searches' (TrainingMaterial|CourseInstance)
+      ★ 'What is a Codex?' (TrainingMaterial|CourseInstance)
+      ★ 'Customising the welcome page' (TrainingMaterial|CourseInstance)
+      ★ 'Using data source tools with Pulsar' (TrainingMaterial|CourseInstance)
+      ★ 'Database Issues' (TrainingMaterial|CourseInstance)
+      ★ 'Incomplete Dataset Download' (TrainingMaterial|CourseInstance)
+      ★ 'How to find and correct tool errors related to Metadata?' (TrainingMaterial|CourseInstance)
+      ★ 'Upload fasta datasets via links' (TrainingMaterial|CourseInstance)
+      ★ 'Upload fastqsanger datasets via links' (TrainingMaterial|CourseInstance)
+      ★ 'Finding BAM dataset identifiers' (TrainingMaterial|CourseInstance)
+      ★ 'Directly obtaining UCSC sourced *genome* identifiers' (TrainingMaterial|CourseInstance)
+      ★ 'Hinzufügen eines Tags' (TrainingMaterial|CourseInstance)
+      ★ 'Aggiunta di un tag' (TrainingMaterial|CourseInstance)
+      ★ 'Adding a tag' (TrainingMaterial|CourseInstance)
+      ★ 'Añadir una etiqueta' (TrainingMaterial|CourseInstance)
+      ★ 'Ändern des Datentyps' (TrainingMaterial|CourseInstance)
+      ★ 'Modifica del tipo di dato' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1459 ms
+    [LLM:content_relevance] 1360 ms
+    [LLM:content_relevance] 1352 ms
+    [LLM:content_relevance] 1302 ms
+    [LLM:content_relevance] 2507 ms
+    Chunk 24/128: relevant
+      ★ 'Differential Expression Analysis of Transcripts' (CourseInstance)
+    [LLM:content_relevance] 4144 ms
+    Chunk 25/128: relevant
+      ★ 'Using the Window Manager to view multiple datasets' (TrainingMaterial)
+      ★ 'Uso del scratchbook para ver varios conjuntos de datos' (TrainingMaterial)
+      ★ 'Why do we do dimension reduction and then clustering? Why not just cluster on the actual data?' (TrainingMaterial)
+      ★ 'Where can I read more about Quality Control of data?' (TrainingMaterial)
+    [LLM:content_relevance] 1398 ms
+    [LLM:content_relevance] 1420 ms
+    [LLM:content_relevance] 1427 ms
+    [LLM:content_relevance] 1404 ms
+    [LLM:content_relevance] 1539 ms
+    [LLM:content_relevance] 1378 ms
+    [LLM:content_relevance] 2214 ms
+    Chunk 32/128: relevant
+    [LLM:content_relevance] 1403 ms
+    [LLM:content_relevance] 1246 ms
+    [LLM:content_relevance] 1357 ms
+    [LLM:content_relevance] 1400 ms
+    [LLM:content_relevance] 1770 ms
+    Chunk 37/128: relevant
+    [LLM:content_relevance] 1351 ms
+    [LLM:content_relevance] 1354 ms
+    [LLM:content_relevance] 10869 ms
+    Chunk 40/128: relevant
+      ★ 'Introduction to Genome Annotation' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to CRISPR screen analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Essential genes detection with Transposon insertion sequencing' (TrainingMaterial|CourseInstance)
+      ★ 'Genome annotation with Prokka' (TrainingMaterial|CourseInstance)
+      ★ 'High Performance Computing for Pairwise Genome Comparison' (TrainingMaterial|CourseInstance)
+      ★ 'Refining Genome Annotations with Apollo' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetics - Back to Basics - Introduction' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetics - Back to Basics - Multiple Sequence Alignment' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetics - Back to Basics - Estimating trees from alignments' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetics - Back to Basics - Phylogenetic Networks' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetics - Back to Basics - Terminology' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetics - Back to Basics - Building Trees' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'A Short Introduction to Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Options for using Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to Microbiome Analysis' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1908 ms
+    [LLM:content_relevance] 11484 ms
+    Chunk 42/128: relevant
+      ★ 'Single Cell' (TrainingMaterial)
+      ★ 'Pangeo ecosystem 101 for everyone' (TrainingMaterial)
+      ★ 'Introduction to climate data' (TrainingMaterial)
+      ★ 'Functionally Assembled Terrestrial Ecosystem Simulator (FATES)' (TrainingMaterial)
+      ★ 'The Pangeo ecosystem' (TrainingMaterial)
+      ★ 'Introduction to Variant analysis' (TrainingMaterial)
+      ★ 'Quality Control' (TrainingMaterial)
+      ★ 'Mapping' (TrainingMaterial)
+      ★ 'Visualisations in Galaxy' (TrainingMaterial)
+      ★ 'JBrowse' (TrainingMaterial)
+      ★ "Friends Don't Let Friends Make Bad Graphs" (TrainingMaterial)
+      ★ 'Circos' (TrainingMaterial)
+      ★ 'Ansible' (TrainingMaterial)
+      ★ 'Galactic Database' (TrainingMaterial)
+      ★ 'Galaxy Interactive Tools' (TrainingMaterial)
+      ★ "Galaxy from an administrator's point of view" (TrainingMaterial)
+      ★ 'Reference Data with CVMFS' (TrainingMaterial)
+      ★ 'Controlling Galaxy with systemd or Supervisor' (TrainingMaterial)
+      ★ 'Advanced customisation of a Galaxy instance' (TrainingMaterial)
+    [LLM:content_relevance] 15017 ms
+    Chunk 43/128: relevant
+      ★ 'Advanced customisation of a Galaxy instance' (TrainingMaterial)
+      ★ 'Galaxy and Celery' (TrainingMaterial)
+      ★ 'External Authentication' (TrainingMaterial)
+      ★ 'Terraform' (TrainingMaterial)
+      ★ 'uWSGI' (TrainingMaterial)
+      ★ 'Gearing towards production' (TrainingMaterial)
+      ★ 'Galaxy Tool Management with Ephemeris' (TrainingMaterial)
+      ★ 'Server Maintenance: Cleanup, Backup, and Restoration' (TrainingMaterial)
+      ★ 'Galaxy Installation with Ansible' (TrainingMaterial)
+      ★ 'Reference Genomes in Galaxy' (TrainingMaterial)
+      ★ 'User, Role, Group, Quota, and Authentication managment' (TrainingMaterial)
+      ★ 'Galaxy on the Cloud' (TrainingMaterial)
+      ★ 'Galaxy Administrator Time Burden and Technology Usage' (TrainingMaterial)
+      ★ 'Empathy' (TrainingMaterial)
+      ★ 'Galaxy Monitoring with Telegraf and Grafana' (TrainingMaterial)
+      ★ 'Storage Management' (TrainingMaterial)
+    [LLM:content_relevance] 10816 ms
+    Chunk 44/128: relevant
+      ★ 'Galaxy Server administration' (TrainingMaterial)
+      ★ 'Running Jobs on Remote Resources with Pulsar' (TrainingMaterial)
+      ★ 'Connecting Galaxy to a compute cluster' (TrainingMaterial)
+      ★ 'Galaxy Monitoring with gxadmin' (TrainingMaterial)
+      ★ 'Storage Management' (TrainingMaterial)
+      ★ 'Docker and Galaxy' (TrainingMaterial)
+      ★ 'Galaxy Troubleshooting' (TrainingMaterial)
+      ★ 'Server: Other' (TrainingMaterial)
+      ★ 'Galaxy Monitoring' (TrainingMaterial)
+      ★ 'Introduction to proteomics, protein identification, quantification and statistical modelling' (TrainingMaterial)
+      ★ 'Submitting SARS-CoV-2 sequences to ENA' (TrainingMaterial)
+      ★ 'Getting data into Galaxy' (TrainingMaterial)
+      ★ 'Introduction to SRA Aligned Read Format and Cloud Metadata for SARS-CoV-2' (TrainingMaterial)
+      ★ 'Galaxy workflows in Dockstore' (TrainingMaterial)
+      ★ 'Bioinformatics Data Types and Databases' (TrainingMaterial)
+      ★ 'A brief history of modern biology' (TrainingMaterial)
+    [LLM:content_relevance] 10152 ms
+    Chunk 45/128: relevant
+      ★ 'Online Resources Gene' (TrainingMaterial)
+      ★ 'Nucleoli Segmentation  &  Feature Extraction  using CellProfiler' (TrainingMaterial)
+      ★ 'Introduction to Transcriptomics' (TrainingMaterial)
+      ★ 'Whole transcriptome analysis of Arabidopsis thaliana' (TrainingMaterial)
+      ★ 'Integrate and query local datasets and distant RDF data with AskOmics using Semantic Web technologies' (TrainingMaterial)
+      ★ 'Network Analysis with Heinz' (TrainingMaterial)
+      ★ 'Identification of non-canonical ORFs and their potential biological function' (TrainingMaterial)
+      ★ 'Visualization of RNA-Seq results with CummeRbund' (TrainingMaterial)
+      ★ 'EWAS Epigenome-Wide Association Studies Introduction' (TrainingMaterial)
+      ★ 'Introduction to DNA Methylation data analysis' (TrainingMaterial)
+      ★ 'Introduction to ChIP-Seq data analysis' (TrainingMaterial)
+      ★ 'ChIP-seq data analysis' (TrainingMaterial)
+      ★ 'Introduction to ATAC-Seq data analysis' (TrainingMaterial)
+      ★ 'Overview of the Galaxy Training Material' (TrainingMaterial)
+      ★ 'Contributing with GitHub via command-line' (TrainingMaterial)
+    [LLM:content_relevance] 2503 ms
+    Chunk 46/128: relevant
+      ★ 'Contributing to the Galaxy Training Material' (TrainingMaterial)
+    [LLM:content_relevance] 10733 ms
+    Chunk 47/128: relevant
+      ★ 'Deep Learning - Part 1' (CourseInstance)
+      ★ 'Deep Learning (without Generative Artificial Intelligence) using Python' (CourseInstance)
+      ★ 'Regulations/standards for AI using DOME' (CourseInstance)
+      ★ 'Regression in Machine Learning' (CourseInstance)
+      ★ 'Galaxy Tabular Learner: Building a Model using Chowell clinical data' (CourseInstance)
+      ★ 'Unicycler assembly of SARS-CoV-2 genome with preprocessing to remove human genome reads' (CourseInstance)
+      ★ 'An Introduction to Genome Assembly' (CourseInstance)
+      ★ 'Genome assembly quality control' (CourseInstance)
+      ★ 'Deeper look into Genome Assembly algorithms' (CourseInstance)
+      ★ 'Genome assembly and assembly QC - Introduction short version' (CourseInstance)
+      ★ 'Unicycler Assembly' (CourseInstance)
+      ★ 'De Bruijn Graph Assembly' (CourseInstance)
+      ★ 'An introduction to get started in genome assembly and annotation' (CourseInstance)
+      ★ 'Architecture 13 - Galaxy Dependencies Management' (CourseInstance)
+      ★ 'Galaxy Interactive Tours' (CourseInstance)
+      ★ 'Architecture 12 - Galaxy Client Architecture' (CourseInstance)
+    [LLM:content_relevance] 1776 ms
+    [LLM:content_relevance] 10567 ms
+    Chunk 49/128: relevant
+      ★ 'Scripting Galaxy using the API and BioBlend' (TrainingMaterial|CourseInstance)
+      ★ 'Tool Shed: sharing Galaxy tools' (TrainingMaterial|CourseInstance)
+      ★ 'Generic plugins' (TrainingMaterial|CourseInstance)
+      ★ 'Architecture 05 - Galaxy Web Frameworks' (TrainingMaterial|CourseInstance)
+      ★ 'Visualizations: JavaScript Plugins' (TrainingMaterial|CourseInstance)
+      ★ 'Architecture 02 - Galaxy Project Management and Contribution' (TrainingMaterial|CourseInstance)
+      ★ 'Architecture 16 - Galaxy Testing' (TrainingMaterial|CourseInstance)
+      ★ 'Galaxy Interactive Environments' (TrainingMaterial|CourseInstance)
+      ★ 'Architecture 11 - Galaxy Markdown Architecture' (TrainingMaterial|CourseInstance)
+      ★ 'Architecture 04 - Galaxy Files and Directory Structure' (TrainingMaterial|CourseInstance)
+      ★ 'Architecture 10 - Galaxy File Sources Architecture' (TrainingMaterial|CourseInstance)
+      ★ 'Tool Dependencies and Conda' (TrainingMaterial|CourseInstance)
+      ★ 'Welcome to the BioImage Model Zoo' (TrainingMaterial|CourseInstance)
+      ★ 'BioImage Model Zoo: Advanced models in one-click' (TrainingMaterial|CourseInstance)
+      ★ 'Contribute to the BioImage.IO models' (TrainingMaterial|CourseInstance)
+      ★ 'Lorum Ipsum' (TrainingMaterial|CourseInstance)
+      ★ 'Una breve introducción a Galaxy' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 3063 ms
+    Chunk 50/128: relevant
+      ★ 'Image analysis using Deep Learning' (TrainingMaterial|CourseInstance)
+      ★ 'Una breve introducción a Galaxy' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 7729 ms
+    [LLM:content_relevance] 1449 ms
+    [LLM:content_relevance] 1321 ms
+    [LLM:content_relevance] 7788 ms
+    Chunk 54/128: relevant
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+    [LLM:content_relevance] 10453 ms
+    Chunk 55/128: relevant
+      ★ 'Long non-coding RNAs (lncRNAs) annotation with FEELnc' (TrainingMaterial|CourseInstance)
+      ★ 'Genome annotation with Maker (short)' (TrainingMaterial|CourseInstance)
+      ★ 'Comparison of two annotation tools - Helixer and Braker3' (TrainingMaterial|CourseInstance)
+      ★ 'Genome annotation with Maker' (TrainingMaterial|CourseInstance)
+      ★ 'From small to large-scale genome comparison' (TrainingMaterial|CourseInstance)
+      ★ 'Refining Genome Annotations with Apollo (prokaryotes)' (TrainingMaterial|CourseInstance)
+      ★ 'Identification of AMR genes in an assembled bacterial genome' (TrainingMaterial|CourseInstance)
+      ★ 'Functional annotation of protein sequences' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetics - Back to basics' (TrainingMaterial|CourseInstance)
+      ★ 'Tree thinking for tuberculosis evolution and epidemiology' (TrainingMaterial|CourseInstance)
+      ★ 'Phylogenetic analysis for bacterial comparative genomics' (TrainingMaterial|CourseInstance)
+      ★ 'Identifying tuberculosis transmission links: from SNPs to transmission clusters' (TrainingMaterial|CourseInstance)
+      ★ 'Upload data to Galaxy' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11203 ms
+    Chunk 56/128: relevant
+      ★ 'mtb_transmission' (CourseInstance)
+      ★ 'Introduction to Galaxy as an RDM platform' (CourseInstance)
+      ★ 'How to reproduce published Galaxy analyses' (CourseInstance)
+      ★ 'Best Practices for Citing Galaxy' (CourseInstance)
+      ★ 'NGS data logistics' (CourseInstance)
+      ★ 'Very Short Introductions: QC' (CourseInstance)
+      ★ 'Introduction to Genomics and Galaxy' (CourseInstance)
+      ★ 'Galaxy Basics for everyone' (CourseInstance)
+      ★ 'Data Manipulation Olympics' (CourseInstance)
+      ★ 'IGV Introduction' (CourseInstance)
+      ★ 'From peaks to genes' (CourseInstance)
+      ★ 'Building an amplicon sequence variant (ASV) table from 16S data using DADA2' (CourseInstance)
+      ★ 'Calculating α and β diversity from microbiome taxonomic data' (CourseInstance)
+    [LLM:content_relevance] 7801 ms
+    Chunk 57/128: relevant
+      ★ 'Calculating α and β diversity from microbiome taxonomic data' (TrainingMaterial)
+      ★ '16S Microbial Analysis with mothur (short)' (TrainingMaterial)
+      ★ 'Taxonomic Profiling and Visualization of Metagenomic Data' (TrainingMaterial)
+      ★ 'Pathogen detection from (direct Nanopore) sequencing data using Galaxy - Foodborne Edition' (TrainingMaterial)
+      ★ '16S Microbial analysis with Nanopore data' (TrainingMaterial)
+      ★ 'Identification of the micro-organisms in a beer using Nanopore sequencing' (TrainingMaterial)
+      ★ 'Indexing and profiling microbes with MetaSBT' (TrainingMaterial)
+      ★ 'Antibiotic resistance detection' (TrainingMaterial)
+      ★ 'Query an annotated mobile genetic element database to identify and annotate genetic elements' (TrainingMaterial)
+    [LLM:content_relevance] 10285 ms
+    Chunk 58/128: relevant
+      ★ 'Query an annotated mobile genetic element database to identify and annotate genetic elements (e.g. plasmids) in metagenomics data' (TrainingMaterial)
+      ★ 'MGnify v5.0 Amplicon Pipeline' (TrainingMaterial)
+      ★ 'Analyses of metagenomics data - The global picture' (TrainingMaterial)
+      ★ 'QIIME 2 Moving Pictures' (TrainingMaterial)
+      ★ 'Assembly of metagenomic sequencing data' (TrainingMaterial)
+      ★ 'QIIME 2 Cancer Microbiome Intervention' (TrainingMaterial)
+      ★ 'Metatranscriptomics analysis using microbiome RNA-seq data' (TrainingMaterial)
+      ★ 'Identifying Mycorrhizal Fungi from ITS2 sequencing using LotuS2' (TrainingMaterial)
+      ★ 'Building and Annotating Metagenome-Assembled Genomes (MAGs) from Short Metagenomics Paired Reads' (TrainingMaterial)
+      ★ '16S Microbial Analysis with mothur (extended)' (TrainingMaterial)
+      ★ 'Binning of metagenomic sequencing data' (TrainingMaterial)
+      ★ 'Metatranscriptomics analysis using microbiome RNA-seq data (short)' (TrainingMaterial)
+      ★ 'Remove contamination and host reads' (TrainingMaterial)
+    [LLM:content_relevance] 10471 ms
+    Chunk 59/128: relevant
+      ★ 'metatranscriptomics' (TrainingMaterial)
+      ★ 'Teaching experiences' (TrainingMaterial)
+      ★ 'Training techniques to enhance learner participation and engagement' (TrainingMaterial)
+      ★ 'Live Coding is a Skill' (TrainingMaterial)
+      ★ 'Set up a Galaxy for Training' (TrainingMaterial)
+      ★ 'Running a workshop as an instructor' (TrainingMaterial)
+      ★ 'Course Builder' (TrainingMaterial)
+      ★ 'Motivation and Demotivation' (TrainingMaterial)
+      ★ 'Organizing a workshop' (TrainingMaterial)
+      ★ 'Training Infrastructure as a Service' (TrainingMaterial)
+      ★ 'Train-the-Trainer: putting it all together' (TrainingMaterial)
+      ★ 'Assessment and feedback in training and teachings' (TrainingMaterial)
+      ★ 'Hybrid training' (TrainingMaterial)
+      ★ 'Galaxy Admin Training' (TrainingMaterial)
+    [LLM:content_relevance] 19350 ms
+    [LLM:content_relevance] 7506 ms
+    Chunk 61/128: relevant
+      ★ 'Single Cell RNA-Seq analysis with RaceID' (TrainingMaterial)
+      ★ 'Filter, plot, and explore single cell RNA-seq data with Seurat' (TrainingMaterial)
+      ★ 'Removing the effects of the cell cycle' (TrainingMaterial)
+      ★ 'Converting between common single cell data formats' (TrainingMaterial)
+      ★ 'Inferring single cell trajectories with Scanpy (Python)' (TrainingMaterial)
+      ★ 'Bulk RNA Deconvolution with MuSiC' (TrainingMaterial)
+      ★ 'Inferring single cell trajectories with Monocle3' (TrainingMaterial)
+      ★ 'Pseudobulk Analysis with Decoupler and EdgeR' (TrainingMaterial)
+      ★ 'Generating a single cell matrix using Alevin' (TrainingMaterial)
+    [LLM:content_relevance] 1935 ms
+    Chunk 62/128: relevant
+    [LLM:content_relevance] 11522 ms
+    Chunk 63/128: relevant
+      ★ 'Single Cell RNA-Seq analysis' (TrainingMaterial)
+      ★ 'Scanpy Parameter Iterator' (TrainingMaterial)
+      ★ 'Multi-sample batch correction with Harmony and SnapATAC2' (TrainingMaterial)
+      ★ 'Combining single cell datasets after pre-processing' (TrainingMaterial)
+      ★ 'Pre-processing of Single-Cell RNA Data' (TrainingMaterial)
+      ★ 'Pre-processing of 10X Single-Cell ATAC-seq Datasets' (TrainingMaterial)
+      ★ 'Filter, plot, and explore single cell RNA-seq data with Seurat (R)' (TrainingMaterial)
+      ★ 'Pangeo ecosystem 101 for everyone - Introduction to Xarray Galaxy Tools' (TrainingMaterial)
+      ★ 'Getting your hands-on earth data' (TrainingMaterial)
+      ★ 'Ocean Data View (ODV)' (TrainingMaterial)
+      ★ 'Analyse Argo data' (TrainingMaterial)
+      ★ 'Collaboration with JupyterGIS' (TrainingMaterial)
+      ★ 'Getting your hands-on climate data' (TrainingMaterial)
+      ★ "Ocean's variables study" (TrainingMaterial)
+      ★ 'Functionally Assembled Terrestrial Ecosystem Simulator (FATES) with Galaxy Climate JupyterLab' (TrainingMaterial)
+    [LLM:content_relevance] 8773 ms
+    Chunk 64/128: relevant
+      ★ 'Functionally Assembled Terrestrial Ecosystem Simulator (FATES)' (CourseInstance)
+      ★ 'Nitrate DMQC for autonomous platforms such as Argo floats' (CourseInstance)
+      ★ 'Visualize Climate data with Panoply netCDF viewer' (CourseInstance)
+      ★ 'Pangeo Notebook in Galaxy - Introduction to Xarray' (CourseInstance)
+      ★ 'Sentinel 5P data visualisation' (CourseInstance)
+      ★ 'Designing plasmids encoding predicted pathways by using the BASIC assembly method' (CourseInstance)
+      ★ 'Evaluating and ranking a set of pathways based on multiple metrics' (CourseInstance)
+      ★ 'Generating theoretical possible pathways for the production of Lycopene in E.Coli using Retrosynthesis tools' (CourseInstance)
+      ★ 'Trio Analysis using Synthetic Datasets from RD-Connect GPAP' (CourseInstance)
+      ★ 'Exome sequencing data analysis for diagnosing a genetic disease' (CourseInstance)
+      ★ 'Deciphering Virus Populations - Single Nucleotide Variants (SNVs) and Specificities in Baculovirus Isolates' (CourseInstance)
+      ★ 'Calling variants in diploid systems' (CourseInstance)
+      ★ 'Identification of somatic and germline variants from tumor and normal sample pairs' (CourseInstance)
+    [LLM:content_relevance] 7372 ms
+    Chunk 65/128: relevant
+      ★ 'Hands-on: Identification of somatic and germline variants from tumor and normal sample pairs' (CourseInstance)
+      ★ 'Hands-on: Working with Beacon V2: A Comprehensive Guide to Creating, Uploading, and Searching for Variants with Beacons' (CourseInstance)
+      ★ 'Hands-on: Somatic Variant Discovery from WES Data Using Control-FREEC' (CourseInstance)
+      ★ 'Hands-on: Calling variants in non-diploid systems' (CourseInstance)
+      ★ 'Hands-on: Avian influenza viral strain analysis from gene segment sequencing data' (CourseInstance)
+      ★ 'Hands-on: Microbial Variant Calling' (CourseInstance)
+      ★ 'Hands-on: Pox virus genome analysis from tiled-amplicon sequencing data' (CourseInstance)
+      ★ 'Hands-on: M.' (CourseInstance)
+    [LLM:content_relevance] 11615 ms
+    Chunk 66/128: relevant
+      ★ 'Pox virus genome analysis from tiled-amplicon sequencing data' (TrainingMaterial|CourseInstance)
+      ★ 'M. tuberculosis Variant Analysis' (TrainingMaterial|CourseInstance)
+      ★ "From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis" (TrainingMaterial|CourseInstance)
+      ★ 'Calling very rare variants' (TrainingMaterial|CourseInstance)
+      ★ 'Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data' (TrainingMaterial|CourseInstance)
+      ★ 'Querying the University of Bradford GDC Beacon Database for Copy Number Variants (CNVs)' (TrainingMaterial|CourseInstance)
+      ★ 'Mapping and molecular identification of phenotype-causing mutations' (TrainingMaterial|CourseInstance)
+      ★ 'Finding the muon stopping site with pymuon-suite in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'SARS-CoV-2 Viral Sample Alignment and Variant Visualization' (TrainingMaterial|CourseInstance)
+      ★ 'Removal of human reads from SARS-CoV-2 sequencing data' (TrainingMaterial|CourseInstance)
+      ★ 'Quality and contamination control in bacterial isolate using Illumina MiSeq Data' (TrainingMaterial|CourseInstance)
+      ★ 'NCBI BLAST+ against the MAdLand' (TrainingMaterial|CourseInstance)
+      ★ 'Screening assembled genomes for contamination using NCBI FCS' (TrainingMaterial|CourseInstance)
+      ★ 'Quality Control' (TrainingMaterial|CourseInstance)
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&sort=date
+    [LLM:content_relevance] 10532 ms
+    Chunk 67/128: relevant
+      ★ 'Mapping' (CourseInstance)
+      ★ 'Clean and manage Sanger sequences from raw files to aligned consensus' (CourseInstance)
+      ★ 'Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants' (CourseInstance)
+      ★ 'Primer and primer scheme design for pan-specific detection and sequencing of viral pathogens across genotypes' (CourseInstance)
+      ★ 'Genomic Data Visualisation with JBrowse' (CourseInstance)
+      ★ 'Visualisation with Circos' (CourseInstance)
+      ★ 'Ploting a Microbial Genome with Circos' (CourseInstance)
+      ★ 'Ansible' (CourseInstance)
+      ★ 'Deploying Wireguard for private mesh networking' (CourseInstance)
+      ★ 'Galaxy usage on SURF Research Cloud' (CourseInstance)
+      ★ 'Galaxy Interactive Tools' (CourseInstance)
+      ★ 'Reference Data with CVMFS' (CourseInstance)
+      ★ 'Performant Uploads with TUS' (CourseInstance)
+    [LLM:content_relevance] 11615 ms
+    Chunk 68/128: relevant
+      ★ 'Hands-on: Performant Uploads with TUS' (TrainingMaterial)
+      ★ 'Hands-on: Create a subdomain for your community on UseGalaxy.eu' (TrainingMaterial)
+      ★ 'Galaxy Monitoring with Reports' (TrainingMaterial)
+      ★ 'Upgrading Galaxy' (TrainingMaterial)
+      ★ 'Deploying Tailscale/Headscale for private mesh networking' (TrainingMaterial)
+      ★ 'Customizing the look of Galaxy (Manual)' (TrainingMaterial)
+      ★ 'Setting up Celery Workers for Galaxy' (TrainingMaterial)
+      ★ 'Adding file-sources to Galaxy' (TrainingMaterial)
+      ★ 'External Authentication' (TrainingMaterial)
+      ★ 'Mapping Jobs to Destinations using TPV' (TrainingMaterial)
+      ★ 'How I learned to stop worrying and love the systemd' (TrainingMaterial)
+      ★ 'Deploying a compute cluster in OpenStack via Terraform' (TrainingMaterial)
+      ★ 'Automation with Jenkins' (TrainingMaterial)
+      ★ 'Managing Galaxy on Kubernetes' (TrainingMaterial)
+    [LLM:content_relevance] 9281 ms
+    Chunk 69/128: relevant
+      ★ 'Galaxy Tool Management with Ephemeris' (TrainingMaterial)
+      ★ 'Reference Data with CVMFS without Ansible' (TrainingMaterial)
+      ★ 'Server Maintenance: Cleanup, Backup, and Restoration' (TrainingMaterial)
+      ★ 'Deploying a Beacon v1 in Galaxy' (TrainingMaterial)
+      ★ 'Galaxy Installation with Ansible' (TrainingMaterial)
+      ★ 'Monitoring Galaxy and Pulsar with Sentry' (TrainingMaterial)
+      ★ 'Reference Data with Data Managers' (TrainingMaterial)
+      ★ 'Enable upload via FTP' (TrainingMaterial)
+      ★ 'Alternative Celery Deployment for Galaxy' (TrainingMaterial)
+      ★ 'Use Apptainer containers for running Galaxy jobs' (TrainingMaterial)
+      ★ 'Galaxy Monitoring with Telegraf and Grafana' (TrainingMaterial)
+      ★ 'Customizing the look of Galaxy' (TrainingMaterial)
+      ★ 'Pulsar usage on SURF Research Cloud' (TrainingMaterial)
+      ★ 'Galaxy Installation on Kubernetes' (TrainingMaterial)
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&sort=relevance
+    [LLM:content_relevance] 13804 ms
+    Chunk 70/128: relevant
+      ★ 'Data Libraries' (TrainingMaterial)
+      ★ 'Running Jobs on Remote Resources with Pulsar' (TrainingMaterial)
+      ★ 'Galaxy Database schema' (TrainingMaterial)
+      ★ 'Connecting Galaxy to a compute cluster' (TrainingMaterial)
+      ★ 'Galaxy Monitoring with gxadmin' (TrainingMaterial)
+      ★ 'Distributed Object Storage' (TrainingMaterial)
+      ★ 'Training Infrastructure as a Service (TIaaS)' (TrainingMaterial)
+      ★ 'Configuring the Onedata connectors (remotes, Object Store, BYOS, BYOD)' (TrainingMaterial)
+      ★ 'Machine Learning Modeling of Anticancer Peptides' (TrainingMaterial)
+      ★ 'Single Cell Proteomics data analysis with bioconductor-scp' (TrainingMaterial)
+      ★ 'Neoantigen 3: PepQuery2 Verification' (TrainingMaterial)
+      ★ 'Clinical Metaproteomics 1: Database-Generation' (TrainingMaterial)
+      ★ 'Label-free versus Labelled - How to Choose Your Quantitation Method' (TrainingMaterial)
+      ★ 'Clinical Metaproteomics 3: Verification' (TrainingMaterial)
+    [LLM:content_relevance] 13107 ms
+    Chunk 71/128: relevant
+      ★ 'DDA | Proteomics | Introductory | 15m' (TrainingMaterial)
+      ★ 'Hands-on | [Clinical Metaproteomics 3: Verification](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/clinical-mp-3-verification/tutorial.html)label-TMT11 | Proteomics |  | 3H' (TrainingMaterial)
+      ★ 'Proteogenomics 3: Novel peptide analysis' (TrainingMaterial)
+      ★ 'Mass spectrometry imaging: Loading and exploring MSI data' (TrainingMaterial)
+      ★ 'Neoantigen 5a: Predicting HLA Binding' (TrainingMaterial)
+      ★ 'metaQuantome 1: Data creation' (TrainingMaterial)
+      ★ 'MaxQuant and MSstats for the analysis of label-free data' (TrainingMaterial)
+      ★ 'Secretome Prediction' (TrainingMaterial)
+      ★ 'metaQuantome 3: Taxonomy' (TrainingMaterial)
+      ★ 'Clinical Metaproteomics 4: Quantitation' (TrainingMaterial)
+      ★ 'Peptide and Protein ID using SearchGUI and PeptideShaker' (TrainingMaterial)
+      ★ 'EncyclopeDIA' (TrainingMaterial)
+      ★ 'Metaproteomics tutorial' (TrainingMaterial)
+      ★ 'Peptide and Protein Quantification via Stable Isotope Labelling (SIL)' (TrainingMaterial)
+      ★ 'Proteogenomics 2: Database Search' (TrainingMaterial)
+      ★ 'Detection and quantitation of N-termini (degradomics) via N-TAILS' (TrainingMaterial)
+    [LLM:content_relevance] 19411 ms
+    [LLM:content_relevance] 13090 ms
+    Chunk 73/128: relevant
+      ★ 'Biomarker candidate identification' (TrainingMaterial|CourseInstance)
+      ★ 'Label-free data analysis using MaxQuant' (TrainingMaterial|CourseInstance)
+      ★ 'Proteogenomics 1: Database Creation' (TrainingMaterial|CourseInstance)
+      ★ 'Neoantigen 1b: Non-Reference-Database-Generation' (TrainingMaterial|CourseInstance)
+      ★ 'Statistical analysis of DIA data' (TrainingMaterial|CourseInstance)
+      ★ 'Neoantigen 5b: IEDB binding Validated Neopeptides' (TrainingMaterial|CourseInstance)
+      ★ 'Multiomics data analysis using MultiGSEA' (TrainingMaterial|CourseInstance)
+      ★ 'Clinical Metaproteomics 2: Discovery' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to Digital Humanities in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'OpenRefine Tutorial for researching cultural data' (TrainingMaterial|CourseInstance)
+      ★ 'Text-Mining Differences in Chinese Newspaper Articles' (TrainingMaterial|CourseInstance)
+      ★ 'Transcribing Audio and Video files with Automated Speech Recognition' (TrainingMaterial|CourseInstance)
+      ★ 'JupyterLab in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Onedata user-owned storage' (TrainingMaterial|CourseInstance)
+      ★ 'Getting started with Onedata distributed storage' (TrainingMaterial|CourseInstance)
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&category=proteomics
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&category=digital-humanities
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&category=galaxy-interface
+    [LLM:content_relevance] 4686 ms
+    Chunk 74/128: relevant
+      ★ 'Using Galaxy and Managing your Data' (TrainingMaterial)
+      ★ 'Hands-on: Getting started with Onedata distributed storage' (TrainingMaterial)
+      ★ 'Submitting sequence data to ENA' (TrainingMaterial)
+      ★ 'Extracting Workflows from Histories' (TrainingMaterial)
+    [LLM:content_relevance] 10940 ms
+    Chunk 75/128: relevant
+      ★ 'Using Workflow Parameters' (TrainingMaterial|CourseInstance)
+      ★ 'Rule Based Uploader' (TrainingMaterial|CourseInstance)
+      ★ 'Automating Galaxy workflows using the command line' (TrainingMaterial|CourseInstance)
+      ★ 'Importing (uploading) data from Onedata' (TrainingMaterial|CourseInstance)
+      ★ 'Using dataset collections' (TrainingMaterial|CourseInstance)
+      ★ 'Rule Based Uploader: Advanced' (TrainingMaterial|CourseInstance)
+      ★ 'Name tags for following complex histories' (TrainingMaterial|CourseInstance)
+      ★ 'Downloading and Deleting Data in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'SRA Aligned Read Format to Speed Up SARS-CoV-2 data Analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Searching Your History' (TrainingMaterial|CourseInstance)
+      ★ 'RStudio in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Data management in Medicinal Chemistry' (TrainingMaterial|CourseInstance)
+      ★ 'Setting up molecular systems' (TrainingMaterial|CourseInstance)
+      ★ 'Virtual screening of the SARS-CoV-2 main protease with rxDock and pose scoring' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10724 ms
+    Chunk 76/128: relevant
+      ★ 'Setting up Molecular Systems' (CourseInstance)
+      ★ 'Protein-ligand docking' (CourseInstance)
+      ★ 'High Throughput Molecular Dynamics and Analysis' (CourseInstance)
+      ★ 'Analysis of molecular dynamics simulations' (CourseInstance)
+      ★ 'Protein target prediction of a bioactive ligand with Align-it and ePharmaLib' (CourseInstance)
+      ★ 'Running molecular dynamics simulations using GROMACS' (CourseInstance)
+      ★ 'Running molecular dynamics simulations using NAMD' (CourseInstance)
+      ★ 'Checking expected species and contamination in bacterial isolate' (CourseInstance)
+      ★ 'Data submission using ENA upload Tool' (CourseInstance)
+      ★ 'Marine Omics identifying biosynthetic gene clusters' (CourseInstance)
+      ★ 'Obis marine indicators' (CourseInstance)
+      ★ 'Biodiversity data exploration' (CourseInstance)
+      ★ 'Cleaning GBIF data using OpenRefine' (CourseInstance)
+      ★ 'Taxonomic Analysis of eDNA' (CourseInstance)
+    [LLM:content_relevance] 11470 ms
+    Chunk 77/128: relevant
+      ★ 'OpenRefine GBIF tutorial' (CourseInstance)
+      ★ 'Ecoregionalization workflow tutorial' (CourseInstance)
+      ★ 'Sentinel 2 biodiversity' (CourseInstance)
+      ★ 'Phylodiversity analysis quick tutorial' (CourseInstance)
+      ★ 'RAD-Seq to construct genetic maps' (CourseInstance)
+      ★ 'From NDVI data with OpenEO to time series visualisation with Holoviews' (CourseInstance)
+      ★ 'Species distribution modeling' (CourseInstance)
+      ★ 'Audio data annotation with NEAL (Nature + Energy Audio labeler)' (CourseInstance)
+      ★ 'Visualization of Climate Data using NetCDF xarray Map Plotting' (CourseInstance)
+      ★ 'Compute and analyze biodiversity metrics with PAMPA toolsuite' (CourseInstance)
+      ★ 'Creating metadata using Ecological Metadata Language (EML) standard with EML Assembly Line functionalities' (CourseInstance)
+      ★ 'Regional GAM' (CourseInstance)
+      ★ 'Life Traits Ecoregionalization workflow' (CourseInstance)
+    [LLM:content_relevance] 8431 ms
+    Chunk 78/128: relevant
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Creating a Special Interest Group' (TrainingMaterial)
+      ★ 'Make your tools available on your subdomain' (TrainingMaterial)
+      ★ 'Creation of resources listing all the tools and their metadata relevant to your community' (TrainingMaterial)
+    [LLM:content_relevance] 9058 ms
+    Chunk 79/128: relevant
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Coding Style' (TrainingMaterial|CourseInstance)
+      ★ 'R basics in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Make & Snakemake' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Flow Control' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Warm-up for statistics and machine learning' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Loops' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Functions' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to sequencing with Python (part two)' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 4942 ms
+    Chunk 80/128: relevant
+      ★ 'Python - Testing' (TrainingMaterial)
+      ★ 'SQL Educational Game - Murder Mystery' (TrainingMaterial)
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&sort=date
+    [LLM:content_relevance] 9827 ms
+    Chunk 81/128: relevant
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Version Control with Git' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to sequencing with Python (part four)' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Introductory Graduation' (TrainingMaterial|CourseInstance)
+      ★ 'Variant Calling Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Advanced CLI in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to Python' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to SQL' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Math' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to sequencing with Python (part three)' (TrainingMaterial|CourseInstance)
+      ★ 'dplyr & tidyverse for data processing' (TrainingMaterial|CourseInstance)
+      ★ 'Advanced SQL' (TrainingMaterial|CourseInstance)
+      ★ 'One protein along the UniProt page' (TrainingMaterial|CourseInstance)
+      ★ 'CLI Educational Game - Bashcrawl' (TrainingMaterial|CourseInstance)
+      ★ 'Python - Globbing' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11541 ms
+    Chunk 82/128: relevant
+      ★ 'Python - Globbing' (CourseInstance)
+      ★ 'SQL with Python' (CourseInstance)
+      ★ 'Versioning your code and data with git' (CourseInstance)
+      ★ 'Data Manipulation Olympics - JQ' (CourseInstance)
+      ★ 'Python - Multiprocessing' (CourseInstance)
+      ★ 'Python - Lists & Strings & Dictionaries' (CourseInstance)
+      ★ 'Advanced Python' (CourseInstance)
+      ★ 'Learning about one gene across biological resources and formats' (CourseInstance)
+      ★ 'Data manipulation with Pandas' (CourseInstance)
+      ★ 'A (very) brief history of genomics' (CourseInstance)
+      ★ 'Plotting in Python' (CourseInstance)
+      ★ 'CLI basics' (CourseInstance)
+      ★ 'Basics of using Git from the Command Line' (CourseInstance)
+      ★ 'SQL with R' (CourseInstance)
+    [LLM:content_relevance] 1449 ms
+    [LLM:content_relevance] 11955 ms
+    Chunk 84/128: relevant
+      ★ 'Voronoi segmentation' (CourseInstance)
+      ★ 'Quantification of single-molecule RNA fluorescence in situ hybridization (smFISH) in yeast cell lines' (CourseInstance)
+      ★ 'Execute a BiaPy workflow in Galaxy' (CourseInstance)
+      ★ 'Training Custom YOLO Models for Segmentation of Bioimages' (CourseInstance)
+      ★ 'Using BioImage.IO models for image analysis in Galaxy' (CourseInstance)
+      ★ 'Analyse HeLa fluorescence siRNA screen' (CourseInstance)
+      ★ 'Nucleoli segmentation and feature extraction using CellProfiler' (CourseInstance)
+      ★ 'Parameter tuning and optimization - Evaluating nuclei segmentation with Galaxy' (CourseInstance)
+      ★ 'CLIP-Seq data analysis from pre-processing to motif detection' (CourseInstance)
+      ★ 'Whole transcriptome analysis of Arabidopsis thaliana' (CourseInstance)
+      ★ 'Reference-based RNAseq data analysis (long)' (CourseInstance)
+      ★ 'RNA-Seq data analysis, clustering and visualisation tutorial' (CourseInstance)
+    [LLM:content_relevance] 4024 ms
+    Chunk 85/128: relevant
+      ★ 'RNA-Seq analysis with AskOmics Interactive Tool' (CourseInstance)
+      ★ 'Genome-wide alternative splicing analysis' (CourseInstance)
+      ★ 'Visualization of RNA-Seq results with Volcano Plot' (CourseInstance)
+    [LLM:content_relevance] 1367 ms
+    [LLM:content_relevance] 9122 ms
+    Chunk 87/128: relevant
+      ★ 'Hands-on: ChIP-seq work-in-progress' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: ATAC-Seq data analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Creating Interactive Galaxy Tours' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Teaching Python' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: FAIR-by-Design methodology' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Single Cell Publication - Data Plotting' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Including a new topic' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Updating tool versions in a tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Contributing to the Galaxy Training Network with GitHub' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Creating a new tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Design and plan session, course, materials' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Contributing with GitHub via its interface' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Tools, Data, and Workflows for tutorials' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Preview the GTN website as you edit your training material' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 8138 ms
+    Chunk 88/128: relevant
+      ★ 'Single Cell Publication - Data Analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Adding Quizzes to your Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Submitting workflows to LifeMonitor' (TrainingMaterial|CourseInstance)
+      ★ 'Uploading Data to Zenodo from Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'DataPLANT ARCs' (TrainingMaterial|CourseInstance)
+      ★ 'Best practices for workflows in GitHub repositories' (TrainingMaterial|CourseInstance)
+      ★ 'FAIR Bioimage Metadata' (TrainingMaterial|CourseInstance)
+      ★ 'FAIR data management solutions' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 16616 ms
+    Chunk 89/128: relevant
+      ★ 'FAIR data management solutions' (TrainingMaterial)
+      ★ 'Integrating InvenioRDM-compatible Repositories with Galaxy' (TrainingMaterial)
+      ★ 'Data Registration' (TrainingMaterial)
+      ★ 'Workflow Run RO-Crate Introduction' (TrainingMaterial)
+      ★ 'FAIR and its Origins' (TrainingMaterial)
+      ★ 'FAIR Galaxy Training Material' (TrainingMaterial)
+      ★ 'Sequence data submission to ENA' (TrainingMaterial)
+      ★ 'REMBI - Recommended Metadata for Biological Images – metadata guidelines for bioimaging data' (TrainingMaterial)
+      ★ 'Metadata' (TrainingMaterial)
+      ★ 'RO-Crate - Introduction' (TrainingMaterial)
+      ★ 'FAIR in a nutshell' (TrainingMaterial)
+      ★ 'FAIRification of an RNAseq dataset' (TrainingMaterial)
+      ★ 'Exporting Workflow Run RO-Crates from Galaxy' (TrainingMaterial)
+      ★ 'Access' (TrainingMaterial)
+    [LLM:content_relevance] 8806 ms
+    Chunk 90/128: relevant
+      ★ 'RO-Crate in Galaxy' (CourseInstance)
+      ★ 'Making clinical datasets FAIR' (CourseInstance)
+      ★ 'Persistent Identifiers' (CourseInstance)
+      ★ 'Unsupervised Analysis of Bone Marrow Cells with Flexynesis' (CourseInstance)
+      ★ 'GLEAM Image Learner - Validating Skin Lesion Classification on HAM10000' (CourseInstance)
+      ★ 'Text-mining with the SimText toolset' (CourseInstance)
+      ★ 'Foundational Aspects of Machine Learning using Python' (CourseInstance)
+      ★ 'Deep Learning (Part 3) - Convolutional neural networks (CNN)' (CourseInstance)
+      ★ 'Predicting Mutation Impact with Zero-shot Learning using a pretrained DNA LLM' (CourseInstance)
+      ★ 'Interval-Wise Testing for omics data' (CourseInstance)
+      ★ 'Basics of machine learning' (CourseInstance)
+    [LLM:content_relevance] 5218 ms
+    Chunk 91/128: relevant
+      ★ 'Fine-tuning a LLM for DNA Sequence Classification' (TrainingMaterial|CourseInstance)
+      ★ 'Gleam Multimodal Learner - Head and Neck cancer Recurrence Prediction with HANCOCK' (TrainingMaterial|CourseInstance)
+      ★ 'Generating Artificial Yeast DNA Sequences using a DNA LLM' (TrainingMaterial|CourseInstance)
+      ★ 'Train and Test a Deep learning image classifier with Galaxy-Ludwig' (TrainingMaterial|CourseInstance)
+      ★ 'Age prediction using machine learning' (TrainingMaterial|CourseInstance)
+      ★ 'Identifing Survival Markers of Brain tumor with Flexynesis' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 15218 ms
+    Chunk 92/128: relevant
+      ★ 'Identifying Survival Markers of Brain tumor with Flexynesis' (TrainingMaterial|CourseInstance)
+      ★ 'Modeling Breast Cancer Subtypes with Flexynesis' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to Machine Learning using R' (TrainingMaterial|CourseInstance)
+      ★ 'Clustering in Machine Learning' (TrainingMaterial|CourseInstance)
+      ★ 'Deep Learning (Part 2) - Recurrent neural networks (RNN)' (TrainingMaterial|CourseInstance)
+      ★ 'Image classification in Galaxy with fruit 360 dataset' (TrainingMaterial|CourseInstance)
+      ★ 'Neural networks using Python' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to deep learning' (TrainingMaterial|CourseInstance)
+      ★ 'Deep Learning (Part 1) - Feedforward neural networks (FNN)' (TrainingMaterial|CourseInstance)
+      ★ 'Supervised Learning with Hyperdimensional Computing' (TrainingMaterial|CourseInstance)
+      ★ 'Deep Learning (without Generative Artificial Intelligence) using Python' (TrainingMaterial|CourseInstance)
+      ★ 'Regulations/standards for AI using DOME' (TrainingMaterial|CourseInstance)
+      ★ 'A Docker-based interactive Jupyterlab powered by GPU for artificial intelligence in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Optimizing DNA Sequences for Biological Functions using a DNA LLM' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10028 ms
+    Chunk 93/128: relevant
+      ★ 'Optimizing DNA Sequences for Biological Functions using a DNA LLM' (TrainingMaterial)
+      ★ 'Machine learning: classification and regression' (TrainingMaterial)
+      ★ 'Regression in Machine Learning' (TrainingMaterial)
+      ★ 'Galaxy Tabular Learner - Building a Model using Chowell clinical data' (TrainingMaterial)
+      ★ 'Genome assembly using PacBio data' (TrainingMaterial)
+      ★ 'Using the VGP workflows to assemble a vertebrate genome with HiFi and Hi-C data' (TrainingMaterial)
+      ★ 'Unicycler assembly of SARS-CoV-2 genome with preprocessing to remove human genome reads' (TrainingMaterial)
+      ★ 'Vertebrate genome assembly using HiFi, Bionano and Hi-C data - Step by Step' (TrainingMaterial)
+      ★ 'Decontamination of a genome assembly' (TrainingMaterial)
+      ★ 'Genome Assembly Quality Control' (TrainingMaterial)
+      ★ 'Hybrid genome assembly - Nanopore and Illumina' (TrainingMaterial)
+      ★ 'Unicycler Assembly' (TrainingMaterial)
+    [LLM:content_relevance] 8603 ms
+    Chunk 94/128: relevant
+      ★ 'Making sense of a newly assembled genome' (CourseInstance)
+      ★ 'Large genome assembly and polishing' (CourseInstance)
+      ★ 'De Bruijn Graph Assembly' (CourseInstance)
+      ★ 'Chloroplast genome assembly' (CourseInstance)
+      ★ 'Assembly of the mitochondrial genome from PacBio HiFi reads' (CourseInstance)
+      ★ 'ERGA post-assembly QC' (CourseInstance)
+      ★ 'Genome Assembly of MRSA from Oxford Nanopore MinION data (and optionally Illumina data)' (CourseInstance)
+      ★ 'Genome Assembly of a bacterial genome (MRSA) sequenced using Illumina MiSeq Data' (CourseInstance)
+      ★ 'Galaxy Interactive Tools' (CourseInstance)
+      ★ 'Creating Galaxy tools from Conda Through Deployment' (CourseInstance)
+      ★ 'ToolFactory: Generating Tools From Simple Scripts' (CourseInstance)
+      ★ 'Galaxy Webhooks' (CourseInstance)
+      ★ 'Contributing to BioBlend as a developer' (CourseInstance)
+      ★ 'nb2workflow: Generating Galaxy Tools From Jupyter Notebooks' (CourseInstance)
+    [LLM:content_relevance] 2133 ms
+    Chunk 95/128: relevant
+      ★ 'BioBlend development tutorial' (CourseInstance)
+    [LLM:content_relevance] 7568 ms
+    Chunk 96/128: relevant
+      ★ 'Ein Protein entlang der UniProt-Seite' (CourseInstance)
+      ★ 'Lernen über ein Gen über biologische Ressourcen und Formate hinweg' (CourseInstance)
+      ★ 'Referenzbasierte RNA-Seq-Datenanalyse' (CourseInstance)
+      ★ 'Breve introducción a Galaxy - en español' (CourseInstance)
+      ★ 'De picos a genes' (CourseInstance)
+      ★ 'Control de calidad' (CourseInstance)
+      ★ 'Mapeo' (CourseInstance)
+      ★ 'Una proteína a lo largo de la página UniProt' (CourseInstance)
+      ★ 'Aprendizaje sobre un gen a través de recursos y formatos biológicos' (CourseInstance)
+      ★ 'Análisis de datos RNA-Seq basados en referencias' (CourseInstance)
+    [LLM:content_relevance] 2904 ms
+    Chunk 97/128: relevant
+      ★ 'Imparare a conoscere un gene attraverso risorse e formati di dato biologici' (TrainingMaterial|CourseInstance)
+      ★ 'Analisi dei dati RNA-Seq basata su riferimenti' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1414 ms
+    [LLM:content_relevance] 1385 ms
+    [LLM:content_relevance] 1439 ms
+    [LLM:content_relevance] 13939 ms
+    Chunk 101/128: relevant
+      ★ 'Intro to Genome Assembly' (CourseInstance)
+      ★ 'Classification LSVC' (CourseInstance)
+      ★ 'Regression GradientBoosting' (CourseInstance)
+      ★ 'Clustering in Machine Learning' (CourseInstance)
+      ★ 'DEG Part - Ref Based RNA Seq - Transcriptomics - GTN' (CourseInstance)
+      ★ 'QC + Mapping + Counting (single+paired) - Ref Based RNA Seq - Transcriptomics - GTN' (CourseInstance)
+      ★ 'QC + Mapping + Counting - Ref Based RNA Seq - Transcriptomics - GTN - subworkflows' (CourseInstance)
+      ★ 'Du Novo GTN Tutorial - Make Consensus Sequences' (CourseInstance)
+      ★ 'Du Novo GTN Tutorial - Variant Calling' (CourseInstance)
+      ★ 'Essential genes detection with Transposon insertion sequencing' (CourseInstance)
+      ★ 'GTN - ChIP Seq - Formation Of Super Structures On Xi' (CourseInstance)
+      ★ 'Comparative gene analysis' (CourseInstance)
+      ★ 'Bacterial Genome Annotation' (CourseInstance)
+      ★ 'Genome annotation with Braker3' (CourseInstance)
+    [LLM:content_relevance] 11959 ms
+    Chunk 102/128: relevant
+      ★ "Workflow constructed from history 'CRISPR tutorial Kenji'" (CourseInstance)
+      ★ 'Gene Cluster Product Similarity Search' (CourseInstance)
+      ★ 'RepeatMasker' (CourseInstance)
+      ★ 'annotation_helixer' (CourseInstance)
+      ★ 'Funannotate' (CourseInstance)
+      ★ 'Long non-coding RNAs (lncRNAs) annotation with FEELnc' (CourseInstance)
+      ★ 'Genome annotation with Maker (short)' (CourseInstance)
+      ★ 'Comparison of two annotation tools: Helixer and Braker3' (CourseInstance)
+      ★ 'Genome annotation with Maker' (CourseInstance)
+      ★ 'CHROMEISTER chromosome comparison' (CourseInstance)
+      ★ 'GECKO pairwise comparison' (CourseInstance)
+      ★ 'Apollo Load Test' (CourseInstance)
+      ★ 'mrsa AMR gene detection' (CourseInstance)
+      ★ 'Functional annotation' (CourseInstance)
+      ★ 'Tree Building (imported from uploaded file)' (CourseInstance)
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&sort=date
+    [LLM:content_relevance] 10372 ms
+    Chunk 103/128: relevant
+      ★ 'Genome Annotation Workflow' (CourseInstance)
+      ★ 'Tree Building Workflow' (CourseInstance)
+      ★ 'Mtb phylogeny Workflow' (CourseInstance)
+      ★ 'From BAMs to drug resistance prediction with TB-profiler Workflow' (CourseInstance)
+      ★ 'From Fastqs to VCFs and BAMs Workflow' (CourseInstance)
+      ★ 'From VCFs to SNP distance matrix Workflow' (CourseInstance)
+      ★ 'Olympic Age Distribution Workflow' (CourseInstance)
+      ★ 'GTN Training: Galaxy 101 For Everyone Workflow' (CourseInstance)
+      ★ 'NGS Tutorial Workflow' (CourseInstance)
+      ★ 'Galaxy Intro Strands 2 Workflow' (CourseInstance)
+      ★ 'Galaxy Intro Strands Workflow' (CourseInstance)
+      ★ 'GTN Training: Galaxy 101 For Everyone Workflow' (CourseInstance)
+      ★ 'GTN Tutorial: Data manipulation Olympics - all steps and exercises Workflow' (CourseInstance)
+      ★ 'Find exons with the highest number of features Workflow' (CourseInstance)
+    [LLM:content_relevance] 2693 ms
+    Chunk 104/128: relevant
+      ★ 'Find exons with the highest number of features' (CourseInstance)
+    [LLM:content_relevance] 12138 ms
+    Chunk 105/128: relevant
+      ★ 'Gene-based Pathogen Identification' (TrainingMaterial|CourseInstance)
+      ★ 'Nanopore Preprocessing' (TrainingMaterial|CourseInstance)
+      ★ 'Pathogen Detection PathoGFAIR Samples Aggregation and Visualisation' (TrainingMaterial|CourseInstance)
+      ★ 'Taxonomy Profiling and Visualization with Krona' (TrainingMaterial|CourseInstance)
+      ★ '16S rRNA Analysis with Nanopore Sequencing Reads' (TrainingMaterial|CourseInstance)
+      ★ 'Identification of the micro-organisms in a beer using Nanopore sequencing' (TrainingMaterial|CourseInstance)
+      ★ 'Antibiotic Resistance Detection' (TrainingMaterial|CourseInstance)
+      ★ 'Query a metaplasmidome database to identify and annotate plasmids in metagenomes' (TrainingMaterial|CourseInstance)
+      ★ 'MAPseq to ampvis2' (TrainingMaterial|CourseInstance)
+      ★ "MGnify's amplicon pipeline v5.0" (TrainingMaterial|CourseInstance)
+      ★ "MGnify's amplicon pipeline v5.0 - ITS" (TrainingMaterial|CourseInstance)
+      ★ "MGnify's amplicon pipeline v5.0 - Quality control PE" (TrainingMaterial|CourseInstance)
+      ★ "MGnify's amplicon pipeline v5.0 - Quality control SE" (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 7993 ms
+    Chunk 106/128: relevant
+      ★ "MGnify's amplicon pipeline v5.0 - rRNA prediction" (Workflow)
+      ★ 'MGnify amplicon summary tables' (Workflow)
+      ★ 'WF4_Quantitation_Workflow' (Workflow)
+      ★ 'Assembly of metagenomic sequencing data' (Workflow)
+      ★ 'workflow-generate-dataset-for-assembly-tutorial' (Workflow)
+      ★ 'Metatranscriptomics analysis using microbiome RNA-seq data' (Workflow)
+      ★ "Workflow for Identifying MF from ITS2 sequencing using LotuS2 - tutorial example run'" (Workflow)
+      ★ 'Metagenomic Binning' (Workflow)
+      ★ 'Metatranscriptomics analysis using microbiome RNA-seq data - Workflow 1: Preprocessing' (Workflow)
+      ★ 'Metatranscriptomics analysis using microbiome RNA-seq data - Workflow 2: Community profile' (Workflow)
+    [LLM:content_relevance] 11219 ms
+    Chunk 107/128: relevant
+      ★ 'Metatranscriptomics analysis using microbiome RNA-seq data - Workflow 3: Functional Information' (CourseInstance)
+      ★ 'Workflow 3: Functional Information (quick)' (CourseInstance)
+      ★ 'Host contamination removal' (CourseInstance)
+      ★ 'MSI Finding Diff Analytes' (CourseInstance)
+      ★ 'GC MS using XCMS' (CourseInstance)
+      ★ "Workflow Constructed From History 'imported: testpourGCC'" (CourseInstance)
+      ★ 'MSI Workflow: spatial distribution' (CourseInstance)
+      ★ 'End-to-end EI+ mass spectra prediction workflow using QCxMS' (CourseInstance)
+      ★ 'Molecular formula assignment and recalibration with MFAssignR package.' (CourseInstance)
+      ★ 'Understanding Barcodes' (CourseInstance)
+      ★ 'EBI SCXA to AnnData (Scanpy) or Seurat Object' (CourseInstance)
+      ★ 'RaceID Workflow' (CourseInstance)
+      ★ 'Seurat Filter, Plot and Exlore tutorial' (CourseInstance)
+      ★ 'Cell Cycle Regression Workflow' (CourseInstance)
+    [LLM:content_relevance] 1403 ms
+    [LLM:content_relevance] 10972 ms
+    Chunk 109/128: relevant
+      ★ 'Galaxy-Workflow-AnnData_object_to_Monocle_input_files' (TrainingMaterial|CourseInstance)
+      ★ 'Monocle3 workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Trajectory analysis using Monocle3 - full tutorial workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Pseudobulk with decoupler and edgeR tutorial workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Generating a single cell matrix using Alevin' (TrainingMaterial|CourseInstance)
+      ★ 'Seurat_PBMC_Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Seurat_PBMC_Workflow_SCT' (TrainingMaterial|CourseInstance)
+      ★ 'Single-cell QC with scater' (TrainingMaterial|CourseInstance)
+      ★ 'scRNA-seq-Preprocessing-TenX' (TrainingMaterial|CourseInstance)
+      ★ 'scRNA-Plant-Analysis' (TrainingMaterial|CourseInstance)
+      ★ 'GO Enrichment Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'sc_matrix' (TrainingMaterial|CourseInstance)
+      ★ 'sc_metadata' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2524 ms
+    Chunk 110/128: relevant
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1426 ms
+    [LLM:content_relevance] 12233 ms
+    Chunk 112/128: relevant
+      ★ 'RetroSynthesis analysis' (CourseInstance)
+      ★ 'Trio Analysis Tutorial' (CourseInstance)
+      ★ 'Exome Seq Training Pre-Mapped W Cached Ref' (CourseInstance)
+      ★ 'Exome Seq Training Full W Cached Ref' (CourseInstance)
+      ★ 'Workflow to detect SNV from Illumina sequenced baculovirus isolates' (CourseInstance)
+      ★ 'diploid' (CourseInstance)
+      ★ 'Identification of somatic and germline variants from tumor and normal sample pairs tutorial' (CourseInstance)
+      ★ 'Somatic-Variant-Discovery-from-WES-Data-Using-Control-FREEC' (CourseInstance)
+      ★ 'Calling variants in non-diploid systems' (CourseInstance)
+      ★ 'Microbial Variant Calling' (CourseInstance)
+      ★ 'pox-virus-tiled-amplicon-ref-masking' (CourseInstance)
+      ★ 'TB variants tutorial main workflow' (CourseInstance)
+      ★ 'TB Variant Analysis v1.0' (CourseInstance)
+      ★ 'Simple COVID-19 - PE Variation' (CourseInstance)
+      ★ 'Mapping And Molecular Identification Of Phenotype Causing Mutations' (CourseInstance)
+    [LLM:content_relevance] 1404 ms
+    [LLM:content_relevance] 10712 ms
+    Chunk 114/128: relevant
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Circos: Nature workflow' (CourseInstance)
+      ★ 'Circos for E. Coli' (CourseInstance)
+      ★ 'PeptideML' (CourseInstance)
+      ★ 'WF1 Database Generation Workflow' (CourseInstance)
+      ★ 'WF3 VERIFICATION WORKFLOW' (CourseInstance)
+      ★ 'GTN Proteogemics3 Novel Peptide Analysis' (CourseInstance)
+      ★ 'MS Imaging Loading Exploring Data' (CourseInstance)
+      ★ 'metaQuantome_datacreation_workflow' (CourseInstance)
+      ★ 'Proteomics: MaxQuant and MSstats for the analysis of label-free data' (CourseInstance)
+      ★ 'Secreted Proteins Via GO Annotation And WoLF PSORT For shCTSB Paper' (CourseInstance)
+      ★ 'metaquantome-taxonomy-workflow' (CourseInstance)
+      ★ 'WF4 Quantitation Workflow' (CourseInstance)
+      ★ 'Peptide And Protein ID Tutorial' (CourseInstance)
+      ★ 'ProteinID SG PS Tutorial WF datasetCollection' (CourseInstance)
+      ★ 'EncyclopeDIA-GTN' (CourseInstance)
+    [LLM:content_relevance] 13286 ms
+    Chunk 115/128: relevant
+      ★ 'teinID SG PS Tutorial WF datasetCollection' (CourseInstance)
+      ★ 'EncyclopeDIA-GTN' (CourseInstance)
+      ★ 'Metaproteomics_GTN' (CourseInstance)
+      ★ 'Proteomics: Peptide and Protein Quantification via stable istobe labeling' (CourseInstance)
+      ★ 'Proteogenomics 2: Database Search' (CourseInstance)
+      ★ 'Tails Triple Dimethyl OpenMS2.1' (CourseInstance)
+      ★ 'DIA_lib_OSW' (CourseInstance)
+      ★ 'MaxQuant MSstatsTMT Training' (CourseInstance)
+      ★ 'DIA_Analysis_OSW' (CourseInstance)
+      ★ 'Proteomics: Peptide and Protein ID using OpenMS' (CourseInstance)
+      ★ 'Peptide And Protein ID Via OMS Using Two Search Engines' (CourseInstance)
+      ★ 'Proteome Annotation' (CourseInstance)
+      ★ 'ProteoRE ProteomeAnnotation Tutorial (release 2.0)' (CourseInstance)
+      ★ 'metaquantome-function-workflow' (CourseInstance)
+      ★ 'Proteomics: database handling' (CourseInstance)
+      ★ 'Proteomics: database handling including mycoplasma' (CourseInstance)
+    [LLM:content_relevance] 11663 ms
+    Chunk 116/128: relevant
+      ★ 'Proteomics: database handling including mycoplasma' (CourseInstance)
+      ★ 'Copy of PeptideDataAnalysis (imported from uploaded file)' (CourseInstance)
+      ★ 'WF5_Data_Interpretation_Worklow' (CourseInstance)
+      ★ "Biomarkers4Paris' Workflow" (CourseInstance)
+      ★ 'Proteomics: MaxQuant workflow' (CourseInstance)
+      ★ 'Proteogenomics 1: Database Creation' (CourseInstance)
+      ★ 'MultiGSEA' (CourseInstance)
+      ★ 'WF2_Discovery-Workflow' (CourseInstance)
+      ★ 'Introduction to DH in Galaxy' (CourseInstance)
+      ★ 'Visualise amount of objects in Museum Collection' (CourseInstance)
+      ★ 'Text-Mining Differences in Chinese Newspaper Articles' (CourseInstance)
+      ★ 'Transcription Speech to Text (imported from uploaded file)' (CourseInstance)
+      ★ 'GTN_ENA_upload_workflow' (CourseInstance)
+      ★ 'Tutorial workflow' (CourseInstance)
+    [LLM:content_relevance] 2269 ms
+    Chunk 117/128: relevant
+      ★ 'Workflow' (TrainingMaterial|CourseInstance|Course)
+    [LLM:content_relevance] 11606 ms
+    Chunk 118/128: relevant
+      ★ 'Simple Analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Zauberkugel' (TrainingMaterial|CourseInstance)
+      ★ 'GROMACS Training Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'MD NAMD' (TrainingMaterial|CourseInstance)
+      ★ 'NAMD MD From CHARMM GUI' (TrainingMaterial|CourseInstance)
+      ★ 'Checking expected species and contamination in bacterial isolate' (TrainingMaterial|CourseInstance)
+      ★ 'Marine Omics identifying biosynthetic gene clusters' (TrainingMaterial|CourseInstance)
+      ★ 'Marine Omics visualisation' (TrainingMaterial|CourseInstance)
+      ★ "Workflow 'Biodiversity data exploration tuto'" (TrainingMaterial|CourseInstance)
+      ★ 'Taxonomic Analysis of eDNA' (TrainingMaterial|CourseInstance)
+      ★ 'Ecoregionalization workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Sentinel 2 example' (TrainingMaterial|CourseInstance)
+      ★ 'Genetic Map Rad Seq Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'NDVI with OpenEO' (TrainingMaterial|CourseInstance)
+      ★ 'NDVI with OpenEO' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2147 ms
+    Chunk 119/128: relevant
+    [LLM:content_relevance] 14022 ms
+    Chunk 120/128: relevant
+      ★ 'Phylogeny Data Prep' (Workflow)
+      ★ 'Champs blocs indicators' (Workflow)
+      ★ 'GBIF data Quality check and filtering workflow Feb-2020' (Workflow)
+      ★ 'GTN Tutorial: Data manipulation Olympics - all steps and exercises' (Workflow)
+      ★ 'Electrophoresis-Gel-Bands-Image-Analysis' (Workflow)
+      ★ 'GTN Exemplar 002 TMA workflow Feb2025' (Workflow)
+      ★ 'ISCC - image analysis workflow example' (Workflow)
+      ★ "Workflow constructed from Tutorial 'Introduction to Image Analysis using Galaxy'" (Workflow)
+      ★ 'Capturing mitoflashes' (Workflow)
+      ★ '2024 OMERO Basic Upload' (Workflow)
+      ★ 'CP object tracking example' (Workflow)
+      ★ 'Segmentation of Anatomical Structures in Medical Images' (Workflow)
+      ★ 'Voronoi segmentation' (Workflow)
+      ★ '2025 2D spot detection' (Workflow)
+      ★ 'BiaPy' (Workflow)
+      ★ 'YOLO training and segmentation workflow' (Workflow)
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=español&sort=date
+    [LLM:content_relevance] 12142 ms
+    Chunk 121/128: relevant
+      ★ 'BiaPy' (CourseInstance)
+      ★ 'YOLO training and segmentation workflow' (CourseInstance)
+      ★ 'Image prediction with BioImage.IO model (imported from uploaded file)' (CourseInstance)
+      ★ 'analyze_screen' (CourseInstance)
+      ★ 'feature_extraction' (CourseInstance)
+      ★ 'CP_pipeline_IDR_training' (CourseInstance)
+      ★ 'Segmentation_Values_Testing' (CourseInstance)
+      ★ 'Tutorial CLIPseq Explorer Demultiplexed PEAKachu eCLIP Hg38' (CourseInstance)
+      ★ 'Whole transcriptome analysis of Arabidopsis thaliana' (CourseInstance)
+      ★ "Workflow constructed from history 'Computer assignment RNA seq analysis and visualisation -BMW2 - attempt 3'" (CourseInstance)
+      ★ 'De novo transcriptome reconstruction with RNA-Seq' (CourseInstance)
+      ★ 'RNA Seq Genes To Pathways (imported from uploaded file)' (CourseInstance)
+      ★ 'sRNA Seq Step 1: Read Pre Processing And Removal Of Artifacts (no Grooming)' (CourseInstance)
+      ★ 'sRNA Seq Step 2: Salmon And DESeq2' (CourseInstance)
+      ★ 'RNA-RNA interactome data analysis - chira v1.4.3' (CourseInstance)
+    [LLM:content_relevance] 11837 ms
+    Chunk 122/128: relevant
+      ★ 'sRNA_seq_Step_2_Salmon_and_DESeq2' (TrainingMaterial)
+      ★ 'RNA-RNA interactome data analysis - chira v1.4.3' (TrainingMaterial)
+      ★ 'QC report' (TrainingMaterial)
+      ★ 'RNA Seq Reads To Counts' (TrainingMaterial)
+      ★ 'Heatmap2 Workflow' (TrainingMaterial)
+      ★ 'BY-COVID: Data Download' (TrainingMaterial)
+      ★ 'mRNA-Seq BY-COVID Pipeline: Analysis' (TrainingMaterial)
+      ★ 'mRNA-Seq BY-COVID Pipeline: Counts' (TrainingMaterial)
+      ★ "Workflow Constructed From History 'Heinz Workflow Trial Sep 11'" (TrainingMaterial)
+      ★ 'GTN_differential_isoform_expression' (TrainingMaterial)
+      ★ 'RNA Seq Counts To Genes' (TrainingMaterial)
+      ★ 'Visualization Of RNA-Seq Results With Volcano Plot' (TrainingMaterial)
+      ★ 'GO Enrichment Workflow' (TrainingMaterial)
+      ★ 'Blockclust 1.1.0 Clustering' (TrainingMaterial)
+      ★ 'trinity NG' (TrainingMaterial)
+    [LLM:content_relevance] 12262 ms
+    Chunk 123/128: relevant
+      ★ 'Small ncRNA clustering workflows' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Hi-C Analysis with Galaxy Tutorial Workflow' (CourseInstance)
+      ★ 'Identification of the binding sites of the T-cell acute lymphocytic leukemia protein 1 (TAL1)' (CourseInstance)
+      ★ 'Workflow Methylation Seq' (CourseInstance)
+      ★ 'Identification Of The Binding Sites Of The Estrogen Receptor - Chip Seq' (CourseInstance)
+      ★ 'Identification Of The Binding Sites Of The Estrogen Receptor - Qc Mapping' (CourseInstance)
+      ★ 'ATAC-seq GTM' (CourseInstance)
+      ★ 'MakeAFakeInput' (CourseInstance)
+      ★ 'Retrieve climate data from Copernicus' (CourseInstance)
+      ★ 'Data management in Medicinal Chemistry workflow' (CourseInstance)
+      ★ 'Final - Unsupervised Analysis of Bone Marrow Cells' (CourseInstance)
+      ★ 'Image Learner - HAM10000' (CourseInstance)
+      ★ 'Simtext training workflow' (CourseInstance)
+    [LLM:content_relevance] 11241 ms
+    Chunk 124/128: relevant
+      ★ 'Workflow: Image Learner - HAM10000' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Simtext training workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Intro_To_CNN_v1.0.11.0' (TrainingMaterial|CourseInstance)
+      ★ "Workflow: Workflow Constructed From History 'IWTomics Workflow'" (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Machine Learning' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: ml_classification' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: GLEAM Multimodal Learner - HANCOCK recurrence prediction' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Ludwig - Image recognition model - MNIST' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Flexynesis - get data from Cbioportal' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: papaa@0.1.9_PI3K_OG_model_tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Age Prediction DNA Methylation' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Age Prediction RNA-Seq' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Final - Survival Markers of Lower Grade' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Final - Modeling Breast Cancer Subtypes + TABPFN' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: Intro_To_RNN_v1_0_10_0' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 19580 ms
+    [LLM:content_relevance] 9565 ms
+    Chunk 126/128: relevant
+      ★ 'Hybrid Genome Assembly Tutorial Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Unicycler training' (TrainingMaterial|CourseInstance)
+      ★ 'Assembly of metagenomic sequencing data' (TrainingMaterial|CourseInstance)
+      ★ 'Ecoli Comparison' (TrainingMaterial|CourseInstance)
+      ★ 'Assembly polishing - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Assembly with Flye - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Assess genome quality - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Combined workflows for large genome assembly - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Data QC - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Racon polish with Illumina reads (R1 only), x2 - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Racon polish with long reads, x4 - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Trim and filter reads - fastp - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'kmer counting - meryl - upgraded' (TrainingMaterial|CourseInstance)
+      ★ 'Debruijn Graph SPAdes Assembly' (TrainingMaterial|CourseInstance)
+      ★ 'Debruijn Graph Velvet Full and SPAdes Assembly' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 6100 ms
+    Chunk 127/128: relevant
+      ★ 'Debruijn Graph Velvet Full and SPAdes Assembly' (CourseInstance)
+      ★ 'Debruijn Graph Velvet Optimiser and SPAdes Assembly' (CourseInstance)
+      ★ 'Chloroplast-genome-assembly-and-annotation' (CourseInstance)
+      ★ 'Mitogenome-Assembly-VGP0' (CourseInstance)
+      ★ 'Post-assembly workflow' (CourseInstance)
+      ★ 'Genome Assembly of MRSA using Oxford Nanopore MinION (and Illumina data if available)' (CourseInstance)
+      ★ 'Genome Assembly of MRSA using Illumina MiSeq Data' (CourseInstance)
+    [LLM:content_relevance] 1268 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/news/2025/04/16/admin-training-survey.html
+    ↓ https://training.galaxyproject.org/training-material/news/2025/04/16/admin-training-survey.html [200]
+    Page 3/20: 45553 chars, 3 chunk(s), hash=1ce5b5f72eba…
+    [LLM:content_relevance] 1333 ms
+    [LLM:content_relevance] 1299 ms
+    [LLM:content_relevance] 1286 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/news/2025/02/14/gtn2025-call-trainer.html
+    ↓ https://training.galaxyproject.org/training-material/news/2025/02/14/gtn2025-call-trainer.html [200]
+    Page 4/20: 35011 chars, 3 chunk(s), hash=82695042ed86…
+    [LLM:content_relevance] 2665 ms
+    [LLM:content_relevance] 1751 ms
+    [LLM:content_relevance] 1224 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/news/2024/12/17/gta-feedback.html
+    ↓ https://training.galaxyproject.org/training-material/news/2024/12/17/gta-feedback.html [200]
+    Page 5/20: 33342 chars, 2 chunk(s), hash=039e467924b4…
+    [LLM:content_relevance] 1315 ms
+    [LLM:content_relevance] 1980 ms
+    Chunk 2/2: relevant
+      ★ 'Galaxy Training Academy 2026' (CourseInstance)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/news/2024/11/29/tracking-of-mitochondria-and-capturing-mitoflashes.html
+    ↓ https://training.galaxyproject.org/training-material/news/2024/11/29/tracking-of-mitochondria-and-capturing-mitoflashes.html [200]
+    Page 6/20: 38529 chars, 3 chunk(s), hash=0c737d445496…
+    [LLM:content_relevance] 2114 ms
+    Chunk 1/3: relevant
+      ★ 'Tracking of mitochondria and capturing mitoflashes' (TrainingMaterial)
+    [LLM:content_relevance] 3091 ms
+    Chunk 2/3: relevant
+      ★ 'Detection of Mitoflashes Tutorial' (TrainingMaterial)
+    [LLM:content_relevance] 1278 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/search2.html?page=2&query=español
+    ↓ https://training.galaxyproject.org/training-material/search2.html?page=2&query=español [200]
+    Page 7/20: 994418 chars, 128 chunk(s), hash=1b0f2aabaf41…
+    [LLM:content_relevance] 1455 ms
+    [LLM:content_relevance] 1376 ms
+    [LLM:content_relevance] 1582 ms
+    [LLM:content_relevance] 1635 ms
+    Chunk 4/128: relevant
+    [LLM:content_relevance] 1718 ms
+    [LLM:content_relevance] 1353 ms
+    [LLM:content_relevance] 1775 ms
+    [LLM:content_relevance] 1751 ms
+    [LLM:content_relevance] 1592 ms
+    [LLM:content_relevance] 1468 ms
+    [LLM:content_relevance] 1595 ms
+    [LLM:content_relevance] 1355 ms
+    [LLM:content_relevance] 1712 ms
+    [LLM:content_relevance] 1702 ms
+    [LLM:content_relevance] 1308 ms
+    [LLM:content_relevance] 1725 ms
+    [LLM:content_relevance] 1658 ms
+    [LLM:content_relevance] 1654 ms
+    [LLM:content_relevance] 1727 ms
+    [LLM:content_relevance] 1397 ms
+    [LLM:content_relevance] 1705 ms
+    [LLM:content_relevance] 1368 ms
+    [LLM:content_relevance] 1308 ms
+    [LLM:content_relevance] 1737 ms
+    [LLM:content_relevance] 1611 ms
+    [LLM:content_relevance] 1433 ms
+    [LLM:content_relevance] 1839 ms
+    Chunk 27/128: relevant
+    [LLM:content_relevance] 2551 ms
+    Chunk 28/128: relevant
+      ★ 'Copy a dataset between histories' (TrainingMaterial)
+      ★ 'Creating a new history' (TrainingMaterial)
+    [LLM:content_relevance] 1794 ms
+    [LLM:content_relevance] 1678 ms
+    [LLM:content_relevance] 2925 ms
+    Chunk 31/128: relevant
+      ★ 'What does `^.\\\tGallus|Homo|Bos.\\*$` mean?' (CourseInstance)
+      ★ 'Importing data from Sierra LIMS' (CourseInstance)
+    [LLM:content_relevance] 1331 ms
+    [LLM:content_relevance] 1397 ms
+    [LLM:content_relevance] 1511 ms
+    [LLM:content_relevance] 1588 ms
+    [LLM:content_relevance] 1604 ms
+    [LLM:content_relevance] 1681 ms
+    [LLM:content_relevance] 1322 ms
+    [LLM:content_relevance] 1640 ms
+    [LLM:content_relevance] 15112 ms
+    Chunk 40/128: relevant
+    [LLM:content_relevance] 12760 ms
+    Chunk 41/128: relevant
+      ★ 'Introduction to Galaxy Analyses' (Course)
+      ★ 'Introduction to metatranscriptomics' (TrainingMaterial|CourseInstance)
+      ★ 'Overview of the Galaxy Training Material for Instructors' (TrainingMaterial|CourseInstance)
+      ★ 'Workshop Kickoff' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to Metabolomics' (TrainingMaterial|CourseInstance)
+      ★ 'Predicting EI+ mass spectra with QCxMS' (TrainingMaterial|CourseInstance)
+      ★ 'Mass spectrometry: LC-MS preprocessing - advanced' (TrainingMaterial|CourseInstance)
+      ★ 'Single-cell Formats and Resources' (TrainingMaterial|CourseInstance)
+      ★ 'Automated Cell Annotation' (TrainingMaterial|CourseInstance)
+      ★ 'An introduction to scRNA-seq data analysis' (TrainingMaterial|CourseInstance)
+      ★ 'GO Enrichment Analysis on Single-Cell RNA-Seq Data' (TrainingMaterial|CourseInstance)
+      ★ 'Clustering 3K PBMCs with Scanpy' (TrainingMaterial|CourseInstance)
+      ★ 'Trajectory analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Plates, Batches, and Barcodes' (TrainingMaterial|CourseInstance)
+      ★ 'Dealing with Cross-Contamination in Fixed Barcode Protocols' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2198 ms
+    Chunk 42/128: relevant
+      ★ 'e-cell tutorial on scRNA sequencing preprocessing' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 12451 ms
+    Chunk 43/128: relevant
+    [LLM:content_relevance] 4759 ms
+    Chunk 44/128: relevant
+    [LLM:content_relevance] 2341 ms
+    Chunk 45/128: relevant
+      ★ 'Online Resources for Gene Expression' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1658 ms
+    [LLM:content_relevance] 12639 ms
+    Chunk 47/128: relevant
+      ★ 'Genome assembly quality control.' (CourseInstance)
+    [LLM:content_relevance] 11066 ms
+    Chunk 48/128: relevant
+      ★ 'Architecture 08 - Galaxy Application Components: Models, Managers, and Services' (TrainingMaterial)
+      ★ 'Architecture 14 - Galaxy Startup Process' (TrainingMaterial)
+      ★ 'Prerequisites for building software/conda packages' (TrainingMaterial)
+      ★ 'Architecture 15 - Galaxy Production Deployment' (TrainingMaterial)
+      ★ 'Introduction to the ToolFactory tutorial.' (TrainingMaterial)
+      ★ 'Tool Dependencies and Containers' (TrainingMaterial)
+      ★ 'Galaxy Webhooks' (TrainingMaterial)
+      ★ 'Architecture 07 - Galaxy Task Management with Celery' (TrainingMaterial)
+      ★ 'Tool development and integration into Galaxy' (TrainingMaterial)
+      ★ 'Architecture 06 - Dependency Injection in Galaxy' (TrainingMaterial)
+      ★ 'Architecture 09 - Galaxy Plugin Architecture' (TrainingMaterial)
+      ★ 'Architecture 01 - Galaxy Ecosystem and Projects' (TrainingMaterial)
+      ★ 'Architecture 03 - Galaxy Architecture Principles' (TrainingMaterial)
+    [LLM:content_relevance] 3829 ms
+    Chunk 49/128: relevant
+    [LLM:content_relevance] 1538 ms
+    [LLM:content_relevance] 9209 ms
+    Chunk 51/128: relevant
+      ★ 'Comparing Groups and Contrast Matrices in MaxQuant-MSstats-DDA-LFQ' (TrainingMaterial)
+      ★ 'Infer Experiments in Galaxy' (TrainingMaterial)
+      ★ 'Studying the Functional State of the Microbiome within Galaxy' (TrainingMaterial)
+      ★ 'Subsampling Samples in Galaxy' (TrainingMaterial)
+      ★ 'Contacting Galaxy Administrators' (TrainingMaterial)
+      ★ 'Matrix Messaging System for Galaxy Project Communication' (TrainingMaterial)
+      ★ 'Taxonomy' (TrainingMaterial)
+      ★ 'RNA-seq Techniques for scRNA-seq' (TrainingMaterial)
+      ★ 'Terms of Usage for Data in Galaxy' (TrainingMaterial)
+      ★ 'MaxQuant in Galaxy and TMT, iTRAQ Support' (TrainingMaterial)
+      ★ 'Tool Order in Tutorials' (TrainingMaterial)
+      ★ 'Changing Tool Version in Galaxy' (TrainingMaterial)
+      ★ 'Organizing Tool Panel in Galaxy' (TrainingMaterial)
+    [LLM:content_relevance] 5011 ms
+    [LLM:content_relevance] 4098 ms
+    Chunk 53/128: relevant
+      ★ 'Genome Annotation' (CourseInstance)
+      ★ 'Comparative gene analysis in unannotated genomes' (CourseInstance)
+      ★ 'Bacterial Genome Annotation' (CourseInstance)
+      ★ 'Genome annotation with Braker3' (CourseInstance)
+    [LLM:content_relevance] 9250 ms
+    Chunk 54/128: relevant
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+    [LLM:content_relevance] 9382 ms
+    Chunk 55/128: relevant
+      ★ 'Bacterial Genome Quality Control Tutorial' (CourseInstance)
+    [LLM:content_relevance] 9791 ms
+    Chunk 56/128: relevant
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 7054 ms
+    Chunk 57/128: relevant
+    [LLM:content_relevance] 15273 ms
+    Chunk 58/128: relevant
+    [LLM:content_relevance] 11163 ms
+    Chunk 59/128: relevant
+      ★ 'Metatranscriptomics' (TrainingMaterial)
+      ★ 'Teaching online' (TrainingMaterial)
+    [LLM:content_relevance] 9759 ms
+    Chunk 60/128: relevant
+      ★ 'Asynchronous training' (CourseInstance)
+      ★ 'Mass spectrometry: GC-MS analysis with the metaMS package' (CourseInstance)
+      ★ 'Mass spectrometry imaging: Finding differential analytes' (CourseInstance)
+      ★ 'Mass spectrometry: LC-MS data processing' (CourseInstance)
+      ★ 'Mass spectrometry: GC-MS data processing (with XCMS, RAMClustR, RIAssigner, and matchms)' (CourseInstance)
+      ★ 'Mass spectrometry: LC-MS analysis' (CourseInstance)
+      ★ 'Mass spectrometry imaging: Examining the spatial distribution of analytes' (CourseInstance)
+      ★ 'Predicting EI+ mass spectra with QCxMS' (CourseInstance)
+      ★ 'Molecular formula assignment and mass recalibration with MFAssignR package' (CourseInstance)
+      ★ 'Mass spectrometry: LC-MS preprocessing with XCMS' (CourseInstance)
+      ★ 'Generating a single cell matrix using Alevin and combining datasets (bash + R)' (CourseInstance)
+      ★ 'Understanding Barcodes' (CourseInstance)
+      ★ 'Importing files from public atlases' (CourseInstance)
+    [LLM:content_relevance] 10445 ms
+    Chunk 61/128: relevant
+      ★ 'Inferring single cell trajectories with Scanpy' (TrainingMaterial|CourseInstance)
+      ★ 'Converting NCBI Data to the AnnData Format' (TrainingMaterial|CourseInstance)
+      ★ 'Comparing inferred cell compositions using MuSiC deconvolution' (TrainingMaterial|CourseInstance)
+      ★ 'Filter, plot and explore single-cell RNA-seq data with Scanpy' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11137 ms
+    Chunk 62/128: relevant
+      ★ 'Clustering 3K PBMCs with Seurat' (TrainingMaterial)
+      ★ 'Single-cell quality control with scater' (TrainingMaterial)
+      ★ 'Pre-processing of 10X Single-Cell RNA Datasets' (TrainingMaterial)
+      ★ 'Analysis of plant scRNA-Seq Data with Scanpy' (TrainingMaterial)
+      ★ 'GO Enrichment Analysis on Single-Cell RNA-Seq Data' (TrainingMaterial)
+      ★ 'Matrix Exchange Format to ESet | Creating a single-cell RNA-seq reference dataset for deconvolution' (TrainingMaterial)
+      ★ 'Single-cell ATAC-seq standard processing with SnapATAC2' (TrainingMaterial)
+      ★ 'Bulk matrix to ESet | Creating the bulk RNA-seq dataset for deconvolution' (TrainingMaterial)
+      ★ 'Clustering 3K PBMCs with Scanpy' (TrainingMaterial)
+      ★ 'Inferring single cell trajectories with Monocle3 (R)' (TrainingMaterial)
+      ★ 'Evaluating Reference Data for Bulk RNA Deconvolution' (TrainingMaterial)
+      ★ 'Filter, plot and explore single-cell RNA-seq data with Scanpy (Python)' (TrainingMaterial)
+    [LLM:content_relevance] 12048 ms
+    Chunk 63/128: relevant
+      ★ 'Jupyter Notebook Basics Pipeline' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10824 ms
+    Chunk 64/128: relevant
+    [LLM:content_relevance] 11338 ms
+    Chunk 65/128: relevant
+    [LLM:content_relevance] 10441 ms
+    Chunk 66/128: relevant
+      ★ 'Hands-on tutorial: Pox virus genome analysis from tiled-amplicon sequencing data' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: M. tuberculosis Variant Analysis' (TrainingMaterial|CourseInstance)
+      ★ "Hands-on tutorial: From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis" (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Calling very rare variants' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Querying the University of Bradford GDC Beacon Database for Copy Number Variants (CNVs)' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Mapping and molecular identification of phenotype-causing mutations' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Finding the muon stopping site with pymuon-suite in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: SARS-CoV-2 Viral Sample Alignment and Variant Visualization' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Removal of human reads from SARS-CoV-2 sequencing data' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Quality and contamination control in bacterial isolate using Illumina MiSeq Data' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: NCBI BLAST+ against the MAdLand' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on tutorial: Screening assembled genomes for contamination using NCBI FCS' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10350 ms
+    Chunk 67/128: relevant
+      ★ 'Hands-on: Screening assembled genomes for contamination using NCBI FCS' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Quality Control deutschespañolitaliano' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Mapping deutschespañolitaliano' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Clean and manage Sanger sequences from raw files to aligned consensus' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Primer and primer scheme design for pan-specific detection and sequencing of viral pathogens across genotypes' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Genomic Data Visualisation with JBrowse' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Visualisation with Circos' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Ploting a Microbial Genome with Circos' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Ansible' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Deploying Wireguard for private mesh networking' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Galaxy usage on SURF Research Cloud deploying' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Galaxy Interactive Tools ansibleinteractive-tools' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Reference Data with CVMFS ansiblegit-gat' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10690 ms
+    Chunk 68/128: relevant
+      ★ 'Create a subdomain for your community on UseGalaxy.eu' (TrainingMaterial|CourseInstance)
+      ★ 'Galaxy Tool Management with Ephemeris' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11220 ms
+    Chunk 69/128: relevant
+      ★ 'Data Libraries' (CourseInstance)
+    [LLM:content_relevance] 18938 ms
+    Chunk 70/128: relevant
+    [LLM:content_relevance] 2291 ms
+    Chunk 71/128: relevant
+      ★ 'Module 1: Introduction to Galaxy' (TrainingMaterial)
+    [LLM:content_relevance] 17067 ms
+    Chunk 72/128: relevant
+      ★ 'Detection and quantitation of N-termini (degradomics) via N-TAILS' (TrainingMaterial)
+      ★ 'Library Generation for DIA Analysis' (TrainingMaterial)
+      ★ 'MaxQuant and MSstats for the analysis of TMT data' (TrainingMaterial)
+      ★ 'DIA Analysis using OpenSwathWorkflow' (TrainingMaterial)
+      ★ 'Neoantigen 1a: Fusion-Database-Generation' (TrainingMaterial)
+      ★ 'Neoantigen 2: Database merge and FragPipe discovery' (TrainingMaterial)
+      ★ 'Peptide and Protein ID using OpenMS tools' (TrainingMaterial)
+      ★ 'Annotating a protein list identified by LC-MS/MS experiments' (TrainingMaterial)
+      ★ 'metaQuantome 2: Function' (TrainingMaterial)
+      ★ 'Neoantigen 4: Variant Annotation' (TrainingMaterial)
+      ★ 'Protein FASTA Database Handling' (TrainingMaterial)
+      ★ 'Peptide Library Data Analysis' (TrainingMaterial)
+      ★ 'Clinical Metaproteomics 5: Data Interpretation' (TrainingMaterial)
+      ★ 'Label-free data analysis using MaxQuant' (TrainingMaterial)
+    [LLM:content_relevance] 11848 ms
+    Chunk 73/128: relevant
+      ★ 'Hands-on: Biomarker candidate identification' (TrainingMaterial)
+      ★ 'Hands-on: Label-free data analysis using MaxQuant' (TrainingMaterial)
+      ★ 'Hands-on: Proteogenomics 1: Database Creation' (TrainingMaterial)
+      ★ 'Hands-on: Neoantigen 1b: Non-Reference-Database-Generation' (TrainingMaterial)
+      ★ 'Hands-on: Statistical analysis of DIA data' (TrainingMaterial)
+      ★ 'Hands-on: Neoantigen 5b: IEDB binding Validated Neopeptides' (TrainingMaterial)
+      ★ 'Hands-on: Multiomics data analysis using MultiGSEA' (TrainingMaterial)
+      ★ 'Hands-on: Clinical Metaproteomics 2: Discovery' (TrainingMaterial)
+      ★ 'Hands-on: Introduction to Digital Humanities in Galaxy' (TrainingMaterial)
+      ★ 'Hands-on: OpenRefine Tutorial for researching cultural data' (TrainingMaterial)
+      ★ 'Hands-on: Text-Mining Differences in Chinese Newspaper Articles' (TrainingMaterial)
+      ★ 'Hands-on: Transcribing Audio and Video files with Automated Speech Recognition' (TrainingMaterial)
+      ★ 'Hands-on: JupyterLab in Galaxy' (TrainingMaterial)
+      ★ 'Hands-on: Onedata user-owned storage' (TrainingMaterial)
+      ★ 'Hands-on: Getting started with Onedata distributed storage' (TrainingMaterial)
+    [LLM:content_relevance] 8091 ms
+    Chunk 74/128: relevant
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 9989 ms
+    Chunk 75/128: relevant
+      ★ 'Managing your Data' (TrainingMaterial)
+    [LLM:content_relevance] 12693 ms
+    Chunk 76/128: relevant
+    [LLM:content_relevance] 10086 ms
+    Chunk 77/128: relevant
+      ★ 'OpenRefine GBIF Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Taxonomic Analysis of eDNA Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Ecoregionalization Workflow Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Sentinel 2 Biodiversity Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Phylodiversity Analysis Quick Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'RAD-Seq to Construct Genetic Maps Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'From NDVI Data with OpenEO to Time Series Visualization with Holoviews Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Species Distribution Modeling Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Audio Data Annotation with NEAL Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Visualization of Climate Data Using NetCDF xarray Map Plotting Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Compute and Analyze Biodiversity Metrics with PAMPA Tool Suite Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Creating Metadata Using Ecological Metadata Language (EML) Standard Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Regional GAM Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Life Traits Ecoregionalization Workflow Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 8867 ms
+    Chunk 78/128: relevant
+      ★ 'RAD-Seq de-novo data analysis' (CourseInstance)
+      ★ 'Metabarcoding/eDNA through Obitools' (CourseInstance)
+      ★ 'QGIS Web Feature Services' (CourseInstance)
+      ★ 'Visualize EBV cube data with Panoply netCDF viewer' (CourseInstance)
+      ★ 'Creating FAIR Quality assessment reports and draft of Data Papers from EML metadata with MetaShRIMPS' (CourseInstance)
+      ★ 'RAD-Seq Reference-based data analysis' (CourseInstance)
+      ★ 'Preparing genomic data for phylogeny reconstruction' (CourseInstance)
+      ★ 'Champs blocs indicators' (CourseInstance)
+      ★ 'Cleaning GBIF data for the use in Ecology' (CourseInstance)
+    [LLM:content_relevance] 9316 ms
+    Chunk 79/128: relevant
+      ★ "What's a Special Interest Group?" (TrainingMaterial)
+      ★ 'Creation of resources listing Galaxy workflow for your community' (TrainingMaterial)
+      ★ 'Creation of a Galaxy tutorial table for your community' (TrainingMaterial)
+      ★ 'Creation of the labs in the different Galaxy instances for your community' (TrainingMaterial)
+      ★ 'Creating community content' (TrainingMaterial)
+    [LLM:content_relevance] 14362 ms
+    Chunk 80/128: relevant
+      ★ 'Python - Basic Types & Type Conversion' (TrainingMaterial)
+      ★ 'Python - Argparse' (TrainingMaterial)
+      ★ 'Python - Files & CSV' (TrainingMaterial)
+      ★ 'Introduction to sequencing with Python (part one)' (TrainingMaterial)
+      ★ 'Conda Environments For Software Development' (TrainingMaterial)
+      ★ 'Python - Subprocess' (TrainingMaterial)
+      ★ 'Data visualisation Olympics - Visualization in R' (TrainingMaterial)
+      ★ 'Python - Type annotations' (TrainingMaterial)
+      ★ 'Data Manipulation Olympics - SQL' (TrainingMaterial)
+      ★ 'Virtual Environments For Software Development' (TrainingMaterial)
+      ★ 'Python - Try & Except' (TrainingMaterial)
+    [LLM:content_relevance] 11041 ms
+    Chunk 81/128: relevant
+      ★ 'Introduction to Data Science with Galaxy' (CourseInstance)
+    [LLM:content_relevance] 11948 ms
+    Chunk 82/128: relevant
+    [LLM:content_relevance] 2896 ms
+    Chunk 83/128: relevant
+      ★ 'Introduction to Image Analysis using Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Object tracking using CellProfiler' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11279 ms
+    Chunk 84/128: relevant
+      ★ 'Hands-on: Voronoi segmentation' (TrainingMaterial)
+      ★ 'Hands-on: Quantification of single-molecule RNA fluorescence in situ hybridization (smFISH) in yeast cell lines' (TrainingMaterial)
+      ★ 'Hands-on: Execute a BiaPy workflow in Galaxy' (TrainingMaterial)
+      ★ 'Hands-on: Training Custom YOLO Models for Segmentation of Bioimages' (TrainingMaterial)
+      ★ 'Hands-on: Using BioImage.IO models for image analysis in Galaxy' (TrainingMaterial)
+      ★ 'Hands-on: Analyse HeLa fluorescence siRNA screen' (TrainingMaterial)
+      ★ 'Hands-on: Nucleoli segmentation and feature extraction using CellProfiler' (TrainingMaterial)
+      ★ 'Hands-on: Parameter tuning and optimization - Evaluating nuclei segmentation with Galaxy' (TrainingMaterial)
+      ★ 'Hands-on: CLIP-Seq data analysis from pre-processing to motif detection' (TrainingMaterial)
+      ★ 'Hands-on: Whole transcriptome analysis of Arabidopsis thaliana' (TrainingMaterial)
+      ★ 'Hands-on: Reference-based RNAseq data analysis (long)' (TrainingMaterial)
+      ★ 'Hands-on: RNA-Seq data analysis, clustering and visualisation tutorial' (TrainingMaterial)
+      ★ 'Hands-on: De novo transcriptome reconstruction with RNA-Seq' (TrainingMaterial)
+    [LLM:content_relevance] 3805 ms
+    Chunk 85/128: relevant
+    [LLM:content_relevance] 2945 ms
+    Chunk 86/128: relevant
+      ★ 'RNA-seq Alignment with STAR' (TrainingMaterial|CourseInstance)
+      ★ 'CUT&RUN data analysis' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11468 ms
+    Chunk 87/128: relevant
+      ★ 'Module 1: Introduction to Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Module 2: Working with Data' (TrainingMaterial|CourseInstance)
+      ★ 'Module 3: Creating Interactive Galaxy Tours' (TrainingMaterial|CourseInstance)
+      ★ 'Module 4: Teaching Python' (TrainingMaterial|CourseInstance)
+      ★ 'Module 5: FAIR-by-Design methodology' (TrainingMaterial|CourseInstance)
+      ★ 'Module 6: Single Cell Publication - Data Plotting' (TrainingMaterial|CourseInstance)
+      ★ 'Module 7: Including a new topic' (TrainingMaterial|CourseInstance)
+      ★ 'Module 8: Updating tool versions in a tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Module 9: Contributing to the Galaxy Training Network with GitHub' (TrainingMaterial|CourseInstance)
+      ★ 'Module 10: Creating a new tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Module 11: Design and plan session, course, materials' (TrainingMaterial|CourseInstance)
+      ★ 'Module 12: Contributing with GitHub via its interface' (TrainingMaterial|CourseInstance)
+      ★ 'Module 13: Tools, Data, and Workflows for tutorials' (TrainingMaterial|CourseInstance)
+      ★ 'Module 14: Preview the GTN website as you edit your training material' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10550 ms
+    Chunk 88/128: relevant
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+    [LLM:content_relevance] 12261 ms
+    Chunk 89/128: relevant
+    [LLM:content_relevance] 9265 ms
+    Chunk 90/128: relevant
+      ★ 'FAIR Data, Workflows, and Research' (Course)
+      ★ 'Introduction to Data Management Plan (DMP) for Peatland Research and PeatDataHub' (TrainingMaterial)
+    [LLM:content_relevance] 10788 ms
+    Chunk 91/128: relevant
+      ★ 'Introduction to Galaxy Analyses' (CourseInstance)
+      ★ 'Classification in Machine Learning' (CourseInstance)
+      ★ 'Fine tune large protein model (ProtTrans) using HuggingFace' (CourseInstance)
+      ★ 'Prepare Data from CbioPortal for Flexynesis Integration' (CourseInstance)
+      ★ 'PAPAA PI3K_OG: PanCancer Aberrant Pathway Activity Analysis' (CourseInstance)
+      ★ 'Pretraining a Large Language Model (LLM) from Scratch on DNA Sequences' (CourseInstance)
+      ★ 'Modeling Breast Cancer Subt' (CourseInstance)
+    [LLM:content_relevance] 18510 ms
+    Chunk 92/128: relevant
+    [LLM:content_relevance] 4028 ms
+    Chunk 93/128: relevant
+    [LLM:content_relevance] 9190 ms
+    Chunk 94/128: relevant
+      ★ 'Hybrid Denovo Assembly Tutorial' (TrainingMaterial)
+      ★ 'Unicycler Assembly Tutorial' (TrainingMaterial)
+      ★ 'Making sense of a newly assembled genome Tutorial' (TrainingMaterial)
+      ★ 'Large genome assembly and polishing Tutorial' (TrainingMaterial)
+      ★ 'De Bruijn Graph Assembly Tutorial' (TrainingMaterial)
+      ★ 'Chloroplast genome assembly Tutorial' (TrainingMaterial)
+      ★ 'Assembly of the mitochondrial genome from PacBio HiFi reads Tutorial' (TrainingMaterial)
+      ★ 'ERGA post-assembly QC Tutorial' (TrainingMaterial)
+      ★ 'Genome Assembly of MRSA from Oxford Nanopore MinION data (and optionally Illumina data) Tutorial' (TrainingMaterial)
+      ★ 'Genome Assembly of a bacterial genome (MRSA) sequenced using Illumina MiSeq Data Tutorial' (TrainingMaterial)
+      ★ 'Galaxy Interactive Tools Tutorial' (TrainingMaterial)
+      ★ 'Creating Galaxy tools from Conda Through Deployment Tutorial' (TrainingMaterial)
+      ★ 'ToolFactory: Generating Tools From Simple Scripts Tutorial' (TrainingMaterial)
+      ★ 'Galaxy Webhooks Tutorial' (TrainingMaterial)
+      ★ 'Contributing to BioBlend as a developer Tutorial' (TrainingMaterial)
+      ★ 'nb2workflow: Generating Galaxy Tools From Jupyter Notebooks Tutorial' (TrainingMaterial)
+    [LLM:content_relevance] 11562 ms
+    Chunk 95/128: relevant
+      ★ 'Hands-on: Generating Galaxy Tools From Jupyter Notebooks' (CourseInstance)
+      ★ 'Hands-on: Contributing a New Feature to Galaxy Core' (CourseInstance)
+      ★ 'Hands-on: Debugging Galaxy' (CourseInstance)
+      ★ 'Hands-on: Writing Automated Tests for Galaxy' (CourseInstance)
+      ★ 'Hands-on: Setting up a dev Onedata instance' (CourseInstance)
+      ★ 'Scripting Galaxy using the API and BioBlend' (CourseInstance)
+      ★ 'Adding and updating best practice metadata for Galaxy tools using the bio.tools registry' (CourseInstance)
+      ★ 'Generic plugins' (CourseInstance)
+      ★ 'ToolFactory: Generating Tools From More Complex Scripts' (CourseInstance)
+      ★ 'JavaScript plugins' (CourseInstance)
+      ★ 'Data source integration' (CourseInstance)
+      ★ 'Von Peaks zu Genen' (CourseInstance)
+      ★ 'Qualitätskontrolle' (CourseInstance)
+      ★ 'Mapping' (CourseInstance)
+      ★ 'Lernen über ein Gen über biologische Ressourcen und Formate hinweg' (CourseInstance)
+    [LLM:content_relevance] 10957 ms
+    Chunk 96/128: relevant
+      ★ "Production d'indicateurs champs de bloc" (TrainingMaterial)
+      ★ 'Dai picchi ai geni' (TrainingMaterial)
+      ★ 'Controllo qualità' (TrainingMaterial)
+      ★ 'Mappatura' (TrainingMaterial)
+      ★ 'Una proteina lungo la pagina UniProt' (TrainingMaterial)
+    [LLM:content_relevance] 4068 ms
+    Chunk 97/128: relevant
+    [LLM:content_relevance] 1481 ms
+    [LLM:content_relevance] 10625 ms
+    Chunk 99/128: relevant
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+      ★ 'FAQs' (TrainingMaterial)
+    [LLM:content_relevance] 1787 ms
+    [LLM:content_relevance] 15332 ms
+    Chunk 101/128: relevant
+      ★ "Workflow constructed from history 'CRISPR tutorial Kenji'" (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 12196 ms
+    Chunk 102/128: relevant
+    [LLM:content_relevance] 2289 ms
+    Chunk 103/128: relevant
+      ★ 'Workflow' (CourseInstance)
+    [LLM:content_relevance] 12337 ms
+    Chunk 104/128: relevant
+      ★ 'Building an amplicon sequence variant (ASV) table from 16S data using DADA2' (Workflow)
+      ★ 'Calculating diversity from microbiome taxonomic data' (Workflow)
+      ★ 'Workflow 1: Quality Control' (Workflow)
+      ★ 'Workflow 2: Data Cleaning And Chimera Removal' (Workflow)
+      ★ 'Workflow 3: Classification' (Workflow)
+      ★ 'Workflow 4: Mock OTU Clustering' (Workflow)
+      ★ 'Workflow 5: OTU Clustering' (Workflow)
+      ★ 'Workflow 6: Alpha Diversity' (Workflow)
+      ★ 'Workflow7: Beta Diversity' (Workflow)
+      ★ 'Taxonomic Profiling and Visualization of Metagenomic Data' (Workflow)
+      ★ 'Allele-based Pathogen Identification' (Workflow)
+      ★ 'Gene-based Pathogen Identification' (Workflow)
+    [LLM:content_relevance] 12818 ms
+    Chunk 105/128: relevant
+      ★ 'Copy Of GTN Training - Antibiotic Resistance Detection' (CourseInstance)
+    [LLM:content_relevance] 12534 ms
+    Chunk 106/128: relevant
+      ★ 'Workflow' (Workflow)
+      ★ 'Workflow' (Workflow)
+      ★ 'Workflow' (Workflow)
+      ★ 'Quantitation Workflow' (Workflow)
+      ★ 'Data Interpretation Workflow' (Workflow)
+      ★ '16S rRNA Sequencing With Mothur: Main Tutorial' (Workflow)
+      ★ 'Discovery Workflow' (Workflow)
+    [LLM:content_relevance] 6106 ms
+    Chunk 107/128: relevant
+    [LLM:content_relevance] 4918 ms
+    Chunk 108/128: relevant
+      ★ 'Single Cell' (CourseInstance)
+      ★ 'Cell Cycle Regression Workflow' (CourseInstance)
+      ★ 'AnnData to Cell Data Set (CDS) conversion' (CourseInstance)
+      ★ 'Single Cell | Workflow' (CourseInstance)
+    [LLM:content_relevance] 11126 ms
+    Chunk 109/128: relevant
+      ★ 'Galaxy-Workflow-AnnData object to Monocle input files' (Workflow)
+      ★ 'Clustering 3k PBMCs with Seurat - Workflow' (Workflow)
+      ★ 'Cluster 3k PBMCs with Seurat - Workflow - SCTransform Version' (Workflow)
+      ★ 'GTN - Preprocessing of 10X scRNA-seq data' (Workflow)
+      ★ 'scRNA Plant Analysis' (Workflow)
+      ★ 'MuSiC-Deconvolution: Data generation | sc | matrix + ESet' (Workflow)
+      ★ 'MuSiC-Deconvolution: Data generation | sc | metadata' (Workflow)
+    [LLM:content_relevance] 4627 ms
+    Chunk 110/128: relevant
+      ★ 'Workflow - Standard processing of 10X single cell ATAC-seq data with SnapATAC2' (TrainingMaterial|CourseInstance)
+      ★ 'Clustering 3k PBMC with Scanpy' (TrainingMaterial|CourseInstance)
+      ★ 'Multisample Batch Correction with SnapATAC2 and Harmony' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11267 ms
+    Chunk 111/128: relevant
+      ★ 'CelSeq2: Multi Batch (mm10)' (CourseInstance)
+      ★ 'CelSeq2: Single Batch (mm10)' (CourseInstance)
+      ★ 'scATAC-seq Count Matrix Filtering' (CourseInstance)
+      ★ 'scATAC-seq FASTQ to Count Matrix' (CourseInstance)
+      ★ "GTN 'Pangeo 101 for everyone - Xarray'" (CourseInstance)
+      ★ 'Analyse Argo data' (CourseInstance)
+      ★ 'Climate 101' (CourseInstance)
+      ★ "Ocean's variables 2.0" (CourseInstance)
+      ★ 'CLM-FATES_ALP1 simulation (5 years)' (CourseInstance)
+      ★ 'Argo-Glider Nitrate QCV' (CourseInstance)
+      ★ 'Pangeo Jupyter Notebook' (CourseInstance)
+      ★ 'Sentinel5 volcanic data' (CourseInstance)
+      ★ 'Genetic Design (BASIC Assembly)' (CourseInstance)
+      ★ 'Pathway Analysis' (CourseInstance)
+      ★ 'RetroSynthesis' (CourseInstance)
+    [LLM:content_relevance] 12976 ms
+    Chunk 112/128: relevant
+      ★ 'RetroSynthesis Analysis' (CourseInstance)
+    [LLM:content_relevance] 1791 ms
+    [LLM:content_relevance] 12468 ms
+    Chunk 114/128: relevant
+      ★ 'WF1_Database_Generation_Workflow' (CourseInstance)
+      ★ 'WF3_Verification_Workflow' (CourseInstance)
+      ★ 'WF4_Quantitation_Workflow' (CourseInstance)
+    [LLM:content_relevance] 2251 ms
+    Chunk 115/128: relevant
+    [LLM:content_relevance] 2428 ms
+    Chunk 116/128: relevant
+      ★ 'Workflows' (CourseInstance)
+    [LLM:content_relevance] 11414 ms
+    Chunk 117/128: relevant
+      ★ 'Using Galaxy and Managing your Data' (TrainingMaterial|CourseInstance)
+      ★ 'Subworkflow' (TrainingMaterial|CourseInstance)
+      ★ 'GTN Training: Workflow Reports - Galaxy 101 For Everyone' (TrainingMaterial|CourseInstance)
+      ★ 'GTN Training: Workflow Reports' (TrainingMaterial|CourseInstance)
+      ★ 'Intermine import/export' (TrainingMaterial|CourseInstance)
+      ★ 'Select First N Lines' (TrainingMaterial|CourseInstance)
+      ★ 'vcf2lineage' (TrainingMaterial|CourseInstance)
+      ★ 'Data management in Medicinal Chemistry workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Virtual screening of the SARS-CoV-2 main protease with rDock and pose scoring' (TrainingMaterial|CourseInstance)
+      ★ 'CTB Workflow' (TrainingMaterial|CourseInstance)
+      ★ "Workflow constructed from history 'Hsp90-MDAnalysis'" (TrainingMaterial|CourseInstance)
+      ★ 'MD protein-ligand workflow (from PDB structure)' (TrainingMaterial|CourseInstance)
+      ★ 'Analysis using MDAnalysis' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11300 ms
+    Chunk 118/128: relevant
+      ★ 'Advanced Workflow' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 16097 ms
+    Chunk 119/128: relevant
+      ★ 'Species Distribution Modeling With Wallace From GBIF - Training Material' (CourseInstance)
+      ★ 'Xarray_Map_Plotting_Workflow' (CourseInstance)
+      ★ 'Compute and analyze biodiversity metrics with PAMPA toolsuite' (CourseInstance)
+      ★ "Abundance Index 'stacked' Visualization Creation" (CourseInstance)
+      ★ "Phenology 'stacked' Visualization Creation" (CourseInstance)
+      ★ 'Tutorial regionalGAM Complete Multispecies' (CourseInstance)
+      ★ 'Regional GAM Workflow' (CourseInstance)
+      ★ 'de novo Rad Seq' (CourseInstance)
+      ★ "Workflow constructed from history 'Tuto Obitools'" (CourseInstance)
+      ★ "Workflow Constructed From History 'STACKS RAD: Population Genomics With Reference Genome'" (CourseInstance)
+      ★ 'Ref Based Rad Seq' (CourseInstance)
+      ★ 'preparing genomic data for phylogeny recostruction (GTN)' (CourseInstance)
+    [LLM:content_relevance] 3343 ms
+    Chunk 120/128: relevant
+      ★ 'Phylogeny Data Prep Workflow' (CourseInstance)
+      ★ 'GBIF Data Quality Check and Filtering Workflow' (CourseInstance)
+    [LLM:content_relevance] 2494 ms
+    Chunk 121/128: relevant
+      ★ 'Workflow' (TrainingMaterial)
+    [LLM:content_relevance] 13326 ms
+    Chunk 122/128: relevant
+      ★ 'sRNA Seq Step 2: Salmon and DESeq2' (CourseInstance)
+    [LLM:content_relevance] 11514 ms
+    Chunk 123/128: relevant
+      ★ 'Small RNA Clustering Workflow' (CourseInstance)
+      ★ 'Transcriptomics' (CourseInstance)
+      ★ 'CUT&RUN' (CourseInstance)
+      ★ 'Infinium Human Methylation BeadChip' (CourseInstance)
+    [LLM:content_relevance] 7661 ms
+    Chunk 124/128: relevant
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 19731 ms
+    [LLM:content_relevance] 13337 ms
+    Chunk 126/128: relevant
+      ★ 'workflow-generate-dataset-for-assembly-tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1832 ms
+    [LLM:content_relevance] 1204 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/mirna-target-finder/faqs/different_padj_value.html
+    ↓ https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/mirna-target-finder/faqs/different_padj_value.html [200]
+    Page 8/20: 23527 chars, 2 chunk(s), hash=58bfa23dec1c…
+    [LLM:content_relevance] 1281 ms
+    [LLM:content_relevance] 1416 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/faqs/gtn/learners_getting_started.html
+    ↓ https://training.galaxyproject.org/training-material/faqs/gtn/learners_getting_started.html [200]
+    Page 9/20: 23694 chars, 2 chunk(s), hash=634e8b60b415…
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1264 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/faqs/galaxy/interactive_tools_jupyter_launch.html
+    ↓ https://training.galaxyproject.org/training-material/faqs/galaxy/interactive_tools_jupyter_launch.html [200]
+    Page 10/20: 27209 chars, 2 chunk(s), hash=bff407c9327a…
+    [LLM:content_relevance] 1321 ms
+    [LLM:content_relevance] 1292 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/faqs/gtn/remote-teaching-cyoa.html
+    ↓ https://training.galaxyproject.org/training-material/faqs/gtn/remote-teaching-cyoa.html [404]
+  ⚠  Could not retrieve https://training.galaxyproject.org/training-material/faqs/gtn/remote-teaching-cyoa.html (HTTP 404 — the URL may be incorrect, the server may be temporarily unavailable, or access may be restricted)
+  Fetch depth-2: ?query=español&page=2
+  ⚠  Skipping ?query=español&page=2: Invalid URL '?query=español&page=2': No scheme supplied. Perhaps you meant https://?query=español&page=2?
+  Fetch depth-2: https://training.galaxyproject.org/training-material/search2.html?query=español&page=2
+    ↓ https://training.galaxyproject.org/training-material/search2.html?query=español&page=2 [200]
+    Page 11/20: 994418 chars, 128 chunk(s), hash=1b0f2aabaf41…
+    [LLM:content_relevance] 1263 ms
+    [LLM:content_relevance] 1604 ms
+    [LLM:content_relevance] 2055 ms
+    [LLM:content_relevance] 1666 ms
+    [LLM:content_relevance] 1647 ms
+    [LLM:content_relevance] 1704 ms
+    [LLM:content_relevance] 2208 ms
+    Chunk 7/128: relevant
+      ★ 'Genome-wide alternative splicing analysis' (TrainingMaterial)
+    [LLM:content_relevance] 1790 ms
+    [LLM:content_relevance] 1742 ms
+    [LLM:content_relevance] 1671 ms
+    [LLM:content_relevance] 1800 ms
+    [LLM:content_relevance] 1708 ms
+    [LLM:content_relevance] 1648 ms
+    [LLM:content_relevance] 1634 ms
+    [LLM:content_relevance] 1860 ms
+    [LLM:content_relevance] 1657 ms
+    [LLM:content_relevance] 1647 ms
+    [LLM:content_relevance] 1338 ms
+    [LLM:content_relevance] 1686 ms
+    [LLM:content_relevance] 1702 ms
+    [LLM:content_relevance] 1864 ms
+    [LLM:content_relevance] 1620 ms
+    [LLM:content_relevance] 1629 ms
+    [LLM:content_relevance] 1723 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 1346 ms
+    [LLM:content_relevance] 1370 ms
+    [LLM:content_relevance] 1404 ms
+    [LLM:content_relevance] 1727 ms
+    [LLM:content_relevance] 1767 ms
+    [LLM:content_relevance] 2640 ms
+    Chunk 31/128: relevant
+      ★ 'What does `^.\\*Gallus|Homo|Bos.\\u002a$` mean?' (CourseInstance)
+    [LLM:content_relevance] 1700 ms
+    [LLM:content_relevance] 1686 ms
+    [LLM:content_relevance] 1623 ms
+    [LLM:content_relevance] 3534 ms
+    Chunk 35/128: relevant
+      ★ 'Introduction to Galaxy' (CourseInstance)
+      ★ 'Using Galaxy and Managing your Data' (CourseInstance)
+    [LLM:content_relevance] 1672 ms
+    [LLM:content_relevance] 1646 ms
+    [LLM:content_relevance] 1567 ms
+    [LLM:content_relevance] 2144 ms
+    Chunk 39/128: relevant
+    [LLM:content_relevance] 19354 ms
+    [LLM:content_relevance] 12316 ms
+    Chunk 41/128: relevant
+      ★ 'Introduction to climate data' (CourseInstance)
+    [LLM:content_relevance] 19276 ms
+    [LLM:content_relevance] 11621 ms
+    Chunk 43/128: relevant
+    [LLM:content_relevance] 8942 ms
+    Chunk 44/128: relevant
+    [LLM:content_relevance] 11930 ms
+    Chunk 45/128: relevant
+      ★ 'Data Types and Databases' (TrainingMaterial|CourseInstance)
+      ★ 'Nucleoli Segmentation & Feature Extraction using CellProfiler' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1679 ms
+    [LLM:content_relevance] 10621 ms
+    Chunk 47/128: relevant
+    [LLM:content_relevance] 12402 ms
+    Chunk 48/128: relevant
+      ★ 'Tool Shed: sharing Galaxy tools' (CourseInstance)
+    [LLM:content_relevance] 13131 ms
+    Chunk 49/128: relevant
+    [LLM:content_relevance] 8376 ms
+    Chunk 50/128: relevant
+      ★ 'Introduction to Galaxy Analyses' (TrainingMaterial|CourseInstance)
+      ★ 'Introducción al análisis de datos de scRNA-seq' (TrainingMaterial|CourseInstance)
+      ★ 'Una Breve Introducción a Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Una introducción al análisis de datos scRNA-seq' (TrainingMaterial|CourseInstance)
+      ★ 'What is a SNP?' (TrainingMaterial|CourseInstance)
+      ★ 'MSStats: what does ‘compare groups = yes’ mean? And the comparison matrix to define the contrast between the 2 groups?' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1656 ms
+    [LLM:content_relevance] 1661 ms
+    [LLM:content_relevance] 4909 ms
+    Chunk 53/128: relevant
+    [LLM:content_relevance] 13433 ms
+    Chunk 54/128: relevant
+      ★ 'CRISPR screen analysis' (TrainingMaterial)
+      ★ 'Secondary metabolite discovery' (TrainingMaterial)
+      ★ 'Essential genes detection with Transposon insertion sequencing' (TrainingMaterial)
+      ★ 'Bacterial pangenomics' (TrainingMaterial)
+      ★ 'Genome annotation with Prokka' (TrainingMaterial)
+      ★ 'Creating an Official Gene Set' (TrainingMaterial)
+      ★ 'Masking repeats with RepeatMasker' (TrainingMaterial)
+      ★ 'Refining Genome Annotations with Apollo (eukaryotes)' (TrainingMaterial)
+      ★ 'Genome annotation with Helixer' (TrainingMaterial)
+      ★ 'Genome annotation with Funannotate' (TrainingMaterial)
+      ★ 'Dataset construction for bacterial comparative genomics' (TrainingMaterial)
+      ★ 'Bacterial genome quality control' (TrainingMaterial)
+    [LLM:content_relevance] 18461 ms
+    Chunk 55/128: relevant
+      ★ 'Microbial Genome Quality Control' (TrainingMaterial)
+    [LLM:content_relevance] 2953 ms
+    Chunk 56/128: relevant
+      ★ 'Evolution' (CourseInstance)
+      ★ 'Introduction to Galaxy Analyses' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+    [LLM:content_relevance] 10776 ms
+    Chunk 57/128: relevant
+    [LLM:content_relevance] 4374 ms
+    Chunk 58/128: relevant
+    [LLM:content_relevance] 1722 ms
+    [LLM:content_relevance] 10561 ms
+    Chunk 60/128: relevant
+    [LLM:content_relevance] 9300 ms
+    Chunk 61/128: relevant
+    [LLM:content_relevance] 11797 ms
+    Chunk 62/128: relevant
+    [LLM:content_relevance] 10318 ms
+    Chunk 63/128: relevant
+      ★ 'Single Cell | 3H' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11662 ms
+    Chunk 64/128: relevant
+      ★ 'Hands-on: Functionally Assembled Terrestrial Ecosystem Simulator (FATES) with Galaxy Climate JupyterLab' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Functionally Assembled Terrestrial Ecosystem Simulator (FATES)' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Nitrate DMQC for autonomous platforms such as Argo floats' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Visualize Climate data with Panoply netCDF viewer' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Pangeo Notebook in Galaxy - Introduction to Xarray' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Sentinel 5P data visualisation' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Designing plasmids encoding predicted pathways by using the BASIC assembly method' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Evaluating and ranking a set of pathways based on multiple metrics' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Generating theoretical possible pathways for the production of Lycopene in E.Coli using Retrosynthesis tools' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Trio Analysis using Synthetic Datasets from RD-Connect GPAP' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Exome sequencing data analysis for diagnosing a genetic disease' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Deciphering Virus Populations - Single Nucleotide Variants (SNVs) and Specificities in Baculovirus Isolates' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on: Calling variants in diploid systems' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 6357 ms
+    Chunk 65/128: relevant
+      ★ 'Working with Beacon V2: A Comprehensive Guide to Creating, Uploading, and Searching for Variants with Beacons' (TrainingMaterial)
+      ★ 'Somatic Variant Discovery from WES Data Using Control-FREEC' (TrainingMaterial)
+      ★ 'Calling variants in non-diploid systems' (TrainingMaterial)
+      ★ 'Avian influenza viral strain analysis from gene segment sequencing data' (TrainingMaterial)
+      ★ 'Microbial Variant Calling' (TrainingMaterial)
+      ★ 'M.' (TrainingMaterial)
+    [LLM:content_relevance] 2233 ms
+    Chunk 66/128: relevant
+    [LLM:content_relevance] 10548 ms
+    Chunk 67/128: relevant
+    [LLM:content_relevance] 10305 ms
+    Chunk 68/128: relevant
+    [LLM:content_relevance] 10217 ms
+    Chunk 69/128: relevant
+    [LLM:content_relevance] 14705 ms
+    Chunk 70/128: relevant
+    [LLM:content_relevance] 12683 ms
+    Chunk 71/128: relevant
+      ★ 'Labelfree vs Labelled' (TrainingMaterial)
+      ★ 'Detection and quantitation of N-termini (degradomics) via N-TAILS' (TrainingMaterial)
+    [LLM:content_relevance] 16494 ms
+    Chunk 72/128: relevant
+    [LLM:content_relevance] 11754 ms
+    Chunk 73/128: relevant
+    [LLM:content_relevance] 10386 ms
+    Chunk 74/128: relevant
+      ★ 'Getting started with Onedata distributed storage' (TrainingMaterial|CourseInstance)
+      ★ 'Annotate, prepare tests and publish Galaxy workflows in workflow registries' (TrainingMaterial|CourseInstance)
+      ★ 'Creating, Editing and Importing Galaxy Workflows' (TrainingMaterial|CourseInstance)
+      ★ 'Creating high resolution images of Galaxy Workflows' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow Reports' (TrainingMaterial|CourseInstance)
+      ★ 'InterMine integration with Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Understanding Galaxy history system' (TrainingMaterial|CourseInstance)
+      ★ 'Use Jupyter notebooks in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Exporting to Onedata remote' (TrainingMaterial|CourseInstance)
+      ★ 'Group tags for complex experimental designs' (TrainingMaterial|CourseInstance)
+      ★ 'Rule Based Uploader' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 18250 ms
+    Chunk 75/128: relevant
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+    [LLM:content_relevance] 10046 ms
+    Chunk 76/128: relevant
+      ★ 'Hands-on: Virtual screening of the SARS-CoV-2 main protease with rxDock and pose scoring' (CourseInstance)
+      ★ 'Hands-on: Protein-ligand docking' (CourseInstance)
+      ★ 'Hands-on: High Throughput Molecular Dynamics and Analysis' (CourseInstance)
+      ★ 'Hands-on: Analysis of molecular dynamics simulations' (CourseInstance)
+      ★ 'Hands-on: Protein target prediction of a bioactive ligand with Align-it and ePharmaLib' (CourseInstance)
+      ★ 'Hands-on: Running molecular dynamics simulations using GROMACS' (CourseInstance)
+      ★ 'Hands-on: Running molecular dynamics simulations using NAMD' (CourseInstance)
+      ★ 'Hands-on: Checking expected species and contamination in bacterial isolate' (CourseInstance)
+      ★ 'Hands-on: Data submission using ENA upload Tool' (CourseInstance)
+      ★ 'Hands-on: Marine Omics identifying biosynthetic gene clusters' (CourseInstance)
+      ★ 'Hands-on: Obis marine indicators' (CourseInstance)
+      ★ 'Hands-on: Biodiversity data exploration' (CourseInstance)
+      ★ 'Hands-on: Cleaning GBIF data using OpenRefine' (CourseInstance)
+      ★ 'Hands-on: Taxonomic Analysis of eDNA' (CourseInstance)
+    [LLM:content_relevance] 19787 ms
+    [LLM:content_relevance] 7314 ms
+    Chunk 78/128: relevant
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11197 ms
+    Chunk 79/128: relevant
+    [LLM:content_relevance] 3207 ms
+    Chunk 80/128: relevant
+    [LLM:content_relevance] 13346 ms
+    Chunk 81/128: relevant
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+    [LLM:content_relevance] 11567 ms
+    Chunk 82/128: relevant
+    [LLM:content_relevance] 4558 ms
+    Chunk 83/128: relevant
+      ★ 'Foundations of Data Science' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Advanced R in Galaxy' (CourseInstance)
+      ★ 'Quantification of electrophoresis gel bands using QuPath and Galaxy imaging tools' (CourseInstance)
+    [LLM:content_relevance] 11776 ms
+    Chunk 84/128: relevant
+      ★ 'De novo transcriptome reconstruction with RNA-Seq' (TrainingMaterial)
+    [LLM:content_relevance] 11330 ms
+    Chunk 85/128: relevant
+      ★ 'RNA-Seq analysis clustering and visualization' (CourseInstance)
+      ★ '3: RNA-seq genes to pathways' (CourseInstance)
+      ★ 'Differential abundance testing of small RNAs' (CourseInstance)
+      ★ 'RNA-RNA interactome data analysis' (CourseInstance)
+      ★ 'Reference-based RNA-Seq data analysis' (CourseInstance)
+      ★ '1: RNA-Seq reads to counts' (CourseInstance)
+      ★ 'Visualization of RNA-Seq results with heatmap2' (CourseInstance)
+      ★ 'Visualization of RNA-Seq results with Volcano Plot in R' (CourseInstance)
+      ★ 'Pathway analysis with the MINERVA Platform' (CourseInstance)
+      ★ 'Network analysis with Heinz' (CourseInstance)
+      ★ '2: RNA-seq counts to genes' (CourseInstance)
+    [LLM:content_relevance] 3381 ms
+    Chunk 86/128: relevant
+      ★ 'Infinium Human Methylation BeadChip' (TrainingMaterial)
+    [LLM:content_relevance] 7757 ms
+    Chunk 87/128: relevant
+      ★ 'Creating Interactive Galaxy Tours' (CourseInstance)
+      ★ 'Teaching Python' (CourseInstance)
+      ★ 'FAIR-by-Design methodology' (CourseInstance)
+      ★ 'Single Cell Publication - Data Plotting' (CourseInstance)
+      ★ 'Including a new topic' (CourseInstance)
+      ★ 'Updating tool versions in a tutorial' (CourseInstance)
+      ★ 'Contributing to the Galaxy Training Network with GitHub' (CourseInstance)
+      ★ 'Creating a new tutorial' (CourseInstance)
+      ★ 'Design and plan session, course, materials' (CourseInstance)
+      ★ 'Contributing with GitHub via its interface' (CourseInstance)
+      ★ 'Tools, Data, and Workflows for tutorials' (CourseInstance)
+      ★ 'Preview the GTN website as you edit your training material' (CourseInstance)
+    [LLM:content_relevance] 8308 ms
+    Chunk 88/128: relevant
+      ★ 'Hands-on: Generating PDF artefacts of the website' (TrainingMaterial)
+      ★ 'Hands-on: Adding auto-generated video to your slides' (TrainingMaterial)
+      ★ 'Hands-on: Submitting workflows to LifeMonitor' (TrainingMaterial)
+      ★ 'Hands-on: Uploading Data to Zenodo from Galaxy' (TrainingMaterial)
+      ★ 'Hands-on: DataPLANT ARCs' (TrainingMaterial)
+      ★ 'Hands-on: FAIR Bioimage Metadata' (TrainingMaterial)
+      ★ 'Hands-on: FAIR data management solutions' (TrainingMaterial)
+    [LLM:content_relevance] 15588 ms
+    Chunk 89/128: relevant
+    [LLM:content_relevance] 6533 ms
+    Chunk 90/128: relevant
+      ★ 'RO-Crate in Galaxy Tutorial' (TrainingMaterial)
+    [LLM:content_relevance] 11335 ms
+    Chunk 91/128: relevant
+      ★ 'Modeling Breast Cancer Subt' (CourseInstance)
+    [LLM:content_relevance] 10972 ms
+    Chunk 92/128: relevant
+      ★ 'Optimizing DNA Sequences for Biological Functions using a DNA LLM' (TrainingMaterial)
+    [LLM:content_relevance] 9000 ms
+    Chunk 93/128: relevant
+      ★ 'Interactive Tools' (TrainingMaterial)
+    [LLM:content_relevance] 11423 ms
+    Chunk 94/128: relevant
+      ★ 'Hybrid Denovo Assembly' (TrainingMaterial)
+    [LLM:content_relevance] 10332 ms
+    Chunk 95/128: relevant
+      ★ 'Contributing a New Feature to Galaxy Core' (CourseInstance)
+      ★ 'Debugging Galaxy' (CourseInstance)
+      ★ 'Writing Automated Tests for Galaxy' (CourseInstance)
+      ★ 'Setting up a dev Onedata instance' (CourseInstance)
+    [LLM:content_relevance] 7606 ms
+    Chunk 96/128: relevant
+    [LLM:content_relevance] 1810 ms
+    [LLM:content_relevance] 1598 ms
+    [LLM:content_relevance] 1326 ms
+    [LLM:content_relevance] 1718 ms
+    [LLM:content_relevance] 11232 ms
+    Chunk 101/128: relevant
+    [LLM:content_relevance] 11867 ms
+    Chunk 102/128: relevant
+      ★ 'Workflow: Genome annotation with Braker3' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: CRISPR tutorial Kenji' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow: RepeatMasker' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10948 ms
+    Chunk 103/128: relevant
+      ★ 'Workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Tree Building (imported from uploaded file)' (TrainingMaterial|CourseInstance)
+      ★ 'Mtb phylogeny' (TrainingMaterial|CourseInstance)
+      ★ 'From BAMs to drug resistance prediction with TB-profiler' (TrainingMaterial|CourseInstance)
+      ★ 'From Fastqs to VCFs and BAMs' (TrainingMaterial|CourseInstance)
+      ★ 'From VCFs to SNP distance matrix' (TrainingMaterial|CourseInstance)
+      ★ 'Olympic Age Distribution' (TrainingMaterial|CourseInstance)
+      ★ 'GTN Training: Galaxy 101 For Everyone' (TrainingMaterial|CourseInstance)
+      ★ 'NGS tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Galaxy Intro Strands 2' (TrainingMaterial|CourseInstance)
+      ★ 'Galaxy Intro Strands' (TrainingMaterial|CourseInstance)
+      ★ 'GTN Training: Galaxy 101 For Everyone' (TrainingMaterial|CourseInstance)
+      ★ 'GTN Tutorial: Data manipulation Olympics - all steps and exercises' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 17740 ms
+    Chunk 104/128: relevant
+      ★ 'Workflow 1: Quality Control [Galaxy Training: 16S Microbial Analysis With Mothur]' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow 2: Data Cleaning And Chimera Removal [Galaxy Training: 16S Microbial Analysis With Mothur]' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow 3: Classification [Galaxy Training: 16S Microbial Analysis With Mothur]' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow 4: Mock OTU Clustering [Galaxy Training: 16S Microbial Analysis With Mothur]' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow 5: OTU Clustering [Galaxy Training: 16S Microbial Analysis With Mothur]' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow 6: Alpha Diversity [Galaxy Training: 16S Microbial Analysis With Mothur]' (TrainingMaterial|CourseInstance)
+      ★ 'Workflow7: Beta Diversity [Galaxy Training: 16S Microbial Analysis With Mothur]' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 12265 ms
+    Chunk 105/128: relevant
+    [LLM:content_relevance] 13031 ms
+    Chunk 106/128: relevant
+      ★ 'WF5_Data_Interpretation_Worklow' (Workflow)
+      ★ 'Training: 16S rRNA Sequencing With Mothur: Main Tutorial' (Workflow)
+      ★ 'WF2_Discovery-Workflow' (Workflow)
+    [LLM:content_relevance] 12014 ms
+    Chunk 107/128: relevant
+    [LLM:content_relevance] 1722 ms
+    [LLM:content_relevance] 2237 ms
+    Chunk 109/128: relevant
+      ★ 'Module 2: Working with Data' (CourseInstance)
+    [LLM:content_relevance] 2366 ms
+    Chunk 110/128: relevant
+      ★ 'Bulk Music 2 Preparescref Workflow' (CourseInstance)
+    [LLM:content_relevance] 12965 ms
+    Chunk 111/128: relevant
+      ★ 'CLM-FATES ALP1 simulation (5 years)' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 12201 ms
+    Chunk 112/128: relevant
+    [LLM:content_relevance] 1625 ms
+    [LLM:content_relevance] 13057 ms
+    Chunk 114/128: relevant
+      ★ 'Workflow: Circos: Nature workflow' (CourseInstance)
+      ★ 'Workflow: Circos for E. Coli' (CourseInstance)
+      ★ 'Workflow: PeptideML' (CourseInstance)
+      ★ 'Workflow: WF1_Database_Generation_Workflow' (CourseInstance)
+      ★ 'Workflow: WF3_Verification_Workflow' (CourseInstance)
+    [LLM:content_relevance] 2390 ms
+    Chunk 115/128: relevant
+      ★ 'Protein-ID SG PS Tutorial WF datasetCollection' (CourseInstance)
+    [LLM:content_relevance] 1679 ms
+    [LLM:content_relevance] 1635 ms
+    [LLM:content_relevance] 12675 ms
+    Chunk 118/128: relevant
+      ★ 'Advanced Workflow' (CourseInstance)
+      ★ 'Species Distribution Modeling With Wallace From GBIF - Training Material' (CourseInstance)
+    [LLM:content_relevance] 12449 ms
+    Chunk 119/128: relevant
+      ★ 'Abundance Index "stacked" Visualization Creation' (TrainingMaterial|CourseInstance)
+      ★ 'Phenology "stacked" Visualization Creation' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 13952 ms
+    Chunk 120/128: relevant
+      ★ 'phylogeny-data-prep' (CourseInstance)
+      ★ 'YOLO training and segmentation workflow' (CourseInstance)
+    [LLM:content_relevance] 12953 ms
+    Chunk 121/128: relevant
+      ★ 'BIAPY' (TrainingMaterial|CourseInstance)
+      ★ 'YOLO training and segmentation workflow' (TrainingMaterial|CourseInstance)
+      ★ 'Image prediction with BioImage.IO model (imported from uploaded file)' (TrainingMaterial|CourseInstance)
+      ★ 'analyze_screen' (TrainingMaterial|CourseInstance)
+      ★ 'feature_extraction' (TrainingMaterial|CourseInstance)
+      ★ 'CP_pipeline_IDR_training' (TrainingMaterial|CourseInstance)
+      ★ 'Segmentation_Values_Testing' (TrainingMaterial|CourseInstance)
+      ★ 'Tutorial CLIPseq Explorer Demultiplexed PEAKachu eCLIP Hg38' (TrainingMaterial|CourseInstance)
+      ★ 'Whole transcriptome analysis of Arabidopsis thaliana' (TrainingMaterial|CourseInstance)
+      ★ "Workflow constructed from history 'Computer assignment RNA seq analysis and visualisation -BMW2 - attempt 3'" (TrainingMaterial|CourseInstance)
+      ★ 'De novo transcriptome reconstruction with RNA-Seq' (TrainingMaterial|CourseInstance)
+      ★ 'RNA Seq Genes To Pathways (imported from uploaded file)' (TrainingMaterial|CourseInstance)
+      ★ 'sRNA Seq Step 1: Read Pre Processing And Removal Of Artifacts (no Grooming)' (TrainingMaterial|CourseInstance)
+      ★ 'sRNA Seq Step 2: Salmon And DESeq2' (TrainingMaterial|CourseInstance)
+      ★ 'RNA-RNA interactome data analysis - chira v1.4.3' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 11992 ms
+    Chunk 122/128: relevant
+    [LLM:content_relevance] 2274 ms
+    Chunk 123/128: relevant
+      ★ 'Small ncRNA Clustering Workflow' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 10636 ms
+    Chunk 124/128: relevant
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+      ★ 'Workflow' (CourseInstance)
+    [LLM:content_relevance] 11533 ms
+    Chunk 125/128: relevant
+      ★ 'Modeling Breast Cancer Subtypes + TABPFN' (CourseInstance)
+      ★ 'Intro_To_RNN_v1_0_10_0' (CourseInstance)
+      ★ 'fruit_360' (CourseInstance)
+      ★ 'Intro_To_Deep_Learning' (CourseInstance)
+      ★ 'Intro_To_FNN_v1_0_10_0' (CourseInstance)
+      ★ 'gpu_jupyterlab_as_jupytool' (CourseInstance)
+      ★ 'ml_regression' (CourseInstance)
+      ★ 'Ludwig - Image recognition model - MNIST' (CourseInstance)
+      ★ 'Genome Assembly using PacBio data' (CourseInstance)
+      ★ 'assembly_with_preprocessing' (CourseInstance)
+      ★ 'assembly_with_preprocessing_and_sra_download' (CourseInstance)
+      ★ 'VGP assembly: training workflow' (CourseInstance)
+      ★ 'Assembly-decontamination-VGP9' (CourseInstance)
+      ★ 'Genome Assembly Quality Control' (CourseInstance)
+      ★ 'Unicycler training' (CourseInstance)
+    [LLM:content_relevance] 12854 ms
+    Chunk 126/128: relevant
+    [LLM:content_relevance] 1863 ms
+    [LLM:content_relevance] 1277 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/single-cell/tutorial.html
+    ↓ https://training.galaxyproject.org/training-material/topics/single-cell/tutorial.html [404]
+  ⚠  Could not retrieve https://training.galaxyproject.org/training-material/topics/single-cell/tutorial.html (HTTP 404 — the URL may be incorrect, the server may be temporarily unavailable, or access may be restricted)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/detection-quantitation-n-termini-degradomics-via-n-tails/tutorial.html
+    ↓ https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/detection-quantitation-n-termini-degradomics-via-n-tails/tutorial.html [404]
+  ⚠  Could not retrieve https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/detection-quantitation-n-termini-degradomics-via-n-tails/tutorial.html (HTTP 404 — the URL may be incorrect, the server may be temporarily unavailable, or access may be restricted)
+  Fetch depth-2: ?query=español&sort=date
+  ⚠  Skipping ?query=español&sort=date: Invalid URL '?query=español&sort=date': No scheme supplied. Perhaps you meant https://?query=español&sort=date?
+  Fetch depth-2: ?query=español&type=online
+  ⚠  Skipping ?query=español&type=online: Invalid URL '?query=español&type=online': No scheme supplied. Perhaps you meant https://?query=español&type=online?
+  Fetch depth-2: ?query=español&tag=python
+  ⚠  Skipping ?query=español&tag=python: Invalid URL '?query=español&tag=python': No scheme supplied. Perhaps you meant https://?query=español&tag=python?
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/contributing/tutorials/design/tutorial.html
+    ↓ https://training.galaxyproject.org/training-material/topics/contributing/tutorials/design/tutorial.html [200]
+    Page 12/20: 224298 chars, 29 chunk(s), hash=5d728a03758b…
+    [LLM:content_relevance] 1942 ms
+    Chunk 1/29: relevant
+      ★ 'Design and plan session, course, materials' (TrainingMaterial)
+    [LLM:content_relevance] 1325 ms
+    [LLM:content_relevance] 1927 ms
+    [LLM:content_relevance] 2322 ms
+    Chunk 4/29: relevant
+      ★ 'How to upload data to Galaxy' (TrainingMaterial)
+    [LLM:content_relevance] 2523 ms
+    Chunk 5/29: relevant
+      ★ 'Hands On: Define audience and teaching goal' (CourseInstance)
+    [LLM:content_relevance] 1352 ms
+    [LLM:content_relevance] 1284 ms
+    [LLM:content_relevance] 1298 ms
+    [LLM:content_relevance] 1337 ms
+    [LLM:content_relevance] 1320 ms
+    [LLM:content_relevance] 1284 ms
+    [LLM:content_relevance] 1343 ms
+    [LLM:content_relevance] 1635 ms
+    [LLM:content_relevance] 1297 ms
+    [LLM:content_relevance] 2650 ms
+    [LLM:content_relevance] 1335 ms
+    [LLM:content_relevance] 1318 ms
+    [LLM:content_relevance] 1287 ms
+    [LLM:content_relevance] 1277 ms
+    [LLM:content_relevance] 1863 ms
+    [LLM:content_relevance] 1275 ms
+    [LLM:content_relevance] 1320 ms
+    [LLM:content_relevance] 1278 ms
+    [LLM:content_relevance] 2125 ms
+    [LLM:content_relevance] 1307 ms
+    [LLM:content_relevance] 1418 ms
+    [LLM:content_relevance] 1334 ms
+    [LLM:content_relevance] 1848 ms
+    Chunk 28/29: relevant
+    [LLM:content_relevance] 1396 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/contributing/
+    ↓ https://training.galaxyproject.org/training-material/topics/contributing/ [200]
+    Page 13/20: 246170 chars, 39 chunk(s), hash=2d026ceef955…
+    [LLM:content_relevance] 1221 ms
+    [LLM:content_relevance] 1326 ms
+    [LLM:content_relevance] 2022 ms
+    Chunk 3/39: relevant
+      ★ 'Principles of learning and how they apply to training and teaching' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1236 ms
+    [LLM:content_relevance] 2947 ms
+    [LLM:content_relevance] 2128 ms
+    [LLM:content_relevance] 1797 ms
+    [LLM:content_relevance] 1284 ms
+    [LLM:content_relevance] 2791 ms
+    Chunk 9/39: relevant
+      ★ 'Tutorial Recording: Create New Tutorial' (TrainingMaterial)
+      ★ 'Creating Content in Markdown' (TrainingMaterial)
+    [LLM:content_relevance] 3784 ms
+    Chunk 10/39: relevant
+      ★ 'Creating Slides' (TrainingMaterial|CourseInstance)
+      ★ 'Plain text slides' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1820 ms
+    Chunk 11/39: relevant
+      ★ 'Create New Tutorial Slides' (CourseInstance)
+    [LLM:content_relevance] 1324 ms
+    [LLM:content_relevance] 1805 ms
+    Chunk 13/39: relevant
+      ★ 'Adding auto-generated video to your slides' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1315 ms
+    [LLM:content_relevance] 2271 ms
+    Chunk 15/39: relevant
+      ★ 'Create New Topic Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Teaching Python Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1282 ms
+    [LLM:content_relevance] 1873 ms
+    Chunk 17/39: relevant
+    [LLM:content_relevance] 1925 ms
+    Chunk 18/39: relevant
+    [LLM:content_relevance] 1323 ms
+    [LLM:content_relevance] 1277 ms
+    [LLM:content_relevance] 1856 ms
+    Chunk 21/39: relevant
+    [LLM:content_relevance] 2225 ms
+    Chunk 22/39: relevant
+    [LLM:content_relevance] 1283 ms
+    [LLM:content_relevance] 2173 ms
+    Chunk 24/39: relevant
+    [LLM:content_relevance] 2532 ms
+    Chunk 25/39: relevant
+    [LLM:content_relevance] 1331 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1343 ms
+    [LLM:content_relevance] 1331 ms
+    [LLM:content_relevance] 2554 ms
+    Chunk 30/39: relevant
+      ★ 'Generating PDF Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'Introduction to Galaxy Training Material' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1268 ms
+    [LLM:content_relevance] 1315 ms
+    [LLM:content_relevance] 1322 ms
+    [LLM:content_relevance] 1313 ms
+    [LLM:content_relevance] 1292 ms
+    [LLM:content_relevance] 1283 ms
+    [LLM:content_relevance] 1281 ms
+    [LLM:content_relevance] 1294 ms
+    [LLM:content_relevance] 1206 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/fair/
+    ↓ https://training.galaxyproject.org/training-material/topics/fair/ [200]
+    Page 14/20: 291482 chars, 44 chunk(s), hash=20a3760c91d1…
+    [LLM:content_relevance] 2344 ms
+    Chunk 1/44: relevant
+      ★ 'FAIR Data Management' (CourseInstance)
+    [LLM:content_relevance] 2050 ms
+    Chunk 2/44: relevant
+    [LLM:content_relevance] 1321 ms
+    [LLM:content_relevance] 1402 ms
+    [LLM:content_relevance] 1351 ms
+    [LLM:content_relevance] 1824 ms
+    Chunk 6/44: relevant
+    [LLM:content_relevance] 2124 ms
+    Chunk 7/44: relevant
+      ★ 'Fair Clinical Tutorial' (TrainingMaterial)
+    [LLM:content_relevance] 2964 ms
+    Chunk 8/44: relevant
+    [LLM:content_relevance] 1972 ms
+    Chunk 9/44: relevant
+    [LLM:content_relevance] 1297 ms
+    [LLM:content_relevance] 1279 ms
+    [LLM:content_relevance] 1251 ms
+    [LLM:content_relevance] 1862 ms
+    Chunk 13/44: relevant
+    [LLM:content_relevance] 2758 ms
+    Chunk 14/44: relevant
+    [LLM:content_relevance] 2344 ms
+    Chunk 15/44: relevant
+      ★ 'bioimage-REMBI Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2321 ms
+    Chunk 16/44: relevant
+    [LLM:content_relevance] 4014 ms
+    Chunk 17/44: relevant
+      ★ 'FAIR Data Practices' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1956 ms
+    Chunk 18/44: relevant
+      ★ 'Introduction to RO-Crate in Galaxy' (CourseInstance)
+    [LLM:content_relevance] 3963 ms
+    Chunk 19/44: relevant
+      ★ 'RO-Crate Introduction (Video Tutorial)' (TrainingMaterial)
+    [LLM:content_relevance] 1340 ms
+    [LLM:content_relevance] 2488 ms
+    Chunk 21/44: relevant
+      ★ 'RO-Crate in Python' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1295 ms
+    [LLM:content_relevance] 1373 ms
+    [LLM:content_relevance] 1369 ms
+    [LLM:content_relevance] 6648 ms
+    Chunk 25/44: relevant
+      ★ 'RO-Crate Submission for Life Monitor' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2414 ms
+    Chunk 26/44: relevant
+    [LLM:content_relevance] 1900 ms
+    Chunk 27/44: relevant
+      ★ 'Tutorials on FAIR Metadata' (CourseInstance)
+    [LLM:content_relevance] 1346 ms
+    [LLM:content_relevance] 1910 ms
+    Chunk 29/44: relevant
+      ★ 'FAIR Data Registration' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1302 ms
+    [LLM:content_relevance] 1297 ms
+    [LLM:content_relevance] 1211 ms
+    [LLM:content_relevance] 1918 ms
+    Chunk 33/44: relevant
+      ★ 'DataPLANT ARCs Tutorial' (CourseInstance)
+    [LLM:content_relevance] 1334 ms
+    [LLM:content_relevance] 1353 ms
+    [LLM:content_relevance] 1332 ms
+    [LLM:content_relevance] 1925 ms
+    Chunk 37/44: relevant
+      ★ 'Data management in Medicinal Chemistry' (CourseInstance)
+    [LLM:content_relevance] 2695 ms
+    [LLM:content_relevance] 1212 ms
+    [LLM:content_relevance] 1256 ms
+    [LLM:content_relevance] 1310 ms
+    [LLM:content_relevance] 1290 ms
+    [LLM:content_relevance] 1314 ms
+    [LLM:content_relevance] 1293 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material?page=2
+    ↓ https://training.galaxyproject.org/training-material?page=2 [404]
+  ⚠  Could not retrieve https://training.galaxyproject.org/training-material?page=2 (HTTP 404 — the URL may be incorrect, the server may be temporarily unavailable, or access may be restricted)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/single-cell/tutorials/bulk-music-2-preparescref/workflows/sc_matrix.html
+    ↓ https://training.galaxyproject.org/training-material/topics/single-cell/tutorials/bulk-music-2-preparescref/workflows/sc_matrix.html [200]
+    Page 15/20: 37563 chars, 5 chunk(s), hash=504ff0b03158…
+    [LLM:content_relevance] 2265 ms
+    [LLM:content_relevance] 1420 ms
+    [LLM:content_relevance] 1401 ms
+    [LLM:content_relevance] 2617 ms
+    [LLM:content_relevance] 1330 ms
+  Fetch depth-2: ?page=2
+  ⚠  Skipping ?page=2: Invalid URL '?page=2': No scheme supplied. Perhaps you meant https://?page=2?
+  Fetch depth-1: https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-101/recordings/
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-101/recordings/ [200]
+    Page 16/20: 26386 chars, 2 chunk(s), hash=7cd762f68f78…
+    [LLM:content_relevance] 2607 ms
+    Chunk 1/2: relevant
+      ★ 'Galaxy Basics for genomics' (CourseInstance)
+    [LLM:content_relevance] 1320 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/faqs/gtn/recordings_add.html
+    ↓ https://training.galaxyproject.org/training-material/faqs/gtn/recordings_add.html [200]
+    Page 17/20: 27212 chars, 3 chunk(s), hash=050953a9292c…
+    [LLM:content_relevance] 1286 ms
+    [LLM:content_relevance] 1257 ms
+    [LLM:content_relevance] 1238 ms
+  Fetch depth-2: https://training.galaxyproject.org/archive/
+    ↓ https://training.galaxyproject.org/archive/ [200]
+    Page 18/20: 5878 chars, 2 chunk(s), hash=72ed62fa53cb…
+    [LLM:content_relevance] 1808 ms
+    Chunk 1/2: relevant
+    [LLM:content_relevance] 1868 ms
+  Fetch depth-1: https://training.galaxyproject.org/training-material/search2.html?query=deutsch
+    ↓ https://training.galaxyproject.org/training-material/search2.html?query=deutsch [200]
+    Page 19/20: 994418 chars, 128 chunk(s), hash=1b0f2aabaf41…
+    [LLM:content_relevance] 1302 ms
+    [LLM:content_relevance] 1702 ms
+    [LLM:content_relevance] 3329 ms
+    [LLM:content_relevance] 1393 ms
+    [LLM:content_relevance] 1563 ms
+    [LLM:content_relevance] 1399 ms
+    [LLM:content_relevance] 1336 ms
+    [LLM:content_relevance] 7832 ms
+    [LLM:content_relevance] 1390 ms
+    [LLM:content_relevance] 1704 ms
+    [LLM:content_relevance] 1378 ms
+    [LLM:content_relevance] 1337 ms
+    [LLM:content_relevance] 1379 ms
+    [LLM:content_relevance] 1374 ms
+    [LLM:content_relevance] 1377 ms
+    [LLM:content_relevance] 4272 ms
+    Chunk 16/128: relevant
+      ★ 'Creating a dataset collection' (TrainingMaterial)
+      ★ 'Erstellen einer Datensatzsammlung' (TrainingMaterial)
+      ★ 'Creare una raccolta di set di dati' (TrainingMaterial)
+      ★ 'Crear una colección de conjuntos de datos' (TrainingMaterial)
+      ★ 'Creazione di una raccolta accoppiata' (TrainingMaterial)
+    [LLM:content_relevance] 1430 ms
+    [LLM:content_relevance] 1264 ms
+    [LLM:content_relevance] 1312 ms
+    [LLM:content_relevance] 1390 ms
+    [LLM:content_relevance] 1358 ms
+    [LLM:content_relevance] 1379 ms
+    [LLM:content_relevance] 1326 ms
+    [LLM:content_relevance] 5301 ms
+    Chunk 24/128: relevant
+      ★ 'Introduction to Galaxy Analyses' (TrainingMaterial|CourseInstance)
+      ★ 'How to read a Diff' (TrainingMaterial|CourseInstance)
+      ★ 'FASTQ format' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1640 ms
+    [LLM:content_relevance] 1334 ms
+    [LLM:content_relevance] 1402 ms
+    [LLM:content_relevance] 1438 ms
+    [LLM:content_relevance] 1422 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1319 ms
+    [LLM:content_relevance] 1337 ms
+    [LLM:content_relevance] 10791 ms
+    Chunk 33/128: relevant
+      ★ 'How do I get help?' (TrainingMaterial|CourseInstance)
+      ★ 'Where do I start?' (TrainingMaterial|CourseInstance)
+      ★ 'Where can I run the hands-on tutorials?' (TrainingMaterial|CourseInstance)
+      ★ 'How do I use this material?' (TrainingMaterial|CourseInstance)
+      ★ 'Defining a Learning Pathway' (TrainingMaterial|CourseInstance)
+      ★ 'Library Permission Issues' (TrainingMaterial|CourseInstance)
+      ★ 'Why do I need that big (~5GB!) complicated Docker thing - can I just install the ToolFactory into our local galaxy server from the toolshed?' (TrainingMaterial|CourseInstance)
+      ★ 'My jobs are not running / I cannot see the history overview menu' (TrainingMaterial|CourseInstance)
+      ★ 'Failing all jobs from a specific user' (TrainingMaterial|CourseInstance)
+      ★ 'How do I find the Maintainer Home pages?' (TrainingMaterial|CourseInstance)
+      ★ 'How do I manage my Galaxy storage?' (TrainingMaterial|CourseInstance)
+      ★ 'How do I manage my repositories on Galaxy?' (TrainingMaterial|CourseInstance)
+      ★ 'Mapping Jobs to Specific Storage By User' (TrainingMaterial|CourseInstance)
+      ★ 'When can you use (or cannot use) Match between runs in MaxQuant?' (TrainingMaterial|CourseInstance)
+      ★ 'How do I add a news feed to a Matrix channel?' (TrainingMaterial|CourseInstance)
+      ★ 'Maximum MAG contamination percentage' (TrainingMaterial|CourseInstance)
+      ★ 'How can I plan meetings across timezones?' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1348 ms
+    [LLM:content_relevance] 1320 ms
+    [LLM:content_relevance] 1310 ms
+    [LLM:content_relevance] 8122 ms
+    [LLM:content_relevance] 1376 ms
+    [LLM:content_relevance] 1331 ms
+    [LLM:content_relevance] 11823 ms
+    Chunk 40/128: relevant
+    [LLM:content_relevance] 12114 ms
+    Chunk 41/128: relevant
+      ★ 'Introduction to Galaxy Analyses' (CourseInstance)
+    [LLM:content_relevance] 19680 ms
+    [LLM:content_relevance] 12978 ms
+    Chunk 43/128: relevant
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&sort=score
+    [LLM:content_relevance] 4819 ms
+    Chunk 44/128: relevant
+      ★ 'Proteomics' (CourseInstance)
+      ★ 'Using Galaxy and Managing your Data' (CourseInstance)
+      ★ 'Foundations of Data Science' (CourseInstance)
+    [LLM:content_relevance] 2112 ms
+    Chunk 45/128: relevant
+    [LLM:content_relevance] 10488 ms
+    Chunk 46/128: relevant
+      ★ 'An earth-system RO-Crate' (CourseInstance)
+      ★ 'Intro to DataPLANT ARCs' (CourseInstance)
+      ★ 'Gleam Image Learner - Validating Skin Lesion Classification on HAM10000' (CourseInstance)
+      ★ 'Convolutional neural networks (CNN) Deep Learning - Part 3' (CourseInstance)
+      ★ 'Introduction to Machine learning' (CourseInstance)
+      ★ 'Classification in Machine Learning' (CourseInstance)
+      ★ 'Fine-tuning Protein Language Model' (CourseInstance)
+      ★ 'Gleam Multimodal Learner - HNSCC Recurrence Prediction with HANCOCK' (CourseInstance)
+      ★ 'Recurrent neural networks (RNN) Deep Learning - Part 2' (CourseInstance)
+      ★ 'Image classification in Galaxy with fruit 360 dataset' (CourseInstance)
+      ★ 'Neural networks using Python' (CourseInstance)
+      ★ 'Feedforward neural networks (FNN) Deep Learning - Part 1' (CourseInstance)
+      ★ 'Deep Learning (without Generative Artificial Intelligence) using Python' (CourseInstance)
+    [LLM:content_relevance] 10813 ms
+    Chunk 47/128: relevant
+    [LLM:content_relevance] 11789 ms
+    Chunk 48/128: relevant
+    [LLM:content_relevance] 2152 ms
+    Chunk 49/128: relevant
+      ★ 'Sliding Window Analysis' (CourseInstance)
+    [LLM:content_relevance] 6261 ms
+    Chunk 50/128: relevant
+      ★ 'Introduction to Galaxy Analyses' (CourseInstance)
+      ★ 'Single Cell' (CourseInstance)
+      ★ 'Introduction to Galaxy' (CourseInstance)
+    [LLM:content_relevance] 1423 ms
+    [LLM:content_relevance] 1359 ms
+    [LLM:content_relevance] 1342 ms
+    [LLM:content_relevance] 11204 ms
+    Chunk 54/128: relevant
+    [LLM:content_relevance] 11735 ms
+    Chunk 55/128: relevant
+      ★ 'Bacterial Genome Quality Control' (CourseInstance)
+    [LLM:content_relevance] 2231 ms
+    Chunk 56/128: relevant
+      ★ 'Module 1: Introduction to Galaxy' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 7413 ms
+    Chunk 57/128: relevant
+    [LLM:content_relevance] 11481 ms
+    Chunk 58/128: relevant
+      ★ 'Query an annotated mobile genetic element database' (TrainingMaterial)
+    [LLM:content_relevance] 10413 ms
+    Chunk 59/128: relevant
+      ★ 'metatranscriptomicsmicrogalaxy' (TrainingMaterial)
+    [LLM:content_relevance] 13238 ms
+    Chunk 60/128: relevant
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&category=teaching
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&category=metabolomics
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&category=single-cell
+    [LLM:content_relevance] 10028 ms
+    Chunk 61/128: relevant
+    [LLM:content_relevance] 11516 ms
+    Chunk 62/128: relevant
+    [LLM:content_relevance] 1452 ms
+    [LLM:content_relevance] 15116 ms
+    Chunk 64/128: relevant
+    [LLM:content_relevance] 5646 ms
+    Chunk 65/128: relevant
+      ★ 'Hands-on tutorial on Identification of somatic and germline variants from tumor and normal sample pairs' (CourseInstance)
+      ★ 'Hands-on tutorial on Working with Beacon V2' (CourseInstance)
+      ★ 'Hands-on tutorial on Somatic Variant Discovery from WES Data Using Control-FREEC' (CourseInstance)
+      ★ 'Hands-on tutorial on Calling variants in non-diploid systems' (CourseInstance)
+      ★ 'Hands-on tutorial on Avian influenza viral strain analysis from gene segment sequencing data' (CourseInstance)
+      ★ 'Hands-on tutorial on Microbial Variant Calling' (CourseInstance)
+      ★ 'Hands-on tutorial on Pox virus genome analysis from tiled-amplicon sequencing data' (CourseInstance)
+    [LLM:content_relevance] 13871 ms
+    Chunk 66/128: relevant
+      ★ 'Hands-on Tutorial: Pox virus genome analysis from tiled-amplicon sequencing data' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: M. tuberculosis Variant Analysis' (TrainingMaterial)
+      ★ "Hands-on Tutorial: From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis" (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Calling very rare variants' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Querying the University of Bradford GDC Beacon Database for Copy Number Variants (CNVs)' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Mapping and molecular identification of phenotype-causing mutations' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Finding the muon stopping site with pymuon-suite in Galaxy' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: SARS-CoV-2 Viral Sample Alignment and Variant Visualization' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Removal of human reads from SARS-CoV-2 sequencing data' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Quality and contamination control in bacterial isolate using Illumina MiSeq Data' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: NCBI BLAST+ against the MAdLand' (TrainingMaterial)
+      ★ 'Hands-on Tutorial: Screening assembled genomes for contamination using NCBI FCS' (TrainingMaterial)
+      ★ 'Quality Control' (TrainingMaterial)
+    [LLM:content_relevance] 9510 ms
+    Chunk 67/128: relevant
+      ★ 'Hands-on' (TrainingMaterial)
+    [LLM:content_relevance] 10099 ms
+    Chunk 68/128: relevant
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+      ★ 'Hands-on' (CourseInstance)
+    [LLM:content_relevance] 11730 ms
+    Chunk 69/128: relevant
+    [LLM:content_relevance] 14700 ms
+    Chunk 70/128: relevant
+    [LLM:content_relevance] 19246 ms
+    Chunk 71/128: relevant
+      ★ 'DDA | Proteomics | Introductory | 15m' (TrainingMaterial)
+      ★ 'Hands-on | [Proteogenomics 3: Novel peptide analysis](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/proteogenomics-novel-peptide-analysis/tutorial.html)proteogenomics | Proteomics | Intermediate | 30m' (TrainingMaterial)
+      ★ 'Hands-on | [Mass spectrometry imaging: Loading and exploring MSI data](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/mass-spectrometry-imaging-loading-exploring-data/tutorial.html)mouseimaging | Proteomics | Introductory | 45m' (TrainingMaterial)
+      ★ 'Hands-on | [Neoantigen 5a: Predicting HLA Binding](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/neoantigen-predicting-hla-binding/tutorial.html)label-free | Proteomics |  | 3H' (TrainingMaterial)
+      ★ 'Hands-on | [metaQuantome 1: Data creation](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/metaquantome-data-creation/tutorial.html)microgalaxy | Proteomics | Intermediate | 1h' (TrainingMaterial)
+      ★ 'Hands-on | [MaxQuant and MSstats for the analysis of label-free data](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/maxquant-msstats-dda-lfq/tutorial.html)label-free | Proteomics | Intermediate | 2H' (TrainingMaterial)
+      ★ 'Hands-on | [Secretome Prediction](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/secretome-prediction/tutorial.html)humanwork-in-progress | Proteomics | Intermediate | 30m' (TrainingMaterial)
+      ★ 'Hands-on | [metaQuantome 3: Taxonomy](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/metaquantome-taxonomy/tutorial.html)microgalaxy | Proteomics | Intermediate | 1h' (TrainingMaterial)
+      ★ 'Hands-on | [Clinical Metaproteomics 4: Quantitation](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/clinical-mp-4-quantitation/tutorial.html)label-TMT11 | Proteomics |  | 3H' (TrainingMaterial)
+      ★ 'Hands-on | [Peptide and Protein ID using SearchGUI and PeptideShaker](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/protein-id-sg-ps/tutorial.html)DDAHeLa | Proteomics | Introductory | 45m' (TrainingMaterial)
+      ★ 'Hands-on | [EncyclopeDIA](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/encyclopedia/tutorial.html)DIA | Proteomics |  | 6H' (TrainingMaterial)
+      ★ 'Hands-on | [Metaproteomics tutorial](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/metaproteomics/tutorial.html)microgalaxy | Proteomics |  | 2h' (TrainingMaterial)
+      ★ 'Hands-on | [Peptide and Protein Quantification via Stable Isotope Labelling (SIL)](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/protein-quant-sil/tutorial.html)DDASILAC | Proteomics | Advanced | 1h' (TrainingMaterial)
+      ★ 'Hands-on | [Proteogenomics 2: Database Search](https://training.galaxyproject.org/training-material/topics/proteomics/tutorials/proteogenomics-dbsearch/tutorial.html)proteogenomics | Proteomics | Intermediate | 15m' (TrainingMaterial)
+      ★ 'Detection and quantitation of N-termini (degradomics) via N-TAILS' (TrainingMaterial)
+    [LLM:content_relevance] 16824 ms
+    Chunk 72/128: relevant
+      ★ 'Label-free data analysis using MaxQuant' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 12192 ms
+    Chunk 73/128: relevant
+      ★ 'Getting started with Onedata distributed storage' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 7906 ms
+    Chunk 74/128: relevant
+    [LLM:content_relevance] 12230 ms
+    Chunk 75/128: relevant
+    [LLM:content_relevance] 9626 ms
+    Chunk 76/128: relevant
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+      ★ 'Hands-on' (TrainingMaterial)
+    [LLM:content_relevance] 10931 ms
+    Chunk 77/128: relevant
+    [LLM:content_relevance] 11035 ms
+    Chunk 78/128: relevant
+    [LLM:content_relevance] 9902 ms
+    Chunk 79/128: relevant
+      ★ 'Hands-on Tutorial: Creation of resources listing all the tools and their metadata relevant to your community' (TrainingMaterial|CourseInstance)
+      ★ "Hands-on Tutorial: What's a Special Interest Group?" (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Creation of resources listing Galaxy workflow for your community' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Creation of a Galaxy tutorial table for your community' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Creation of the labs in the different Galaxy instances for your community' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Creating community content' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Python - Coding Style' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: R basics in Galaxy' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Make & Snakemake' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Python - Flow Control' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Python - Warm-up for statistics and machine learning' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Python - Loops' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Python - Functions' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on Tutorial: Introduction to sequencing with Python (part two)' (TrainingMaterial|CourseInstance)
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&sort=date
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&type=online
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&level=beginner
+    [LLM:content_relevance] 9536 ms
+    Chunk 80/128: relevant
+    [LLM:content_relevance] 8479 ms
+    Chunk 81/128: relevant
+    [LLM:content_relevance] 11475 ms
+    Chunk 82/128: relevant
+    [LLM:content_relevance] 1937 ms
+    Chunk 83/128: relevant
+    [LLM:content_relevance] 9524 ms
+    Chunk 84/128: relevant
+    [LLM:content_relevance] 3763 ms
+    Chunk 85/128: relevant
+    [LLM:content_relevance] 9310 ms
+    Chunk 86/128: relevant
+      ★ 'limma-voommouseQC' (TrainingMaterial|CourseInstance)
+      ★ 'GO Enrichment Analysis' (TrainingMaterial|CourseInstance)
+      ★ 'RNA Seq Counts to Viz in R' (TrainingMaterial|CourseInstance)
+      ★ 'Small Non-coding RNA Clustering using BlockClust' (TrainingMaterial|CourseInstance)
+      ★ 'Visualization of RNA-Seq results with CummeRbund' (TrainingMaterial|CourseInstance)
+      ★ 'De novo transcriptome assembly, annotation, and differential expression analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Hi-C analysis of Drosophila melanogaster cells using HiCExplorer' (TrainingMaterial|CourseInstance)
+      ★ 'Identification of the binding sites of the T-cell acute lymphocytic leukemia protein 1 (TAL1)' (TrainingMaterial|CourseInstance)
+      ★ 'DNA Methylation data analysis' (TrainingMaterial|CourseInstance)
+      ★ 'Formation of the Super-Structures on the Inactive X' (TrainingMaterial|CourseInstance)
+      ★ 'Identification of the binding sites of the Estrogen receptor' (TrainingMaterial|CourseInstance)
+      ★ 'ATAC-Seq data analysis' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 3670 ms
+    Chunk 87/128: relevant
+    [LLM:content_relevance] 10473 ms
+    Chunk 88/128: relevant
+      ★ 'Generating PDF artefacts of the website' (TrainingMaterial)
+      ★ 'Updating diffs in admin training' (TrainingMaterial)
+      ★ 'GTN Metadata' (TrainingMaterial)
+      ★ 'Creating content in Markdown' (TrainingMaterial)
+    [LLM:content_relevance] 10620 ms
+    Chunk 89/128: relevant
+    [LLM:content_relevance] 8850 ms
+    Chunk 90/128: relevant
+    [LLM:content_relevance] 4209 ms
+    Chunk 91/128: relevant
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&sort=date
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&sort=relevance
+    [LLM:content_relevance] 18529 ms
+    Chunk 92/128: relevant
+    [LLM:content_relevance] 7131 ms
+    Chunk 93/128: relevant
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+      ★ 'Hands-on' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 12782 ms
+    Chunk 94/128: relevant
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&category=assembly
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&category=development
+  ⚠  Skipping faceted-search URL: https://training.galaxyproject.org/training-material/search2.html?query=deutsch&category=analysis
+    [LLM:content_relevance] 10698 ms
+    Chunk 95/128: relevant
+    [LLM:content_relevance] 11980 ms
+    Chunk 96/128: relevant
+    [LLM:content_relevance] 2678 ms
+    Chunk 97/128: relevant
+    [LLM:content_relevance] 1357 ms
+    [LLM:content_relevance] 1351 ms
+    [LLM:content_relevance] 1346 ms
+    [LLM:content_relevance] 11270 ms
+    Chunk 101/128: relevant
+    [LLM:content_relevance] 1723 ms
+    [LLM:content_relevance] 8998 ms
+    Chunk 103/128: relevant
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+      ★ 'Workflow' (TrainingMaterial)
+    [LLM:content_relevance] 19592 ms
+    [LLM:content_relevance] 12598 ms
+    Chunk 105/128: relevant
+    [LLM:content_relevance] 12034 ms
+    Chunk 106/128: relevant
+    [LLM:content_relevance] 10053 ms
+    Chunk 107/128: relevant
+    [LLM:content_relevance] 1463 ms
+    [LLM:content_relevance] 9760 ms
+    Chunk 109/128: relevant
+      ★ 'Galaxy-Workflow-AnnData_object_to_Monocle_input_files.html' (CourseInstance)
+      ★ 'Galaxy-Workflow-Monocle3_workflow.html' (CourseInstance)
+      ★ 'Trajectory-analysis-using-Monocle3---full-tutorial-workflow.html' (CourseInstance)
+      ★ 'pseudo-bulk_edgeR.html' (CourseInstance)
+      ★ 'Generating-a-single-cell-matrix-using-Alevin-ARCHIVE.html' (CourseInstance)
+      ★ 'Seurat_PBMC_Workflow.html' (CourseInstance)
+      ★ 'Seurat_PBMC_Workflow_SCT.html' (CourseInstance)
+      ★ 'main_workflow.html' (CourseInstance)
+      ★ 'scRNA-seq-Preprocessing-TenX.html' (CourseInstance)
+      ★ 'main_workflow.html' (CourseInstance)
+      ★ 'scRNA-Plant-Analysis.html' (CourseInstance)
+      ★ 'main_workflow.html' (CourseInstance)
+      ★ 'sc_matrix.html' (CourseInstance)
+      ★ 'sc_metadata.html' (CourseInstance)
+    [LLM:content_relevance] 2137 ms
+    Chunk 110/128: relevant
+    [LLM:content_relevance] 12966 ms
+    Chunk 111/128: relevant
+    [LLM:content_relevance] 2320 ms
+    Chunk 112/128: relevant
+      ★ 'Synthetic Biology - RetroSynthesis Analysis Workflows' (CourseInstance)
+    [LLM:content_relevance] 1341 ms
+    [LLM:content_relevance] 1795 ms
+    Chunk 114/128: relevant
+    [LLM:content_relevance] 14032 ms
+    Chunk 115/128: relevant
+    [LLM:content_relevance] 7508 ms
+    Chunk 116/128: relevant
+      ★ 'WF5_Data_Interpreter_Worklow' (CourseInstance)
+    [LLM:content_relevance] 9402 ms
+    Chunk 117/128: relevant
+    [LLM:content_relevance] 12533 ms
+    Chunk 118/128: relevant
+      ★ 'Species Distribution Modeling With Wallace From GBIF - Training Material' (Workflow)
+    [LLM:content_relevance] 1426 ms
+    [LLM:content_relevance] 11120 ms
+    Chunk 120/128: relevant
+      ★ 'Champs Blocs Indicators Workflow' (CourseInstance)
+      ★ 'Data Manipulation Olympics Workflow' (CourseInstance)
+      ★ 'Electrophoresis-Gel-Bands-Image-Analysis Workflow' (CourseInstance)
+      ★ 'Multiplex Tissue Imaging-TMA Workflow' (CourseInstance)
+      ★ 'ISCC - Image Analysis Workflow Example' (CourseInstance)
+      ★ "Workflow Constructed from Tutorial 'Introduction to Image Analysis using Galaxy'" (CourseInstance)
+      ★ 'Capturing Mitoflashes Workflow' (CourseInstance)
+      ★ '2024 OMERO Basic Upload Workflow' (CourseInstance)
+      ★ 'CP Object Tracking Example Workflow' (CourseInstance)
+      ★ 'Segmentation of Anatomical Structures in Medical Images Workflow' (CourseInstance)
+      ★ 'Voronoi Segmentation Workflow' (CourseInstance)
+      ★ '2025 2D Spot Detection Workflow' (CourseInstance)
+      ★ 'BiaPy Workflow' (CourseInstance)
+      ★ 'YOLO Training and Segmentation Workflow' (CourseInstance)
+    [LLM:content_relevance] 16606 ms
+    Chunk 121/128: relevant
+    [LLM:content_relevance] 13269 ms
+    Chunk 122/128: relevant
+    [LLM:content_relevance] 12692 ms
+    Chunk 123/128: relevant
+      ★ 'Small ncRNA clustering' (CourseInstance)
+      ★ 'Simtext training workflow' (CourseInstance)
+    [LLM:content_relevance] 12977 ms
+    Chunk 124/128: relevant
+      ★ 'Simtext training workflow' (TrainingMaterial)
+      ★ 'Intro_To_CNN_v1.0.11.0' (TrainingMaterial)
+      ★ "Workflow Constructed From History 'IWTomics Workflow'" (TrainingMaterial)
+      ★ 'Machine Learning' (TrainingMaterial)
+      ★ 'ml_classification' (TrainingMaterial)
+      ★ 'GLEAM Multimodal Learner - HANCOCK recurrence prediction' (TrainingMaterial)
+      ★ 'Ludwig - Image recognition model - MNIST' (TrainingMaterial)
+      ★ 'Flexynesis - get data from Cbioportal' (TrainingMaterial)
+      ★ 'papaa@0.1.9_PI3K_OG_model_tutorial' (TrainingMaterial)
+      ★ 'Age Prediction DNA Methylation' (TrainingMaterial)
+      ★ 'Age Prediction RNA-Seq' (TrainingMaterial)
+      ★ 'Final - Survival Markers of Lower Grade' (TrainingMaterial)
+      ★ 'Final - Modeling Breast Cancer Subtypes + TABPFN' (TrainingMaterial)
+      ★ 'Intro_To_RNN_v1_0_10_0' (TrainingMaterial)
+    [LLM:content_relevance] 19852 ms
+    [LLM:content_relevance] 12074 ms
+    Chunk 126/128: relevant
+    [LLM:content_relevance] 8078 ms
+    Chunk 127/128: relevant
+    [LLM:content_relevance] 1312 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/
+    ↓ https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/ [404]
+  ⚠  Could not retrieve https://training.galaxyproject.org/training-material/topics/transcriptomics/tutorials/ (HTTP 404 — the URL may be incorrect, the server may be temporarily unavailable, or access may be restricted)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/admin/
+    ↓ https://training.galaxyproject.org/training-material/topics/admin/ [200]
+    Page 20/20: 672136 chars, 100 chunk(s), hash=c2c543e0e4a8…
+    [LLM:content_relevance] 1745 ms
+    Chunk 1/100: relevant
+    [LLM:content_relevance] 2261 ms
+    Chunk 2/100: relevant
+      ★ 'Ansible tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1936 ms
+    Chunk 3/100: relevant
+      ★ 'Ansible Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1332 ms
+    [LLM:content_relevance] 1905 ms
+    Chunk 5/100: relevant
+    [LLM:content_relevance] 1385 ms
+    [LLM:content_relevance] 1337 ms
+    [LLM:content_relevance] 2457 ms
+    Chunk 8/100: relevant
+    [LLM:content_relevance] 2820 ms
+    Chunk 9/100: relevant
+      ★ 'Jobs & Scheduling' (CourseInstance)
+    [LLM:content_relevance] 2470 ms
+    [LLM:content_relevance] 1402 ms
+    [LLM:content_relevance] 1954 ms
+    Chunk 12/100: relevant
+    [LLM:content_relevance] 1338 ms
+    [LLM:content_relevance] 1772 ms
+    [LLM:content_relevance] 1794 ms
+    [LLM:content_relevance] 5677 ms
+    Chunk 16/100: relevant
+      ★ 'Pulsar Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 6171 ms
+    Chunk 17/100: relevant
+      ★ 'Using Apptainer containers for running Galaxy jobs' (CourseInstance)
+    [LLM:content_relevance] 1604 ms
+    [LLM:content_relevance] 1678 ms
+    [LLM:content_relevance] 1406 ms
+    [LLM:content_relevance] 2188 ms
+    [LLM:content_relevance] 2310 ms
+    Chunk 22/100: relevant
+      ★ 'Data Library Tutorial' (TrainingMaterial)
+      ★ 'Data Library Slides' (TrainingMaterial)
+    [LLM:content_relevance] 1288 ms
+    [LLM:content_relevance] 3193 ms
+    Chunk 24/100: relevant
+      ★ 'Data Library Tutorial (February 2021)' (TrainingMaterial|CourseInstance)
+      ★ 'Distributed Object Storage Tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 3395 ms
+    Chunk 25/100: relevant
+      ★ 'Object Store Tutorial' (CourseInstance)
+    [LLM:content_relevance] 1320 ms
+    [LLM:content_relevance] 8939 ms
+    Chunk 27/100: relevant
+    [LLM:content_relevance] 1445 ms
+    [LLM:content_relevance] 1834 ms
+    [LLM:content_relevance] 2420 ms
+    Chunk 30/100: relevant
+    [LLM:content_relevance] 2431 ms
+    [LLM:content_relevance] 2043 ms
+    [LLM:content_relevance] 1309 ms
+    [LLM:content_relevance] 1339 ms
+    [LLM:content_relevance] 1294 ms
+    [LLM:content_relevance] 1686 ms
+    Chunk 36/100: relevant
+    [LLM:content_relevance] 1319 ms
+    [LLM:content_relevance] 2789 ms
+    Chunk 38/100: relevant
+      ★ 'Beacon tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'FTP tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1344 ms
+    [LLM:content_relevance] 2610 ms
+    Chunk 40/100: relevant
+      ★ 'External Authentication Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'External Authentication Slides' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1289 ms
+    [LLM:content_relevance] 1272 ms
+    [LLM:content_relevance] 1301 ms
+    [LLM:content_relevance] 1251 ms
+    [LLM:content_relevance] 2178 ms
+    Chunk 45/100: relevant
+    [LLM:content_relevance] 1329 ms
+    [LLM:content_relevance] 2093 ms
+    Chunk 47/100: relevant
+      ★ 'Tutorial on Tool Management' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1388 ms
+    [LLM:content_relevance] 2734 ms
+    Chunk 49/100: relevant
+    [LLM:content_relevance] 5786 ms
+    [LLM:content_relevance] 2557 ms
+    Chunk 51/100: relevant
+      ★ 'Training Infrastructure as a Service (TIaaS) Tutorial' (TrainingMaterial|CourseInstance)
+      ★ 'TIaaS Tutorial Recording (February 2021)' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 2657 ms
+    Chunk 52/100: relevant
+      ★ 'Running Galaxy on the Cloud' (CourseInstance)
+    [LLM:content_relevance] 1354 ms
+    [LLM:content_relevance] 1332 ms
+    [LLM:content_relevance] 3132 ms
+    Chunk 55/100: relevant
+      ★ 'Deploying Galaxy on Kubernetes' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1367 ms
+    [LLM:content_relevance] 1242 ms
+    [LLM:content_relevance] 1928 ms
+    Chunk 58/100: relevant
+    [LLM:content_relevance] 1981 ms
+    [LLM:content_relevance] 1976 ms
+    Chunk 60/100: relevant
+    [LLM:content_relevance] 1277 ms
+    [LLM:content_relevance] 1858 ms
+    Chunk 62/100: relevant
+    [LLM:content_relevance] 1288 ms
+    [LLM:content_relevance] 1818 ms
+    Chunk 64/100: relevant
+    [LLM:content_relevance] 1341 ms
+    [LLM:content_relevance] 1261 ms
+    [LLM:content_relevance] 1313 ms
+    [LLM:content_relevance] 3192 ms
+    Chunk 68/100: relevant
+      ★ 'Poll-SSA' (TrainingMaterial)
+    [LLM:content_relevance] 3599 ms
+    Chunk 69/100: relevant
+      ★ 'Troubleshooting' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1374 ms
+    [LLM:content_relevance] 1263 ms
+    [LLM:content_relevance] 1304 ms
+    [LLM:content_relevance] 1262 ms
+    [LLM:content_relevance] 2442 ms
+    Chunk 74/100: relevant
+      ★ 'User, Role, Group, Quota, and Authentication Management' (TrainingMaterial)
+    [LLM:content_relevance] 1296 ms
+    [LLM:content_relevance] 1352 ms
+    [LLM:content_relevance] 1301 ms
+    [LLM:content_relevance] 1369 ms
+    [LLM:content_relevance] 1319 ms
+    [LLM:content_relevance] 1777 ms
+    Chunk 80/100: relevant
+    [LLM:content_relevance] 1301 ms
+    [LLM:content_relevance] 1268 ms
+    [LLM:content_relevance] 1310 ms
+    [LLM:content_relevance] 1906 ms
+    Chunk 84/100: relevant
+    [LLM:content_relevance] 2620 ms
+    [LLM:content_relevance] 1228 ms
+    [LLM:content_relevance] 1290 ms
+    [LLM:content_relevance] 1345 ms
+    [LLM:content_relevance] 1353 ms
+    [LLM:content_relevance] 1291 ms
+    [LLM:content_relevance] 1347 ms
+    [LLM:content_relevance] 1358 ms
+    [LLM:content_relevance] 1303 ms
+    [LLM:content_relevance] 1809 ms
+    Chunk 94/100: relevant
+      ★ 'Galaxy Database schema tutorial' (TrainingMaterial|CourseInstance)
+    [LLM:content_relevance] 1281 ms
+    [LLM:content_relevance] 1323 ms
+    [LLM:content_relevance] 1346 ms
+    [LLM:content_relevance] 1323 ms
+    [LLM:content_relevance] 1360 ms
+    [LLM:content_relevance] 3536 ms
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Discovery complete: 1835 item(s) found across 20 page(s)
+Phase 2–4: extract, review, validate
+  Item: 'Module 1: Introduction to Galaxy' (TrainingMaterial|CourseInstance)
+    ⚠  Could not fetch detail page: Invalid URL '#module-1-introduction-to-galaxy': No scheme supplied. Perhaps you meant https://#module-1-introduction-to-galaxy?
+    [LLM:metadata_analysis] 14590 ms
+    [LLM:json_ld_extraction] 29001 ms
+    [LLM:json_ld_review] 35640 ms
+    ✗ Introduction to Galaxy and Sequence analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 38946 ms
+  Item: 'A short introduction to Galaxy' (TrainingMaterial)
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html [200]
+    [LLM:metadata_analysis] 21722 ms
+    [LLM:json_ld_extraction] 38325 ms
+    [LLM:json_ld_review] 32960 ms
+    ✗ A short introduction to Galaxy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 28912 ms
+  Item: 'Galaxy Introduction Short Tutorial' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html [200]
+    [LLM:metadata_analysis] 18127 ms
+    [LLM:json_ld_extraction] 25226 ms
+    [LLM:json_ld_review] 23019 ms
+    ✗ A short introduction to Galaxy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25514 ms
+  Item: 'Galaxy Introduction Tutorial' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html [200]
+    [LLM:metadata_analysis] 17634 ms
+    [LLM:json_ld_extraction] 29792 ms
+    [LLM:json_ld_review] 28815 ms
+    ✗ A short introduction to Galaxy Analyses – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23708 ms
+  Item: 'Galaxy Introduction Slides' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/slides-plain.html [200]
+    [LLM:metadata_analysis] 15007 ms
+    [LLM:json_ld_extraction] 25898 ms
+    [LLM:json_ld_review] 29315 ms
+    ✗ A Short Introduction to Galaxy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 31506 ms
+  Item: 'Galaxy Introduction Slides (Plain Text)' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/slides-plain.html [200]
+    [LLM:metadata_analysis] 16710 ms
+    [LLM:json_ld_extraction] 27493 ms
+    [LLM:json_ld_review] 29905 ms
+    ✗ A Short Introduction to Galaxy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 31164 ms
+  Item: 'Galaxy Basics for genomics' (TrainingMaterial)
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-101/tutorial.html [200]
+    [LLM:metadata_analysis] 16480 ms
+    [LLM:json_ld_extraction] 32860 ms
+    [LLM:json_ld_review] 34405 ms
+    ✗ Galaxy Basics for genomics – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 37985 ms
+  Item: 'Basics of Genome Sequence Analysis' (TrainingMaterial)
+    ⚠  Could not fetch detail page: HTTPSConnectionPool(host='training-galaxyproject.org', port=443): Max retries exceeded with url: /training-material/topics/introduction/tutorials/galaxy-intro-101/tutorial.html (Caused by NameResolutionError("HTTPSConnection(host='training-galaxyproject.org', port=443): Failed to resolve 'training-galaxyproject.org' ([Errno -2] Name or service not known)"))
+    [LLM:metadata_analysis] 15626 ms
+    [LLM:json_ld_extraction] 21658 ms
+    [LLM:json_ld_review] 20505 ms
+    ✗ Introduction to Galaxy and Sequence analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22554 ms
+  Item: 'Quality Control' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html [200]
+    [LLM:metadata_analysis] 19156 ms
+    [LLM:json_ld_extraction] 40006 ms
+    [LLM:json_ld_review] 38892 ms
+    ✗ Quality Control – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 41101 ms
+  Item: 'Quality Control Tutorial' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html [200]
+    [LLM:metadata_analysis] 20250 ms
+    [LLM:json_ld_extraction] 36730 ms
+    [LLM:json_ld_review] 37197 ms
+    ✗ Quality Control – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 39510 ms
+  Item: 'Mapping Tutorial' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/mapping/tutorial.html [200]
+    [LLM:metadata_analysis] 17749 ms
+    [LLM:json_ld_extraction] 30589 ms
+    [LLM:json_ld_review] 31290 ms
+    ✗ Mapping – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 33533 ms
+  Item: 'An Introduction to Genome Assembly' (TrainingMaterial|CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/topics/assembly/tutorials/general-introduction/tutorial.html [200]
+    [LLM:metadata_analysis] 18970 ms
+    [LLM:json_ld_extraction] 25362 ms
+    [LLM:json_ld_review] 23671 ms
+    ✗ An Introduction to Genome Assembly – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24862 ms
+  Item: 'General Introduction to Galaxy' (TrainingMaterial)
+    ↓ https://training.galaxyproject.org/training-material/topics/assembly/tutorials/general-introduction/tutorial.html [200]
+    [LLM:metadata_analysis] 19051 ms
+    [LLM:json_ld_extraction] 22907 ms
+    [LLM:json_ld_review] 20742 ms
+    ✗ An Introduction to Genome Assembly – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22671 ms
+  Item: 'Galaxy Training Academy 2025' (CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/news/2025/03/26/gta-registration-open.html [200]
+    [LLM:metadata_analysis] 18893 ms
+    [LLM:json_ld_extraction] 23930 ms
+    [LLM:json_ld_review] 24560 ms
+    ✗ Galaxy Training Academy 2025 – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25477 ms
+  Item: 'BioNT basic curriculum Round Two' (CourseInstance)
+    ↓ https://training.galaxyproject.org/training-material/news/2025/01/21/biont-workshops.html [200]
+    [LLM:metadata_analysis] 20069 ms
+    [LLM:json_ld_extraction] 27935 ms
+    [LLM:json_ld_review] 27089 ms
+    ✗ BioNT basic curriculum Round Two - Starting in autumn 2024 with the RNA-Seq and Python Workshops – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 29035 ms
+  Item: 'Single Cell' (Course)
+    ↓ https://training.galaxyproject.org/training-material/topics/single-cell/ [200]
+    [LLM:metadata_analysis] 17020 ms
+    [LLM:json_ld_extraction] 22618 ms
+    [LLM:json_ld_review] 21958 ms
+    ✗ Single Cell – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23652 ms
+  Item: 'Galaxy Server administration' (Course)
+    [LLM:metadata_analysis] 15414 ms
+    [LLM:json_ld_extraction] 15789 ms
+    [LLM:json_ld_review] 22592 ms
+    ✗ Galaxy Server administration – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
