@@ -177,6 +177,14 @@ class AgentLogger:
             ValidationEvent(item_name=item_name, errors=errors, passed=passed)
         )
 
+    def set_legacy_fn(self, legacy_fn: Callable[[str], None] | None) -> None:
+        """Set or replace the legacy plain-string callback.
+
+        This is a public alternative to passing *legacy_fn* in the constructor,
+        useful when a caller wants to attach a callback after the logger is created.
+        """
+        self._legacy_fn = legacy_fn
+
     # -- Read-only access ------------------------------------------------------
 
     @property
@@ -210,12 +218,6 @@ class AgentLogger:
             stats["count"] += 1
             stats["total_ms"] = round(stats["total_ms"] + e.latency_ms, 1)
 
-        relevant_chunks = sum(
-            1
-            for e in self._events
-            if isinstance(e, InfoEvent) and "relevant" in e.message
-        )
-
         return {
             "llm_calls": len(llm_events),
             "total_llm_ms": round(total_latency, 1),
@@ -224,5 +226,4 @@ class AgentLogger:
             "items_found": len(item_events),
             "validations": len(validation_events),
             "validation_errors": sum(len(e.errors) for e in validation_events),
-            "relevant_chunks": relevant_chunks,
         }

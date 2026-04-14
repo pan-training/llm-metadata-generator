@@ -185,11 +185,12 @@ function renderEvent(ev) {
     body.innerHTML = '<strong>Warning:</strong> ' + escHtml(ev.message);
 
   } else if (ev.type === 'fetch') {
-    const kb = ev.content_length ? Math.round(ev.content_length / 1024) + ' KB' : '';
+    const bytes = ev.content_length || 0;
+    const sizeStr = bytes >= 1024 ? Math.ceil(bytes / 1024) + ' KB' : (bytes > 0 ? bytes + ' B' : '');
     const statusBadge = ev.status_code < 400
       ? `<span style="color:#137333">${ev.status_code}</span>`
       : `<span style="color:#c5221f">${ev.status_code}</span>`;
-    body.innerHTML = `GET ${statusBadge} <a href="${escHtml(ev.url)}" target="_blank" style="color:#1a73e8">${escHtml(ev.url)}</a> <span class="ev-meta">${kb}</span>`;
+    body.innerHTML = `GET ${statusBadge} <a href="${escHtml(ev.url)}" target="_blank" style="color:#1a73e8">${escHtml(ev.url)}</a> <span class="ev-meta">${sizeStr}</span>`;
 
   } else if (ev.type === 'item_found') {
     body.innerHTML = `<strong>Found:</strong> ${escHtml(ev.title)} <span class="ev-meta">(${escHtml(ev.item_type)})</span>`;
@@ -214,7 +215,7 @@ function renderEvent(ev) {
     const id = 'llm-' + (_llmCounter++);
     const ms = ev.latency_ms ? `${ev.latency_ms.toFixed(0)} ms` : '';
     body.innerHTML = `<strong>${escHtml(ev.task)}</strong> → <code>${escHtml(ev.model)}</code> <span class="ev-meta">${ms}</span>` +
-      `<button class="llm-toggle" onclick="toggleLlm('${id}', event)">▶ prompt / response</button>`;
+      `<button class="llm-toggle" onclick="toggleLlm('${id}', event)">${llmBtnLabel(false)}</button>`;
     const detail = document.createElement('div');
     detail.id = id;
     detail.className = 'llm-detail';
@@ -230,6 +231,10 @@ function renderEvent(ev) {
   return li;
 }
 
+function llmBtnLabel(open) {
+  return open ? '▼ prompt / response' : '▶ prompt / response';
+}
+
 function escHtml(str) {
   return String(str)
     .replace(/&/g, '&amp;')
@@ -243,7 +248,7 @@ function toggleLlm(id, ev) {
   const el = document.getElementById(id);
   if (el) el.classList.toggle('open');
   const btn = ev.target;
-  btn.textContent = (el && el.classList.contains('open')) ? '▼ prompt / response' : '▶ prompt / response';
+  btn.textContent = llmBtnLabel(el && el.classList.contains('open'));
 }
 
 // ---------------------------------------------------------------------------

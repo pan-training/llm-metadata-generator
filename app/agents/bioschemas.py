@@ -670,7 +670,7 @@ class BioschemasExtractorAgent:
         else:
             # Both logger and log_fn provided – attach log_fn to the logger.
             if log_fn is not None and logger._legacy_fn is None:
-                logger._legacy_fn = log_fn
+                logger.set_legacy_fn(log_fn)
             self._logger = logger
 
         if llm_client is None:
