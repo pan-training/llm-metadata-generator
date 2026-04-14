@@ -395,6 +395,65 @@ def _html_to_markdown(
     return md, links
 
 
+def _clean_html_for_llm(
+    html: str, base_url: str
+) -> tuple[str, list[tuple[str, str]]]:
+    """Strip noise tags and resolve URLs in *html* without converting to Markdown.
+
+    Produces cleaned HTML suitable for passing directly to an LLM when the
+    caller wants the model to see raw HTML structure instead of Markdown.
+    The same noise tags removed by :func:`_html_to_markdown` (``script``,
+    ``style``, ``noscript``, ``template``) are stripped here too so the
+    output remains compact.  Relative URLs in ``<a href>`` and ``<img src>``
+    attributes are resolved to absolute using *base_url*.
+
+    Returns:
+        ``(cleaned_html, [(absolute_url, anchor_text), ...])``
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    for noise_tag in soup.find_all(["script", "style", "noscript", "template"]):
+        noise_tag.decompose()
+
+    links: list[tuple[str, str]] = []
+    seen_urls: set[str] = set()
+
+    for a_tag in soup.find_all("a", href=True):
+        href = str(a_tag["href"]).strip()
+        if href.startswith(("#", "mailto:", "javascript:")):
+            continue
+        absolute = urljoin(base_url, href)
+        if urlparse(absolute).scheme not in ("http", "https"):
+            continue
+        a_tag["href"] = absolute
+        anchor = a_tag.get_text(strip=True)
+        if absolute not in seen_urls:
+            seen_urls.add(absolute)
+            links.append((absolute, anchor))
+
+    for img_tag in soup.find_all("img", src=True):
+        src = str(img_tag["src"]).strip()
+        if not src.startswith(("data:", "#")):
+            img_tag["src"] = urljoin(base_url, src)
+
+    return str(soup), links
+
+
+def _page_content(
+    html: str, base_url: str, raw_html: bool
+) -> tuple[str, list[tuple[str, str]]]:
+    """Return ``(text, links)`` using either Markdown or cleaned HTML.
+
+    When *raw_html* is ``False`` (default) the result of
+    :func:`_html_to_markdown` is returned.  When *raw_html* is ``True`` the
+    cleaned HTML from :func:`_clean_html_for_llm` is returned instead so the
+    LLM sees the original HTML structure.  Either way, the same set of
+    absolute links is extracted and returned.
+    """
+    if raw_html:
+        return _clean_html_for_llm(html, base_url)
+    return _html_to_markdown(html, base_url)
+
+
 # ---------------------------------------------------------------------------
 # Text chunking
 # ---------------------------------------------------------------------------
@@ -826,6 +885,7 @@ def compute_site_structure_summary(
     url: str,
     llm_client: Any,
     logger: "AgentLogger | None" = None,
+    raw_html: bool = False,
 ) -> str:
     """Compute a rich structural summary for a training website (Phase 0).
 
@@ -844,6 +904,9 @@ def compute_site_structure_summary(
         llm_client: An OpenAI-compatible client instance.
         logger: Optional :class:`~app.agents.logger.AgentLogger` for structured
             progress events.
+        raw_html: When ``True`` the LLM receives cleaned HTML instead of the
+            default Markdown conversion.  Hashing is always performed on the
+            Markdown representation regardless of this flag.
 
     Returns:
         JSON string with the structural summary (``schema_version="2"``).
@@ -888,18 +951,18 @@ def compute_site_structure_summary(
         content_length=len(response.text),
         parent=phase0_id,
     )
-    primary_md, primary_links = _html_to_markdown(response.text, url)
-    _logger.info(f"Primary page: {len(primary_md)} chars", parent=phase0_id)
+    primary_content_text, primary_links = _page_content(response.text, url, raw_html)
+    _logger.info(f"Primary page: {len(primary_content_text)} chars", parent=phase0_id)
 
     # Show beginning + end for large pages so the LLM sees the full range.
-    if len(primary_md) > STRUCTURE_CONTENT_SIZE * 2:
+    if len(primary_content_text) > STRUCTURE_CONTENT_SIZE * 2:
         primary_content = (
-            primary_md[:STRUCTURE_CONTENT_SIZE]
+            primary_content_text[:STRUCTURE_CONTENT_SIZE]
             + "\n\n[...middle content omitted...]\n\n"
-            + primary_md[-STRUCTURE_CONTENT_SIZE:]
+            + primary_content_text[-STRUCTURE_CONTENT_SIZE:]
         )
     else:
-        primary_content = primary_md[: STRUCTURE_CONTENT_SIZE * 2]
+        primary_content = primary_content_text[: STRUCTURE_CONTENT_SIZE * 2]
 
     _logger.info("Summarising primary page structure", parent=phase0_id)
     primary_summary = _summarise_page_for_structure(url, primary_content, llm_client)
@@ -957,17 +1020,17 @@ def compute_site_structure_summary(
             content_length=len(resp.text),
             parent=phase0_id,
         )
-        nav_md, _ = _html_to_markdown(resp.text, nav_url)
-        _logger.info(f"Summarising {nav_url} ({len(nav_md)} chars)", parent=phase0_id)
+        nav_content_text, _ = _page_content(resp.text, nav_url, raw_html)
+        _logger.info(f"Summarising {nav_url} ({len(nav_content_text)} chars)", parent=phase0_id)
 
-        if len(nav_md) > STRUCTURE_CONTENT_SIZE * 2:
+        if len(nav_content_text) > STRUCTURE_CONTENT_SIZE * 2:
             nav_content = (
-                nav_md[:STRUCTURE_CONTENT_SIZE]
+                nav_content_text[:STRUCTURE_CONTENT_SIZE]
                 + "\n\n[...middle content omitted...]\n\n"
-                + nav_md[-STRUCTURE_CONTENT_SIZE:]
+                + nav_content_text[-STRUCTURE_CONTENT_SIZE:]
             )
         else:
-            nav_content = nav_md[: STRUCTURE_CONTENT_SIZE * 2]
+            nav_content = nav_content_text[: STRUCTURE_CONTENT_SIZE * 2]
 
         page_sum = _summarise_page_for_structure(nav_url, nav_content, llm_client)
         page_sum["url"] = nav_url
@@ -1054,6 +1117,7 @@ class BioschemasExtractorAgent:
     def __init__(self) -> None:
         # Holds the AgentLogger for the duration of a run(); reset to None after.
         self._logger: AgentLogger | None = None
+        self._raw_html: bool = False
 
     def run(
         self,
@@ -1063,6 +1127,7 @@ class BioschemasExtractorAgent:
         llm_client: Any = None,
         logger: AgentLogger | None = None,
         on_item: Callable[[dict[str, Any]], None] | None = None,
+        raw_html: bool = False,
     ) -> list[dict[str, Any]]:
         """Extract Bioschemas JSON-LD from the given URL.
 
@@ -1081,6 +1146,10 @@ class BioschemasExtractorAgent:
             on_item: Optional callback invoked with each fully processed
                 JSON-LD item as it is produced (before the final list is
                 returned).  Useful for streaming / partial result persistence.
+            raw_html: When ``True`` the LLM receives cleaned HTML instead of
+                the default Markdown conversion.  Hashing for change detection
+                is always performed on the Markdown representation regardless
+                of this flag.
 
         Returns:
             List of Bioschemas JSON-LD dicts.
@@ -1090,6 +1159,7 @@ class BioschemasExtractorAgent:
             NotTrainingContentError: No training content found after crawling.
         """
         self._logger = logger if logger is not None else AgentLogger()
+        self._raw_html = raw_html
 
         if llm_client is None:
             raise ValueError("llm_client must be provided")
@@ -1191,7 +1261,7 @@ class BioschemasExtractorAgent:
                         parent=item_id,
                     )
 
-            item_text, _ = _html_to_markdown(item_html or "", item_info.url or url)
+            item_text, _ = _page_content(item_html or "", item_info.url or url, self._raw_html)
             content_for_extraction = item_text[:MAX_EXTRACTION_CONTENT]
 
             # --- Chain-of-thought reasoning pass (step 2a) ---
@@ -1358,13 +1428,15 @@ class BioschemasExtractorAgent:
         html = response.text
         state.pages[start_url] = html
 
-        # Convert HTML → Markdown first; hash the stable Markdown content so
-        # that cosmetic HTML changes (whitespace, inline styles, CDN URLs)
-        # don't trigger unnecessary re-extraction.
+        # Always hash the stable Markdown content so that cosmetic HTML changes
+        # (whitespace, inline styles, CDN URLs) don't trigger unnecessary
+        # re-extraction.  When raw_html mode is active the LLM receives cleaned
+        # HTML instead of Markdown, but the hash is still derived from Markdown.
         md_text, _ = _html_to_markdown(html, start_url)
         page_hash = _content_hash(md_text)
         state.page_hashes[start_url] = page_hash
-        chunks = _chunk_text(md_text)
+        content_text = _clean_html_for_llm(html, start_url)[0] if self._raw_html else md_text
+        chunks = _chunk_text(content_text)
         total_chunks = len(chunks)
         if logger:
             logger.info(
