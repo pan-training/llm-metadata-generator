@@ -1,1 +1,109 @@
-{"site_description": "PaN Training is a platform providing training resources for the photon & neutron community.", "content_types": [{"type": "TrainingMaterial", "description": "Individual training materials, often workflows or analyses, covering specific scientific topics.", "primary_url": "https://test.tesshub.hzdr.de/materials", "navigation": {"type": "paginated", "urls": ["https://test.tesshub.hzdr.de/materials?page=2", "https://test.tesshub.hzdr.de/materials?page=3"], "description": "Materials are listed across multiple pages, accessible via pagination."}, "examples": [{"title": "Analysis of plant scRNA-Seq Data with Scanpy", "description": "plants paper-replication end-to-end", "url": "https://test.tesshub.hzdr.de/materials/analysis-of-plant-scrna-seq-data-with-scanpy"}, {"title": "Whole Genome Sequencing of SARS-CoV-2 genomes with Nextclade", "description": "A workflow that implements the Nextclade pipeline for SARS-CoV-2 variant analysis.", "url": "https://test.tesshub.hzdr.de/materials/whole-genome-sequencing-of-sars-cov-2-genomes-with-nextclade"}, {"title": "M. tuberculosis Variant Analysis", "description": "Analysis of M. tuberculosis genomes to identify variants and understand drug resistance.", "url": "https://test.tesshub.hzdr.de/materials/m-tuberculosis-variant-analysis"}, {"title": "Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data", "description": "A workflow for analysing SARS-CoV-2 sequencing data to identify mutations, reconstruct genomes and assign lineages.", "url": "https://test.tesshub.hzdr.de/materials/mutation-calling-viral-genome-reconstruction-and-lineage-clade-assignment-from-sars-cov-2-sequencing-data-e219503e-4cc6-46f8-89cd-096405d4dfbe"}], "typical_structure": "Each material listing includes a title, a short description, and a unique URL."}, {"type": "Workflow", "description": "Specific workflows designed for data analysis, often linked to particular tools or pipelines.", "primary_url": "https://test.tesshub.hzdr.de/workflows", "navigation": {"type": "categories", "urls": ["https://test.tesshub.hzdr.de/workflows?across_all_spaces=true"], "description": "Workflows are filterable by space, but the page currently shows zero workflows."}, "examples": [], "typical_structure": "Currently no workflows are listed, but expected structure is similar to TrainingMaterials: title, description, URL."}, {"type": "LearningPath", "description": "Curated sequences of training materials designed to guide users through a specific learning objective.", "primary_url": "https://test.tesshub.hzdr.de/learning_paths", "navigation": {"type": "categories", "urls": ["https://test.tesshub.hzdr.de/learning_paths?across_all_spaces=true", "https://test.tesshub.hzdr.de/learning_paths?include_archived=true"], "description": "Learning Paths can be filtered by space and archived status, but the page currently shows no learning paths."}, "examples": [], "typical_structure": "Expected structure is a list of paths, each with a title, description, and URL. Currently no items exist."}, {"type": "Space", "description": "Collections of training materials organized around a specific project, institution, or topic.", "primary_url": "https://test.tesshub.hzdr.de/spaces", "navigation": {"type": "single_list", "urls": ["https://test.tesshub.hzdr.de/spaces"], "description": "Spaces are listed on a single page, potentially with pagination."}, "examples": [{"title": "de.KCD Training Materials", "description": "A space for training materials related to de.KCD.", "url": "https://kcd.tesshub.hzdr.de"}, {"title": "DALIA", "description": "A space containing 820 training materials related to DALIA.", "url": "https://dalia.tesshub.hzdr.de"}, {"title": "EOSC Academy", "description": "A space for training materials related to the EOSC Academy.", "url": "https://eosc-academy.tesshub.hzdr.de"}, {"title": "OERHub.at", "description": "A space for training materials related to OERHub.at.", "url": "https://oerhub.tesshub.hzdr.de"}], "typical_structure": "Each Space listing includes a title, a description, and a URL pointing to the space's page."}], "source_url": "https://test.tesshub.hzdr.de/", "source_domain": "test.tesshub.hzdr.de", "computed_at": "2026-04-14T12:45:45.117071+00:00", "schema_version": "2"}
+{
+    "site_description": "PaN Training is a platform providing training resources for the photon & neutron community.",
+    "content_types": [
+        {
+            "type": "TrainingMaterial",
+            "description": "Individual training materials, often workflows or analyses, covering specific scientific topics.",
+            "primary_url": "https://test.tesshub.hzdr.de/materials",
+            "navigation": {
+                "type": "paginated",
+                "urls": [
+                    "https://test.tesshub.hzdr.de/materials?page=2",
+                    "https://test.tesshub.hzdr.de/materials?page=3"
+                ],
+                "description": "Materials are listed across multiple pages, accessible via pagination."
+            },
+            "examples": [
+                {
+                    "title": "Analysis of plant scRNA-Seq Data with Scanpy",
+                    "description": "plants paper-replication end-to-end",
+                    "url": "https://test.tesshub.hzdr.de/materials/analysis-of-plant-scrna-seq-data-with-scanpy"
+                },
+                {
+                    "title": "Whole Genome Sequencing of SARS-CoV-2 genomes with Nextclade",
+                    "description": "A workflow that implements the Nextclade pipeline for SARS-CoV-2 variant analysis.",
+                    "url": "https://test.tesshub.hzdr.de/materials/whole-genome-sequencing-of-sars-cov-2-genomes-with-nextclade"
+                },
+                {
+                    "title": "M. tuberculosis Variant Analysis",
+                    "description": "Analysis of M. tuberculosis genomes to identify variants and understand drug resistance.",
+                    "url": "https://test.tesshub.hzdr.de/materials/m-tuberculosis-variant-analysis"
+                },
+                {
+                    "title": "Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data",
+                    "description": "A workflow for analysing SARS-CoV-2 sequencing data to identify mutations, reconstruct genomes and assign lineages.",
+                    "url": "https://test.tesshub.hzdr.de/materials/mutation-calling-viral-genome-reconstruction-and-lineage-clade-assignment-from-sars-cov-2-sequencing-data-e219503e-4cc6-46f8-89cd-096405d4dfbe"
+                }
+            ],
+            "typical_structure": "Each material listing includes a title, a short description, and a unique URL."
+        },
+        {
+            "type": "Workflow",
+            "description": "Specific workflows designed for data analysis, often linked to particular tools or pipelines.",
+            "primary_url": "https://test.tesshub.hzdr.de/workflows",
+            "navigation": {
+                "type": "categories",
+                "urls": [
+                    "https://test.tesshub.hzdr.de/workflows?across_all_spaces=true"
+                ],
+                "description": "Workflows are filterable by space, but the page currently shows zero workflows."
+            },
+            "examples": [],
+            "typical_structure": "Currently no workflows are listed, but expected structure is similar to TrainingMaterials: title, description, URL."
+        },
+        {
+            "type": "LearningPath",
+            "description": "Curated sequences of training materials designed to guide users through a specific learning objective.",
+            "primary_url": "https://test.tesshub.hzdr.de/learning_paths",
+            "navigation": {
+                "type": "categories",
+                "urls": [
+                    "https://test.tesshub.hzdr.de/learning_paths?across_all_spaces=true",
+                    "https://test.tesshub.hzdr.de/learning_paths?include_archived=true"
+                ],
+                "description": "Learning Paths can be filtered by space and archived status, but the page currently shows no learning paths."
+            },
+            "examples": [],
+            "typical_structure": "Expected structure is a list of paths, each with a title, description, and URL. Currently no items exist."
+        },
+        {
+            "type": "Space",
+            "description": "Collections of training materials organized around a specific project, institution, or topic.",
+            "primary_url": "https://test.tesshub.hzdr.de/spaces",
+            "navigation": {
+                "type": "single_list",
+                "urls": [
+                    "https://test.tesshub.hzdr.de/spaces"
+                ],
+                "description": "Spaces are listed on a single page, potentially with pagination."
+            },
+            "examples": [
+                {
+                    "title": "de.KCD Training Materials",
+                    "description": "A space for training materials related to de.KCD.",
+                    "url": "https://kcd.tesshub.hzdr.de"
+                },
+                {
+                    "title": "DALIA",
+                    "description": "A space containing 820 training materials related to DALIA.",
+                    "url": "https://dalia.tesshub.hzdr.de"
+                },
+                {
+                    "title": "EOSC Academy",
+                    "description": "A space for training materials related to the EOSC Academy.",
+                    "url": "https://eosc-academy.tesshub.hzdr.de"
+                },
+                {
+                    "title": "OERHub.at",
+                    "description": "A space for training materials related to OERHub.at.",
+                    "url": "https://oerhub.tesshub.hzdr.de"
+                }
+            ],
+            "typical_structure": "Each Space listing includes a title, a description, and a URL pointing to the space's page."
+        }
+    ],
+    "source_url": "https://test.tesshub.hzdr.de/",
+    "source_domain": "test.tesshub.hzdr.de",
+    "computed_at": "2026-04-14T12:45:45.117071+00:00",
+    "schema_version": "2"
+}

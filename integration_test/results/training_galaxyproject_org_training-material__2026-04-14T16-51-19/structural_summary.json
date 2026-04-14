@@ -1,1 +1,114 @@
-{"site_description": "The Galaxy Training website provides educational materials and resources for using the Galaxy data analysis platform.", "content_types": [{"type": "TrainingMaterial|Tutorial", "description": "Individual tutorials that explain how to perform specific tasks or analyses using Galaxy.", "primary_url": "https://training.galaxyproject.org/training-material/", "navigation": {"type": "paginated", "urls": ["https://training.galaxyproject.org/training-material/"], "description": "The main training materials page is paginated."}, "examples": [{"title": "Introduction to Galaxy", "description": "This tutorial introduces the Galaxy interface and basic workflow creation.", "url": "/training-material/tutorials/galaxy-introduction/galaxy-introduction.html"}, {"title": "Filtering data with Galaxy", "description": "Learn how to filter data in Galaxy using various filtering tools and parameters.", "url": "/training-material/tutorials/filtering/filtering.html"}, {"title": "Introduction to RNA-Seq with Galaxy", "description": "This tutorial covers the basic steps of an RNA-Seq analysis using Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/ngi-rnaseq/introduction-to-rna-seq-with-galaxy/"}, {"title": "Metagenomics with Galaxy", "description": "This tutorial provides an introduction to metagenomics analysis using Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/metagenomics-galaxy/"}], "typical_structure": "Tutorials usually consist of a title, introductory text, and a series of steps with screenshots and explanations. URLs typically follow a `/training-material/tutorials/[topic]/[topic].html` pattern."}, {"type": "TrainingMaterial|LearningPathway", "description": "Curated sets of tutorials that provide a structured learning experience on a specific topic.", "primary_url": "https://training.galaxyproject.org/training-material/learning-pathways", "navigation": {"type": "single_list", "urls": ["https://training.galaxyproject.org/training-material/learning-pathways"], "description": "Learning pathways are listed on a single page."}, "examples": [{"title": "RNA-Seq Analysis with Galaxy", "description": "This pathway guides users through a comprehensive RNA-Seq analysis workflow using Galaxy, from data import to differential expression analysis.", "url": "https://training.galaxyproject.org/training-material/tutorials/rnaseq/rnaseq.html"}, {"title": "Metagenomics with Galaxy", "description": "This pathway explores the analysis of metagenomic data using Galaxy, covering steps like quality control, taxonomic profiling and functional analysis.", "url": "https://training.galaxyproject.org/training-material/tutorials/metagenomics/metagenomics.html"}, {"title": "ChIP-Seq analysis with Galaxy", "description": "This tutorial provides a basic introduction to ChIP-Seq analysis using Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/chipseq/chipseq.html"}, {"title": "Variant Calling with GATK and Galaxy", "description": "This tutorial shows you how to call variants using GATK in Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/variant-calling/variant-calling.html"}], "typical_structure": "Learning pathways present a list of linked tutorials with descriptions outlining the overall learning objectives. URLs typically follow a `/training-material/tutorials/[topic]/[topic].html` pattern."}, {"type": "TrainingMaterial|HallOfFame", "description": "A listing of particularly useful or important Galaxy Training materials.", "primary_url": "https://training.galaxyproject.org/training-material/hall-of-fame", "navigation": {"type": "single_list", "urls": ["https://training.galaxyproject.org/training-material/hall-of-fame"], "description": "Hall of Fame materials are listed on a single page"}, "examples": [{"title": "Introduction to RNA-Seq with Galaxy", "description": "This tutorial covers the basic steps of an RNA-Seq analysis using Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/ngi-rnaseq/introduction-to-rna-seq-with-galaxy/"}, {"title": "Metagenomics with Galaxy", "description": "This tutorial provides an introduction to metagenomics analysis using Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/metagenomics-galaxy/"}, {"title": "GWAS with PLINK in Galaxy", "description": "This tutorial provides an introduction to Genome-Wide Association Studies (GWAS) using PLINK in Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/gwas-plink/gwas-with-plink/"}, {"title": "Variant calling with GATK in Galaxy", "description": "This tutorial provides an introduction to variant calling with GATK in Galaxy.", "url": "https://training.galaxyproject.org/training-material/tutorials/gatk/variant-calling-with-gatk/"}], "typical_structure": "Similar to tutorials, but flagged as a 'Hall of Fame' material. URLs typically follow a `/training-material/tutorials/[topic]/[topic].html` pattern."}], "source_url": "https://training.galaxyproject.org/training-material/", "source_domain": "training.galaxyproject.org", "computed_at": "2026-04-14T16:53:41.676034+00:00", "schema_version": "2"}
+{
+    "site_description": "The Galaxy Training website provides educational materials and resources for using the Galaxy data analysis platform.",
+    "content_types": [
+        {
+            "type": "TrainingMaterial|Tutorial",
+            "description": "Individual tutorials that explain how to perform specific tasks or analyses using Galaxy.",
+            "primary_url": "https://training.galaxyproject.org/training-material/",
+            "navigation": {
+                "type": "paginated",
+                "urls": [
+                    "https://training.galaxyproject.org/training-material/"
+                ],
+                "description": "The main training materials page is paginated."
+            },
+            "examples": [
+                {
+                    "title": "Introduction to Galaxy",
+                    "description": "This tutorial introduces the Galaxy interface and basic workflow creation.",
+                    "url": "/training-material/tutorials/galaxy-introduction/galaxy-introduction.html"
+                },
+                {
+                    "title": "Filtering data with Galaxy",
+                    "description": "Learn how to filter data in Galaxy using various filtering tools and parameters.",
+                    "url": "/training-material/tutorials/filtering/filtering.html"
+                },
+                {
+                    "title": "Introduction to RNA-Seq with Galaxy",
+                    "description": "This tutorial covers the basic steps of an RNA-Seq analysis using Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/ngi-rnaseq/introduction-to-rna-seq-with-galaxy/"
+                },
+                {
+                    "title": "Metagenomics with Galaxy",
+                    "description": "This tutorial provides an introduction to metagenomics analysis using Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/metagenomics-galaxy/"
+                }
+            ],
+            "typical_structure": "Tutorials usually consist of a title, introductory text, and a series of steps with screenshots and explanations. URLs typically follow a `/training-material/tutorials/[topic]/[topic].html` pattern."
+        },
+        {
+            "type": "TrainingMaterial|LearningPathway",
+            "description": "Curated sets of tutorials that provide a structured learning experience on a specific topic.",
+            "primary_url": "https://training.galaxyproject.org/training-material/learning-pathways",
+            "navigation": {
+                "type": "single_list",
+                "urls": [
+                    "https://training.galaxyproject.org/training-material/learning-pathways"
+                ],
+                "description": "Learning pathways are listed on a single page."
+            },
+            "examples": [
+                {
+                    "title": "RNA-Seq Analysis with Galaxy",
+                    "description": "This pathway guides users through a comprehensive RNA-Seq analysis workflow using Galaxy, from data import to differential expression analysis.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/rnaseq/rnaseq.html"
+                },
+                {
+                    "title": "Metagenomics with Galaxy",
+                    "description": "This pathway explores the analysis of metagenomic data using Galaxy, covering steps like quality control, taxonomic profiling and functional analysis.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/metagenomics/metagenomics.html"
+                },
+                {
+                    "title": "ChIP-Seq analysis with Galaxy",
+                    "description": "This tutorial provides a basic introduction to ChIP-Seq analysis using Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/chipseq/chipseq.html"
+                },
+                {
+                    "title": "Variant Calling with GATK and Galaxy",
+                    "description": "This tutorial shows you how to call variants using GATK in Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/variant-calling/variant-calling.html"
+                }
+            ],
+            "typical_structure": "Learning pathways present a list of linked tutorials with descriptions outlining the overall learning objectives. URLs typically follow a `/training-material/tutorials/[topic]/[topic].html` pattern."
+        },
+        {
+            "type": "TrainingMaterial|HallOfFame",
+            "description": "A listing of particularly useful or important Galaxy Training materials.",
+            "primary_url": "https://training.galaxyproject.org/training-material/hall-of-fame",
+            "navigation": {
+                "type": "single_list",
+                "urls": [
+                    "https://training.galaxyproject.org/training-material/hall-of-fame"
+                ],
+                "description": "Hall of Fame materials are listed on a single page"
+            },
+            "examples": [
+                {
+                    "title": "Introduction to RNA-Seq with Galaxy",
+                    "description": "This tutorial covers the basic steps of an RNA-Seq analysis using Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/ngi-rnaseq/introduction-to-rna-seq-with-galaxy/"
+                },
+                {
+                    "title": "Metagenomics with Galaxy",
+                    "description": "This tutorial provides an introduction to metagenomics analysis using Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/metagenomics-galaxy/"
+                },
+                {
+                    "title": "GWAS with PLINK in Galaxy",
+                    "description": "This tutorial provides an introduction to Genome-Wide Association Studies (GWAS) using PLINK in Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/gwas-plink/gwas-with-plink/"
+                },
+                {
+                    "title": "Variant calling with GATK in Galaxy",
+                    "description": "This tutorial provides an introduction to variant calling with GATK in Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/tutorials/gatk/variant-calling-with-gatk/"
+                }
+            ],
+            "typical_structure": "Similar to tutorials, but flagged as a 'Hall of Fame' material. URLs typically follow a `/training-material/tutorials/[topic]/[topic].html` pattern."
+        }
+    ],
+    "source_url": "https://training.galaxyproject.org/training-material/",
+    "source_domain": "training.galaxyproject.org",
+    "computed_at": "2026-04-14T16:53:41.676034+00:00",
+    "schema_version": "2"
+}

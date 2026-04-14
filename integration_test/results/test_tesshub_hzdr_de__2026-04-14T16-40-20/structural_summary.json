@@ -1,1 +1,107 @@
-{"site_description": "The PaN Training portal provides access to training resources for photon and neutron sciences.", "content_types": [{"type": "CourseInstance|Event", "description": "Individual events or workshops offered as training opportunities.", "primary_url": "https://test.tesshub.hzdr.de/events", "navigation": {"type": "paginated", "urls": ["https://test.tesshub.hzdr.de/events?page=2"], "description": "Events are listed across multiple pages, accessible via pagination."}, "examples": [{"title": "HDF5 crash course", "description": "This workshop will teach you the basics of the HDF5 data format.", "url": "https://test.tesshub.hzdr.de/events/27"}, {"title": "Introduction to Git and GitHub", "description": "This workshop will give you a practical introduction to version control using Git and GitHub.", "url": "https://test.tesshub.hzdr.de/events/26"}, {"title": "Introduction to JupyterLab", "description": "This workshop provides an overview of JupyterLab, its functionalities and how to use it for data analysis and scientific computing.", "url": "https://test.tesshub.hzdr.de/events/25"}], "typical_structure": "Each event has a title, a brief description, and a unique URL."}, {"type": "Workflow", "description": "Reusable workflows for data analysis in photon and neutron sciences.", "primary_url": "https://test.tesshub.hzdr.de/workflows", "navigation": {"type": "single_list", "urls": [], "description": "Workflows are listed on a single page."}, "examples": [{"title": "Workflow examples for EDXAS data analysis", "description": "Workflow examples for EDXAS data analysis with Athena and Artemis.", "url": "https://test.tesshub.hzdr.de/workflows/1"}, {"title": "Analysis of Resonant X-ray Scattering data with pyqtgraph and numpy", "description": "Workflow for analysis of Resonant X-ray Scattering data.", "url": "https://test.tesshub.hzdr.de/workflows/2"}, {"title": "Workflow for processing and fitting of XAS data", "description": "This workflow presents an automated approach to processing and fitting XAS data using Demeter.", "url": "https://test.tesshub.hzdr.de/workflows/3"}], "typical_structure": "Each workflow has a title, a description of its purpose, and a URL."}, {"type": "Course|ResourceCollection", "description": "Collections of learning resources, potentially including materials, tutorials, and other assets. These are sometimes referred to as 'Spaces'.", "primary_url": "https://test.tesshub.hzdr.de/spaces", "navigation": {"type": "paginated", "urls": ["https://test.tesshub.hzdr.de/spaces/1", "https://test.tesshub.hzdr.de/spaces/2", "https://test.tesshub.hzdr.de/spaces/3", "https://test.tesshub.hzdr.de/spaces/4", "https://test.tesshub.hzdr.de/spaces/5", "https://test.tesshub.hzdr.de/spaces/6"], "description": "Resources are grouped into 'Spaces' and accessible through pagination."}, "examples": [{"title": "ELIXIR-TeSS Training", "description": "Training resources from ELIXIR-TeSS.", "url": "https://test.tesshub.hzdr.de/spaces/5"}, {"title": "PaN Training", "description": "Central hub for all PaN Training materials.", "url": "https://test.tesshub.hzdr.de/spaces/1"}, {"title": "NFDI4Culture", "description": "Resources related to the NFDI4Culture project.", "url": "https://test.tesshub.hzdr.de/spaces/6"}, {"title": "HPC-Training", "description": "High Performance Computing Training materials.", "url": "https://test.tesshub.hzdr.de/spaces/2"}], "typical_structure": "Each collection has a title, description, and a URL pointing to a page containing resources."}], "source_url": "https://test.tesshub.hzdr.de/", "source_domain": "test.tesshub.hzdr.de", "computed_at": "2026-04-14T16:43:18.782910+00:00", "schema_version": "2"}
+{
+    "site_description": "The PaN Training portal provides access to training resources for photon and neutron sciences.",
+    "content_types": [
+        {
+            "type": "CourseInstance|Event",
+            "description": "Individual events or workshops offered as training opportunities.",
+            "primary_url": "https://test.tesshub.hzdr.de/events",
+            "navigation": {
+                "type": "paginated",
+                "urls": [
+                    "https://test.tesshub.hzdr.de/events?page=2"
+                ],
+                "description": "Events are listed across multiple pages, accessible via pagination."
+            },
+            "examples": [
+                {
+                    "title": "HDF5 crash course",
+                    "description": "This workshop will teach you the basics of the HDF5 data format.",
+                    "url": "https://test.tesshub.hzdr.de/events/27"
+                },
+                {
+                    "title": "Introduction to Git and GitHub",
+                    "description": "This workshop will give you a practical introduction to version control using Git and GitHub.",
+                    "url": "https://test.tesshub.hzdr.de/events/26"
+                },
+                {
+                    "title": "Introduction to JupyterLab",
+                    "description": "This workshop provides an overview of JupyterLab, its functionalities and how to use it for data analysis and scientific computing.",
+                    "url": "https://test.tesshub.hzdr.de/events/25"
+                }
+            ],
+            "typical_structure": "Each event has a title, a brief description, and a unique URL."
+        },
+        {
+            "type": "Workflow",
+            "description": "Reusable workflows for data analysis in photon and neutron sciences.",
+            "primary_url": "https://test.tesshub.hzdr.de/workflows",
+            "navigation": {
+                "type": "single_list",
+                "urls": [],
+                "description": "Workflows are listed on a single page."
+            },
+            "examples": [
+                {
+                    "title": "Workflow examples for EDXAS data analysis",
+                    "description": "Workflow examples for EDXAS data analysis with Athena and Artemis.",
+                    "url": "https://test.tesshub.hzdr.de/workflows/1"
+                },
+                {
+                    "title": "Analysis of Resonant X-ray Scattering data with pyqtgraph and numpy",
+                    "description": "Workflow for analysis of Resonant X-ray Scattering data.",
+                    "url": "https://test.tesshub.hzdr.de/workflows/2"
+                },
+                {
+                    "title": "Workflow for processing and fitting of XAS data",
+                    "description": "This workflow presents an automated approach to processing and fitting XAS data using Demeter.",
+                    "url": "https://test.tesshub.hzdr.de/workflows/3"
+                }
+            ],
+            "typical_structure": "Each workflow has a title, a description of its purpose, and a URL."
+        },
+        {
+            "type": "Course|ResourceCollection",
+            "description": "Collections of learning resources, potentially including materials, tutorials, and other assets. These are sometimes referred to as 'Spaces'.",
+            "primary_url": "https://test.tesshub.hzdr.de/spaces",
+            "navigation": {
+                "type": "paginated",
+                "urls": [
+                    "https://test.tesshub.hzdr.de/spaces/1",
+                    "https://test.tesshub.hzdr.de/spaces/2",
+                    "https://test.tesshub.hzdr.de/spaces/3",
+                    "https://test.tesshub.hzdr.de/spaces/4",
+                    "https://test.tesshub.hzdr.de/spaces/5",
+                    "https://test.tesshub.hzdr.de/spaces/6"
+                ],
+                "description": "Resources are grouped into 'Spaces' and accessible through pagination."
+            },
+            "examples": [
+                {
+                    "title": "ELIXIR-TeSS Training",
+                    "description": "Training resources from ELIXIR-TeSS.",
+                    "url": "https://test.tesshub.hzdr.de/spaces/5"
+                },
+                {
+                    "title": "PaN Training",
+                    "description": "Central hub for all PaN Training materials.",
+                    "url": "https://test.tesshub.hzdr.de/spaces/1"
+                },
+                {
+                    "title": "NFDI4Culture",
+                    "description": "Resources related to the NFDI4Culture project.",
+                    "url": "https://test.tesshub.hzdr.de/spaces/6"
+                },
+                {
+                    "title": "HPC-Training",
+                    "description": "High Performance Computing Training materials.",
+                    "url": "https://test.tesshub.hzdr.de/spaces/2"
+                }
+            ],
+            "typical_structure": "Each collection has a title, description, and a URL pointing to a page containing resources."
+        }
+    ],
+    "source_url": "https://test.tesshub.hzdr.de/",
+    "source_domain": "test.tesshub.hzdr.de",
+    "computed_at": "2026-04-14T16:43:18.782910+00:00",
+    "schema_version": "2"
+}

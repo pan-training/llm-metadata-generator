@@ -1,1 +1,73 @@
-{"site_description": "The Galaxy Training website provides training materials for the Galaxy bioinformatics platform, covering topics from introductory concepts to advanced data analysis.", "content_types": [{"type": "TrainingMaterial|CourseInstance", "description": "Individual modules or lessons within a learning pathway, often focusing on a specific task or tool.", "primary_url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html", "navigation": {"type": "paginated", "urls": ["#module-1-introduction-to-galaxy", "#module-2-working-with-data", "#module-6-rnaseq-analysis"], "description": "Modules are listed within a learning pathway page, often identified by anchor links."}, "examples": [{"title": "Module 1: Introduction to Galaxy", "description": "Provides a first look at the Galaxy platform.", "url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html#module-1-introduction-to-galaxy"}, {"title": "Module 2: Working with Data", "description": "Learn the basics of data manipulation inside Galaxy.", "url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html#module-2-working-with-data"}, {"title": "Module 6: RNA-Seq analysis", "description": "An introduction to RNA-Seq analysis.", "url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html#module-6-rnaseq-analysis"}], "typical_structure": "Modules are identified with 'Module X: ' title, followed by a brief description. They are typically linked via anchor tags within a longer learning pathway page."}, {"type": "Course", "description": "Topical collections of tutorials, slides and related materials covering a specific subject area within Galaxy.", "primary_url": "https://training.galaxyproject.org/training-material/", "navigation": {"type": "categories", "urls": ["https://training.galaxyproject.org/training-material/topics/introduction/", "https://training.galaxyproject.org/training-material/topics/galaxy-interface/", "https://training.galaxyproject.org/training-material/topics/climate/"], "description": "Courses are organized by topic and accessible from the main training material page."}, "examples": [{"title": "Introduction to Galaxy Analyses", "description": "A tutorial introducing users to basic Galaxy analyses.", "url": "https://training.galaxyproject.org/training-material/topics/introduction/"}, {"title": "Using Galaxy and Managing your Data", "description": "Tutorials about the Galaxy interface and data management.", "url": "https://training.galaxyproject.org/training-material/topics/galaxy-interface/"}, {"title": "Climate", "description": "Tutorials relating to climate data analysis in Galaxy.", "url": "https://training.galaxyproject.org/training-material/topics/climate/"}], "typical_structure": "A course page typically lists multiple tutorials and resources related to a specific topic.  Each item has a title and a brief description, with links to the resource itself."}], "source_url": "https://training.galaxyproject.org/training-material/", "source_domain": "training.galaxyproject.org", "computed_at": "2026-04-14T14:18:56.474243+00:00", "schema_version": "2"}
+{
+    "site_description": "The Galaxy Training website provides training materials for the Galaxy bioinformatics platform, covering topics from introductory concepts to advanced data analysis.",
+    "content_types": [
+        {
+            "type": "TrainingMaterial|CourseInstance",
+            "description": "Individual modules or lessons within a learning pathway, often focusing on a specific task or tool.",
+            "primary_url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html",
+            "navigation": {
+                "type": "paginated",
+                "urls": [
+                    "#module-1-introduction-to-galaxy",
+                    "#module-2-working-with-data",
+                    "#module-6-rnaseq-analysis"
+                ],
+                "description": "Modules are listed within a learning pathway page, often identified by anchor links."
+            },
+            "examples": [
+                {
+                    "title": "Module 1: Introduction to Galaxy",
+                    "description": "Provides a first look at the Galaxy platform.",
+                    "url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html#module-1-introduction-to-galaxy"
+                },
+                {
+                    "title": "Module 2: Working with Data",
+                    "description": "Learn the basics of data manipulation inside Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html#module-2-working-with-data"
+                },
+                {
+                    "title": "Module 6: RNA-Seq analysis",
+                    "description": "An introduction to RNA-Seq analysis.",
+                    "url": "https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html#module-6-rnaseq-analysis"
+                }
+            ],
+            "typical_structure": "Modules are identified with 'Module X: ' title, followed by a brief description. They are typically linked via anchor tags within a longer learning pathway page."
+        },
+        {
+            "type": "Course",
+            "description": "Topical collections of tutorials, slides and related materials covering a specific subject area within Galaxy.",
+            "primary_url": "https://training.galaxyproject.org/training-material/",
+            "navigation": {
+                "type": "categories",
+                "urls": [
+                    "https://training.galaxyproject.org/training-material/topics/introduction/",
+                    "https://training.galaxyproject.org/training-material/topics/galaxy-interface/",
+                    "https://training.galaxyproject.org/training-material/topics/climate/"
+                ],
+                "description": "Courses are organized by topic and accessible from the main training material page."
+            },
+            "examples": [
+                {
+                    "title": "Introduction to Galaxy Analyses",
+                    "description": "A tutorial introducing users to basic Galaxy analyses.",
+                    "url": "https://training.galaxyproject.org/training-material/topics/introduction/"
+                },
+                {
+                    "title": "Using Galaxy and Managing your Data",
+                    "description": "Tutorials about the Galaxy interface and data management.",
+                    "url": "https://training.galaxyproject.org/training-material/topics/galaxy-interface/"
+                },
+                {
+                    "title": "Climate",
+                    "description": "Tutorials relating to climate data analysis in Galaxy.",
+                    "url": "https://training.galaxyproject.org/training-material/topics/climate/"
+                }
+            ],
+            "typical_structure": "A course page typically lists multiple tutorials and resources related to a specific topic.  Each item has a title and a brief description, with links to the resource itself."
+        }
+    ],
+    "source_url": "https://training.galaxyproject.org/training-material/",
+    "source_domain": "training.galaxyproject.org",
+    "computed_at": "2026-04-14T14:18:56.474243+00:00",
+    "schema_version": "2"
+}
