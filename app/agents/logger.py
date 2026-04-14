@@ -75,9 +75,9 @@ class WarnEvent:
 class LLMCallEvent:
     """One LLM completion call with prompt preview, response preview, and latency.
 
-    The optional ``chunk`` field holds the content/page-text that was submitted
-    for analysis, stored separately from the instruction part of the prompt so
-    that the viewer can display them in distinct panels.
+    The optional ``chunk_preview`` field holds the content/page-text that was
+    submitted for analysis, stored separately from the instruction part of the
+    prompt so that the viewer can display them in distinct panels.
     """
 
     task: str
@@ -85,7 +85,7 @@ class LLMCallEvent:
     prompt_preview: str
     response_preview: str
     latency_ms: float
-    chunk: str = ""
+    chunk_preview: str = ""
     id: int = 0
     parent_id: int | None = None
     timestamp: float = field(default_factory=time.time)
@@ -224,7 +224,7 @@ class AgentLogger:
             model=model,
             prompt_preview=prompt[:PREVIEW_LENGTH],
             response_preview=response[:PREVIEW_LENGTH],
-            chunk=chunk[:CHUNK_PREVIEW_LENGTH],
+            chunk_preview=chunk[:CHUNK_PREVIEW_LENGTH],
             latency_ms=round(latency_ms, 1),
             id=self._next_id(),
             parent_id=parent,

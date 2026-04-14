@@ -212,8 +212,8 @@ function renderEventBody(ev, body) {
     detail.id = uid;
     detail.className = 'llm-detail';
     let detailHtml = `<span class="llm-label">PROMPT</span>${escHtml(ev.prompt_preview)}`;
-    if (ev.chunk) {
-      detailHtml += `<hr class="llm-sep"><span class="llm-label">CHUNK</span>${escHtml(ev.chunk)}`;
+    if (ev.chunk_preview) {
+      detailHtml += `<hr class="llm-sep"><span class="llm-label">CHUNK</span>${escHtml(ev.chunk_preview)}`;
     }
     detailHtml += `<hr class="llm-sep"><span class="llm-label">RESPONSE</span>${escHtml(ev.response_preview)}`;
     detail.innerHTML = detailHtml;

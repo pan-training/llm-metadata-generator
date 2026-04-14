@@ -94,8 +94,8 @@ def test_logger_llm_call_truncates_prompt_preview() -> None:
     )
     ev = logger.events[0]
     assert isinstance(ev, LLMCallEvent)
-    assert len(ev.prompt_preview) <= 4000
-    assert len(ev.chunk) <= 8000
+    assert ev.prompt_preview == long_prompt[:4000]
+    assert ev.chunk_preview == long_chunk[:8000]
 
 
 def test_logger_validation_event_passed() -> None:
