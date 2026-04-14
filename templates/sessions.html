@@ -10,7 +10,7 @@
     header { background: #1a73e8; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
     header h1 { margin: 0; font-size: 1.4rem; }
     header small { opacity: 0.85; font-size: 0.85rem; }
-    .container { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
+    .container { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
     table { width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
     th { background: #f0f4ff; padding: 12px 16px; text-align: left; font-size: 0.8rem; text-transform: uppercase; color: #555; letter-spacing: .05em; }
     td { padding: 12px 16px; border-top: 1px solid #eee; vertical-align: top; font-size: 0.9rem; }
@@ -25,11 +25,56 @@
     .detail-inner { padding: 16px 24px; background: #fafbff; border-top: 2px solid #dde4f0; display: none; }
     .detail-inner.open { display: block; }
     .detail-inner h4 { margin: 0 0 8px; font-size: 0.85rem; color: #555; text-transform: uppercase; letter-spacing: .05em; }
-    pre { background: #1e1e2e; color: #cdd6f4; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.82rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin: 0 0 16px; }
     .url-cell { max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .url-cell a { color: #1a73e8; text-decoration: none; }
     .url-cell a:hover { text-decoration: underline; }
     .no-sessions { text-align: center; padding: 48px; color: #888; }
+
+    /* ---- Overview stats bar ---- */
+    .stats-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+    .stat-pill { background: #e8f0fe; border-radius: 20px; padding: 5px 14px; font-size: 0.82rem; color: #1a73e8; font-weight: 600; }
+    .stat-pill.warn { background: #fce8e6; color: #c5221f; }
+    .stat-pill.ok   { background: #e6f4ea; color: #137333; }
+
+    /* ---- Event timeline ---- */
+    .event-timeline { list-style: none; margin: 0; padding: 0; }
+    .event-timeline li { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; border-bottom: 1px solid #edf0f7; font-size: 0.85rem; line-height: 1.4; }
+    .event-timeline li:last-child { border-bottom: none; }
+    .ev-icon { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-top: 1px; }
+    .ev-info    .ev-icon { background: #e8f0fe; color: #1a73e8; }
+    .ev-warn    .ev-icon { background: #fce8e6; color: #c5221f; }
+    .ev-llm     .ev-icon { background: #f3e8fd; color: #7b1fa2; }
+    .ev-fetch   .ev-icon { background: #e6f4ea; color: #137333; }
+    .ev-fetch.err .ev-icon { background: #fce8e6; color: #c5221f; }
+    .ev-item    .ev-icon { background: #fff3e0; color: #e65100; }
+    .ev-val-ok  .ev-icon { background: #e6f4ea; color: #137333; }
+    .ev-val-err .ev-icon { background: #fce8e6; color: #c5221f; }
+    .ev-body { flex: 1; min-width: 0; }
+    .ev-meta { color: #888; font-size: 0.78rem; margin-left: 4px; }
+
+    /* ---- Expandable LLM call details ---- */
+    .llm-toggle { background: none; border: 1px solid #d0d0e8; border-radius: 4px; padding: 2px 8px; font-size: 0.75rem; cursor: pointer; color: #7b1fa2; margin-left: 6px; }
+    .llm-toggle:hover { background: #f3e8fd; }
+    .llm-detail { display: none; margin-top: 6px; background: #1e1e2e; color: #cdd6f4; border-radius: 6px; padding: 10px 12px; font-family: monospace; font-size: 0.78rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+    .llm-detail.open { display: block; }
+    .llm-label { color: #89b4fa; font-weight: 700; display: block; margin-bottom: 4px; }
+    .llm-sep { border: none; border-top: 1px solid #45475a; margin: 8px 0; }
+
+    /* ---- Validation errors list ---- */
+    .val-errors { margin: 4px 0 0 0; padding: 0 0 0 16px; color: #c5221f; font-size: 0.8rem; }
+
+    /* ---- JSON result ---- */
+    pre.json-result { background: #1e1e2e; color: #cdd6f4; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.82rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin: 0 0 16px; }
+
+    /* ---- Plain log fallback ---- */
+    pre.plain-log { background: #1e1e2e; color: #cdd6f4; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.82rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; margin: 0 0 16px; }
+
+    /* ---- Tabs ---- */
+    .tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+    .tab-btn { background: #e8ecf4; border: none; border-radius: 6px 6px 0 0; padding: 7px 16px; cursor: pointer; font-size: 0.85rem; color: #555; }
+    .tab-btn.active { background: #1a73e8; color: white; }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
   </style>
 </head>
 <body>
@@ -66,16 +111,26 @@
       <tr class="detail-row" id="detail-{{ s.id }}">
         <td colspan="5">
           <div class="detail-inner" id="detail-inner-{{ s.id }}">
-            {% if s.log %}
-            <h4>Log</h4>
-            <pre>{{ s.log }}</pre>
-            {% endif %}
-            {% if s.result_json %}
-            <h4>Generated JSON-LD</h4>
-            <pre id="json-{{ s.id }}">{{ s.result_json }}</pre>
-            {% else %}
-            <p style="color:#888; font-size:.9rem;">No result yet.</p>
-            {% endif %}
+            <div class="tabs">
+              <button class="tab-btn active" onclick="switchTab({{ s.id }}, 'log', event)">Event Log</button>
+              <button class="tab-btn" onclick="switchTab({{ s.id }}, 'result', event)">JSON-LD Result</button>
+            </div>
+
+            <div class="tab-pane active" id="tab-log-{{ s.id }}">
+              {% if s.log %}
+              <div id="log-container-{{ s.id }}" data-log="{{ s.log | e }}"></div>
+              {% else %}
+              <p style="color:#888; font-size:.9rem;">No log entries yet.</p>
+              {% endif %}
+            </div>
+
+            <div class="tab-pane" id="tab-result-{{ s.id }}">
+              {% if s.result_json %}
+              <pre class="json-result" id="json-{{ s.id }}">{{ s.result_json }}</pre>
+              {% else %}
+              <p style="color:#888; font-size:.9rem;">No result yet.</p>
+              {% endif %}
+            </div>
           </div>
         </td>
       </tr>
@@ -90,20 +145,233 @@
 </div>
 
 <script>
-  function toggleDetail(id) {
-    const inner = document.getElementById('detail-inner-' + id);
-    if (!inner) return;
-    inner.classList.toggle('open');
-    // Pretty-print JSON if present
+// ---------------------------------------------------------------------------
+// Event-type rendering helpers
+// ---------------------------------------------------------------------------
+
+const EV_ICONS = {
+  info:       { cls: 'ev-info',    icon: 'ℹ',  label: '' },
+  warn:       { cls: 'ev-warn',    icon: '⚠',  label: '' },
+  llm_call:   { cls: 'ev-llm',     icon: 'LLM', label: '' },
+  fetch:      { cls: 'ev-fetch',   icon: 'GET', label: '' },
+  item_found: { cls: 'ev-item',    icon: '★',  label: '' },
+  validation: { cls: 'ev-val-ok',  icon: '✓',  label: '' },
+};
+
+let _llmCounter = 0;
+
+function renderEvent(ev) {
+  const li = document.createElement('li');
+  const meta = EV_ICONS[ev.type] || { cls: 'ev-info', icon: '?', label: '' };
+
+  let extraCls = meta.cls;
+  if (ev.type === 'fetch' && ev.status_code >= 400) extraCls += ' err';
+  if (ev.type === 'validation' && !ev.passed) extraCls = 'ev-val-err';
+
+  li.className = extraCls;
+
+  const iconEl = document.createElement('span');
+  iconEl.className = 'ev-icon';
+  iconEl.textContent = ev.type === 'fetch' ? String(ev.status_code || 'GET') : meta.icon;
+  if (ev.type === 'validation') iconEl.textContent = ev.passed ? '✓' : '✗';
+
+  const body = document.createElement('span');
+  body.className = 'ev-body';
+
+  if (ev.type === 'info') {
+    body.textContent = ev.message;
+
+  } else if (ev.type === 'warn') {
+    body.innerHTML = '<strong>Warning:</strong> ' + escHtml(ev.message);
+
+  } else if (ev.type === 'fetch') {
+    const kb = ev.content_length ? Math.round(ev.content_length / 1024) + ' KB' : '';
+    const statusBadge = ev.status_code < 400
+      ? `<span style="color:#137333">${ev.status_code}</span>`
+      : `<span style="color:#c5221f">${ev.status_code}</span>`;
+    body.innerHTML = `GET ${statusBadge} <a href="${escHtml(ev.url)}" target="_blank" style="color:#1a73e8">${escHtml(ev.url)}</a> <span class="ev-meta">${kb}</span>`;
+
+  } else if (ev.type === 'item_found') {
+    body.innerHTML = `<strong>Found:</strong> ${escHtml(ev.title)} <span class="ev-meta">(${escHtml(ev.item_type)})</span>`;
+
+  } else if (ev.type === 'validation') {
+    if (ev.passed) {
+      body.innerHTML = `<strong>Valid:</strong> ${escHtml(ev.item_name)}`;
+    } else {
+      const id = 'val-' + (_llmCounter++);
+      body.innerHTML = `<strong>Validation errors</strong> for ${escHtml(ev.item_name)} (${ev.errors.length})`;
+      const ul = document.createElement('ul');
+      ul.className = 'val-errors';
+      ev.errors.forEach(e => {
+        const li2 = document.createElement('li');
+        li2.textContent = e;
+        ul.appendChild(li2);
+      });
+      body.appendChild(ul);
+    }
+
+  } else if (ev.type === 'llm_call') {
+    const id = 'llm-' + (_llmCounter++);
+    const ms = ev.latency_ms ? `${ev.latency_ms.toFixed(0)} ms` : '';
+    body.innerHTML = `<strong>${escHtml(ev.task)}</strong> → <code>${escHtml(ev.model)}</code> <span class="ev-meta">${ms}</span>` +
+      `<button class="llm-toggle" onclick="toggleLlm('${id}', event)">▶ prompt / response</button>`;
+    const detail = document.createElement('div');
+    detail.id = id;
+    detail.className = 'llm-detail';
+    detail.innerHTML =
+      `<span class="llm-label">PROMPT</span>${escHtml(ev.prompt_preview)}` +
+      `<hr class="llm-sep">` +
+      `<span class="llm-label">RESPONSE</span>${escHtml(ev.response_preview)}`;
+    body.appendChild(detail);
+  }
+
+  li.appendChild(iconEl);
+  li.appendChild(body);
+  return li;
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function toggleLlm(id, ev) {
+  ev.stopPropagation();
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+  const btn = ev.target;
+  btn.textContent = (el && el.classList.contains('open')) ? '▼ prompt / response' : '▶ prompt / response';
+}
+
+// ---------------------------------------------------------------------------
+// Stats bar from events
+// ---------------------------------------------------------------------------
+
+function buildStatsBar(events) {
+  const llm = events.filter(e => e.type === 'llm_call');
+  const fetches = events.filter(e => e.type === 'fetch');
+  const items = events.filter(e => e.type === 'item_found');
+  const valErr = events.filter(e => e.type === 'validation' && !e.passed);
+  const warns = events.filter(e => e.type === 'warn');
+  const totalMs = llm.reduce((s, e) => s + (e.latency_ms || 0), 0);
+
+  const bar = document.createElement('div');
+  bar.className = 'stats-bar';
+
+  const add = (text, cls) => {
+    const p = document.createElement('span');
+    p.className = 'stat-pill' + (cls ? ' ' + cls : '');
+    p.textContent = text;
+    bar.appendChild(p);
+  };
+
+  add(`${llm.length} LLM call${llm.length !== 1 ? 's' : ''} · ${Math.round(totalMs)} ms total`);
+  add(`${fetches.length} fetch${fetches.length !== 1 ? 'es' : ''}`);
+  add(`${items.length} item${items.length !== 1 ? 's' : ''} found`, items.length > 0 ? 'ok' : '');
+  if (valErr.length > 0) add(`${valErr.length} validation error${valErr.length !== 1 ? 's' : ''}`, 'warn');
+  if (warns.length > 0) add(`${warns.length} warning${warns.length !== 1 ? 's' : ''}`, 'warn');
+
+  return bar;
+}
+
+// ---------------------------------------------------------------------------
+// Render log: try structured JSON, fall back to plain text
+// ---------------------------------------------------------------------------
+
+function renderLog(container) {
+  const raw = container.dataset.log;
+  if (!raw) return;
+
+  let events = null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].type) {
+      events = parsed;
+    }
+  } catch (e) { /* fall through */ }
+
+  if (events) {
+    container.appendChild(buildStatsBar(events));
+
+    const ul = document.createElement('ul');
+    ul.className = 'event-timeline';
+    events.forEach(ev => ul.appendChild(renderEvent(ev)));
+    container.appendChild(ul);
+  } else {
+    // Legacy plain-text log
+    const pre = document.createElement('pre');
+    pre.className = 'plain-log';
+    pre.textContent = raw;
+    container.appendChild(pre);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Toggle / open detail row
+// ---------------------------------------------------------------------------
+
+function toggleDetail(id) {
+  const inner = document.getElementById('detail-inner-' + id);
+  if (!inner) return;
+  inner.classList.toggle('open');
+
+  if (inner.classList.contains('open')) {
+    // Render log on first open
+    const logContainer = document.getElementById('log-container-' + id);
+    if (logContainer && !logContainer.dataset.rendered) {
+      renderLog(logContainer);
+      logContainer.dataset.rendered = '1';
+    }
+    // Pretty-print JSON result
     const jsonPre = document.getElementById('json-' + id);
-    if (jsonPre && inner.classList.contains('open') && !jsonPre.dataset.pretty) {
+    if (jsonPre && !jsonPre.dataset.pretty) {
       try {
         const obj = JSON.parse(jsonPre.textContent);
         jsonPre.textContent = JSON.stringify(obj, null, 2);
         jsonPre.dataset.pretty = '1';
-      } catch(e) {}
+      } catch (e) {}
     }
   }
+}
+
+// ---------------------------------------------------------------------------
+// Tab switching
+// ---------------------------------------------------------------------------
+
+function switchTab(id, tab, ev) {
+  ev.stopPropagation();
+  const panes = document.querySelectorAll(`#detail-inner-${id} .tab-pane`);
+  const btns  = document.querySelectorAll(`#detail-inner-${id} .tab-btn`);
+  panes.forEach(p => p.classList.remove('active'));
+  btns.forEach(b => b.classList.remove('active'));
+
+  const pane = document.getElementById(`tab-${tab}-${id}`);
+  if (pane) pane.classList.add('active');
+  if (ev.target) ev.target.classList.add('active');
+
+  // Render log if switching to log tab for the first time
+  if (tab === 'log') {
+    const logContainer = document.getElementById('log-container-' + id);
+    if (logContainer && !logContainer.dataset.rendered) {
+      renderLog(logContainer);
+      logContainer.dataset.rendered = '1';
+    }
+  }
+  // Pretty-print JSON on result tab
+  if (tab === 'result') {
+    const jsonPre = document.getElementById('json-' + id);
+    if (jsonPre && !jsonPre.dataset.pretty) {
+      try {
+        const obj = JSON.parse(jsonPre.textContent);
+        jsonPre.textContent = JSON.stringify(obj, null, 2);
+        jsonPre.dataset.pretty = '1';
+      } catch (e) {}
+    }
+  }
+}
 </script>
 </body>
 </html>
