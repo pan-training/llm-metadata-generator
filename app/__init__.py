@@ -295,15 +295,75 @@ def _register_integration_test_cli(app: Flask) -> None:
                 encoding="utf-8",
             )
 
-            log_entries: list[str] = []
             log_file = run_dir / "log.txt"
             log_fh = log_file.open("w", encoding="utf-8")
 
-            def _log(msg: str) -> None:
-                log_entries.append(msg)
-                click.echo(f"  {msg}")
-                log_fh.write(msg + "\n")
-                log_fh.flush()
+            from app.agents.logger import (
+                AgentEvent,
+                AgentLogger,
+                FetchEvent,
+                InfoEvent,
+                ItemFoundEvent,
+                LLMCallEvent,
+                ValidationEvent,
+                WarnEvent,
+            )
+
+            # Track parent depths so child events are indented on the console.
+            _depth_cache: dict[int, int] = {}
+
+            def _event_depth(ev: AgentEvent) -> int:
+                if ev.parent_id is None:
+                    depth = 0
+                else:
+                    depth = _depth_cache.get(ev.parent_id, 0) + 1
+                _depth_cache[ev.id] = depth
+                return depth
+
+            def _format_console_line(ev: AgentEvent, depth: int) -> str | None:
+                """Return a human-readable console line for *ev*, or None to skip."""
+                indent = "  " * depth
+                if isinstance(ev, InfoEvent):
+                    return f"{indent}{ev.message}"
+                if isinstance(ev, WarnEvent):
+                    return f"{indent}⚠  {ev.message}"
+                if isinstance(ev, LLMCallEvent):
+                    return (
+                        f"{indent}[LLM:{ev.task}] {ev.latency_ms:.0f} ms"
+                    )
+                if isinstance(ev, FetchEvent):
+                    return f"{indent}↓ {ev.url} [{ev.status_code}]"
+                if isinstance(ev, ItemFoundEvent):
+                    return f"{indent}★ {ev.title!r} ({ev.item_type})"
+                if isinstance(ev, ValidationEvent):
+                    status = "✓" if ev.passed else "✗"
+                    errs = f" – {len(ev.errors)} error(s)" if ev.errors else ""
+                    return f"{indent}{status} {ev.item_name}{errs}"
+                return None
+
+            # Create logger first so _on_event can reference it without a
+            # forward declaration; the callback is assigned immediately after.
+            run_logger = AgentLogger()
+            _log_write_count = 0
+
+            def _on_event(ev: AgentEvent) -> None:
+                """Stream each event to console + log.txt immediately."""
+                nonlocal _log_write_count
+                depth = _event_depth(ev)
+                line = _format_console_line(ev, depth)
+                if line:
+                    click.echo(f"  {line}")
+                    log_fh.write(line + "\n")
+                    log_fh.flush()
+                # Write log.json every 10 events to balance real-time visibility
+                # against the O(n²) cost of rewriting the whole file on every event.
+                _log_write_count += 1
+                if _log_write_count % 10 == 0:
+                    (run_dir / "log.json").write_text(
+                        run_logger.to_json(), encoding="utf-8"
+                    )
+
+            run_logger.on_event = _on_event
 
             items: list[dict[str, object]] = []
 
@@ -325,7 +385,7 @@ def _register_integration_test_cli(app: Flask) -> None:
                     prompt=site_prompt,  # type: ignore[arg-type]
                     structural_summary=None,
                     llm_client=client,
-                    log_fn=_log,
+                    logger=run_logger,
                     on_item=_on_item,
                 )
             except AccessDeniedError as exc:
@@ -339,6 +399,23 @@ def _register_integration_test_cli(app: Flask) -> None:
                 click.echo(f"  UNEXPECTED ERROR: {error}", err=True)
             finally:
                 log_fh.close()
+                # Write the final log.json (events were already written
+                # incrementally, but this ensures a complete flush at the end).
+                (run_dir / "log.json").write_text(
+                    run_logger.to_json(), encoding="utf-8"
+                )
+                # Print per-phase timing summary to console
+                summary = run_logger.summary()
+                click.echo(
+                    f"  LLM: {summary['llm_calls']} call(s), "
+                    f"{summary['total_llm_ms']:.0f} ms total"
+                )
+                by_task = summary.get("llm_by_task", {})
+                for task_name, stats in by_task.items():
+                    click.echo(
+                        f"    {task_name}: {stats['count']} call(s), "
+                        f"{stats['total_ms']:.0f} ms"
+                    )
 
             # Validate items (annotates in-place with _validation key) and
             # overwrite result.json with the annotated version.
@@ -355,7 +432,23 @@ def _register_integration_test_cli(app: Flask) -> None:
                     encoding="utf-8",
                 )
 
-            # Write human-readable summary.
+            # Write human-readable summary (includes per-phase LLM timing).
+            run_summary = run_logger.summary()
+            timing_lines: list[str] = [
+                "",
+                "## LLM timing",
+                f"  Total: {run_summary['llm_calls']} call(s), "
+                f"{run_summary['total_llm_ms']:.0f} ms",
+            ]
+            for task_name, stats in run_summary.get("llm_by_task", {}).items():
+                timing_lines.append(
+                    f"  {task_name}: {stats['count']} call(s), {stats['total_ms']:.0f} ms"
+                )
+            log_entries = [
+                ev.message
+                for ev in run_logger.events
+                if isinstance(ev, (InfoEvent, WarnEvent))
+            ]
             summary_lines = [
                 "# Integration test summary",
                 "",
@@ -366,6 +459,7 @@ def _register_integration_test_cli(app: Flask) -> None:
                 "",
                 "## Validation",
                 *(validation_lines or ["  (no items to validate)"]),
+                *timing_lines,
                 "",
                 "## Agent log",
                 *(f"  {e}" for e in log_entries),

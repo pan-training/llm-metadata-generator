@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integration Test Runs</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #f5f7fa; color: #333; }
+    header { background: #1a73e8; color: white; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+    header h1 { margin: 0; font-size: 1.4rem; }
+    .header-links { display: flex; gap: 16px; align-items: center; }
+    .header-links a { color: white; opacity: .85; font-size: .9rem; text-decoration: none; }
+    .header-links a:hover { opacity: 1; }
+    .container { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+    .run-card { background: white; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.1); margin-bottom: 12px; overflow: hidden; }
+    .run-header { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; }
+    .run-header:hover { background: #f0f4ff; }
+    .run-status { flex-shrink: 0; width: 10px; height: 10px; border-radius: 50%; }
+    .run-status.ok  { background: #34a853; }
+    .run-status.err { background: #ea4335; }
+    .run-url { flex: 1; font-size: .9rem; color: #1a73e8; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .run-meta { font-size: .8rem; color: #888; white-space: nowrap; }
+    .run-pills { display: flex; gap: 8px; }
+    .run-pill { font-size: .75rem; border-radius: 12px; padding: 2px 10px; font-weight: 600; }
+    .run-pill.items { background: #e6f4ea; color: #137333; }
+    .run-pill.err   { background: #fce8e6; color: #c5221f; }
+    .run-pill.warn  { background: #fff3cd; color: #856404; }
+    .run-body { display: none; border-top: 1px solid #eee; }
+    .run-body.open { display: block; }
+
+    /* ---- Tabs ---- */
+    .tabs { display: flex; gap: 4px; padding: 12px 18px 0; }
+    .tab-btn { background: #e8ecf4; border: none; border-radius: 6px 6px 0 0; padding: 7px 16px; cursor: pointer; font-size: .85rem; color: #555; }
+    .tab-btn.active { background: #1a73e8; color: white; }
+    .tab-pane { display: none; padding: 12px 18px; }
+    .tab-pane.active { display: block; }
+
+    /* ---- Stats bar ---- */
+    .stats-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .stat-pill { background: #e8f0fe; border-radius: 20px; padding: 4px 12px; font-size: .8rem; color: #1a73e8; font-weight: 600; }
+    .stat-pill.warn { background: #fce8e6; color: #c5221f; }
+    .stat-pill.ok   { background: #e6f4ea; color: #137333; }
+
+    /* ---- Event timeline ---- */
+    .event-timeline { list-style: none; margin: 0; padding: 0; }
+    .event-timeline li { display: flex; align-items: flex-start; gap: 10px; padding: 5px 0; border-bottom: 1px solid #edf0f7; font-size: .85rem; line-height: 1.4; }
+    .event-timeline li:last-child { border-bottom: none; }
+    .ev-icon { flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-top: 1px; }
+    .ev-info    .ev-icon { background: #e8f0fe; color: #1a73e8; }
+    .ev-warn    .ev-icon { background: #fce8e6; color: #c5221f; }
+    .ev-llm     .ev-icon { background: #f3e8fd; color: #7b1fa2; }
+    .ev-fetch   .ev-icon { background: #e6f4ea; color: #137333; }
+    .ev-fetch.err .ev-icon { background: #fce8e6; color: #c5221f; }
+    .ev-item    .ev-icon { background: #fff3e0; color: #e65100; }
+    .ev-val-ok  .ev-icon { background: #e6f4ea; color: #137333; }
+    .ev-val-err .ev-icon { background: #fce8e6; color: #c5221f; }
+    .ev-body { flex: 1; min-width: 0; }
+    .ev-meta { color: #888; font-size: .78rem; margin-left: 4px; }
+
+    /* ---- Child event groups ---- */
+    .ev-children { list-style: none; margin: 4px 0 0 24px; padding: 0; border-left: 2px solid #e0e5f0; padding-left: 8px; }
+    .ev-children.collapsed { display: none; }
+    .ev-toggle { background: none; border: 1px solid #c8cfe8; border-radius: 3px; padding: 1px 6px; font-size: .7rem; cursor: pointer; color: #555; margin-left: 6px; }
+    .ev-toggle:hover { background: #e8f0fe; }
+
+    /* ---- Expandable LLM call details ---- */
+    .llm-toggle { background: none; border: 1px solid #d0d0e8; border-radius: 4px; padding: 2px 8px; font-size: .75rem; cursor: pointer; color: #7b1fa2; margin-left: 6px; }
+    .llm-toggle:hover { background: #f3e8fd; }
+    .llm-detail { display: none; margin-top: 6px; background: #1e1e2e; color: #cdd6f4; border-radius: 6px; padding: 10px 12px; font-family: monospace; font-size: .78rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+    .llm-detail.open { display: block; }
+    .llm-label { color: #89b4fa; font-weight: 700; display: block; margin-bottom: 4px; }
+    .llm-sep { border: none; border-top: 1px solid #45475a; margin: 8px 0; }
+
+    /* ---- Validation errors ---- */
+    .val-errors { margin: 4px 0 0 0; padding: 0 0 0 16px; color: #c5221f; font-size: .8rem; }
+
+    /* ---- Code blocks ---- */
+    pre.json-result, pre.plain-log, pre.summary-md {
+      background: #1e1e2e; color: #cdd6f4; padding: 12px; border-radius: 6px;
+      overflow-x: auto; font-size: .82rem; line-height: 1.5;
+      white-space: pre-wrap; word-break: break-word; margin: 0;
+    }
+    .no-runs { text-align: center; padding: 48px; color: #888; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Integration Test Runs</h1>
+  <div class="header-links">
+    <a href="/sessions">← Session Viewer</a>
+    <small style="opacity:.85;">Admin · User {{ user_id }}</small>
+  </div>
+</header>
+
+<div class="container">
+  {% if runs %}
+  {% for run in runs %}
+  <div class="run-card">
+    <div class="run-header" onclick="toggleRun('{{ loop.index }}')">
+      <div class="run-status {{ 'err' if run.has_error else 'ok' }}"></div>
+      <div class="run-url" title="{{ run.url }}">{{ run.url }}</div>
+      <div class="run-pills">
+        {% if run.item_count is not none %}
+        <span class="run-pill items">{{ run.item_count }} item{{ '' if run.item_count == 1 else 's' }}</span>
+        {% endif %}
+        {% if run.has_error %}
+        <span class="run-pill err">error</span>
+        {% endif %}
+      </div>
+      <div class="run-meta">{{ run.timestamp }}</div>
+    </div>
+
+    <div class="run-body" id="run-body-{{ loop.index }}">
+      {% if run.description %}
+      <div style="padding: 8px 18px 0; font-size:.85rem; color:#555;">{{ run.description }}</div>
+      {% endif %}
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchRunTab('{{ loop.index }}', 'log', event)">Event Log</button>
+        <button class="tab-btn" onclick="switchRunTab('{{ loop.index }}', 'result', event)">JSON-LD Result</button>
+        <button class="tab-btn" onclick="switchRunTab('{{ loop.index }}', 'summary', event)">Summary</button>
+      </div>
+
+      <div id="rtab-log-{{ loop.index }}" class="tab-pane active">
+        <div id="log-container-{{ loop.index }}"
+             data-log="{{ run.log | e if run.log else '' }}"></div>
+      </div>
+
+      <div id="rtab-result-{{ loop.index }}" class="tab-pane">
+        {% if run.result_json %}
+        <pre id="rjson-{{ loop.index }}" class="json-result">{{ run.result_json }}</pre>
+        {% else %}
+        <p style="color:#888;font-size:.85rem;">No result.json found for this run.</p>
+        {% endif %}
+      </div>
+
+      <div id="rtab-summary-{{ loop.index }}" class="tab-pane">
+        {% if run.summary_md %}
+        <pre class="summary-md">{{ run.summary_md }}</pre>
+        {% else %}
+        <p style="color:#888;font-size:.85rem;">No summary.md found for this run.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  {% else %}
+  <div class="no-runs">
+    <p>No integration test runs found in <code>integration_test/results/</code>.</p>
+    <p>Run <code>flask integration-test run</code> to create one.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// Shared event-rendering (same logic as sessions.html)
+// ---------------------------------------------------------------------------
+
+const EV_ICONS = {
+  info:       { cls: 'ev-info',    icon: 'ℹ' },
+  warn:       { cls: 'ev-warn',    icon: '⚠' },
+  llm_call:   { cls: 'ev-llm',     icon: 'LLM' },
+  fetch:      { cls: 'ev-fetch',   icon: 'GET' },
+  item_found: { cls: 'ev-item',    icon: '★' },
+  validation: { cls: 'ev-val-ok',  icon: '✓' },
+};
+
+let _evCounter = 0;
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function llmBtnLabel(open) {
+  return open ? '▼ prompt / response' : '▶ prompt / response';
+}
+
+function toggleLlm(id, ev) {
+  ev.stopPropagation();
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('open');
+  ev.target.textContent = llmBtnLabel(el && el.classList.contains('open'));
+}
+
+function renderEventBody(ev, body) {
+  if (ev.type === 'info') {
+    body.textContent = ev.message;
+  } else if (ev.type === 'warn') {
+    body.innerHTML = '<strong>Warning:</strong> ' + escHtml(ev.message);
+  } else if (ev.type === 'fetch') {
+    const bytes = ev.content_length || 0;
+    const sizeStr = bytes >= 1024 ? Math.ceil(bytes / 1024) + ' KB' : (bytes > 0 ? bytes + ' B' : '');
+    const badge = ev.status_code < 400
+      ? `<span style="color:#137333">${ev.status_code}</span>`
+      : `<span style="color:#c5221f">${ev.status_code}</span>`;
+    body.innerHTML = `GET ${badge} <a href="${escHtml(ev.url)}" target="_blank" style="color:#1a73e8">${escHtml(ev.url)}</a> <span class="ev-meta">${sizeStr}</span>`;
+  } else if (ev.type === 'item_found') {
+    body.innerHTML = `<strong>Found:</strong> ${escHtml(ev.title)} <span class="ev-meta">(${escHtml(ev.item_type)})</span>`;
+  } else if (ev.type === 'validation') {
+    if (ev.passed) {
+      body.innerHTML = `<strong>Valid:</strong> ${escHtml(ev.item_name)}`;
+    } else {
+      body.innerHTML = `<strong>Validation errors</strong> for ${escHtml(ev.item_name)} (${ev.errors.length})`;
+      const ul = document.createElement('ul');
+      ul.className = 'val-errors';
+      ev.errors.forEach(e => { const li2 = document.createElement('li'); li2.textContent = e; ul.appendChild(li2); });
+      body.appendChild(ul);
+    }
+  } else if (ev.type === 'llm_call') {
+    const uid = 'llm-' + (_evCounter++);
+    const ms = ev.latency_ms ? `${ev.latency_ms.toFixed(0)} ms` : '';
+    body.innerHTML = `<strong>${escHtml(ev.task)}</strong> → <code>${escHtml(ev.model)}</code> <span class="ev-meta">${ms}</span>` +
+      `<button class="llm-toggle" onclick="toggleLlm('${uid}', event)">${llmBtnLabel(false)}</button>`;
+    const detail = document.createElement('div');
+    detail.id = uid; detail.className = 'llm-detail';
+    let detailHtml = `<span class="llm-label">PROMPT</span>${escHtml(ev.prompt_preview)}`;
+    if (ev.chunk_preview) {
+      detailHtml += `<hr class="llm-sep"><span class="llm-label">CHUNK</span>${escHtml(ev.chunk_preview)}`;
+    }
+    detailHtml += `<hr class="llm-sep"><span class="llm-label">RESPONSE</span>${escHtml(ev.response_preview)}`;
+    detail.innerHTML = detailHtml;
+    body.appendChild(detail);
+  }
+}
+
+function renderEvent(ev, childMap) {
+  const li = document.createElement('li');
+  const meta = EV_ICONS[ev.type] || { cls: 'ev-info', icon: '?' };
+  let cls = meta.cls;
+  if (ev.type === 'fetch' && ev.status_code >= 400) cls += ' err';
+  if (ev.type === 'validation' && !ev.passed) cls = 'ev-val-err';
+  li.className = cls;
+
+  const iconEl = document.createElement('span');
+  iconEl.className = 'ev-icon';
+  iconEl.textContent = ev.type === 'fetch' ? String(ev.status_code || 'GET') : meta.icon;
+  if (ev.type === 'validation') iconEl.textContent = ev.passed ? '✓' : '✗';
+
+  const body = document.createElement('span');
+  body.className = 'ev-body';
+  renderEventBody(ev, body);
+
+  const children = childMap.get(ev.id) || [];
+  if (children.length > 0) {
+    const childListId = 'ch-' + (_evCounter++);
+    const btn = document.createElement('button');
+    btn.className = 'ev-toggle';
+    const startCollapsed = children.length > 3;
+    btn.textContent = `▶ ${children.length}`;
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const cl = document.getElementById(childListId);
+      if (!cl) return;
+      const collapsed = cl.classList.toggle('collapsed');
+      btn.textContent = (collapsed ? '▶ ' : '▼ ') + children.length;
+    };
+    if (!startCollapsed) btn.textContent = `▼ ${children.length}`;
+    body.appendChild(btn);
+    const childUl = document.createElement('ul');
+    childUl.className = 'ev-children' + (startCollapsed ? ' collapsed' : '');
+    childUl.id = childListId;
+    children.forEach(c => childUl.appendChild(renderEvent(c, childMap)));
+    body.appendChild(childUl);
+  }
+
+  li.appendChild(iconEl);
+  li.appendChild(body);
+  return li;
+}
+
+function buildTree(events) {
+  const byId = new Map();
+  const childMap = new Map();
+  events.forEach(ev => byId.set(ev.id, ev));
+  const roots = [];
+  events.forEach(ev => {
+    const pid = ev.parent_id;
+    if (pid && byId.has(pid)) {
+      if (!childMap.has(pid)) childMap.set(pid, []);
+      childMap.get(pid).push(ev);
+    } else {
+      roots.push(ev);
+    }
+  });
+  return { roots, childMap };
+}
+
+function buildStatsBar(events) {
+  const llm = events.filter(e => e.type === 'llm_call');
+  const fetches = events.filter(e => e.type === 'fetch');
+  const items = events.filter(e => e.type === 'item_found');
+  const valErr = events.filter(e => e.type === 'validation' && !e.passed);
+  const warns = events.filter(e => e.type === 'warn');
+  const totalMs = llm.reduce((s, e) => s + (e.latency_ms || 0), 0);
+  const bar = document.createElement('div');
+  bar.className = 'stats-bar';
+  const add = (text, cls) => {
+    const p = document.createElement('span');
+    p.className = 'stat-pill' + (cls ? ' ' + cls : '');
+    p.textContent = text;
+    bar.appendChild(p);
+  };
+  add(`${llm.length} LLM call${llm.length !== 1 ? 's' : ''} · ${Math.round(totalMs)} ms total`);
+  add(`${fetches.length} fetch${fetches.length !== 1 ? 'es' : ''}`);
+  add(`${items.length} item${items.length !== 1 ? 's' : ''} found`, items.length > 0 ? 'ok' : '');
+  if (valErr.length > 0) add(`${valErr.length} validation error${valErr.length !== 1 ? 's' : ''}`, 'warn');
+  if (warns.length > 0) add(`${warns.length} warning${warns.length !== 1 ? 's' : ''}`, 'warn');
+  return bar;
+}
+
+function renderLog(container) {
+  const raw = container.dataset.log;
+  if (!raw) { container.textContent = 'No log available.'; return; }
+  let events = null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].type) events = parsed;
+  } catch (e) {}
+  if (events) {
+    container.appendChild(buildStatsBar(events));
+    const { roots, childMap } = buildTree(events);
+    const ul = document.createElement('ul');
+    ul.className = 'event-timeline';
+    roots.forEach(ev => ul.appendChild(renderEvent(ev, childMap)));
+    container.appendChild(ul);
+  } else {
+    const pre = document.createElement('pre');
+    pre.className = 'plain-log';
+    pre.textContent = raw;
+    container.appendChild(pre);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Card expand / collapse
+// ---------------------------------------------------------------------------
+
+function toggleRun(idx) {
+  const body = document.getElementById('run-body-' + idx);
+  if (!body) return;
+  body.classList.toggle('open');
+  if (body.classList.contains('open')) {
+    // Render log on first expand
+    const lc = document.getElementById('log-container-' + idx);
+    if (lc && !lc.dataset.rendered) { renderLog(lc); lc.dataset.rendered = '1'; }
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tab switching
+// ---------------------------------------------------------------------------
+
+function switchRunTab(idx, tab, ev) {
+  ev.stopPropagation();
+  const body = document.getElementById('run-body-' + idx);
+  if (!body) return;
+  body.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  body.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  const pane = document.getElementById(`rtab-${tab}-${idx}`);
+  if (pane) pane.classList.add('active');
+  if (ev.target) ev.target.classList.add('active');
+
+  if (tab === 'log') {
+    const lc = document.getElementById('log-container-' + idx);
+    if (lc && !lc.dataset.rendered) { renderLog(lc); lc.dataset.rendered = '1'; }
+  }
+  if (tab === 'result') {
+    const pre = document.getElementById('rjson-' + idx);
+    if (pre && !pre.dataset.pretty) {
+      try { pre.textContent = JSON.stringify(JSON.parse(pre.textContent), null, 2); pre.dataset.pretty = '1'; } catch (e) {}
+    }
+  }
+}
+</script>
+</body>
+</html>
