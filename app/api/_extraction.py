@@ -299,11 +299,22 @@ def run_extraction(
     )
 
     with app.app_context():
-        logger = AgentLogger()
+        def _persist_running_log() -> None:
+            try:
+                update_session(session_id, "running", log=logger.to_json())
+            except Exception:
+                _LOGGER.exception(
+                    "Could not persist running log for session %s",
+                    session_id,
+                )
+
+        def _on_log_event(_ev: object) -> None:
+            _persist_running_log()
+
+        logger = AgentLogger(on_event=_on_log_event)
 
         try:
             logger.info(f"Starting extraction for {url}")
-            update_session(session_id, "running", log=logger.to_json())
 
             llm_client = get_llm_client("default")
 

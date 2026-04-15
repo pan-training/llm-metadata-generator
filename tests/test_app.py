@@ -281,6 +281,81 @@ def test_run_pending_extractions_includes_stale_running_sessions(
     assert executed_ids == [stale_running.id]
 
 
+def test_run_extraction_persists_running_log_on_each_event(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    with app.app_context():
+        from app.api._extraction import run_extraction
+        from app.db.sqlite import init_db
+        from app.models.session import create_session
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        session = create_session(user.id, "https://example.com/training")
+
+        monkeypatch.setattr("app.agents.get_llm_client", lambda _task: object())
+        monkeypatch.setattr(
+            "app.agents.bioschemas.compute_site_structure_summary",
+            lambda **kwargs: '{"schema_version":"2"}',
+        )
+
+        class _FakeAgent:
+            def run(
+                self,
+                *,
+                url: str,
+                prompt: str | None,
+                structural_summary: str | None,
+                llm_client: Any,
+                logger: Any,
+            ) -> list[dict[str, str]]:
+                _ = (url, prompt, structural_summary, llm_client)
+                logger.info("phase 1")
+                logger.info("phase 2")
+                return [{"name": "Item A", "url": "https://example.com/item"}]
+
+        monkeypatch.setattr("app.agents.bioschemas.BioschemasExtractorAgent", _FakeAgent)
+
+        from app.models.session import update_session as _real_update_session
+
+        running_event_counts: list[int] = []
+
+        def _tracked_update_session(
+            session_id: int,
+            status: str,
+            log: str | None = None,
+            result_json: str | None = None,
+        ) -> None:
+            if status == "running" and log is not None:
+                parsed = json.loads(log)
+                if isinstance(parsed, list):
+                    running_event_counts.append(len(parsed))
+            _real_update_session(
+                session_id=session_id,
+                status=status,
+                log=log,
+                result_json=result_json,
+            )
+
+        monkeypatch.setattr("app.api._extraction.update_session", _tracked_update_session)
+
+        run_extraction(
+            app=app,
+            session_id=session.id,
+            url="https://example.com/training",
+            prompt=None,
+            structural_summary=None,
+            site_content_hash="hash",
+        )
+
+    assert len(running_event_counts) >= 2
+    assert running_event_counts == sorted(running_event_counts)
+    assert running_event_counts[-1] > 1
+
+
 def test_enqueue_extraction_skips_when_site_hash_unchanged(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
