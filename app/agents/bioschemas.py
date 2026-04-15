@@ -164,6 +164,10 @@ MAX_FIX_ATTEMPTS = 1  # maximum schema-fix LLM passes per item
 # Maximum characters of item content sent to the extraction LLM.
 MAX_EXTRACTION_CONTENT = 8000
 
+# Maximum characters of a schema property description included in validation
+# error hints (keeps the hint concise for LLM context).
+MAX_SCHEMA_HINT_LENGTH = 120
+
 _USER_AGENT = (
     "BioschemasMetadataGenerator/1.0 "
     "(+https://github.com/pan-training/llm-metadata-generator)"
@@ -813,7 +817,7 @@ def _validate_with_schema(item: dict[str, Any]) -> list[str]:
                 desc = prop_schema.get("description") or prop_schema.get("$comment")
                 if desc:
                     # Trim to a concise hint
-                    hint = f" (expected: {desc[:120]})"
+                    hint = f" (expected: {desc[:MAX_SCHEMA_HINT_LENGTH]})"
             errors.append(f"{path}: {err.message}{hint}")
         return errors
     except Exception as exc:
@@ -1575,9 +1579,11 @@ class BioschemasExtractorAgent:
             for item_data in result.get("items", []):
                 raw_item_url = item_data.get("url", start_url)
                 # Resolve relative URLs against the page being crawled
-                if raw_item_url and not urlparse(raw_item_url).scheme:
-                    raw_item_url = urljoin(start_url, raw_item_url)
-                item_url = raw_item_url
+                item_url = (
+                    urljoin(start_url, raw_item_url)
+                    if raw_item_url and not urlparse(raw_item_url).scheme
+                    else raw_item_url
+                )
                 item_title = item_data.get("title", "")
                 if not item_title:
                     continue
@@ -1608,12 +1614,15 @@ class BioschemasExtractorAgent:
             # Collect follow-links (deduplicated, capped)
             if depth < MAX_FOLLOW_DEPTH:
                 for link_data in result.get("follow_links", [])[:MAX_LINKS_PER_CHUNK]:
-                    link_url = link_data.get("url", "")
-                    if not link_url:
+                    raw_link_url = link_data.get("url", "")
+                    if not raw_link_url:
                         continue
                     # Resolve relative URLs against the page being crawled
-                    if not urlparse(link_url).scheme:
-                        link_url = urljoin(start_url, link_url)
+                    link_url = (
+                        urljoin(start_url, raw_link_url)
+                        if not urlparse(raw_link_url).scheme
+                        else raw_link_url
+                    )
                     if link_url in state.pages or link_url in links_to_follow:
                         continue
                     if _is_faceted_search_url(link_url, start_url):
