@@ -14,6 +14,22 @@ from app.models.session import create_session, get_active_session, update_sessio
 _LOGGER = logging.getLogger(__name__)
 
 
+def build_extraction_job_id(session_id: int) -> str:
+    """Return a deterministic APScheduler id used for lookup/cancellation."""
+    return f"session-extraction-{session_id}"
+
+
+def _is_structured_log_empty(log_value: str | None) -> bool:
+    """Return True when log text is empty or a JSON-encoded empty list."""
+    if not log_value:
+        return True
+    try:
+        parsed = json.loads(log_value)
+    except json.JSONDecodeError:
+        return False
+    return isinstance(parsed, list) and len(parsed) == 0
+
+
 def _get_structural_summary(url: str) -> str | None:
     """Return the cached structural summary for *url*, if present."""
     db = get_db()
@@ -44,8 +60,8 @@ def run_extraction(
         logger = AgentLogger()
 
         try:
-            update_session(session_id, "running", log=logger.to_json())
             logger.info(f"Starting extraction for {url}")
+            update_session(session_id, "running", log=logger.to_json())
 
             llm_client = get_llm_client("default")
 
@@ -141,6 +157,8 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
         scheduler.add_job(
             func=run_extraction,
             trigger="date",
+            id=build_extraction_job_id(new_session.id),
+            replace_existing=True,
             kwargs={
                 "app": app,
                 "session_id": new_session.id,
@@ -192,8 +210,8 @@ def run_pending_extractions(
     """
     db = get_db()
     query = (
-        "SELECT id, url FROM sessions"
-        " WHERE status = 'pending'"
+        "SELECT id, url, status, log FROM sessions"
+        " WHERE status IN ('pending', 'running')"
         " AND (? IS NULL OR user_id = ?)"
         " AND (? IS NULL OR url = ?)"
         " ORDER BY created_at ASC"
@@ -202,6 +220,11 @@ def run_pending_extractions(
 
     executed_ids: list[int] = []
     for row in rows:
+        status = str(row["status"])
+        log_value = row["log"]
+        if status == "running" and not _is_structured_log_empty(log_value):
+            continue
+
         session_id = int(row["id"])
         session_url = str(row["url"])
         try:
