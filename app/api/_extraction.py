@@ -6,6 +6,7 @@ import logging
 import posixpath
 import random
 import sqlite3
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Literal
@@ -20,6 +21,7 @@ from app.models.session import create_session, get_active_session, update_sessio
 
 _LOGGER = logging.getLogger(__name__)
 MAX_CACHED_ITEM_URLS = 200
+MAX_HASH_CHECK_PAGES = 200
 
 
 @dataclass(frozen=True)
@@ -84,6 +86,45 @@ def _fetch_site_content_hash(url: str) -> str | None:
     return hashlib.sha256(markdown.encode()).hexdigest()
 
 
+def _load_crawled_page_hashes(structural_summary: str | None) -> dict[str, str]:
+    """Return cached per-page hashes from a structural summary, if valid."""
+    if not structural_summary:
+        return {}
+    try:
+        summary = json.loads(structural_summary)
+    except json.JSONDecodeError:
+        return {}
+    if not isinstance(summary, dict):
+        return {}
+    raw_hashes = summary.get("crawled_page_hashes")
+    if not isinstance(raw_hashes, dict):
+        return {}
+
+    normalized: dict[str, str] = {}
+    for page_url, page_hash in raw_hashes.items():
+        if not isinstance(page_url, str) or not isinstance(page_hash, str):
+            continue
+        normalized[page_url] = page_hash
+        if len(normalized) >= MAX_HASH_CHECK_PAGES:
+            break
+    return normalized
+
+
+def _snapshot_content_hash(page_hashes: Mapping[str, str], root_hash: str | None) -> str | None:
+    """Build a deterministic hash over crawled pages, with root hash fallback."""
+    normalized_pairs = sorted((str(url), str(content_hash)) for url, content_hash in page_hashes.items())
+    if not normalized_pairs:
+        return root_hash
+
+    payload = {
+        "root_hash": root_hash or "",
+        "pages": normalized_pairs,
+    }
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+    ).hexdigest()
+
+
 def _build_extraction_plan(url: str, force_refresh: bool = False) -> ExtractionPlan:
     """Decide whether to skip, incrementally refresh, or fully refresh *url*."""
     cache_row = _get_cache_row(url)
@@ -116,6 +157,20 @@ def _build_extraction_plan(url: str, force_refresh: bool = False) -> ExtractionP
             site_content_hash=None,
         )
 
+    cached_page_hashes = _load_crawled_page_hashes(cached_summary)
+    current_page_hashes: dict[str, str] = {}
+    for page_url in cached_page_hashes:
+        page_hash = _fetch_site_content_hash(page_url)
+        if page_hash is None:
+            return ExtractionPlan(
+                mode="incremental",
+                structural_summary=cached_summary,
+                site_content_hash=None,
+            )
+        current_page_hashes[page_url] = page_hash
+
+    current_snapshot_hash = _snapshot_content_hash(current_page_hashes, current_hash)
+
     full_refresh_probability = _normalize_probability(
         current_app.config.get("CRON_METADATA_FULL_REFRESH_PROBABILITY", 0.01)
     )
@@ -123,20 +178,31 @@ def _build_extraction_plan(url: str, force_refresh: bool = False) -> ExtractionP
         return ExtractionPlan(
             mode="full_refresh",
             structural_summary=None,
-            site_content_hash=current_hash,
+            site_content_hash=current_snapshot_hash,
         )
 
-    if current_hash == cached_hash:
+    if current_snapshot_hash == cached_hash:
         return ExtractionPlan(
             mode="no_update",
             structural_summary=cached_summary,
-            site_content_hash=current_hash,
+            site_content_hash=current_snapshot_hash,
+        )
+
+    # Backward compatibility: old cache entries may contain only the root-page hash.
+    if cached_hash == current_hash and all(
+        current_page_hashes.get(page_url) == cached_page_hash
+        for page_url, cached_page_hash in cached_page_hashes.items()
+    ):
+        return ExtractionPlan(
+            mode="no_update",
+            structural_summary=cached_summary,
+            site_content_hash=current_snapshot_hash,
         )
 
     return ExtractionPlan(
         mode="incremental",
         structural_summary=cached_summary,
-        site_content_hash=current_hash,
+        site_content_hash=current_snapshot_hash,
     )
 
 
@@ -281,7 +347,9 @@ def run_extraction(
             )
 
             # Update metadata_cache with the latest site-content hash and summary.
-            content_hash = site_content_hash or hashlib.sha256(result_str.encode()).hexdigest()
+            content_hash = _snapshot_content_hash(latest_page_hashes, site_content_hash)
+            if content_hash is None:
+                content_hash = hashlib.sha256(result_str.encode()).hexdigest()
             db = get_db()
             db.execute(
                 "INSERT INTO metadata_cache (url, content_hash, structural_summary, last_crawled_at)"

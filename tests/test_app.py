@@ -380,3 +380,131 @@ def test_enqueue_extraction_random_full_refresh_is_configurable(
 
     assert len(fake_scheduler.jobs) == 1
     assert fake_scheduler.jobs[0]["structural_summary"] is None
+
+
+def test_enqueue_extraction_detects_changes_on_cached_subpages(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app(
+        {
+            "TESTING": True,
+            "DATABASE_URL": str(tmp_path / "test.db"),
+            "CRON_METADATA_FULL_REFRESH_PROBABILITY": 0.0,
+        }
+    )
+
+    class _FakeScheduler:
+        def __init__(self) -> None:
+            self.jobs: list[dict[str, Any]] = []
+
+        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
+            _ = (func, trigger)
+            self.jobs.append(kwargs)
+
+    fake_scheduler = _FakeScheduler()
+
+    with app.app_context():
+        from app.api._extraction import _snapshot_content_hash, enqueue_extraction_if_needed
+        from app.db.sqlite import get_db, init_db
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        app.extensions["scheduler"] = fake_scheduler
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            (
+                "https://example.com/training",
+                "root-hash",
+                (
+                    '{"schema_version":"2","crawled_page_hashes":{'
+                    '"https://example.com/training":"root-hash",'
+                    '"https://example.com/training/page-2":"old-page-hash"}}'
+                ),
+            ),
+        )
+        db.commit()
+
+        hash_by_url = {
+            "https://example.com/training": "root-hash",
+            "https://example.com/training/page-2": "new-page-hash",
+        }
+        monkeypatch.setattr(
+            "app.api._extraction._fetch_site_content_hash",
+            lambda current_url: hash_by_url.get(current_url),
+        )
+
+        enqueue_extraction_if_needed("https://example.com/training", None, user.id)
+
+        expected_snapshot_hash = _snapshot_content_hash(
+            {
+                "https://example.com/training": "root-hash",
+                "https://example.com/training/page-2": "new-page-hash",
+            },
+            "root-hash",
+        )
+
+    assert len(fake_scheduler.jobs) == 1
+    assert fake_scheduler.jobs[0]["site_content_hash"] == expected_snapshot_hash
+
+
+def test_enqueue_extraction_skips_when_cached_subpages_are_unchanged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app(
+        {
+            "TESTING": True,
+            "DATABASE_URL": str(tmp_path / "test.db"),
+            "CRON_METADATA_FULL_REFRESH_PROBABILITY": 0.0,
+        }
+    )
+
+    class _FakeScheduler:
+        def __init__(self) -> None:
+            self.jobs: list[dict[str, Any]] = []
+
+        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
+            _ = (func, trigger)
+            self.jobs.append(kwargs)
+
+    fake_scheduler = _FakeScheduler()
+
+    with app.app_context():
+        from app.api._extraction import _snapshot_content_hash, enqueue_extraction_if_needed
+        from app.db.sqlite import get_db, init_db
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        app.extensions["scheduler"] = fake_scheduler
+        cached_page_hashes = {
+            "https://example.com/training": "root-hash",
+            "https://example.com/training/page-2": "page-hash",
+        }
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            (
+                "https://example.com/training",
+                _snapshot_content_hash(cached_page_hashes, "root-hash"),
+                (
+                    '{"schema_version":"2","crawled_page_hashes":{'
+                    '"https://example.com/training":"root-hash",'
+                    '"https://example.com/training/page-2":"page-hash"}}'
+                ),
+            ),
+        )
+        db.commit()
+
+        monkeypatch.setattr(
+            "app.api._extraction._fetch_site_content_hash",
+            lambda current_url: cached_page_hashes.get(current_url),
+        )
+
+        enqueue_extraction_if_needed("https://example.com/training", None, user.id)
+
+        session_count = db.execute("SELECT COUNT(*) FROM sessions").fetchone()[0]
+
+    assert session_count == 0
+    assert fake_scheduler.jobs == []
