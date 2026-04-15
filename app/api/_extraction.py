@@ -2,17 +2,30 @@
 
 import hashlib
 import json
-from typing import Any
+import logging
 
+from flask import Flask
 from flask import current_app
 
 from app.agents.logger import AgentLogger
 from app.db.sqlite import get_db
 from app.models.session import create_session, get_active_session, update_session
 
+_LOGGER = logging.getLogger(__name__)
+
+
+def _get_structural_summary(url: str) -> str | None:
+    """Return the cached structural summary for *url*, if present."""
+    db = get_db()
+    cache_row = db.execute(
+        "SELECT structural_summary FROM metadata_cache WHERE url = ?",
+        (url,),
+    ).fetchone()
+    return cache_row["structural_summary"] if cache_row else None
+
 
 def run_extraction(
-    app: Any,
+    app: Flask,
     session_id: int,
     url: str,
     prompt: str | None,
@@ -121,13 +134,7 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
 
     # Retrieve structural_summary from metadata_cache for incremental runs.
     # Pass None (full refresh) if no previous crawl is recorded.
-    db = get_db()
-    cache_row = db.execute(
-        "SELECT structural_summary FROM metadata_cache WHERE url = ?",
-        (url,),
-    ).fetchone()
-
-    structural_summary = cache_row["structural_summary"] if cache_row else None
+    structural_summary = _get_structural_summary(url)
 
     scheduler = current_app.extensions.get("scheduler")
     if scheduler is not None:
@@ -142,3 +149,75 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
                 "structural_summary": structural_summary,
             },
         )
+
+
+def trigger_extraction_now(
+    app: Flask,
+    user_id: int,
+    url: str,
+    prompt: str | None,
+) -> int:
+    """Create a session for ``(user_id, url)`` and execute extraction immediately.
+
+    Args:
+        app: Flask application object used to push an app context in the worker.
+        user_id: Owner of the new session.
+        url: Source URL to extract metadata from.
+        prompt: Optional prompt override for the extractor.
+
+    Returns:
+        The id of the newly created session.
+    """
+    new_session = create_session(user_id, url)
+    run_extraction(
+        app=app,
+        session_id=new_session.id,
+        url=url,
+        prompt=prompt,
+        structural_summary=_get_structural_summary(url),
+    )
+    return new_session.id
+
+
+def run_pending_extractions(
+    app: Flask,
+    user_id: int | None = None,
+    url: str | None = None,
+) -> list[int]:
+    """Run queued (pending) extraction sessions immediately and return successful ids.
+
+    Sessions are processed in creation order. If one session fails before
+    ``run_extraction`` can persist an error state, processing continues with the
+    remaining queued sessions.
+    """
+    db = get_db()
+    query = (
+        "SELECT id, url FROM sessions"
+        " WHERE status = 'pending'"
+        " AND (? IS NULL OR user_id = ?)"
+        " AND (? IS NULL OR url = ?)"
+        " ORDER BY created_at ASC"
+    )
+    rows = db.execute(query, (user_id, user_id, url, url)).fetchall()
+
+    executed_ids: list[int] = []
+    for row in rows:
+        session_id = int(row["id"])
+        session_url = str(row["url"])
+        try:
+            run_extraction(
+                app=app,
+                session_id=session_id,
+                url=session_url,
+                prompt=None,
+                structural_summary=_get_structural_summary(session_url),
+            )
+            executed_ids.append(session_id)
+        except Exception:
+            _LOGGER.exception(
+                "Failed to execute queued extraction session %s for %s",
+                session_id,
+                session_url,
+            )
+
+    return executed_ids

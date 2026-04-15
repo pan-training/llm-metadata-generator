@@ -88,6 +88,7 @@ def create_app(config=None) -> Flask:
     # Register CLI command groups.
     _register_db_cli(app)
     _register_users_cli(app)
+    _register_tasks_cli(app)
     _register_integration_test_cli(app)
 
     # Register blueprints.
@@ -175,6 +176,51 @@ def _register_users_cli(app: Flask) -> None:
             click.echo("Token revoked.")
         else:
             click.echo("Token not found.", err=True)
+
+
+def _register_tasks_cli(app: Flask) -> None:
+    """Register the ``flask tasks`` command group."""
+
+    @app.cli.group()
+    def tasks() -> None:
+        """Background task commands."""
+
+    @tasks.command("trigger-metadata")
+    @click.option("--user-id", required=True, type=int, help="User id owning the session.")
+    @click.option("--url", required=True, help="Training website URL to extract metadata from.")
+    @click.option("--prompt", default=None, help="Optional extraction prompt override.")
+    def trigger_metadata_command(user_id: int, url: str, prompt: str | None) -> None:
+        """Run one metadata extraction task immediately."""
+        from flask import current_app
+
+        from app.api._extraction import trigger_extraction_now
+        from app.db.sqlite import get_db
+
+        db = get_db()
+        user_row = db.execute("SELECT id FROM users WHERE id = ?", (user_id,)).fetchone()
+        if user_row is None:
+            raise click.ClickException(f"User id {user_id} not found.")
+
+        session_id = trigger_extraction_now(current_app, user_id, url, prompt)
+        click.echo(f"Triggered metadata extraction (session_id={session_id}).")
+
+    @tasks.command("run-queued")
+    @click.option("--user-id", type=int, default=None, help="Only run queued tasks for this user id.")
+    @click.option("--url", default=None, help="Only run queued tasks for this URL.")
+    def run_queued_command(user_id: int | None, url: str | None) -> None:
+        """Run queued (pending) metadata extraction tasks immediately."""
+        from flask import current_app
+
+        from app.api._extraction import run_pending_extractions
+
+        executed_ids = run_pending_extractions(current_app, user_id=user_id, url=url)
+        if not executed_ids:
+            click.echo("No queued metadata tasks found.")
+            return
+        click.echo(
+            f"Executed {len(executed_ids)} queued metadata task(s): "
+            + ", ".join(str(session_id) for session_id in executed_ids)
+        )
 
 
 def _register_integration_test_cli(app: Flask) -> None:
@@ -544,4 +590,3 @@ def _register_integration_test_cli(app: Flask) -> None:
             click.echo(f"  => Results saved to {run_dir.relative_to(root)}")
 
         click.echo("\nIntegration tests complete.")
-
