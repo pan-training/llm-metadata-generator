@@ -482,10 +482,12 @@ def test_classify_chunk_prompt_includes_decision_gate_and_output_schema(
     assert len(captured_messages) >= 2
     system_prompt = captured_messages[0]["content"]
     prompt = captured_messages[1]["content"]
-    assert "MANDATORY DECISION PROCEDURE" in system_prompt
+    assert "Mandatory decision procedure" in system_prompt
     assert "return {\"relevant\": false, \"items\": [], \"follow_links\": []} and STOP." in system_prompt
+    assert "Step 2 — extract items only when evidence is concrete in THIS chunk." in system_prompt
+    assert "Step 3 — choose follow_links." in system_prompt
     assert "Do NOT extract filter/facet/tag links as items." in prompt
-    assert "Use this summary only to understand section context." in prompt
+    assert "Before reading the previous summary: use it only to understand section context." in prompt
     assert '"follow_links": [{"url": "...", "reason": "..."}]}' in prompt
     assert '"ignored_links"' not in prompt
 

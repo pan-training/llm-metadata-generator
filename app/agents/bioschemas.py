@@ -276,7 +276,7 @@ You are an expert at identifying scientific training content on web pages.
 Your task is to classify a text chunk from a website and identify any training
 materials, courses, or events it describes.  You do NOT produce JSON-LD here.
 
-MANDATORY DECISION PROCEDURE (follow in order):
+Mandatory decision procedure (follow in order):
 Step 1 — classify chunk type first.
 - If the chunk is navigation/filter UI only (tag clouds, sort controls, keyword
   filters, auth links, cookie/privacy text, scaffolding) and has no concrete
@@ -1949,10 +1949,11 @@ class BioschemasExtractorAgent:
                     "/login, /register, /search, /api/.\n\n"
                     "If this chunk is navigation/filter UI only (no concrete item "
                     "content), set relevant=false and items=[].\n\n"
+                    "Before reading the previous summary: use it only to "
+                    "understand section context. Do NOT "
+                    "extract items or links from the summary itself.\n"
                     "Previous chunk carry-over context summary "
-                    f"(may be empty): {previous_chunk_summary or '(none)'}\n"
-                    "Use this summary only to understand section context. Do NOT "
-                    "extract items or links from the summary itself.\n\n"
+                    f"(may be empty): {previous_chunk_summary or '(none)'}\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
