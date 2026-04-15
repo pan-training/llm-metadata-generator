@@ -1380,7 +1380,7 @@ class BioschemasExtractorAgent:
                 llm_client=llm_client,
                 parent_id=item_id,
             )
-            content_for_review = item_text[:MAX_EXTRACTION_CONTENT]
+            review_content = item_text[:MAX_EXTRACTION_CONTENT]
 
             chunk_extractions: list[dict[str, Any]] = []
             for chunk_index, chunk_content in enumerate(relevant_chunks):
@@ -1425,7 +1425,7 @@ class BioschemasExtractorAgent:
             # --- Review ---
             reviewed = self._review_item(
                 item=extracted,
-                content=content_for_review,
+                content=review_content,
                 llm_client=llm_client,
                 parent_id=item_id,
             )

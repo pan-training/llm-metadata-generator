@@ -165,7 +165,7 @@ def test_select_relevant_item_chunks_falls_back_when_none_classified_relevant(
     ) * 500
 
     def _fake_all_irrelevant(
-        self: BioschemasExtractorAgent,
+        _self: Any,
         item_info: Any,
         chunk_text: str,
         chunk_index: int,
@@ -866,7 +866,7 @@ def test_agent_uses_llm_chunk_relevance_for_long_item_pages(
     captured_content: dict[str, str] = {}
 
     def _fake_relevance(
-        self: BioschemasExtractorAgent,
+        _self: Any,
         item_info: Any,
         chunk_text: str,
         chunk_index: int,
