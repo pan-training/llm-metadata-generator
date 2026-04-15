@@ -356,10 +356,13 @@ def test_enqueue_extraction_skips_when_site_hash_unchanged(
     with app.app_context():
         from app.api._extraction import enqueue_extraction_if_needed
         from app.db.sqlite import get_db, init_db
+        from app.models.session import create_session, update_session
         from app.models.user import create_user
 
         init_db()
         user, _token = create_user()
+        done_session = create_session(user.id, "https://example.com/training")
+        update_session(done_session.id, "done", result_json='[{"name":"cached"}]')
         app.extensions["scheduler"] = fake_scheduler
         db = get_db()
         db.execute(
@@ -377,7 +380,7 @@ def test_enqueue_extraction_skips_when_site_hash_unchanged(
 
         session_count = db.execute("SELECT COUNT(*) FROM sessions").fetchone()[0]
 
-    assert session_count == 0
+    assert session_count == 1
     assert fake_scheduler.jobs == []
 
 
@@ -600,10 +603,13 @@ def test_enqueue_extraction_skips_when_cached_subpages_are_unchanged(
     with app.app_context():
         from app.api._extraction import _snapshot_content_hash, enqueue_extraction_if_needed
         from app.db.sqlite import get_db, init_db
+        from app.models.session import create_session, update_session
         from app.models.user import create_user
 
         init_db()
         user, _token = create_user()
+        done_session = create_session(user.id, "https://example.com/training")
+        update_session(done_session.id, "done", result_json='[{"name":"cached"}]')
         app.extensions["scheduler"] = fake_scheduler
         cached_page_hashes = {
             "https://example.com/training": "root-hash",
@@ -633,5 +639,5 @@ def test_enqueue_extraction_skips_when_cached_subpages_are_unchanged(
 
         session_count = db.execute("SELECT COUNT(*) FROM sessions").fetchone()[0]
 
-    assert session_count == 0
+    assert session_count == 1
     assert fake_scheduler.jobs == []

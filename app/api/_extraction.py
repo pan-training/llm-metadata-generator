@@ -17,7 +17,12 @@ from flask import current_app
 
 from app.agents.logger import AgentLogger
 from app.db.sqlite import get_db
-from app.models.session import create_session, get_active_session, update_session
+from app.models.session import (
+    create_session,
+    get_active_session,
+    get_latest_done_session,
+    update_session,
+)
 
 _LOGGER = logging.getLogger(__name__)
 MAX_CACHED_ITEM_URLS = 200
@@ -421,14 +426,18 @@ def enqueue_extraction_if_needed(
     """Create a pending session and enqueue an extraction job if no active session exists.
 
     Does nothing if there is already a pending or running session for (user_id, url).
+    Hash-based ``no_update`` skips are applied only when a completed session already
+    exists for the same ``(user_id, url)``; otherwise we still enqueue so cancelled/
+    first-run flows can recover and produce a done result.
     In testing mode (no scheduler attached) the session is created but not executed.
     """
     active = get_active_session(user_id, url)
     if active is not None:
         return
 
+    latest_done_session = get_latest_done_session(user_id, url)
     plan = _build_extraction_plan(url, force_refresh=force_refresh)
-    if plan.mode == "no_update":
+    if plan.mode == "no_update" and latest_done_session is not None:
         _LOGGER.info("Skipping extraction for %s: unchanged content hash", url)
         return
 
