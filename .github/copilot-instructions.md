@@ -19,7 +19,7 @@ llm-metadata-generator/
 │   │   ├── _extraction.py   ✅  Shared background extraction job
 │   │   ├── collection.py    ✅  GET /metadata  – returns JSON-LD list for a training collection
 │   │   ├── resource.py      ✅  GET /metadata/single – returns single JSON-LD object
-│   │   └── sessions.py      ✅  GET /sessions + POST /sessions/login (session viewer)
+│   │   └── sessions.py      ✅  Session viewer + admin log exports (`/sessions`, `/integration-tests`, `/normal-runs`)
 │   ├── agents/
 │   │   ├── __init__.py      ✅  get_llm_client() + get_model_for_task() (env-var model config)
 │   │   ├── bioschemas.py    ✅  Main extraction agent: chunk-based crawl, integrated link-follow, JSON schema validation
@@ -49,6 +49,9 @@ llm-metadata-generator/
 │       └── examples/        ✅  Example JSON-LD files used in tests
 ├── templates/
 │   └── sessions.html        ✅  HTML session viewer (login via POST /sessions/login)
+├── normal_run/
+│   ├── README.md            ✅  How admins export normal-run logs
+│   └── results/             ✅  Commit-friendly exports (`normal_runs__<timestamp>/sessions.json`)
 ├── tests/
 │   ├── __init__.py          ✅
 │   ├── test_app.py          ✅  Smoke tests: app factory, db init
