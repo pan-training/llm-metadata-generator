@@ -17,11 +17,19 @@ from flask import current_app
 
 from app.agents.logger import AgentLogger
 from app.db.sqlite import get_db
-from app.models.session import create_session, get_active_session, update_session
+from app.models.session import (
+    Session,
+    create_session,
+    get_active_session,
+    get_latest_session,
+    update_session,
+)
 
 _LOGGER = logging.getLogger(__name__)
 MAX_CACHED_ITEM_URLS = 200
 MAX_HASH_CHECK_PAGES = 200
+INITIAL_PROGRESS_EVENTS_TO_PERSIST = 3
+PROGRESS_PERSIST_EVERY_N_EVENTS = 10
 
 
 @dataclass(frozen=True)
@@ -300,6 +308,20 @@ def run_extraction(
 
     with app.app_context():
         logger = AgentLogger()
+        def _persist_progress(_event: object) -> None:
+            event_count = len(logger.events)
+            if (
+                event_count > INITIAL_PROGRESS_EVENTS_TO_PERSIST
+                and event_count % PROGRESS_PERSIST_EVERY_N_EVENTS != 0
+            ):
+                return
+            update_session(
+                session_id,
+                "running",
+                log=logger.to_json(),
+            )
+
+        logger.on_event = _persist_progress
 
         try:
             logger.info(f"Starting extraction for {url}")
@@ -402,14 +424,18 @@ def enqueue_extraction_if_needed(
     """Create a pending session and enqueue an extraction job if no active session exists.
 
     Does nothing if there is already a pending or running session for (user_id, url).
+    Hash-based ``no_update`` skips are applied only when the latest session for the
+    same ``(user_id, url)`` is already ``done``; cancelled/error flows still enqueue
+    so operators can restart extraction explicitly.
     In testing mode (no scheduler attached) the session is created but not executed.
     """
     active = get_active_session(user_id, url)
     if active is not None:
         return
 
+    latest_session = get_latest_session(user_id, url)
     plan = _build_extraction_plan(url, force_refresh=force_refresh)
-    if plan.mode == "no_update":
+    if _should_skip_enqueue(plan.mode, latest_session):
         _LOGGER.info("Skipping extraction for %s: unchanged content hash", url)
         return
 
@@ -437,6 +463,28 @@ def enqueue_extraction_if_needed(
                 "site_content_hash": plan.site_content_hash,
             },
         )
+
+
+def _should_skip_enqueue(
+    plan_mode: Literal["no_update", "incremental", "full_refresh"],
+    latest_session: Session | None,
+) -> bool:
+    """Return whether enqueue should be skipped for the current extraction plan.
+
+    Args:
+        plan_mode: Extraction plan mode calculated for the source URL.
+        latest_session: Most recent session row for the same ``(user_id, url)``,
+            if one exists.
+
+    Returns:
+        ``True`` when the latest session is already ``done`` and the plan says
+        ``no_update``; otherwise ``False``.
+    """
+    return (
+        plan_mode == "no_update"
+        and latest_session is not None
+        and latest_session.status == "done"
+    )
 
 
 def trigger_extraction_now(
@@ -485,7 +533,7 @@ def run_pending_extractions(
         " WHERE status IN ('pending', 'running')"
         " AND (? IS NULL OR user_id = ?)"
         " AND (? IS NULL OR url = ?)"
-        " ORDER BY created_at ASC"
+        " ORDER BY id ASC"
     )
     rows = db.execute(query, (user_id, user_id, url, url)).fetchall()
 

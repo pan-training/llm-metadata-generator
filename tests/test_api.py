@@ -182,6 +182,171 @@ def test_get_collection_does_not_enqueue_if_active_session(
     assert active_count == 1
 
 
+def test_get_collection_reenqueues_when_last_session_was_cancelled(
+    app: Flask, client: FlaskClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A cancelled session must not block re-queueing when cache hash is unchanged."""
+    url = "https://example.com/training"
+    executed: list[int] = []
+
+    with app.app_context():
+        from app.db.sqlite import get_db
+
+        user, token = create_user()
+        cancelled = create_session(user.id, url)
+        update_session(cancelled.id, "cancelled")
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            (url, "test-site-hash", '{"schema_version":"2"}'),
+        )
+        db.commit()
+
+    def _fake_run_extraction(
+        session_id: int,
+        **_kwargs: object,
+    ) -> None:
+        executed.append(session_id)
+
+    monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
+
+    response = client.get(
+        "/metadata?url=https://example.com/training",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 200
+    assert json.loads(response.data) == []
+
+    with app.app_context():
+        from app.api._extraction import run_pending_extractions
+        from app.models.session import get_active_session
+
+        active = get_active_session(user.id, url)
+        assert active is not None
+        assert active.status == "pending"
+
+        executed_ids = run_pending_extractions(app, user_id=user.id, url=url)
+
+    assert executed_ids == [active.id]
+    assert executed == [active.id]
+
+
+def test_get_collection_reenqueues_when_latest_session_cancelled_even_with_older_done(
+    app: Flask, client: FlaskClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A cancelled latest session must allow re-queue, even with an older done run."""
+    url = "https://example.com/training"
+    executed: list[int] = []
+
+    with app.app_context():
+        from app.db.sqlite import get_db
+
+        user, token = create_user()
+        done = create_session(user.id, url)
+        update_session(done.id, "done", result_json='[{"name":"cached"}]')
+        cancelled = create_session(user.id, url)
+        update_session(cancelled.id, "cancelled")
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            (url, "test-site-hash", '{"schema_version":"2"}'),
+        )
+        db.commit()
+
+    def _fake_run_extraction(
+        app: Flask,
+        session_id: int,
+        url: str,
+        prompt: str | None,
+        structural_summary: str | None,
+        site_content_hash: str | None = None,
+    ) -> None:
+        del app, url, prompt, structural_summary, site_content_hash
+        executed.append(session_id)
+
+    monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
+
+    response = client.get(
+        "/metadata?url=https://example.com/training",
+        headers={"Authorization": "Bearer " + token},
+    )
+    assert response.status_code == 200
+    assert json.loads(response.data) == [{"name": "cached"}]
+
+    with app.app_context():
+        from app.api._extraction import run_pending_extractions
+        from app.models.session import get_active_session
+
+        active = get_active_session(user.id, url)
+        assert active is not None
+        assert active.status == "pending"
+
+        executed_ids = run_pending_extractions(app, user_id=user.id, url=url)
+
+    assert executed_ids == [active.id]
+    assert executed == [active.id]
+
+
+def test_get_collection_reenqueues_after_cancelling_running_session(
+    app: Flask, client: FlaskClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Cancel a running session via endpoint, then /metadata must create a new pending session."""
+    url = "https://example.com/training"
+    executed: list[int] = []
+
+    with app.app_context():
+        from app.db.sqlite import get_db
+
+        user, token = create_user()
+        done = create_session(user.id, url)
+        update_session(done.id, "done", result_json='[{"name":"cached"}]')
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            (url, "test-site-hash", '{"schema_version":"2"}'),
+        )
+        running = create_session(user.id, url)
+        update_session(running.id, "running")
+        db.commit()
+
+    def _fake_run_extraction(
+        app: Flask,
+        session_id: int,
+        url: str,
+        prompt: str | None,
+        structural_summary: str | None,
+        site_content_hash: str | None = None,
+    ) -> None:
+        del app, url, prompt, structural_summary, site_content_hash
+        executed.append(session_id)
+
+    monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
+
+    client.post("/sessions/login", json={"token": token})
+    cancel_response = client.post(f"/sessions/{running.id}/cancel")
+    assert cancel_response.status_code in (302, 303)
+
+    response = client.get(
+        "/metadata?url=https://example.com/training",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 200
+    assert json.loads(response.data) == [{"name": "cached"}]
+
+    with app.app_context():
+        from app.api._extraction import run_pending_extractions
+        from app.models.session import get_active_session
+
+        active = get_active_session(user.id, url)
+        assert active is not None
+        assert active.status == "pending"
+
+        executed_ids = run_pending_extractions(app, user_id=user.id, url=url)
+
+    assert executed_ids == [active.id]
+    assert executed == [active.id]
+
+
 # ---------------------------------------------------------------------------
 # GET /metadata/single
 # ---------------------------------------------------------------------------
@@ -360,5 +525,27 @@ def test_cancel_pending_session_marks_status_cancelled(
     assert response.status_code in (302, 303)
     with app.app_context():
         cancelled = get_session_by_id(pending_session.id)
+    assert cancelled is not None
+    assert cancelled.status == "cancelled"
+
+
+def test_cancel_running_session_marks_status_cancelled(
+    app: Flask, client: FlaskClient
+) -> None:
+    with app.app_context():
+        user, token = create_user()
+        running_session = create_session(user.id, "https://example.com/running")
+        update_session(
+            running_session.id,
+            "running",
+            log='[{"id":1,"type":"info","message":"Starting extraction for https://example.com/running"}]',
+        )
+
+    client.post("/sessions/login", json={"token": token})
+    response = client.post(f"/sessions/{running_session.id}/cancel")
+
+    assert response.status_code in (302, 303)
+    with app.app_context():
+        cancelled = get_session_by_id(running_session.id)
     assert cancelled is not None
     assert cancelled.status == "cancelled"
