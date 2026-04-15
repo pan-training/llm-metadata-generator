@@ -241,6 +241,8 @@ def normal_runs_export() -> ResponseReturnValue:
     if not session.get("is_admin"):
         return Response("Forbidden – admin access required", status=403)
 
+    export_now = datetime.now(timezone.utc)
+
     db = get_db()
     rows = db.execute(
         "SELECT id, user_id, url, status, log, result_json, created_at, updated_at"
@@ -248,13 +250,13 @@ def normal_runs_export() -> ResponseReturnValue:
     ).fetchall()
 
     export_payload: dict[str, object] = {
-        "exported_at": datetime.now(timezone.utc).isoformat(),
+        "exported_at": export_now.isoformat(),
         "exported_by_user_id": user_id,
         "session_count": len(rows),
         "sessions": [dict(row) for row in rows],
     }
 
-    export_stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S")
+    export_stamp = export_now.strftime("%Y-%m-%dT%H-%M-%S-%f")
     export_dir = _NORMAL_RUN_RESULTS_DIR / f"normal_runs__{export_stamp}"
     export_dir.mkdir(parents=True, exist_ok=False)
     (export_dir / "sessions.json").write_text(

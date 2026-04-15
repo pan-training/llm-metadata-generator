@@ -23,6 +23,6 @@ Commit exports you want to share for debugging:
 
 ```bash
 git add normal_run/results/
-git commit -m "normal run log export: <context>"
+git commit -m "Normal run log export: <context>"
 git push
 ```
