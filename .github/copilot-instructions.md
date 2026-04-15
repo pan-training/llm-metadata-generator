@@ -123,6 +123,10 @@ llm-metadata-generator/
 
 ## Running tests
 
+Tests must not depend on external network access. Mock/stub HTTP requests in
+tests (for example, monkeypatch `requests.get`) so the suite still passes in
+CI/sandbox environments where outbound URLs may be blocked by a firewall.
+
 ```bash
 pytest tests/
 ```
