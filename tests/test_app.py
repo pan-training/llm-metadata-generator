@@ -73,9 +73,9 @@ def test_tasks_trigger_metadata_command_invokes_extraction(
     captured: dict[str, Any] = {}
 
     def _fake_trigger_extraction_now(
-        flask_app: Any, user_id: int, url: str, prompt: str | None
+        app: Any, user_id: int, url: str, prompt: str | None
     ) -> int:
-        captured["app"] = flask_app
+        captured["app"] = app
         captured["user_id"] = user_id
         captured["url"] = url
         captured["prompt"] = prompt

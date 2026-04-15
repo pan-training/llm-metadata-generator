@@ -2,8 +2,8 @@
 
 import hashlib
 import json
-from typing import Any
 
+from flask import Flask
 from flask import current_app
 
 from app.agents.logger import AgentLogger
@@ -22,7 +22,7 @@ def _get_structural_summary(url: str) -> str | None:
 
 
 def run_extraction(
-    app: Any,
+    app: Flask,
     session_id: int,
     url: str,
     prompt: str | None,
@@ -149,12 +149,22 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
 
 
 def trigger_extraction_now(
-    app: Any,
+    app: Flask,
     user_id: int,
     url: str,
     prompt: str | None,
 ) -> int:
-    """Create a new session and run extraction immediately in-process."""
+    """Create a session for ``(user_id, url)`` and execute extraction immediately.
+
+    Args:
+        app: Flask application object used to push an app context in the worker.
+        user_id: Owner of the new session.
+        url: Source URL to extract metadata from.
+        prompt: Optional prompt override for the extractor.
+
+    Returns:
+        The id of the newly created session.
+    """
     new_session = create_session(user_id, url)
     run_extraction(
         app=app,

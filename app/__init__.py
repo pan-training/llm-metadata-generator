@@ -201,8 +201,7 @@ def _register_tasks_cli(app: Flask) -> None:
         if user_row is None:
             raise click.ClickException(f"User id {user_id} not found.")
 
-        app_obj = current_app._get_current_object()  # type: ignore[attr-defined]
-        session_id = trigger_extraction_now(app_obj, user_id, url, prompt)
+        session_id = trigger_extraction_now(current_app, user_id, url, prompt)
         click.echo(f"Triggered metadata extraction (session_id={session_id}).")
 
 
