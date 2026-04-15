@@ -1,5 +1,8 @@
 """Smoke tests for the Flask application factory and database setup."""
 
+from pathlib import Path
+from typing import Any
+
 import pytest
 from flask import Flask
 
@@ -53,3 +56,76 @@ def test_db_init_is_idempotent(app):
 
         init_db()
         init_db()  # second call must succeed silently
+
+
+def test_tasks_trigger_metadata_command_invokes_extraction(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    with app.app_context():
+        from app.db.sqlite import init_db
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+
+    captured: dict[str, Any] = {}
+
+    def _fake_trigger_extraction_now(
+        flask_app: Any, user_id: int, url: str, prompt: str | None
+    ) -> int:
+        captured["app"] = flask_app
+        captured["user_id"] = user_id
+        captured["url"] = url
+        captured["prompt"] = prompt
+        return 123
+
+    monkeypatch.setattr(
+        "app.api._extraction.trigger_extraction_now",
+        _fake_trigger_extraction_now,
+    )
+
+    runner = app.test_cli_runner()
+    result = runner.invoke(
+        args=[
+            "tasks",
+            "trigger-metadata",
+            "--user-id",
+            str(user.id),
+            "--url",
+            "https://example.com/training",
+            "--prompt",
+            "focus on workshop data",
+        ]
+    )
+
+    assert result.exit_code == 0
+    assert "Triggered metadata extraction (session_id=123)." in result.output
+    assert captured["user_id"] == user.id
+    assert captured["url"] == "https://example.com/training"
+    assert captured["prompt"] == "focus on workshop data"
+
+
+def test_tasks_trigger_metadata_command_fails_for_unknown_user(tmp_path: Path) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    with app.app_context():
+        from app.db.sqlite import init_db
+
+        init_db()
+
+    runner = app.test_cli_runner()
+    result = runner.invoke(
+        args=[
+            "tasks",
+            "trigger-metadata",
+            "--user-id",
+            "9999",
+            "--url",
+            "https://example.com/training",
+        ]
+    )
+
+    assert result.exit_code != 0
+    assert "User id 9999 not found." in result.output

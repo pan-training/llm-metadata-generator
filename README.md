@@ -186,6 +186,28 @@ Results are saved to `integration_test/results/<site>__<timestamp>/` with a live
 
 ---
 
+## Manually triggering tasks
+
+For testing, you can trigger a metadata extraction task directly from the CLI:
+
+```bash
+flask tasks trigger-metadata --user-id <user_id> --url https://example.com/training
+```
+
+Optional prompt override:
+
+```bash
+flask tasks trigger-metadata --user-id <user_id> --url https://example.com/training --prompt "focus on workshop events"
+```
+
+You can find user IDs with:
+
+```bash
+flask users list
+```
+
+---
+
 ## Where to start
 
 New to the codebase? Start with these files:

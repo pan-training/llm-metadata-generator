@@ -11,6 +11,16 @@ from app.db.sqlite import get_db
 from app.models.session import create_session, get_active_session, update_session
 
 
+def _get_structural_summary(url: str) -> str | None:
+    """Return the cached structural summary for *url*, if present."""
+    db = get_db()
+    cache_row = db.execute(
+        "SELECT structural_summary FROM metadata_cache WHERE url = ?",
+        (url,),
+    ).fetchone()
+    return cache_row["structural_summary"] if cache_row else None
+
+
 def run_extraction(
     app: Any,
     session_id: int,
@@ -121,13 +131,7 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
 
     # Retrieve structural_summary from metadata_cache for incremental runs.
     # Pass None (full refresh) if no previous crawl is recorded.
-    db = get_db()
-    cache_row = db.execute(
-        "SELECT structural_summary FROM metadata_cache WHERE url = ?",
-        (url,),
-    ).fetchone()
-
-    structural_summary = cache_row["structural_summary"] if cache_row else None
+    structural_summary = _get_structural_summary(url)
 
     scheduler = current_app.extensions.get("scheduler")
     if scheduler is not None:
@@ -142,3 +146,21 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
                 "structural_summary": structural_summary,
             },
         )
+
+
+def trigger_extraction_now(
+    app: Any,
+    user_id: int,
+    url: str,
+    prompt: str | None,
+) -> int:
+    """Create a new session and run extraction immediately in-process."""
+    new_session = create_session(user_id, url)
+    run_extraction(
+        app=app,
+        session_id=new_session.id,
+        url=url,
+        prompt=prompt,
+        structural_summary=_get_structural_summary(url),
+    )
+    return new_session.id
