@@ -4,6 +4,8 @@ from dataclasses import dataclass
 
 from app.db.sqlite import get_db
 
+_SESSION_COLUMNS = "id, user_id, url, status, log, result_json, created_at, updated_at"
+
 
 @dataclass
 class Session:
@@ -51,8 +53,7 @@ def get_session_by_id(session_id: int) -> Session | None:
     """Return the session with the given id, or None if not found."""
     db = get_db()
     row = db.execute(
-        "SELECT id, user_id, url, status, log, result_json, created_at, updated_at"
-        " FROM sessions WHERE id = ?",
+        f"SELECT {_SESSION_COLUMNS} FROM sessions WHERE id = ?",
         (session_id,),
     ).fetchone()
     if row is None:
@@ -64,10 +65,25 @@ def get_latest_done_session(user_id: int, url: str) -> Session | None:
     """Return the most recently completed session for (user_id, url), or None."""
     db = get_db()
     row = db.execute(
-        "SELECT id, user_id, url, status, log, result_json, created_at, updated_at"
+        f"SELECT {_SESSION_COLUMNS}"
         " FROM sessions"
         " WHERE user_id = ? AND url = ? AND status = 'done'"
-        " ORDER BY updated_at DESC LIMIT 1",
+        " ORDER BY id DESC LIMIT 1",
+        (user_id, url),
+    ).fetchone()
+    if row is None:
+        return None
+    return _row_to_session(row)
+
+
+def get_latest_session(user_id: int, url: str) -> Session | None:
+    """Return the most recently created session for (user_id, url), or None."""
+    db = get_db()
+    row = db.execute(
+        f"SELECT {_SESSION_COLUMNS}"
+        " FROM sessions"
+        " WHERE user_id = ? AND url = ?"
+        " ORDER BY id DESC LIMIT 1",
         (user_id, url),
     ).fetchone()
     if row is None:
@@ -79,10 +95,10 @@ def get_active_session(user_id: int, url: str) -> Session | None:
     """Return a pending or running session for (user_id, url), or None."""
     db = get_db()
     row = db.execute(
-        "SELECT id, user_id, url, status, log, result_json, created_at, updated_at"
+        f"SELECT {_SESSION_COLUMNS}"
         " FROM sessions"
         " WHERE user_id = ? AND url = ? AND status IN ('pending', 'running')"
-        " ORDER BY created_at DESC LIMIT 1",
+        " ORDER BY id DESC LIMIT 1",
         (user_id, url),
     ).fetchone()
     if row is None:
@@ -125,9 +141,7 @@ def get_sessions_for_user(user_id: int) -> list[Session]:
     """Return all sessions for the given user, most recent first."""
     db = get_db()
     rows = db.execute(
-        "SELECT id, user_id, url, status, log, result_json, created_at, updated_at"
-        " FROM sessions WHERE user_id = ?"
-        " ORDER BY created_at DESC",
+        f"SELECT {_SESSION_COLUMNS} FROM sessions WHERE user_id = ? ORDER BY id DESC",
         (user_id,),
     ).fetchall()
     return [_row_to_session(row) for row in rows]

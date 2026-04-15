@@ -18,9 +18,10 @@ from flask import current_app
 from app.agents.logger import AgentLogger
 from app.db.sqlite import get_db
 from app.models.session import (
+    Session,
     create_session,
     get_active_session,
-    get_latest_done_session,
+    get_latest_session,
     update_session,
 )
 
@@ -426,18 +427,18 @@ def enqueue_extraction_if_needed(
     """Create a pending session and enqueue an extraction job if no active session exists.
 
     Does nothing if there is already a pending or running session for (user_id, url).
-    Hash-based ``no_update`` skips are applied only when a completed session already
-    exists for the same ``(user_id, url)``; otherwise we still enqueue so cancelled/
-    first-run flows can recover and produce a done result.
+    Hash-based ``no_update`` skips are applied only when the latest session for the
+    same ``(user_id, url)`` is already ``done``; cancelled/error flows still enqueue
+    so operators can restart extraction explicitly.
     In testing mode (no scheduler attached) the session is created but not executed.
     """
     active = get_active_session(user_id, url)
     if active is not None:
         return
 
-    latest_done_session = get_latest_done_session(user_id, url)
+    latest_session = get_latest_session(user_id, url)
     plan = _build_extraction_plan(url, force_refresh=force_refresh)
-    if plan.mode == "no_update" and latest_done_session is not None:
+    if _should_skip_enqueue(plan.mode, latest_session):
         _LOGGER.info("Skipping extraction for %s: unchanged content hash", url)
         return
 
@@ -465,6 +466,22 @@ def enqueue_extraction_if_needed(
                 "site_content_hash": plan.site_content_hash,
             },
         )
+
+
+def _should_skip_enqueue(
+    plan_mode: Literal["no_update", "incremental", "full_refresh"],
+    latest_session: Session | None,
+) -> bool:
+    """Return whether enqueue should be skipped for the current extraction plan.
+
+    ``no_update`` means the remote content hash looks unchanged, but we only skip
+    creating a new session when the latest local session is already ``done``.
+    """
+    return (
+        plan_mode == "no_update"
+        and latest_session is not None
+        and latest_session.status == "done"
+    )
 
 
 def trigger_extraction_now(
@@ -513,7 +530,7 @@ def run_pending_extractions(
         " WHERE status IN ('pending', 'running')"
         " AND (? IS NULL OR user_id = ?)"
         " AND (? IS NULL OR url = ?)"
-        " ORDER BY created_at ASC"
+        " ORDER BY id ASC"
     )
     rows = db.execute(query, (user_id, user_id, url, url)).fetchall()
 
