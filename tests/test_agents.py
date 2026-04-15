@@ -11,12 +11,14 @@ import pytest
 from app.agents.bioschemas import (
     AccessDeniedError,
     BioschemasExtractorAgent,
+    MAX_EXTRACTION_CONTENT,
     NotTrainingContentError,
     _content_hash,
     _html_to_markdown,
     _chunk_text,
     _is_faceted_search_url,
     _is_non_content_url,
+    _select_extraction_content,
     compute_site_structure_summary,
 )
 
@@ -144,6 +146,26 @@ def test_chunk_text_splits_long_text() -> None:
     # Each chunk should be at most chunk_size + some tolerance
     for chunk in chunks:
         assert len(chunk) <= 600  # chunk_size + some flexibility
+
+
+def test_select_extraction_content_prefers_relevant_chunk_over_navigation_prefix() -> None:
+    nav = (
+        ("navigation menu filter sort login register privacy policy terms of use\n" * 120)
+        + ("[Filter](https://example.com/filter)\n" * 80)
+    )
+    material = (
+        "\n## Hands-on RNA-Seq Workshop\n"
+        "This training workshop teaches RNA-Seq analysis with practical exercises.\n"
+        "Agenda, duration, prerequisites and instructor details are provided.\n"
+    )
+    text = nav + ("\nFiller\n" * 800) + material + ("Further notes\n" * 300)
+
+    selected = _select_extraction_content(text, "RNA-Seq Workshop")
+
+    assert len(selected) <= MAX_EXTRACTION_CONTENT
+    assert "Hands-on RNA-Seq Workshop" in selected
+    assert "teaches RNA-Seq analysis" in selected
+    assert "navigation menu filter sort login register" not in selected
 
 
 # ---------------------------------------------------------------------------
@@ -736,6 +758,95 @@ def test_agent_on_item_callback_called_per_item(monkeypatch: pytest.MonkeyPatch)
     assert len(received) == 1
     assert received[0]["name"] == "Workshop"
     assert result == received
+
+
+def test_agent_uses_chunked_content_selection_for_long_item_pages(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Long item pages should include relevant later content, not only the prefix."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+    monkeypatch.setattr(
+        "requests.get",
+        lambda *a, **kw: _make_response("<html><body>Workshop listing</body></html>"),
+    )
+
+    long_item_text = (
+        ("navigation menu filter sort login register privacy policy\n" * 140)
+        + ("[Filter](https://example.com/filter)\n" * 100)
+        + ("\nFiller\n" * 900)
+        + "## Deep Learning Workshop\n"
+        + "This training workshop includes hands-on sessions and an agenda.\n"
+        + ("Additional content\n" * 350)
+    )
+    monkeypatch.setattr(
+        "app.agents.bioschemas._page_content",
+        lambda html, base_url, raw_html: (long_item_text, []),
+    )
+
+    chunk_class = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Deep Learning Workshop",
+                    "url": "https://example.com/deep-learning",
+                    "item_type": "TrainingMaterial",
+                    "context": "workshop listing",
+                }
+            ],
+            "follow_links": [],
+        }
+    )
+    client = MockLLMClient([chunk_class])
+
+    captured_content: dict[str, str] = {}
+
+    def _fake_reason(
+        self: BioschemasExtractorAgent,
+        item_info: Any,
+        content: str,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> str:
+        captured_content["value"] = content
+        return "reasoning"
+
+    def _fake_extract(
+        self: BioschemasExtractorAgent,
+        item_info: Any,
+        content: str,
+        prompt: str | None,
+        reasoning: str,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        return {
+            "@type": "LearningResource",
+            "name": "Deep Learning Workshop",
+            "description": "A workshop.",
+            "keywords": ["workshop"],
+            "url": "https://example.com/deep-learning",
+        }
+
+    monkeypatch.setattr(BioschemasExtractorAgent, "_reason_about_item", _fake_reason)
+    monkeypatch.setattr(BioschemasExtractorAgent, "_extract_item", _fake_extract)
+    monkeypatch.setattr(
+        BioschemasExtractorAgent,
+        "_review_item",
+        lambda self, item, content, llm_client, parent_id=None: item,
+    )
+
+    agent = BioschemasExtractorAgent()
+    result = agent.run(url="https://example.com/listing", llm_client=client)
+
+    assert len(result) == 1
+    assert "Deep Learning Workshop" in captured_content["value"]
+    assert "hands-on sessions and an agenda" in captured_content["value"]
+    assert "navigation menu filter sort login register" not in captured_content["value"]
+    assert len(captured_content["value"]) <= MAX_EXTRACTION_CONTENT
 
 
 # ---------------------------------------------------------------------------

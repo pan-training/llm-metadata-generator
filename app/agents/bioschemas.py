@@ -163,6 +163,8 @@ MAX_FIX_ATTEMPTS = 1  # maximum schema-fix LLM passes per item
 
 # Maximum characters of item content sent to the extraction LLM.
 MAX_EXTRACTION_CONTENT = 8000
+EXTRACTION_CHUNK_SIZE = 2500
+EXTRACTION_CHUNK_OVERLAP = 250
 
 # Maximum characters of a schema property description included in validation
 # error hints (keeps the hint concise for LLM context).
@@ -539,6 +541,116 @@ def _chunk_text(
         chunks.append(text[start:end])
         start = max(start + 1, end - overlap)
     return chunks
+
+
+_EXTRACTION_POSITIVE_HINTS: tuple[str, ...] = (
+    "training",
+    "course",
+    "workshop",
+    "tutorial",
+    "webinar",
+    "learning",
+    "curriculum",
+    "instructor",
+    "speaker",
+    "agenda",
+    "syllabus",
+    "prerequisite",
+    "duration",
+)
+
+_EXTRACTION_NOISE_HINTS: tuple[str, ...] = (
+    "navigation",
+    "filter",
+    "sort",
+    "menu",
+    "breadcrumb",
+    "privacy policy",
+    "terms of use",
+    "cookie",
+    "sign in",
+    "log in",
+    "register",
+)
+
+
+def _title_tokens(title: str) -> set[str]:
+    """Return normalized title tokens useful for chunk relevance scoring."""
+    return {
+        token
+        for token in re.findall(r"[a-z0-9]+", title.lower())
+        if len(token) >= 3
+    }
+
+
+def _chunk_relevance_score(chunk_text: str, title_tokens: set[str]) -> int:
+    """Score a chunk for extraction relevance (higher is better)."""
+    lowered = chunk_text.lower()
+    positive_hits = sum(1 for hint in _EXTRACTION_POSITIVE_HINTS if hint in lowered)
+    noise_hits = sum(1 for hint in _EXTRACTION_NOISE_HINTS if hint in lowered)
+    title_hits = sum(1 for token in title_tokens if token in lowered)
+    heading_hits = chunk_text.count("\n#") + chunk_text.lower().count("<h")
+    link_count = len(re.findall(r"\[[^\]]+\]\([^)]+\)|<a\b", chunk_text, flags=re.IGNORECASE))
+    line_count = max(chunk_text.count("\n") + 1, 1)
+    link_density_penalty = 2 if (link_count / line_count) > 0.35 else 0
+
+    return (
+        positive_hits * 3
+        + title_hits * 5
+        + min(heading_hits, 3)
+        - noise_hits * 3
+        - link_density_penalty
+    )
+
+
+def _select_extraction_content(text: str, item_title: str) -> str:
+    """Build extraction context from relevant chunks instead of only text prefix."""
+    if len(text) <= MAX_EXTRACTION_CONTENT:
+        return text
+
+    chunks = _chunk_text(
+        text,
+        chunk_size=EXTRACTION_CHUNK_SIZE,
+        overlap=EXTRACTION_CHUNK_OVERLAP,
+    )
+    if len(chunks) == 1:
+        return chunks[0][:MAX_EXTRACTION_CONTENT]
+
+    title_tokens = _title_tokens(item_title)
+    scored_chunks = [
+        (idx, _chunk_relevance_score(chunk, title_tokens))
+        for idx, chunk in enumerate(chunks)
+    ]
+    preferred_indexes = [idx for idx, score in scored_chunks if score > 0]
+    if not preferred_indexes:
+        return text[:MAX_EXTRACTION_CONTENT]
+
+    selected_indexes = set(preferred_indexes)
+    for idx in preferred_indexes:
+        if idx > 0:
+            selected_indexes.add(idx - 1)
+        if idx + 1 < len(chunks):
+            selected_indexes.add(idx + 1)
+
+    separators = "\n\n---\n\n"
+    selected_parts: list[str] = []
+    used_chars = 0
+    for idx in sorted(selected_indexes):
+        part = chunks[idx]
+        add_sep = len(separators) if selected_parts else 0
+        if used_chars + add_sep + len(part) > MAX_EXTRACTION_CONTENT:
+            remaining = MAX_EXTRACTION_CONTENT - used_chars - add_sep
+            if remaining > 120:
+                selected_parts.append(part[:remaining])
+            break
+        if selected_parts:
+            selected_parts.append(separators)
+            used_chars += len(separators)
+        selected_parts.append(part)
+        used_chars += len(part)
+
+    selected_text = "".join(selected_parts)
+    return selected_text if selected_text else text[:MAX_EXTRACTION_CONTENT]
 
 
 # ---------------------------------------------------------------------------
@@ -1368,7 +1480,10 @@ class BioschemasExtractorAgent:
                     )
 
             item_text, _ = _page_content(item_html or "", item_info.url or url, self._raw_html)
-            content_for_extraction = item_text[:MAX_EXTRACTION_CONTENT]
+            content_for_extraction = _select_extraction_content(
+                item_text,
+                item_info.title,
+            )
 
             # --- Chain-of-thought reasoning pass (step 2a) ---
             # The LLM writes free-text notes about what metadata it can
