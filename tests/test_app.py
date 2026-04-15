@@ -15,6 +15,15 @@ def app():
     return create_app({"TESTING": True, "DATABASE_URL": ":memory:"})
 
 
+@pytest.fixture(autouse=True)
+def disable_site_hash_network_calls(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Prevent app tests from performing live network fetches for site hashes."""
+    monkeypatch.setattr(
+        "app.api._extraction._fetch_site_content_hash",
+        lambda _url: "test-site-hash",
+    )
+
+
 def test_create_app_returns_flask_instance(app):
     assert isinstance(app, Flask)
 
