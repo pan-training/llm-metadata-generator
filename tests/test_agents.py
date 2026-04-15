@@ -168,6 +168,17 @@ def test_select_extraction_content_prefers_relevant_chunk_over_navigation_prefix
     assert "navigation menu filter sort login register" not in selected
 
 
+def test_select_extraction_content_falls_back_to_prefix_without_relevant_chunks() -> None:
+    text = (
+        ("navigation filter sort login register privacy policy terms of use\n" * 220)
+        + ("[Filter](https://example.com/filter)\n" * 160)
+        + ("Footer links only\n" * 500)
+    )
+    selected = _select_extraction_content(text, "AI")
+
+    assert selected == text[:MAX_EXTRACTION_CONTENT]
+
+
 # ---------------------------------------------------------------------------
 # Tests for _is_faceted_search_url
 # ---------------------------------------------------------------------------

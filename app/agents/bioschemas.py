@@ -573,6 +573,8 @@ _EXTRACTION_NOISE_HINTS: tuple[str, ...] = (
     "register",
 )
 
+_MARKDOWN_OR_HTML_LINK_RE = re.compile(r"\[[^\]]+\]\([^)]+\)|<a\b", flags=re.IGNORECASE)
+
 
 def _title_tokens(title: str) -> set[str]:
     """Return normalized title tokens useful for chunk relevance scoring."""
@@ -590,7 +592,7 @@ def _chunk_relevance_score(chunk_text: str, title_tokens: set[str]) -> int:
     noise_hits = sum(1 for hint in _EXTRACTION_NOISE_HINTS if hint in lowered)
     title_hits = sum(1 for token in title_tokens if token in lowered)
     heading_hits = chunk_text.count("\n#") + chunk_text.lower().count("<h")
-    link_count = len(re.findall(r"\[[^\]]+\]\([^)]+\)|<a\b", chunk_text, flags=re.IGNORECASE))
+    link_count = len(_MARKDOWN_OR_HTML_LINK_RE.findall(chunk_text))
     line_count = max(chunk_text.count("\n") + 1, 1)
     link_density_penalty = 2 if (link_count / line_count) > 0.35 else 0
 
@@ -632,20 +634,20 @@ def _select_extraction_content(text: str, item_title: str) -> str:
         if idx + 1 < len(chunks):
             selected_indexes.add(idx + 1)
 
-    separators = "\n\n---\n\n"
+    separator = "\n\n---\n\n"
     selected_parts: list[str] = []
     used_chars = 0
     for idx in sorted(selected_indexes):
         part = chunks[idx]
-        add_sep = len(separators) if selected_parts else 0
+        add_sep = len(separator) if selected_parts else 0
         if used_chars + add_sep + len(part) > MAX_EXTRACTION_CONTENT:
             remaining = MAX_EXTRACTION_CONTENT - used_chars - add_sep
             if remaining > 120:
                 selected_parts.append(part[:remaining])
             break
         if selected_parts:
-            selected_parts.append(separators)
-            used_chars += len(separators)
+            selected_parts.append(separator)
+            used_chars += len(separator)
         selected_parts.append(part)
         used_chars += len(part)
 
