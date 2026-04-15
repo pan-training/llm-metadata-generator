@@ -124,7 +124,7 @@
             {% if pending_next_run_by_session.get(s.id) %}
             Next scrape attempt: {{ pending_next_run_by_session.get(s.id) }}
             {% else %}
-            Queued. It will run automatically when the worker picks it up (or via <code>flask tasks run-queued</code>).
+            Queued. It will run automatically when the background scheduler picks it up (or via <code>flask tasks run-queued</code>).
             {% endif %}
           </div>
           <form method="POST" action="/sessions/{{ s.id }}/cancel">

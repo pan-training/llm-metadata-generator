@@ -15,11 +15,11 @@ _LOGGER = logging.getLogger(__name__)
 
 
 def build_extraction_job_id(session_id: int) -> str:
-    """Return a deterministic APScheduler job id for a session extraction."""
+    """Return a deterministic APScheduler id used for lookup/cancellation."""
     return f"session-extraction-{session_id}"
 
 
-def _has_empty_structured_log(log_value: str | None) -> bool:
+def _is_structured_log_empty(log_value: str | None) -> bool:
     """Return True when log text is empty or a JSON-encoded empty list."""
     if not log_value:
         return True
@@ -222,7 +222,7 @@ def run_pending_extractions(
     for row in rows:
         status = str(row["status"])
         log_value = row["log"]
-        if status == "running" and not _has_empty_structured_log(log_value):
+        if status == "running" and not _is_structured_log_empty(log_value):
             continue
 
         session_id = int(row["id"])

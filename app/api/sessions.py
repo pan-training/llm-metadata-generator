@@ -109,6 +109,8 @@ def sessions_view() -> ResponseReturnValue:
     scheduler = current_app.extensions.get("scheduler")
     if scheduler is not None:
         for job in scheduler.get_jobs():
+            if not job.id.startswith("session-extraction-"):
+                continue
             session_id = job.kwargs.get("session_id")
             next_run_time = job.next_run_time
             if isinstance(session_id, int) and next_run_time is not None:
