@@ -417,24 +417,18 @@ def _register_integration_test_cli(app: Flask) -> None:
             # Create logger first so _on_event can reference it without a
             # forward declaration; the callback is assigned immediately after.
             run_logger = AgentLogger()
-            _log_write_count = 0
 
             def _on_event(ev: AgentEvent) -> None:
                 """Stream each event to console + log.txt immediately."""
-                nonlocal _log_write_count
                 depth = _event_depth(ev)
                 line = _format_console_line(ev, depth)
                 if line:
                     click.echo(f"  {line}")
                     log_fh.write(line + "\n")
                     log_fh.flush()
-                # Write log.json every 10 events to balance real-time visibility
-                # against the O(n²) cost of rewriting the whole file on every event.
-                _log_write_count += 1
-                if _log_write_count % 10 == 0:
-                    (run_dir / "log.json").write_text(
-                        run_logger.to_json(), encoding="utf-8"
-                    )
+                (run_dir / "log.json").write_text(
+                    run_logger.to_json(), encoding="utf-8"
+                )
 
             run_logger.on_event = _on_event
 

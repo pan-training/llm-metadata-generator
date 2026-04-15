@@ -1,5 +1,6 @@
 """Smoke tests for the Flask application factory and database setup."""
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -585,3 +586,74 @@ def test_enqueue_extraction_skips_when_cached_subpages_are_unchanged(
 
     assert session_count == 0
     assert fake_scheduler.jobs == []
+
+
+def test_integration_test_run_writes_log_json_on_each_event(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+    config_path = tmp_path / "config.json"
+    output_dir = tmp_path / "results"
+    config_path.write_text(
+        json.dumps({"sites": [{"url": "https://example.com/training"}]}),
+        encoding="utf-8",
+    )
+
+    class _FakeAgent:
+        def run(
+            self,
+            *,
+            url: str,
+            prompt: str | None,
+            structural_summary: str | None,
+            llm_client: Any,
+            logger: Any,
+            on_item: Any,
+            raw_html: bool,
+        ) -> None:
+            _ = (url, prompt, structural_summary, llm_client, on_item, raw_html)
+            logger.info("Phase 1")
+            logger.info("Phase 2")
+
+    monkeypatch.setattr("app.agents.get_llm_client", lambda: object())
+    monkeypatch.setattr("app.agents.bioschemas.BioschemasExtractorAgent", _FakeAgent)
+    monkeypatch.setattr(
+        "app.agents.bioschemas.compute_site_structure_summary",
+        lambda **kwargs: '{"schema_version":"2"}',
+    )
+
+    original_write_text = Path.write_text
+    log_json_writes = 0
+
+    def _counting_write_text(path: Path, data: str, *args: Any, **kwargs: Any) -> int:
+        nonlocal log_json_writes
+        if path.name == "log.json":
+            log_json_writes += 1
+        return original_write_text(path, data, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "write_text", _counting_write_text)
+
+    original_relative_to = Path.relative_to
+
+    def _safe_relative_to(path: Path, *other: Path | str) -> Path:
+        try:
+            return original_relative_to(path, *other)
+        except ValueError:
+            return path
+
+    monkeypatch.setattr(Path, "relative_to", _safe_relative_to)
+
+    runner = app.test_cli_runner()
+    result = runner.invoke(
+        args=[
+            "integration-test",
+            "run",
+            "--config",
+            str(config_path),
+            "--output-dir",
+            str(output_dir),
+        ]
+    )
+
+    assert result.exit_code == 0
+    assert log_json_writes > 1
