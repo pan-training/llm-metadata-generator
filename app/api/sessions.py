@@ -129,7 +129,7 @@ def sessions_view() -> ResponseReturnValue:
 
 @bp.post("/sessions/<int:session_id>/cancel")
 def cancel_session_view(session_id: int) -> ResponseReturnValue:
-    """Cancel a pending session for the authenticated user."""
+    """Cancel a pending or running session for the authenticated user."""
     user_id: int | None = session.get("user_id")
     if not user_id:
         return redirect(url_for("sessions_viewer.login_form"))

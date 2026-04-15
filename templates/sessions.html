@@ -130,8 +130,15 @@
           <form method="POST" action="/sessions/{{ s.id }}/cancel">
             <button class="cancel-btn" type="submit" onclick="event.stopPropagation()">Cancel</button>
           </form>
-          {% elif s.status == "running" and (not s.log or s.log == "[]") %}
+          {% elif s.status == "running" %}
+          {% if not s.log or s.log == "[]" %}
           <div class="status-hint">Starting… no events have been persisted yet.</div>
+          {% else %}
+          <div class="status-hint">If this appears stuck, cancel it and re-run with <code>flask tasks run-queued</code>.</div>
+          {% endif %}
+          <form method="POST" action="/sessions/{{ s.id }}/cancel">
+            <button class="cancel-btn" type="submit" onclick="event.stopPropagation()">Cancel</button>
+          </form>
           {% endif %}
         </td>
         <td>{{ s.created_at }}</td>

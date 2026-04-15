@@ -362,3 +362,25 @@ def test_cancel_pending_session_marks_status_cancelled(
         cancelled = get_session_by_id(pending_session.id)
     assert cancelled is not None
     assert cancelled.status == "cancelled"
+
+
+def test_cancel_running_session_marks_status_cancelled(
+    app: Flask, client: FlaskClient
+) -> None:
+    with app.app_context():
+        user, token = create_user()
+        running_session = create_session(user.id, "https://example.com/running")
+        update_session(
+            running_session.id,
+            "running",
+            log='[{"id":1,"type":"info","message":"Starting extraction for https://example.com/running"}]',
+        )
+
+    client.post("/sessions/login", json={"token": token})
+    response = client.post(f"/sessions/{running_session.id}/cancel")
+
+    assert response.status_code in (302, 303)
+    with app.app_context():
+        cancelled = get_session_by_id(running_session.id)
+    assert cancelled is not None
+    assert cancelled.status == "cancelled"

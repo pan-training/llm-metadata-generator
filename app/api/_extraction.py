@@ -39,14 +39,29 @@ def build_extraction_job_id(session_id: int) -> str:
 
 
 def _is_structured_log_empty(log_value: str | None) -> bool:
-    """Return True when log text is empty or a JSON-encoded empty list."""
+    """Return True when the log indicates no meaningful extraction progress yet."""
     if not log_value:
         return True
     try:
         parsed = json.loads(log_value)
     except json.JSONDecodeError:
         return False
-    return isinstance(parsed, list) and len(parsed) == 0
+    if not isinstance(parsed, list):
+        return False
+    if len(parsed) == 0:
+        return True
+    if len(parsed) != 1:
+        return False
+    first_event = parsed[0]
+    if not isinstance(first_event, dict):
+        return False
+    event_type = first_event.get("type")
+    event_message = first_event.get("message")
+    return (
+        event_type == "info"
+        and isinstance(event_message, str)
+        and event_message.startswith("Starting extraction for ")
+    )
 
 
 def _get_structural_summary(url: str) -> str | None:
