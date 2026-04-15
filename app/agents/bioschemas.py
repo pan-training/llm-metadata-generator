@@ -547,6 +547,32 @@ def _chunk_text(
     return chunks
 
 
+def _join_chunks_with_limit(
+    chunks: list[str],
+    max_chars: int,
+    separator: str = "\n\n---\n\n",
+) -> str:
+    """Join complete chunks without exceeding *max_chars*."""
+    if not chunks:
+        return ""
+
+    joined_parts: list[str] = []
+    used_chars = 0
+    for chunk in chunks:
+        sep_len = len(separator) if joined_parts else 0
+        if used_chars + sep_len + len(chunk) > max_chars:
+            break
+        if joined_parts:
+            joined_parts.append(separator)
+            used_chars += len(separator)
+        joined_parts.append(chunk)
+        used_chars += len(chunk)
+
+    if joined_parts:
+        return "".join(joined_parts)
+    return chunks[0][:max_chars]
+
+
 # ---------------------------------------------------------------------------
 # Faceted search URL detection
 # ---------------------------------------------------------------------------
@@ -1380,7 +1406,10 @@ class BioschemasExtractorAgent:
                 llm_client=llm_client,
                 parent_id=item_id,
             )
-            review_content = item_text[:MAX_EXTRACTION_CONTENT]
+            review_content = _join_chunks_with_limit(
+                relevant_chunks,
+                MAX_EXTRACTION_CONTENT,
+            )
 
             chunk_extractions: list[dict[str, Any]] = []
             for chunk_index, chunk_content in enumerate(relevant_chunks):

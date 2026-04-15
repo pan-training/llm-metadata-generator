@@ -223,6 +223,31 @@ def test_merge_chunk_extractions_uses_llm_for_multiple_candidates() -> None:
     assert result["description"] == "Merged description"
 
 
+def test_merge_chunk_extractions_returns_single_candidate_directly() -> None:
+    agent = BioschemasExtractorAgent()
+    item_info = DiscoveredItem(
+        title="Single candidate",
+        url="https://example.com/single",
+        item_type="TrainingMaterial",
+        source_url="https://example.com/listing",
+        context="context",
+    )
+    candidate = {
+        "@type": "LearningResource",
+        "name": "Single candidate",
+        "description": "Only one chunk result",
+        "keywords": ["single"],
+    }
+
+    result = agent._merge_chunk_extractions(
+        item_info=item_info,
+        chunk_extractions=[candidate],
+        llm_client=MockLLMClient([]),
+    )
+
+    assert result == candidate
+
+
 # ---------------------------------------------------------------------------
 # Tests for _is_faceted_search_url
 # ---------------------------------------------------------------------------
