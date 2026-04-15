@@ -1,0 +1,2512 @@
+Computing structural summary (Phase 0) …
+Phase 0: computing structural summary
+  Fetching primary URL: https://training.galaxyproject.org/training-material/
+  ↓ https://training.galaxyproject.org/training-material/ [200]
+  Primary page: 84175 chars
+  Summarising primary page structure
+  Following 7 structural navigation link(s)
+  ↓ https://training.galaxyproject.org/training-material/hall-of-fame [200]
+  Summarising https://training.galaxyproject.org/training-material/hall-of-fame (233283 chars)
+  ↓ https://training.galaxyproject.org/training-material/learning-pathways [200]
+  Summarising https://training.galaxyproject.org/training-material/learning-pathways (54192 chars)
+  ↓ https://training.galaxyproject.org/training-material/faqs/index.html [200]
+  Summarising https://training.galaxyproject.org/training-material/faqs/index.html (31290 chars)
+  ↓ https://training.galaxyproject.org/training-material/user/theme.html [200]
+  Summarising https://training.galaxyproject.org/training-material/user/theme.html (18594 chars)
+  ↓ https://training.galaxyproject.org/training-material/user/privacy.html [200]
+  Summarising https://training.galaxyproject.org/training-material/user/privacy.html (20478 chars)
+  ↓ https://training.galaxyproject.org/training-material/stats.html [200]
+  Summarising https://training.galaxyproject.org/training-material/stats.html (469 chars)
+  ↓ https://training.galaxyproject.org/training-material/feedback.html [200]
+  Summarising https://training.galaxyproject.org/training-material/feedback.html (1004664 chars)
+  Compiling structural summary from 8 page summary/ies
+  Structural summary ready (5245 chars)
+Structural summary saved to structural_summary.json
+Using structural summary: {"site_description": "The Galaxy Training website provides educational materials and resources for using the Galaxy data analysis platform.", "content_types": [{"type": "TrainingMaterial|Tutorial", "description": "Individual tutorials that explain how to perform specific tasks or analyses using Galaxy.", "primary_url": "https://training.galaxyproject.org/training-material/", "navigation": {"type": "paginated", "urls": ["https://training.galaxyproject.org/training-material/"], "description": "The…
+Phase 1 starting from 3 content-type URL(s) listed in structural summary
+Phase 1: crawl + discover
+  Fetch primary: https://training.galaxyproject.org/training-material/
+    ↓ https://training.galaxyproject.org/training-material/ [200]
+    Page 1/20: 91934 chars, 26 chunk(s), hash=5d3243350049…
+    [LLM:content_relevance] 1492 ms
+    [LLM:content_relevance] 2969 ms
+    [LLM:content_relevance] 3279 ms
+    [LLM:content_relevance] 4299 ms
+    Chunk 4/26: relevant
+      ★ 'Introduction to Galaxy Analyses' (LearningPathway)
+      ★ 'Using Galaxy and Managing your Data' (LearningPathway)
+      ★ 'NGS Basics Learning Path' (LearningPathway)
+    [LLM:content_relevance] 15663 ms
+    Chunk 5/26: relevant
+      ★ 'Plants' (TrainingMaterial|LearningPathway)
+      ★ 'Statistics and machine learning' (TrainingMaterial|LearningPathway)
+      ★ 'Visualisation' (TrainingMaterial|LearningPathway)
+      ★ 'Assembly' (TrainingMaterial|LearningPathway)
+      ★ 'ELIXIR' (TrainingMaterial|LearningPathway)
+      ★ 'Epigenetics' (TrainingMaterial|LearningPathway)
+      ★ 'GMOD' (TrainingMaterial|LearningPathway)
+      ★ 'Metabolomics' (TrainingMaterial|LearningPathway)
+      ★ 'Proteomics' (TrainingMaterial|LearningPathway)
+      ★ 'Sequence analysis' (TrainingMaterial|LearningPathway)
+      ★ 'Single Cell' (TrainingMaterial|LearningPathway)
+      ★ 'Synthetic Biology' (TrainingMaterial|LearningPathway)
+      ★ 'Transcriptomics' (TrainingMaterial|LearningPathway)
+      ★ 'Variant Analysis' (TrainingMaterial|LearningPathway)
+      ★ 'Galaxy Server administration' (TrainingMaterial|LearningPathway)
+      ★ 'Development in Galaxy' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 3718 ms
+    Chunk 6/26: relevant
+      ★ 'Contributing to the Galaxy Training Material' (TrainingMaterial|LearningPathway)
+      ★ 'Teaching and Hosting Galaxy training' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 2307 ms
+    Chunk 7/26: relevant
+      ★ 'Hall of Fame' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 4304 ms
+    Chunk 8/26: relevant
+      ★ 'Galaxy Training Academy 2026' (TrainingMaterial|Event)
+      ★ 'Galaxy Beyond Basics: Mastering Workflows, Automation, and Scalability' (TrainingMaterial|Event)
+      ★ 'BioNT Brings Galaxy Training to German, Spanish, and Italian Learners' (TrainingMaterial|NewsArticle)
+    [LLM:content_relevance] 2047 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 8079 ms
+    Chunk 11/26: relevant
+      ★ 'CINECA' (TrainingMaterial|HallOfFame)
+      ★ 'CORBEL' (TrainingMaterial|HallOfFame)
+      ★ 'EOC Data Commons' (TrainingMaterial|HallOfFame)
+      ★ 'EDCTP-EU' (TrainingMaterial|HallOfFame)
+      ★ 'ELIXIR-CONVERGE' (TrainingMaterial|HallOfFame)
+      ★ 'ELIXIR-EXCELERATE' (TrainingMaterial|HallOfFame)
+      ★ 'ELIXIR-STEERS' (TrainingMaterial|HallOfFame)
+      ★ 'DASH UK' (TrainingMaterial|HallOfFame)
+      ★ 'EOC-Life' (TrainingMaterial|HallOfFame)
+      ★ 'EOC-Mesh' (TrainingMaterial|HallOfFame)
+      ★ 'EPSRC Training Grant' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 7705 ms
+    Chunk 12/26: relevant
+      ★ 'EOSC-Mesh' (TrainingMaterial|HallOfFame)
+      ★ 'EPSRC/OU' (TrainingMaterial|HallOfFame)
+      ★ 'EuroScienceGateway' (TrainingMaterial|HallOfFame)
+      ★ 'Fair-Ease' (TrainingMaterial|HallOfFame)
+      ★ 'FNSO' (TrainingMaterial|HallOfFame)
+      ★ 'FondFrance' (TrainingMaterial|HallOfFame)
+      ★ 'Gallantries' (TrainingMaterial|HallOfFame)
+      ★ 'DEFEND' (TrainingMaterial|HallOfFame)
+      ★ 'HealthyCloud' (TrainingMaterial|HallOfFame)
+      ★ 'MVD' (TrainingMaterial|HallOfFame)
+      ★ 'MOOREV' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 8484 ms
+    Chunk 13/26: relevant
+      ★ 'NFDI4Bioimage' (TrainingMaterial|HallOfFame)
+      ★ 'NFDI4Culture' (TrainingMaterial|HallOfFame)
+      ★ 'DataPLANT' (TrainingMaterial|HallOfFame)
+      ★ 'NFDI4Microbiota' (TrainingMaterial|HallOfFame)
+      ★ 'NHGRI ANVIL' (TrainingMaterial|HallOfFame)
+      ★ 'NHGRI GDS Community Network' (TrainingMaterial|HallOfFame)
+      ★ 'OSCARS' (TrainingMaterial|HallOfFame)
+      ★ 'Skills4SEOSC' (TrainingMaterial|HallOfFame)
+      ★ 'Example organisation' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 6241 ms
+    Chunk 14/26: relevant
+      ★ 'ABRomics' (TrainingMaterial|HallOfFame)
+      ★ 'Antarctic and Southern Ocean Coalition' (TrainingMaterial|HallOfFame)
+      ★ 'Australian BioCommons' (TrainingMaterial|HallOfFame)
+      ★ 'Avans' (TrainingMaterial|HallOfFame)
+      ★ 'Amazon Web Services' (TrainingMaterial|HallOfFame)
+      ★ 'Bioconda' (TrainingMaterial|HallOfFame)
+      ★ 'BioDATEN' (TrainingMaterial|HallOfFame)
+      ★ 'BioFAIR' (TrainingMaterial|HallOfFame)
+      ★ 'Biolytix AG' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 8237 ms
+    Chunk 15/26: relevant
+      ★ 'Bundesministerium für Bildung und Forschung' (TrainingMaterial|HallOfFame)
+      ★ 'CESNET (Czech Education and Scientific NETwork)' (TrainingMaterial|HallOfFame)
+      ★ 'The Carpentries' (TrainingMaterial|HallOfFame)
+      ★ 'Collaborative Research Centre 1425' (TrainingMaterial|HallOfFame)
+      ★ 'Collaborative Research Centre 992' (TrainingMaterial|HallOfFame)
+      ★ 'DATA TERRA' (TrainingMaterial|HallOfFame)
+      ★ 'DECHEMA' (TrainingMaterial|HallOfFame)
+      ★ 'Data Science Center' (TrainingMaterial|HallOfFame)
+      ★ 'EIRENE RI' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 7193 ms
+    Chunk 16/26: relevant
+      ★ 'ELIXIR Czechia' (TrainingMaterial|HallOfFame)
+      ★ 'ELIXIR Germany' (TrainingMaterial|HallOfFame)
+      ★ 'European Space Agency' (TrainingMaterial|HallOfFame)
+      ★ 'Euro-BioImaging' (TrainingMaterial|HallOfFame)
+      ★ 'GalaxyWorks' (TrainingMaterial|HallOfFame)
+      ★ 'GHGA' (TrainingMaterial|HallOfFame)
+      ★ 'GigaScience' (TrainingMaterial|HallOfFame)
+      ★ 'Image Data Resource' (TrainingMaterial|HallOfFame)
+      ★ 'IFREMER' (TrainingMaterial|HallOfFame)
+      ★ 'JXTX Foundation' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 1483 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 7064 ms
+    Chunk 19/26: relevant
+      ★ 'EU' (TrainingMaterial|HallOfFame)
+      ★ 'FAIR2Adapt' (TrainingMaterial|HallOfFame)
+      ★ 'OSCARS-FIESTA' (TrainingMaterial|HallOfFame)
+      ★ 'FIND' (TrainingMaterial|HallOfFame)
+      ★ 'FZJ' (TrainingMaterial|HallOfFame)
+      ★ 'GIS' (TrainingMaterial|HallOfFame)
+      ★ 'GBIF' (TrainingMaterial|HallOfFame)
+      ★ 'HZI' (TrainingMaterial|HallOfFame)
+      ★ 'IFB' (TrainingMaterial|HallOfFame)
+      ★ 'INAB|CERTH' (TrainingMaterial|HallOfFame)
+      ★ 'IRCCS' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 1523 ms
+    [LLM:content_relevance] 9969 ms
+    Chunk 21/26: relevant
+      ★ 'UMN' (TrainingMaterial|HallOfFame)
+      ★ 'MNHN' (TrainingMaterial|HallOfFame)
+      ★ 'MPIIE' (TrainingMaterial|HallOfFame)
+      ★ 'MWK' (TrainingMaterial|HallOfFame)
+      ★ 'NCBI' (TrainingMaterial|HallOfFame)
+      ★ 'NIH' (TrainingMaterial|HallOfFame)
+      ★ 'NL-BioImaging' (TrainingMaterial|HallOfFame)
+      ★ 'NSF' (TrainingMaterial|HallOfFame)
+      ★ 'OU' (TrainingMaterial|HallOfFame)
+      ★ 'PanACEA' (TrainingMaterial|HallOfFame)
+      ★ 'PANGenS' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 1687 ms
+    [LLM:content_relevance] 7514 ms
+    Chunk 23/26: relevant
+      ★ 'UniSR' (TrainingMaterial|HallOfFame)
+      ★ 'Sciensano' (TrainingMaterial|HallOfFame)
+      ★ 'SPUN' (TrainingMaterial|HallOfFame)
+      ★ 'SU' (TrainingMaterial|HallOfFame)
+      ★ 'SPOC' (TrainingMaterial|HallOfFame)
+      ★ 'SwissTPH' (TrainingMaterial|HallOfFame)
+      ★ 'SURF' (TrainingMaterial|HallOfFame)
+      ★ 'TB-CAPT' (TrainingMaterial|HallOfFame)
+      ★ 'UFZ - Helmholtz-Zentrum für Umweltforschung UFZ' (TrainingMaterial|HallOfFame)
+      ★ 'UGA' (TrainingMaterial|HallOfFame)
+      ★ 'UKRI-MRC' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 2594 ms
+    Chunk 24/26: relevant
+      ★ 'Hall of Fame' (TrainingMaterial|HallOfFame)
+    [LLM:content_relevance] 1637 ms
+    [LLM:content_relevance] 1739 ms
+  Fetch depth-1: https://training.galaxyproject.org/training-material/topics/climate/
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/ [200]
+    Page 2/20: 190972 chars, 52 chunk(s), hash=0faf960a60f1…
+    [LLM:content_relevance] 1445 ms
+    [LLM:content_relevance] 2354 ms
+    Chunk 2/52: relevant
+      ★ 'Learning Pathways' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 1531 ms
+    [LLM:content_relevance] 1538 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 3788 ms
+    Chunk 6/52: relevant
+      ★ 'Getting your hands-on earth data' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1608 ms
+    [LLM:content_relevance] 2558 ms
+    Chunk 8/52: relevant
+      ★ 'Introduction to climate data' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2456 ms
+    Chunk 9/52: relevant
+      ★ 'Introduction to Climate Data Analysis with Galaxy' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1504 ms
+    [LLM:content_relevance] 2047 ms
+    Chunk 12/52: relevant
+      ★ 'OCEAN-DATA-VIEW Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2762 ms
+    Chunk 13/52: relevant
+      ★ 'Sentinel 5P data visualisation' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 7474 ms
+    Chunk 14/52: relevant
+      ★ 'Sentinel-5 Data Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2734 ms
+    Chunk 15/52: relevant
+      ★ 'Sentinel 5P data visualisation tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 5734 ms
+    Chunk 16/52: relevant
+      ★ 'Visualize Climate data with Panoply netCDF viewer' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 6999 ms
+    Chunk 17/52: relevant
+      ★ 'Panoply Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1493 ms
+    Chunk 18/52: relevant
+    [LLM:content_relevance] 4064 ms
+    Chunk 19/52: relevant
+      ★ 'Analyse Argo data' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 3378 ms
+    Chunk 20/52: relevant
+      ★ 'Arctic Ocean Data Analysis' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2763 ms
+    Chunk 21/52: relevant
+      ★ 'Analyse Argo data workflows' (TrainingMaterial|Tutorial)
+      ★ 'Collaboration with JupyterGIS' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1601 ms
+    [LLM:content_relevance] 2658 ms
+    Chunk 23/52: relevant
+      ★ 'JupyterGIS Collaboration' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2049 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 1945 ms
+    [LLM:content_relevance] 3480 ms
+    Chunk 27/52: relevant
+      ★ 'Functionally Assembled Terrestrial Ecosystem Simulator (FATES) workflows' (TrainingMaterial|Tutorial)
+      ★ 'Slides for Functionally Assembled Terrestrial Ecosystem Simulator (FATES)' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1500 ms
+    [LLM:content_relevance] 1537 ms
+    [LLM:content_relevance] 3070 ms
+    Chunk 30/52: relevant
+      ★ 'Ocean QCV Analysis Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2657 ms
+    Chunk 31/52: relevant
+      ★ 'Nitrate DMQC for autonomous platforms such as Argo floats workflows' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2552 ms
+    Chunk 32/52: relevant
+      ★ "Ocean's variables study" (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 3889 ms
+    Chunk 33/52: relevant
+      ★ "Workflows for Ocean's variables study" (TrainingMaterial|Workflow)
+    [LLM:content_relevance] 2661 ms
+    Chunk 34/52: relevant
+      ★ "Ocean's variables study workflows" (TrainingMaterial|CourseInstance|Course)
+      ★ 'Pangeo ecosystem 101 for everyone - Introduction to Xarray Galaxy Tools' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1625 ms
+    [LLM:content_relevance] 2865 ms
+    Chunk 36/52: relevant
+      ★ 'Pangeo Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2662 ms
+    Chunk 37/52: relevant
+      ★ 'Pangeo ecosystem 101 for everyone - Introduction to Xarray Galaxy Tools workflows' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2148 ms
+    [LLM:content_relevance] 4506 ms
+    [LLM:content_relevance] 2251 ms
+    Chunk 40/52: relevant
+      ★ 'Functionally Assembled Terrestrial Ecosystem Simulator (FATES) with Galaxy Climate JupyterLab' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 4902 ms
+    Chunk 41/52: relevant
+      ★ 'FATES JupyterLab Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 3272 ms
+    Chunk 42/52: relevant
+      ★ 'Pangeo Notebook in Galaxy - Introduction to Xarray Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2662 ms
+    Chunk 43/52: relevant
+      ★ 'Pangeo Notebook' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 9339 ms
+    Chunk 44/52: relevant
+      ★ 'Plain text slides' (TrainingMaterial|Tutorial)
+      ★ 'Video Slides' (TrainingMaterial|Tutorial)
+      ★ 'Follow the tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2417 ms
+    Chunk 45/52: relevant
+      ★ 'Pangeo Notebook in Galaxy - Introduction to Xarray workflows' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2251 ms
+    Chunk 46/52: relevant
+      ★ 'Pangeo Notebook Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2851 ms
+    Chunk 47/52: relevant
+      ★ 'Pangeo Notebook Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2046 ms
+    Chunk 48/52: relevant
+    [LLM:content_relevance] 1532 ms
+    [LLM:content_relevance] 1334 ms
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 1726 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/learning-pathways
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways [200]
+    Page 3/20: 60009 chars, 19 chunk(s), hash=ced659277fe0…
+    [LLM:content_relevance] 1537 ms
+    [LLM:content_relevance] 2047 ms
+    Chunk 2/19: relevant
+    [LLM:content_relevance] 3069 ms
+    Chunk 3/19: relevant
+      ★ 'Introduction to Galaxy and Sequence analysis' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4734 ms
+    Chunk 4/19: relevant
+      ★ 'Introduction to Galaxy and Sequence analysis' (TrainingMaterial|LearningPathway)
+      ★ 'Epigenetics data analysis with Galaxy' (TrainingMaterial|LearningPathway)
+      ★ 'Introduction to Galaxy and Single Cell RNA Sequence analysis' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4258 ms
+    Chunk 5/19: relevant
+      ★ 'Cell RNA Sequence analysis' (TrainingMaterial|LearningPathway)
+      ★ 'Detection of AMR genes in bacterial genomes' (TrainingMaterial|LearningPathway)
+      ★ 'Applying single-cell RNA-seq analysis' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4168 ms
+    Chunk 6/19: relevant
+      ★ 'ngle-cell RNA-seq analysis' (TrainingMaterial|LearningPathway)
+      ★ 'From Zero To Hero with Python' (TrainingMaterial|LearningPathway)
+      ★ 'Discovering Galaxy through climate analysis' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4808 ms
+    Chunk 7/19: relevant
+      ★ 'Discovering Galaxy through climate analysis' (TrainingMaterial|LearningPathway)
+      ★ 'Clinical metaproteomics workflows within Galaxy' (TrainingMaterial|LearningPathway)
+      ★ 'Bioinformatics Projects: Using deconvolution to get new insights from old bulk RNA-seq data' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 3770 ms
+    Chunk 8/19: relevant
+      ★ 'Finding old bulk RNA-seq data and transforming it into new results' (TrainingMaterial|LearningPathway)
+      ★ 'FAIR Data Management' (TrainingMaterial|LearningPathway)
+      ★ 'Genome annotation for eukaryotes' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 3480 ms
+    Chunk 9/19: relevant
+      ★ 'Genome annotation for prokaryotes' (TrainingMaterial|LearningPathway)
+      ★ 'Introduction to Galaxy and Ecological data analysis' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 3377 ms
+    Chunk 10/19: relevant
+      ★ 'Introduction to Galaxy and Ecological data analysis' (TrainingMaterial|LearningPathway)
+      ★ 'From R to Machine Learning; an introductory course' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4718 ms
+    Chunk 11/19: relevant
+      ★ 'Machine learning' (TrainingMaterial|LearningPathway)
+      ★ 'Building and Annotating Metagenome-Assembled Genomes (MAGs) from Metagenomics Reads' (TrainingMaterial|LearningPathway)
+      ★ 'Metagenomics data processing and analysis for microbiome' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4502 ms
+    Chunk 12/19: relevant
+      ★ 'Microbiome data analysis with Galaxy' (TrainingMaterial|LearningPathway)
+      ★ 'Artificial Intelligence and Machine Learning in Life Sciences using Python' (TrainingMaterial|LearningPathway)
+      ★ 'Neoantigen discovery using the iPepGen pipeline' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4994 ms
+    Chunk 13/19: relevant
+      ★ 'Immunopeptidogenomics (iPepGen) Workflow for Neoantigen Discovery' (LearningPathway)
+      ★ 'Proteogenomics' (LearningPathway)
+      ★ 'Introductory Python' (LearningPathway)
+    [LLM:content_relevance] 4606 ms
+    Chunk 14/19: relevant
+      ★ 'Applying single-cell RNA-seq analysis in Coding Environments' (TrainingMaterial|LearningPathway)
+      ★ 'Introductory SQL' (TrainingMaterial|CourseInstance|Course)
+    [LLM:content_relevance] 3597 ms
+    Chunk 15/19: relevant
+      ★ 'Introductory SQL' (TrainingMaterial|CourseInstance|Course)
+      ★ 'Onboarding for new contributors' (TrainingMaterial|LearningPathway)
+      ★ 'Admin Training Course' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 4748 ms
+    Chunk 16/19: relevant
+      ★ 'Admin Training Course' (TrainingMaterial|LearningPathway)
+      ★ 'Tool development for a nice & shiny subdomain' (TrainingMaterial|LearningPathway)
+      ★ 'Creation of a Community CoDex and lab (and optionally of a Special Interest Group (SIG))' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 2165 ms
+    Chunk 17/19: relevant
+      ★ 'Train the Trainers' (TrainingMaterial|LearningPathway)
+    [LLM:content_relevance] 1635 ms
+    [LLM:content_relevance] 1740 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/earth_system/tutorial.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=en&_x_tr_pto=wapp
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/earth_system/tutorial.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=en&_x_tr_pto=wapp [200]
+    Page 4/20: 82068 chars, 15 chunk(s), hash=57947a2f3cf2…
+    [LLM:content_relevance] 1460 ms
+    [LLM:content_relevance] 2558 ms
+    Chunk 2/15: relevant
+      ★ 'Earth System Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 2559 ms
+    Chunk 4/15: relevant
+    [LLM:content_relevance] 2047 ms
+    Chunk 5/15: relevant
+    [LLM:content_relevance] 3172 ms
+    Chunk 6/15: relevant
+    [LLM:content_relevance] 4154 ms
+    Chunk 7/15: relevant
+      ★ 'Ocean’s variables study' (TrainingMaterial|Tutorial)
+      ★ 'Ocean Data View (ODV)' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2456 ms
+    [LLM:content_relevance] 2250 ms
+    Chunk 9/15: relevant
+      ★ 'QGIS Web Feature Services' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2354 ms
+    Chunk 10/15: relevant
+      ★ 'OBIS marine indicators tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1618 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1637 ms
+    [LLM:content_relevance] 2046 ms
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/earth_system/tutorial.html?_x_tr_sl=en&_x_tr_tl=ar&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/earth_system/tutorial.html?_x_tr_sl=en&_x_tr_tl=it&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/earth_system/tutorial.html
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/earth_system/tutorial.html [200]
+    Page 5/20: 82068 chars, 15 chunk(s), hash=57947a2f3cf2…
+    [LLM:content_relevance] 1464 ms
+    [LLM:content_relevance] 3378 ms
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 1945 ms
+    Chunk 4/15: relevant
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 3477 ms
+    Chunk 6/15: relevant
+    [LLM:content_relevance] 4274 ms
+    Chunk 7/15: relevant
+      ★ 'Sentinel 2 mission' (TrainingMaterial|Resource)
+    [LLM:content_relevance] 3684 ms
+    Chunk 8/15: relevant
+      ★ 'From NDVI data with OpenEO to time series visualisation with Holoviews' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 4402 ms
+    Chunk 9/15: relevant
+      ★ 'Climate Data Store' (TrainingMaterial|Tool)
+      ★ 'OBIS Ocean Biodiversity Information System' (TrainingMaterial|Tool)
+    [LLM:content_relevance] 3868 ms
+    Chunk 10/15: relevant
+      ★ 'OBIS marine indicators' (TrainingMaterial|Tutorial)
+      ★ 'Cleaning GBIF data for the use in Ecology' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 5940 ms
+    Chunk 12/15: relevant
+      ★ 'Getting your hands-on earth data (Galaxy Training Materials)' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1837 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1821 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/introduction/slides-plain.html
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/introduction/slides-plain.html [200]
+    Page 6/20: 45037 chars, 13 chunk(s), hash=d34c5da86e49…
+    [LLM:content_relevance] 1401 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 2253 ms
+    Chunk 5/13: relevant
+      ★ 'Introduction to Climate Data Resources' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1496 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1434 ms
+    [LLM:content_relevance] 3480 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1842 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1840 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html [200]
+    Page 7/20: 82068 chars, 17 chunk(s), hash=6ddf7fc44c56…
+    [LLM:content_relevance] 1518 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 2765 ms
+    Chunk 4/17: relevant
+    [LLM:content_relevance] 2660 ms
+    Chunk 5/17: relevant
+      ★ 'Tutorial on Accessing and Downloading Sentinel 5P Data' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2405 ms
+    Chunk 6/17: relevant
+      ★ 'Sentinel 5 Data Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 1327 ms
+    [LLM:content_relevance] 1437 ms
+    [LLM:content_relevance] 1944 ms
+    [LLM:content_relevance] 2149 ms
+    Chunk 11/17: relevant
+      ★ 'Hands On: Visualise data through out time' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2201 ms
+    Chunk 12/17: relevant
+      ★ 'Create a timeseries plot' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1638 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1638 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1743 ms
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=zh-CN&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=ar&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html?_x_tr_sl=en&_x_tr_tl=it&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/sentinel5_data/workflows/
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/sentinel5_data/workflows/ [200]
+    Page 8/20: 18624 chars, 5 chunk(s), hash=ad223168bb09…
+    [LLM:content_relevance] 1476 ms
+    [LLM:content_relevance] 1663 ms
+    [LLM:content_relevance] 1537 ms
+    [LLM:content_relevance] 1632 ms
+    [LLM:content_relevance] 1740 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp [200]
+    Page 9/20: 106782 chars, 20 chunk(s), hash=3f21d97a1dda…
+    [LLM:content_relevance] 2089 ms
+    Chunk 1/20: relevant
+      ★ 'Hands-on: Visualize Climate data with Panoply netCDF viewer' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 3350 ms
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 2151 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 2661 ms
+    Chunk 6/20: relevant
+      ★ 'Panoply' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1693 ms
+    [LLM:content_relevance] 1539 ms
+    [LLM:content_relevance] 2557 ms
+    Chunk 12/20: relevant
+      ★ 'Hands On: geographical map' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2865 ms
+    Chunk 13/20: relevant
+      ★ 'Scale and Color Table' (TrainingMaterial|Tutorial)
+      ★ 'Changing Map Projection' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 3174 ms
+    Chunk 14/20: relevant
+      ★ 'Using Orthographic projection' (TrainingMaterial|Tutorial)
+      ★ 'Creating timeseries' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1579 ms
+    [LLM:content_relevance] 1327 ms
+    [LLM:content_relevance] 1539 ms
+    [LLM:content_relevance] 1432 ms
+    [LLM:content_relevance] 1844 ms
+    [LLM:content_relevance] 1739 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp [200]
+    Page 10/20: 106782 chars, 20 chunk(s), hash=3f21d97a1dda…
+    [LLM:content_relevance] 1544 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1639 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 3175 ms
+    Chunk 6/20: relevant
+      ★ 'Introduction to Panoply Galaxy Interactive Environment' (TrainingMaterial|Tutorial)
+      ★ 'Quick View Data with Panoply' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 3835 ms
+    Chunk 7/20: relevant
+      ★ 'Introduction to NetCDF and Climate Data Visualization' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1527 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1536 ms
+    Chunk 11/20: relevant
+    [LLM:content_relevance] 3069 ms
+    Chunk 12/20: relevant
+      ★ 'Hands On: geographical map' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1548 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1328 ms
+    [LLM:content_relevance] 2461 ms
+    Chunk 16/20: relevant
+      ★ 'Visualize Climate data with Panoply netCDF viewer (Galaxy Training Materials)' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1329 ms
+    [LLM:content_relevance] 1432 ms
+    [LLM:content_relevance] 1682 ms
+    [LLM:content_relevance] 1739 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=zh-CN&_x_tr_hl=en&_x_tr_pto=wapp
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=zh-CN&_x_tr_hl=en&_x_tr_pto=wapp [200]
+    Page 11/20: 106782 chars, 20 chunk(s), hash=3f21d97a1dda…
+    [LLM:content_relevance] 1556 ms
+    [LLM:content_relevance] 1948 ms
+    [LLM:content_relevance] 1538 ms
+    [LLM:content_relevance] 2659 ms
+    Chunk 4/20: relevant
+      ★ 'Panoply Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2508 ms
+    Chunk 5/20: relevant
+      ★ 'Introduction to Panoply with Galaxy' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2455 ms
+    Chunk 6/20: relevant
+      ★ 'Panoply Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 4369 ms
+    Chunk 10/20: relevant
+      ★ 'BedTools Genome Coverage' (TrainingMaterial|Tutorial)
+      ★ 'BedTools Intersect' (TrainingMaterial|Tutorial)
+      ★ 'Macs2 broadCall' (TrainingMaterial|Tutorial)
+      ★ 'Panoply' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2353 ms
+    Chunk 11/20: relevant
+      ★ 'Panoply Tutorial for Climate Data Analysis' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 2704 ms
+    Chunk 13/20: relevant
+      ★ 'Panoply tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1532 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1331 ms
+    [LLM:content_relevance] 1433 ms
+    [LLM:content_relevance] 1736 ms
+    [LLM:content_relevance] 1539 ms
+    [LLM:content_relevance] 1843 ms
+  Fetch depth-2: https://training-galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en&_x_tr_pto=wapp
+  ⚠  Skipping https://training-galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en&_x_tr_pto=wapp: HTTPSConnectionPool(host='training-galaxyproject.org', port=443): Max retries exceeded with url: /training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en&_x_tr_pto=wapp (Caused by NameResolutionError("HTTPSConnection(host='training-galaxyproject.org', port=443): Failed to resolve 'training-galaxyproject.org' ([Errno -2] Name or service not known)"))
+  Fetch depth-2: https://training-galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=en&_x_tr_pto=wapp
+  ⚠  Skipping https://training-galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=en&_x_tr_pto=wapp: HTTPSConnectionPool(host='training-galaxyproject.org', port=443): Max retries exceeded with url: /training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=en&_x_tr_pto=wapp (Caused by NameResolutionError("HTTPSConnection(host='training-galaxyproject.org', port=443): Failed to resolve 'training-galaxyproject.org' ([Errno -2] Name or service not known)"))
+  Fetch depth-2: https://training-galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=en&_x_tr_pto=wapp
+  ⚠  Skipping https://training-galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=en&_x_tr_pto=wapp: HTTPSConnectionPool(host='training-galaxyproject.org', port=443): Max retries exceeded with url: /training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=en&_x_tr_pto=wapp (Caused by NameResolutionError("HTTPSConnection(host='training-galaxyproject.org', port=443): Failed to resolve 'training-galaxyproject.org' ([Errno -2] Name or service not known)"))
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=zh-CN&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=fr&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=ja&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=pt&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=ar&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=it&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=earth-system
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=earth-system [200]
+    Page 12/20: 102559 chars, 21 chunk(s), hash=99c4fc72f840…
+    [LLM:content_relevance] 1584 ms
+    [LLM:content_relevance] 3484 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 2600 ms
+    Chunk 4/21: relevant
+      ★ 'Argo Pangeo Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1521 ms
+    [LLM:content_relevance] 2574 ms
+    Chunk 6/21: relevant
+    [LLM:content_relevance] 1842 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 2456 ms
+    Chunk 10/21: relevant
+      ★ 'NetCDF dataset with Xarray metadata Galaxy Tool' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1497 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 2456 ms
+    [LLM:content_relevance] 2150 ms
+    Chunk 14/21: relevant
+      ★ 'ODV Collection Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2762 ms
+    Chunk 15/21: relevant
+      ★ 'Hands On: Visualise with ODV' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Visualise the temperature on a map with ODV' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2189 ms
+    Chunk 16/21: relevant
+      ★ 'Tutorial on Visualizing Argo Data with Ocean Data View in the Pangeo Ecosystem' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1739 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1432 ms
+    [LLM:content_relevance] 1638 ms
+    [LLM:content_relevance] 2046 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=ocean
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=ocean [200]
+    Page 13/20: 102559 chars, 21 chunk(s), hash=99c4fc72f840…
+    [LLM:content_relevance] 1552 ms
+    [LLM:content_relevance] 1637 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1329 ms
+    [LLM:content_relevance] 2251 ms
+    Chunk 6/21: relevant
+      ★ 'Plotting water temperature with respect to time using netCDF xarray tools in Galaxy Europe' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1471 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1842 ms
+    [LLM:content_relevance] 2252 ms
+    Chunk 10/21: relevant
+      ★ 'NetCDF xarray Metadata Info' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1329 ms
+    [LLM:content_relevance] 2662 ms
+    [LLM:content_relevance] 1531 ms
+    [LLM:content_relevance] 1595 ms
+    [LLM:content_relevance] 2046 ms
+    Chunk 15/21: relevant
+      ★ 'Hands On: Visualise with ODV' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 2971 ms
+    Chunk 18/21: relevant
+      ★ 'Analyse Argo data (Galaxy Training Materials)' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1637 ms
+    [LLM:content_relevance] 1672 ms
+    [LLM:content_relevance] 1737 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=pangeo
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=pangeo [200]
+    Page 14/20: 102559 chars, 21 chunk(s), hash=99c4fc72f840…
+    [LLM:content_relevance] 1921 ms
+    [LLM:content_relevance] 2150 ms
+    [LLM:content_relevance] 1739 ms
+    [LLM:content_relevance] 2969 ms
+    Chunk 4/21: relevant
+      ★ 'Argo Data Analysis with Pangeo' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1485 ms
+    [LLM:content_relevance] 2661 ms
+    Chunk 6/21: relevant
+      ★ 'Argo Pangeo Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 2354 ms
+    Chunk 9/21: relevant
+      ★ 'Argo data access' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1597 ms
+    [LLM:content_relevance] 1329 ms
+    [LLM:content_relevance] 2047 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1432 ms
+    [LLM:content_relevance] 1432 ms
+    [LLM:content_relevance] 1741 ms
+    [LLM:content_relevance] 1532 ms
+    [LLM:content_relevance] 1537 ms
+    [LLM:content_relevance] 5526 ms
+    [LLM:content_relevance] 6754 ms
+    [LLM:content_relevance] 1893 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=argo
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html?query=argo [200]
+    Page 15/20: 102559 chars, 21 chunk(s), hash=99c4fc72f840…
+    [LLM:content_relevance] 1478 ms
+    [LLM:content_relevance] 3072 ms
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 2148 ms
+    Chunk 4/21: relevant
+      ★ 'Argo Pangeo Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2002 ms
+    Chunk 5/21: relevant
+    [LLM:content_relevance] 1639 ms
+    [LLM:content_relevance] 1637 ms
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1327 ms
+    [LLM:content_relevance] 1846 ms
+    [LLM:content_relevance] 1286 ms
+    [LLM:content_relevance] 1945 ms
+    [LLM:content_relevance] 2662 ms
+    Chunk 15/21: relevant
+      ★ 'Hands On: Visualise with ODV' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Visualise the temperature on a map with ODV' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 2662 ms
+    Chunk 18/21: relevant
+    [LLM:content_relevance] 1491 ms
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 1842 ms
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html (blocked by robots.txt)
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/argo_pangeo/workflows/ (blocked by robots.txt)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/jupytergis_collaboration/recordings/
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/jupytergis_collaboration/recordings/ [200]
+    Page 16/20: 22422 chars, 7 chunk(s), hash=16ceeac8a1aa…
+    [LLM:content_relevance] 1574 ms
+    [LLM:content_relevance] 1634 ms
+    [LLM:content_relevance] 2824 ms
+    Chunk 3/7: relevant
+      ★ 'Recordings - Collaboration with JupyterGIS' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 2047 ms
+    Chunk 5/7: relevant
+      ★ 'JupyterGIS Collaboration Tutorial Recording' (TrainingMaterial|Recording)
+    [LLM:content_relevance] 1943 ms
+    [LLM:content_relevance] 1638 ms
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/fates/slides.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean_qcv_analysis/workflows/
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean_qcv_analysis/workflows/ [200]
+    Page 17/20: 18756 chars, 5 chunk(s), hash=92d6b351fa47…
+    [LLM:content_relevance] 1550 ms
+    [LLM:content_relevance] 1637 ms
+    [LLM:content_relevance] 3379 ms
+    [LLM:content_relevance] 1736 ms
+    [LLM:content_relevance] 1640 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean_qcv_analysis/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean_qcv_analysis/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp [200]
+    Page 18/20: 118331 chars, 26 chunk(s), hash=c46e271bc141…
+    [LLM:content_relevance] 2156 ms
+    Chunk 1/26: relevant
+      ★ 'Hands-on: Nitrate DMQC for autonomous platforms such as Argo floats' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 1531 ms
+    [LLM:content_relevance] 3177 ms
+    Chunk 4/26: relevant
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1742 ms
+    [LLM:content_relevance] 1559 ms
+    [LLM:content_relevance] 2254 ms
+    Chunk 8/26: relevant
+      ★ 'Ocean QCV Analysis Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 2456 ms
+    Chunk 10/26: relevant
+      ★ 'Run a predefined workflow' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1735 ms
+    [LLM:content_relevance] 1540 ms
+    [LLM:content_relevance] 2280 ms
+    Chunk 13/26: relevant
+      ★ 'QCV harmonizer' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 2969 ms
+    Chunk 15/26: relevant
+      ★ 'Run ODV collection manager' (TrainingMaterial|Tutorial)
+      ★ 'Run ODV interactive tool' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 1637 ms
+    [LLM:content_relevance] 1561 ms
+    [LLM:content_relevance] 1535 ms
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 1537 ms
+    [LLM:content_relevance] 1539 ms
+    [LLM:content_relevance] 1528 ms
+    [LLM:content_relevance] 1741 ms
+    [LLM:content_relevance] 1532 ms
+    [LLM:content_relevance] 1847 ms
+  ⚠  Skipping https://training-galaxyproject-org.translate.goog/training-material/topics/climate/tutorials/ocean-variables/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp (blocked by robots.txt)
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean-variables/tutorial.html
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean-variables/tutorial.html [200]
+    Page 19/20: 142688 chars, 34 chunk(s), hash=0e3eea616f39…
+    [LLM:content_relevance] 1527 ms
+    [LLM:content_relevance] 1844 ms
+    [LLM:content_relevance] 2149 ms
+    Chunk 3/34: relevant
+    [LLM:content_relevance] 2147 ms
+    Chunk 4/34: relevant
+      ★ 'Ocean Variables Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1976 ms
+    Chunk 5/34: relevant
+    [LLM:content_relevance] 1640 ms
+    [LLM:content_relevance] 1533 ms
+    [LLM:content_relevance] 1330 ms
+    [LLM:content_relevance] 1434 ms
+    [LLM:content_relevance] 1431 ms
+    Chunk 10/34: relevant
+    [LLM:content_relevance] 1435 ms
+    [LLM:content_relevance] 1432 ms
+    [LLM:content_relevance] 4214 ms
+    Chunk 13/34: relevant
+      ★ 'Change the size of your dots' (TrainingMaterial|Tutorial)
+      ★ 'Save your data' (TrainingMaterial|Tutorial)
+      ★ 'Choose Your Own Tutorial (CYOT)' (TrainingMaterial|CourseInstance|Course)
+    [LLM:content_relevance] 4300 ms
+    Chunk 14/34: relevant
+      ★ 'Hands On: Save your subset view' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Save your subset map' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Extract your variables in netcdf data' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Exit ODV and go back on Galaxy' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 5490 ms
+    Chunk 15/34: relevant
+      ★ 'DIVAnd: Data-Interpolating Variational Analysis in n dimensions' (TrainingMaterial|Tutorial)
+      ★ 'BONUS: Even more ODV' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Open your Netcdf data in ODV' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Visualise your Phosphate variable' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1597 ms
+    [LLM:content_relevance] 2148 ms
+    Chunk 17/34: relevant
+      ★ "Ocean's variables tutorial" (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1482 ms
+    [LLM:content_relevance] 1537 ms
+    [LLM:content_relevance] 2148 ms
+    Chunk 20/34: relevant
+      ★ 'Tutorial on Ocean Variables' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 3278 ms
+    Chunk 22/34: relevant
+      ★ 'Hands On: Save your subset view' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Save your subset map' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Extract your variables in netcdf data' (TrainingMaterial|Tutorial)
+      ★ 'Hands On: Exit ODV and go back on Galaxy' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2474 ms
+    Chunk 23/34: relevant
+      ★ 'Exit ODV and go back on Galaxy' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 2048 ms
+    [LLM:content_relevance] 2148 ms
+    Chunk 25/34: relevant
+      ★ 'Hands On: Create a climatology' (TrainingMaterial|Tutorial)
+    [LLM:content_relevance] 1788 ms
+    [LLM:content_relevance] 1534 ms
+    [LLM:content_relevance] 2253 ms
+    Chunk 28/34: relevant
+    [LLM:content_relevance] 3173 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 1326 ms
+    [LLM:content_relevance] 1437 ms
+    [LLM:content_relevance] 1636 ms
+    [LLM:content_relevance] 1741 ms
+  Fetch depth-2: https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean-variables/workflows/
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean-variables/workflows/ [200]
+    Page 20/20: 18606 chars, 5 chunk(s), hash=03343de741a6…
+    [LLM:content_relevance] 1686 ms
+    [LLM:content_relevance] 1536 ms
+    [LLM:content_relevance] 2044 ms
+    [LLM:content_relevance] 1638 ms
+    [LLM:content_relevance] 1945 ms
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Discovery complete: 273 item(s) found across 20 page(s)
+Phase 2–4: extract, review, validate
+  Item: 'Introduction to Galaxy Analyses' (LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/introduction/ [200]
+    [LLM:metadata_analysis] 15193 ms
+    [LLM:json_ld_extraction] 4051 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Using Galaxy and Managing your Data' (LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/galaxy-interface/ [200]
+    [LLM:metadata_analysis] 14544 ms
+    [LLM:json_ld_extraction] 11009 ms
+    [LLM:json_ld_review] 17511 ms
+    ✗ Using Galaxy and Managing your Data / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19091 ms
+  Item: 'NGS Basics Learning Path' (LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html?utm_source=gtn&amp;utm_medium=home&amp;utm_campaign=home-cta-lp [200]
+    [LLM:metadata_analysis] 20612 ms
+    [LLM:json_ld_extraction] 3946 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Plants' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/plants/ [200]
+    [LLM:metadata_analysis] 15092 ms
+    [LLM:json_ld_extraction] 11058 ms
+    [LLM:json_ld_review] 17837 ms
+    ✗ Plants – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19317 ms
+  Item: 'Statistics and machine learning' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/statistics/ [200]
+    [LLM:metadata_analysis] 16227 ms
+    [LLM:json_ld_extraction] 20580 ms
+    [LLM:json_ld_review] 19390 ms
+    ✗ Statistics and machine learning – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22598 ms
+  Item: 'Visualisation' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/visualisation/ [200]
+    [LLM:metadata_analysis] 16271 ms
+    [LLM:json_ld_extraction] 18227 ms
+    [LLM:json_ld_review] 18632 ms
+    ✗ Visualisation / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19378 ms
+  Item: 'Assembly' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/assembly/ [200]
+    [LLM:metadata_analysis] 14717 ms
+    [LLM:json_ld_extraction] 3787 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'ELIXIR' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/elixir/ [200]
+    [LLM:metadata_analysis] 15376 ms
+    [LLM:json_ld_extraction] 11772 ms
+    [LLM:json_ld_review] 18881 ms
+    ✓ ELIXIR / Tutorial List
+  Item: 'Epigenetics' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/epigenetics/ [200]
+    [LLM:metadata_analysis] 20171 ms
+    [LLM:json_ld_extraction] 16792 ms
+    [LLM:json_ld_review] 19699 ms
+    ✗ Epigenetics / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21354 ms
+  Item: 'GMOD' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/gmod/ [200]
+    [LLM:metadata_analysis] 15829 ms
+    [LLM:json_ld_extraction] 4200 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Metabolomics' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/metabolomics/ [200]
+    [LLM:metadata_analysis] 16515 ms
+    [LLM:json_ld_extraction] 15565 ms
+    [LLM:json_ld_review] 20412 ms
+    ✗ Metabolomics / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22012 ms
+  Item: 'Proteomics' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/proteomics/ [200]
+    [LLM:metadata_analysis] 13634 ms
+    [LLM:json_ld_extraction] 17100 ms
+    [LLM:json_ld_review] 17610 ms
+    ✓ Proteomics / Tutorial List
+  Item: 'Sequence analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/sequence-analysis/ [200]
+    [LLM:metadata_analysis] 16045 ms
+    [LLM:json_ld_extraction] 4295 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Single Cell' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/single-cell/ [200]
+    [LLM:metadata_analysis] 16181 ms
+    [LLM:json_ld_extraction] 15765 ms
+    [LLM:json_ld_review] 21134 ms
+    ✗ Single Cell / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22909 ms
+  Item: 'Synthetic Biology' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/synthetic-biology/ [200]
+    [LLM:metadata_analysis] 16099 ms
+    [LLM:json_ld_extraction] 19391 ms
+    [LLM:json_ld_review] 19560 ms
+    ✗ Synthetic Biology / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21139 ms
+  Item: 'Transcriptomics' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/transcriptomics/ [200]
+    [LLM:metadata_analysis] 14481 ms
+    [LLM:json_ld_extraction] 20068 ms
+    [LLM:json_ld_review] 22107 ms
+    ✗ Transcriptomics / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23903 ms
+  Item: 'Variant Analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/variant-analysis/ [200]
+    [LLM:metadata_analysis] 15518 ms
+    [LLM:json_ld_extraction] 20238 ms
+    [LLM:json_ld_review] 23468 ms
+    ✗ Variant Analysis / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25531 ms
+  Item: 'Galaxy Server administration' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/admin/ [200]
+    [LLM:metadata_analysis] 12812 ms
+    [LLM:json_ld_extraction] 18851 ms
+    [LLM:json_ld_review] 20487 ms
+    ✗ Galaxy Server administration / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22054 ms
+  Item: 'Development in Galaxy' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/dev/ [200]
+    [LLM:metadata_analysis] 14738 ms
+    [LLM:json_ld_extraction] 10446 ms
+    [LLM:json_ld_review] 17965 ms
+    ✗ Development in Galaxy / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19215 ms
+  Item: 'Contributing to the Galaxy Training Material' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/contributing/ [200]
+    [LLM:metadata_analysis] 15282 ms
+    [LLM:json_ld_extraction] 20528 ms
+    [LLM:json_ld_review] 21505 ms
+    ✗ Contributing to the Galaxy Training Material / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23137 ms
+  Item: 'Teaching and Hosting Galaxy training' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/topics/teaching/ [200]
+    [LLM:metadata_analysis] 15058 ms
+    [LLM:json_ld_extraction] 21203 ms
+    [LLM:json_ld_review] 21036 ms
+    ✗ Teaching and Hosting Galaxy training / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22581 ms
+  Item: 'Hall of Fame' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame [200]
+    [LLM:metadata_analysis] 14864 ms
+    [LLM:json_ld_extraction] 14028 ms
+    [LLM:json_ld_review] 15260 ms
+    ✗ Hall of Fame – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 16639 ms
+  Item: 'Galaxy Training Academy 2026' (TrainingMaterial|Event)
+    ↓ https://training.galaxyproject.org/training-material/events/2026-05-18-galaxy-academy.html [200]
+    [LLM:metadata_analysis] 16236 ms
+    [LLM:json_ld_extraction] 24254 ms
+    [LLM:json_ld_review] 24807 ms
+    ✗ Galaxy Training Academy 2026 – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27198 ms
+  Item: 'Galaxy Beyond Basics: Mastering Workflows, Automation, and Scalability' (TrainingMaterial|Event)
+    ↓ https://training.galaxyproject.org/training-material/events/2026-10-12-Advanced-Galaxy-Training.html [200]
+    [LLM:metadata_analysis] 17245 ms
+    [LLM:json_ld_extraction] 23956 ms
+    [LLM:json_ld_review] 27269 ms
+    ✗ Galaxy Beyond Basics: Mastering Workflows, Automation, and Scalability – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 30543 ms
+  Item: 'BioNT Brings Galaxy Training to German, Spanish, and Italian Learners' (TrainingMaterial|NewsArticle)
+    ↓ https://training.galaxyproject.org/training-material/news/2026/04/01/biont.html [200]
+    [LLM:metadata_analysis] 17974 ms
+    [LLM:json_ld_extraction] 4170 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'CINECA' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/CINECA-Project [200]
+    [LLM:metadata_analysis] 18166 ms
+    [LLM:json_ld_extraction] 16782 ms
+    [LLM:json_ld_review] 19626 ms
+    ✗ GTN Contributor: Common Infrastructure for National Cohorts in Europe, Canada, and Africa – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19780 ms
+  Item: 'CORBEL' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/corbel [200]
+    [LLM:metadata_analysis] 16460 ms
+    [LLM:json_ld_extraction] 14331 ms
+    [LLM:json_ld_review] 18526 ms
+    ✗ GTN Contributor: CORBEL – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20382 ms
+  Item: 'EOC Data Commons' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/datacommons [200]
+    [LLM:metadata_analysis] 14589 ms
+    [LLM:json_ld_extraction] 15761 ms
+    [LLM:json_ld_review] 16274 ms
+    ✓ GTN Contributor: EOSC Data Commons
+  Item: 'EDCTP-EU' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/edctp-eu [200]
+    [LLM:metadata_analysis] 16248 ms
+    [LLM:json_ld_extraction] 13531 ms
+    [LLM:json_ld_review] 16625 ms
+    ✗ GTN Contributor: EDCTP-EU – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 18652 ms
+  Item: 'ELIXIR-CONVERGE' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/elixir-converge [200]
+    [LLM:metadata_analysis] 16678 ms
+    [LLM:json_ld_extraction] 13728 ms
+    [LLM:json_ld_review] 2679 ms
+    ✓ GTN Contributor: ELIXIR-CONVERGE
+  Item: 'ELIXIR-EXCELERATE' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/elixir-excelerate [200]
+    [LLM:metadata_analysis] 15544 ms
+    [LLM:json_ld_extraction] 13318 ms
+    [LLM:json_ld_review] 15573 ms
+    ✗ GTN Contributor: ELIXIR-EXCELERATE – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 18026 ms
+  Item: 'ELIXIR-STEERS' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/elixir-steers [200]
+    [LLM:metadata_analysis] 16560 ms
+    [LLM:json_ld_extraction] 15368 ms
+    [LLM:json_ld_review] 22537 ms
+    ✗ GTN Contributor: ELIXIR-STEERS – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21349 ms
+  Item: 'DASH UK' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/elixir-uk-dash [200]
+    [LLM:metadata_analysis] 17050 ms
+    [LLM:json_ld_extraction] 13798 ms
+    [LLM:json_ld_review] 15946 ms
+    ✓ GTN Contributor: DASH UK
+  Item: 'EOC-Life' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/eosc-life [200]
+    [LLM:metadata_analysis] 16535 ms
+    [LLM:json_ld_extraction] 10852 ms
+    [LLM:json_ld_review] 19283 ms
+    ✗ GTN Contributor: EOSC-Life – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21130 ms
+  Item: 'EOC-Mesh' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/eosc-mesh [200]
+    [LLM:metadata_analysis] 16023 ms
+    [LLM:json_ld_extraction] 16686 ms
+    [LLM:json_ld_review] 17604 ms
+    ✓ GTN Contributor: EOSC-Mesh
+  Item: 'EPSRC Training Grant' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/epsrc-training-grant [200]
+    [LLM:metadata_analysis] 17407 ms
+    [LLM:json_ld_extraction] 4093 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'EOSC-Mesh' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/eosc-mesh [200]
+    [LLM:metadata_analysis] 14771 ms
+    [LLM:json_ld_extraction] 14331 ms
+    [LLM:json_ld_review] 19448 ms
+    ✓ GTN Contributor: EOSC-Mesh
+  Item: 'EPSRC/OU' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/epsrc-training-grant [200]
+    [LLM:metadata_analysis] 17878 ms
+    [LLM:json_ld_extraction] 4196 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'EuroScienceGateway' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/eurosciencegateway [200]
+    [LLM:metadata_analysis] 15729 ms
+    [LLM:json_ld_extraction] 11469 ms
+    [LLM:json_ld_review] 17714 ms
+    ✓ GTN Contributor: EuroScienceGateway
+  Item: 'Fair-Ease' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/fairease [200]
+    [LLM:metadata_analysis] 15857 ms
+    [LLM:json_ld_extraction] 13206 ms
+    [LLM:json_ld_review] 19860 ms
+    ✗ GTN Contributor: Fair-Ease – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21732 ms
+  Item: 'FNSO' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/fnso2019 [200]
+    [LLM:metadata_analysis] 15020 ms
+    [LLM:json_ld_extraction] 11261 ms
+    [LLM:json_ld_review] 20884 ms
+    ✗ GTN Contributor: OpenMetaPaper – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23016 ms
+  Item: 'FondFrance' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/fondfrance [200]
+    [LLM:metadata_analysis] 15435 ms
+    [LLM:json_ld_extraction] 13717 ms
+    [LLM:json_ld_review] 15023 ms
+    ✓ GTN Contributor: Fondation de France
+  Item: 'Gallantries' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/gallantries [200]
+    [LLM:metadata_analysis] 16518 ms
+    [LLM:json_ld_extraction] 14046 ms
+    [LLM:json_ld_review] 21050 ms
+    ✗ GTN Contributor: Gallantries: Bridging Training Communities in Life Science, Environment and Health – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23046 ms
+  Item: 'DEFEND' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/h2020-defend [200]
+    [LLM:metadata_analysis] 21158 ms
+    [LLM:json_ld_extraction] 13416 ms
+    [LLM:json_ld_review] 19398 ms
+    ✓ GTN Contributor: Addressing the dual emerging threats of African Swine Fever and Lumpy Skin Disease in Europe
+  Item: 'HealthyCloud' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/healthycloud [200]
+    [LLM:metadata_analysis] 15100 ms
+    [LLM:json_ld_extraction] 12595 ms
+    [LLM:json_ld_review] 17924 ms
+    ✗ GTN Contributor: HealthyCloud – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19900 ms
+  Item: 'MVD' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/materialvitaldigital [200]
+    [LLM:metadata_analysis] 15520 ms
+    [LLM:json_ld_extraction] 13110 ms
+    [LLM:json_ld_review] 20414 ms
+    ✗ GTN Contributor: MaterialVital-Digital – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21062 ms
+  Item: 'MOOREV' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/moorev [200]
+    [LLM:metadata_analysis] 15179 ms
+    [LLM:json_ld_extraction] 13106 ms
+    [LLM:json_ld_review] 13926 ms
+    ✓ GTN Contributor: MOOREV
+  Item: 'NFDI4Bioimage' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nfdi4bioimage [200]
+    [LLM:metadata_analysis] 15528 ms
+    [LLM:json_ld_extraction] 13619 ms
+    [LLM:json_ld_review] 18431 ms
+    ✓ GTN Contributor: NFDI4Bioimage
+  Item: 'NFDI4Culture' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nfdi4culture [200]
+    [LLM:metadata_analysis] 15822 ms
+    [LLM:json_ld_extraction] 13926 ms
+    [LLM:json_ld_review] 16383 ms
+    ✓ GTN Contributor: NFDI4Culture – Consortium for Research Data on Material and Immaterial Cultural Heritage
+  Item: 'DataPLANT' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nfdi4plants [200]
+    [LLM:metadata_analysis] 16851 ms
+    [LLM:json_ld_extraction] 15561 ms
+    [LLM:json_ld_review] 18880 ms
+    ✓ GTN Contributor: DataPLANT (NFDI4Plants)
+  Item: 'NFDI4Microbiota' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nfdi4microbiota [200]
+    [LLM:metadata_analysis] 16474 ms
+    [LLM:json_ld_extraction] 15460 ms
+    [LLM:json_ld_review] 20607 ms
+    ✗ GTN Contributor: NFDI4Microbiota – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22522 ms
+  Item: 'NHGRI ANVIL' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nhgri-anvil [200]
+    [LLM:metadata_analysis] 16739 ms
+    [LLM:json_ld_extraction] 16586 ms
+    [LLM:json_ld_review] 23653 ms
+    ✗ GTN Contributor: National Human Genome Research Institute Genomic Data Science Analysis, Visualization, and Informatics Lab-Space – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26006 ms
+  Item: 'NHGRI GDS Community Network' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nhgri-gdscn [200]
+    [LLM:metadata_analysis] 16945 ms
+    [LLM:json_ld_extraction] 14231 ms
+    [LLM:json_ld_review] 21645 ms
+    ✗ GTN Contributor: National Human Genome Research Institute Genomic Data Science Community Network – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23595 ms
+  Item: 'OSCARS' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/oscars [200]
+    [LLM:metadata_analysis] 17358 ms
+    [LLM:json_ld_extraction] 9931 ms
+    [LLM:json_ld_review] 2969 ms
+    ✗ GTN Contributor: Open Science Clusters' Action for Research & Society – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 12996 ms
+  Item: 'Skills4SEOSC' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/skills4eosc [200]
+    [LLM:metadata_analysis] 15424 ms
+    [LLM:json_ld_extraction] 15462 ms
+    [LLM:json_ld_review] 21337 ms
+    ✗ GTN Contributor: Skills for European Open Science Cloud – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23193 ms
+  Item: 'Example organisation' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/an-example [200]
+    [LLM:metadata_analysis] 15398 ms
+    [LLM:json_ld_extraction] 10858 ms
+    [LLM:json_ld_review] 16689 ms
+    ✗ GTN Contributor: Example organisation – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20814 ms
+  Item: 'ABRomics' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/abromics [200]
+    [LLM:metadata_analysis] 15205 ms
+    [LLM:json_ld_extraction] 3859 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Antarctic and Southern Ocean Coalition' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ASOC [200]
+    [LLM:metadata_analysis] 16014 ms
+    [LLM:json_ld_extraction] 10137 ms
+    [LLM:json_ld_review] 16795 ms
+    ✗ GTN Contributor: Antarctic and Southern Ocean Coalition – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20703 ms
+  Item: 'Australian BioCommons' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/AustralianBioCommons [200]
+    [LLM:metadata_analysis] 17850 ms
+    [LLM:json_ld_extraction] 14342 ms
+    [LLM:json_ld_review] 19046 ms
+    ✓ GTN Contributor: Australian BioCommons
+  Item: 'Avans' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/avans-atgm [200]
+    [LLM:metadata_analysis] 14786 ms
+    [LLM:json_ld_extraction] 13618 ms
+    [LLM:json_ld_review] 16282 ms
+    ✓ GTN Contributor: Avans Hogeschool
+  Item: 'Amazon Web Services' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/aws [200]
+    [LLM:metadata_analysis] 17242 ms
+    [LLM:json_ld_extraction] 16179 ms
+    [LLM:json_ld_review] 21706 ms
+    ✓ GTN Contributor: Amazon Web Services
+  Item: 'Bioconda' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/bioconda [200]
+    [LLM:metadata_analysis] 14500 ms
+    [LLM:json_ld_extraction] 16691 ms
+    [LLM:json_ld_review] 19392 ms
+    ✗ GTN Contributor: Bioconda – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20103 ms
+  Item: 'BioDATEN' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/biodaten [200]
+    [LLM:metadata_analysis] 16434 ms
+    [LLM:json_ld_extraction] 14337 ms
+    [LLM:json_ld_review] 18163 ms
+    ✗ GTN Contributor: BioDATEN – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19786 ms
+  Item: 'BioFAIR' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/biofair [200]
+    [LLM:metadata_analysis] 17150 ms
+    [LLM:json_ld_extraction] 11981 ms
+    [LLM:json_ld_review] 17509 ms
+    ✓ GTN Contributor: BioFAIR
+  Item: 'Biolytix AG' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/biolytix [200]
+    [LLM:metadata_analysis] 16437 ms
+    [LLM:json_ld_extraction] 13698 ms
+    [LLM:json_ld_review] 15666 ms
+    ✓ GTN Contributor: Biolytix AG
+  Item: 'Bundesministerium für Bildung und Forschung' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/bmbf [200]
+    [LLM:metadata_analysis] 17460 ms
+    [LLM:json_ld_extraction] 13516 ms
+    [LLM:json_ld_review] 12492 ms
+    ✗ GTN Contributor: Bundesministerium für Bildung und Forschung – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 15552 ms
+    ✓ GTN Contributor: Bundesministerium für Bildung und Forschung
+  Item: 'CESNET (Czech Education and Scientific NETwork)' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/cesnet [200]
+    [LLM:metadata_analysis] 15609 ms
+    [LLM:json_ld_extraction] 13928 ms
+    [LLM:json_ld_review] 19763 ms
+    ✗ GTN Contributor: CESNET (Czech Education and Scientific NETwork) – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21538 ms
+  Item: 'The Carpentries' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/carpentries [200]
+    [LLM:metadata_analysis] 15193 ms
+    [LLM:json_ld_extraction] 18840 ms
+    [LLM:json_ld_review] 20479 ms
+    ✗ GTN Contributor: The Carpentries – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22543 ms
+  Item: 'Collaborative Research Centre 1425' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/crc1425 [200]
+    [LLM:metadata_analysis] 17085 ms
+    [LLM:json_ld_extraction] 14744 ms
+    [LLM:json_ld_review] 16793 ms
+    ✓ GTN Contributor: Collaborative Research Centre 1425
+  Item: 'Collaborative Research Centre 992' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/crc992 [200]
+    [LLM:metadata_analysis] 16891 ms
+    [LLM:json_ld_extraction] 10705 ms
+    [LLM:json_ld_review] 20725 ms
+    ✗ GTN Contributor: Collaborative Research Centre 992 – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23888 ms
+  Item: 'DATA TERRA' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/dataterra [200]
+    [LLM:metadata_analysis] 14288 ms
+    [LLM:json_ld_extraction] 15665 ms
+    [LLM:json_ld_review] 18124 ms
+    ✓ GTN Contributor: DATA TERRA
+  Item: 'DECHEMA' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/dechema [200]
+    [LLM:metadata_analysis] 14590 ms
+    [LLM:json_ld_extraction] 13515 ms
+    [LLM:json_ld_review] 14640 ms
+    ✓ GTN Contributor: DECHEMA
+  Item: 'Data Science Center' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/dsc-bremen [200]
+    [LLM:metadata_analysis] 16537 ms
+    [LLM:json_ld_extraction] 14237 ms
+    [LLM:json_ld_review] 17718 ms
+    ✓ GTN Contributor: Data Science Center
+  Item: 'EIRENE RI' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/eirene [200]
+    [LLM:metadata_analysis] 14599 ms
+    [LLM:json_ld_extraction] 15566 ms
+    [LLM:json_ld_review] 16283 ms
+    ✗ GTN Contributor: EIRENE RI – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 18020 ms
+  Item: 'ELIXIR Czechia' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/elixir-cz [200]
+    [LLM:metadata_analysis] 15709 ms
+    [LLM:json_ld_extraction] 10957 ms
+    [LLM:json_ld_review] 21911 ms
+    ✗ GTN Contributor: ELIXIR Czechia – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22736 ms
+  Item: 'ELIXIR Germany' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/elixir-de [200]
+    [LLM:metadata_analysis] 16030 ms
+    [LLM:json_ld_extraction] 13620 ms
+    [LLM:json_ld_review] 19862 ms
+    ✗ GTN Contributor: ELIXIR Germany – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21500 ms
+  Item: 'European Space Agency' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/esa [200]
+    [LLM:metadata_analysis] 15627 ms
+    [LLM:json_ld_extraction] 11468 ms
+    [LLM:json_ld_review] 15361 ms
+    ✓ GTN Contributor: European Space Agency
+  Item: 'Euro-BioImaging' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/eubi [200]
+    [LLM:metadata_analysis] 14400 ms
+    [LLM:json_ld_extraction] 13415 ms
+    [LLM:json_ld_review] 16895 ms
+    ✓ GTN Contributor: Euro-BioImaging
+  Item: 'GalaxyWorks' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/galaxyworks [200]
+    [LLM:metadata_analysis] 15822 ms
+    [LLM:json_ld_extraction] 18943 ms
+    [LLM:json_ld_review] 20876 ms
+    ✗ GTN Contributor: GalaxyWorks – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22618 ms
+  Item: 'GHGA' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ghga-de [200]
+    [LLM:metadata_analysis] 15205 ms
+    [LLM:json_ld_extraction] 12082 ms
+    [LLM:json_ld_review] 16383 ms
+    ✓ GTN Contributor: GHGA
+  Item: 'GigaScience' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/gigascience [200]
+    [LLM:metadata_analysis] 16036 ms
+    [LLM:json_ld_extraction] 4196 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Image Data Resource' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/idr [200]
+    [LLM:metadata_analysis] 15013 ms
+    [LLM:json_ld_extraction] 15054 ms
+    [LLM:json_ld_review] 16381 ms
+    ✓ GTN Contributor: Image Data Resource
+  Item: 'IFREMER' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ifremer [200]
+    [LLM:metadata_analysis] 15619 ms
+    [LLM:json_ld_extraction] 13311 ms
+    [LLM:json_ld_review] 17609 ms
+    ✗ GTN Contributor: IFREMER – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20110 ms
+  Item: 'JXTX Foundation' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/jxtxfoundation [200]
+    [LLM:metadata_analysis] 16445 ms
+    [LLM:json_ld_extraction] 15461 ms
+    [LLM:json_ld_review] 17511 ms
+    ✓ GTN Contributor: JXTX Foundation
+  Item: 'EU' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/eu [200]
+    [LLM:metadata_analysis] 17165 ms
+    [LLM:json_ld_extraction] 13618 ms
+    [LLM:json_ld_review] 16690 ms
+    ✓ GTN Contributor: The European Union
+  Item: 'FAIR2Adapt' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/FAIR2Adapt [200]
+    [LLM:metadata_analysis] 16229 ms
+    [LLM:json_ld_extraction] 16587 ms
+    [LLM:json_ld_review] 21523 ms
+    ✗ GTN Contributor: EOSC | FAIR2Adapt – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23928 ms
+  Item: 'OSCARS-FIESTA' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/fiesta [200]
+    [LLM:metadata_analysis] 15211 ms
+    [LLM:json_ld_extraction] 12492 ms
+    [LLM:json_ld_review] 21954 ms
+    ✗ GTN Contributor: FAIR Image Analysis across Sciences – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22889 ms
+  Item: 'FIND' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/find [200]
+    [LLM:metadata_analysis] 16857 ms
+    [LLM:json_ld_extraction] 13394 ms
+    [LLM:json_ld_review] 16588 ms
+    ✓ GTN Contributor: The Foundation for Innovative New Diagnostics
+  Item: 'FZJ' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/forschungszentrum-juelich [200]
+    [LLM:metadata_analysis] 16747 ms
+    [LLM:json_ld_extraction] 15056 ms
+    [LLM:json_ld_review] 16629 ms
+    ✓ GTN Contributor: Forschungszentrum Jülich GmbH
+  Item: 'GIS' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/gis [200]
+    [LLM:metadata_analysis] 14387 ms
+    [LLM:json_ld_extraction] 15154 ms
+    [LLM:json_ld_review] 17714 ms
+    ✓ GTN Contributor: Genome Institute of Singapore
+  Item: 'GBIF' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/gbif [200]
+    [LLM:metadata_analysis] 15316 ms
+    [LLM:json_ld_extraction] 15971 ms
+    [LLM:json_ld_review] 21341 ms
+    ✗ GTN Contributor: Global Biodiversity Information Facility – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23187 ms
+  Item: 'HZI' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/hzi-bifo [200]
+    [LLM:metadata_analysis] 14898 ms
+    [LLM:json_ld_extraction] 14029 ms
+    [LLM:json_ld_review] 15668 ms
+    ✓ GTN Contributor: Helmholtz Centre for Infection Research
+  Item: 'IFB' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ifb [200]
+    [LLM:metadata_analysis] 14332 ms
+    [LLM:json_ld_extraction] 11469 ms
+    [LLM:json_ld_review] 13824 ms
+    ✓ GTN Contributor: Institut Français de Bioinformatique
+  Item: 'INAB|CERTH' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/inab-certh [200]
+    [LLM:metadata_analysis] 14183 ms
+    [LLM:json_ld_extraction] 13308 ms
+    [LLM:json_ld_review] 16081 ms
+    ✓ GTN Contributor: INAB|CERTH
+  Item: 'IRCCS' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/irccs [200]
+    [LLM:metadata_analysis] 16234 ms
+    [LLM:json_ld_extraction] 11675 ms
+    [LLM:json_ld_review] 2762 ms
+    ✓ GTN Contributor: IRCCS Ospedale San Raffaele
+  Item: 'UMN' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/minnesotauni [200]
+    [LLM:metadata_analysis] 15716 ms
+    [LLM:json_ld_extraction] 13800 ms
+    [LLM:json_ld_review] 15356 ms
+    ✓ GTN Contributor: University of Minnesota
+  Item: 'MNHN' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/mnhn [200]
+    [LLM:metadata_analysis] 16232 ms
+    [LLM:json_ld_extraction] 11775 ms
+    [LLM:json_ld_review] 2662 ms
+    ✓ GTN Contributor: Muséum national d'Histoire naturelle
+  Item: 'MPIIE' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/MPIIE [200]
+    [LLM:metadata_analysis] 17168 ms
+    [LLM:json_ld_extraction] 17814 ms
+    [LLM:json_ld_review] 18986 ms
+    ✓ GTN Contributor: Max Planck Institute of Immunology and Epigenetics
+  Item: 'MWK' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/mwk [200]
+    [LLM:metadata_analysis] 16119 ms
+    [LLM:json_ld_extraction] 14647 ms
+    [LLM:json_ld_review] 16793 ms
+    ✓ GTN Contributor: Ministry of Science, Research and Arts
+  Item: 'NCBI' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ncbi [200]
+    [LLM:metadata_analysis] 17157 ms
+    [LLM:json_ld_extraction] 13518 ms
+    [LLM:json_ld_review] 20314 ms
+    ✗ GTN Contributor: National Center for Biotechnology Information – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21192 ms
+  Item: 'NIH' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/NIH [200]
+    [LLM:metadata_analysis] 14691 ms
+    [LLM:json_ld_extraction] 11778 ms
+    [LLM:json_ld_review] 16486 ms
+    ✓ GTN Contributor: National Institutes of Health
+  Item: 'NL-BioImaging' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nlbioimaging [200]
+    [LLM:metadata_analysis] 14081 ms
+    [LLM:json_ld_extraction] 14848 ms
+    [LLM:json_ld_review] 15666 ms
+    ✓ GTN Contributor: NL-BioImaging
+  Item: 'NSF' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/nsf [200]
+    [LLM:metadata_analysis] 16375 ms
+    [LLM:json_ld_extraction] 11324 ms
+    [LLM:json_ld_review] 15770 ms
+    ✗ GTN Contributor: National Science Foundation – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 16689 ms
+  Item: 'OU' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ou [200]
+    [LLM:metadata_analysis] 15366 ms
+    [LLM:json_ld_extraction] 15564 ms
+    [LLM:json_ld_review] 20008 ms
+    ✗ GTN Contributor: The Open University – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21499 ms
+  Item: 'PanACEA' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/panacea [200]
+    [LLM:metadata_analysis] 15104 ms
+    [LLM:json_ld_extraction] 3956 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'PANGenS' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/pangens [200]
+    [LLM:metadata_analysis] 14401 ms
+    [LLM:json_ld_extraction] 3788 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'UniSR' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/san-raffaele-uni [200]
+    [LLM:metadata_analysis] 17151 ms
+    [LLM:json_ld_extraction] 12130 ms
+    [LLM:json_ld_review] 15666 ms
+    ✓ GTN Contributor: Università Vita-Salute San Raffaele
+  Item: 'Sciensano' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/sciensano [200]
+    [LLM:metadata_analysis] 14899 ms
+    [LLM:json_ld_extraction] 11261 ms
+    [LLM:json_ld_review] 16691 ms
+    ✓ GTN Contributor: Sciensano
+  Item: 'SPUN' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/societyprotectionundergroundnetworks [200]
+    [LLM:metadata_analysis] 15924 ms
+    [LLM:json_ld_extraction] 3992 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'SU' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/sorbonneuniv [200]
+    [LLM:metadata_analysis] 14606 ms
+    [LLM:json_ld_extraction] 15973 ms
+    [LLM:json_ld_review] 19189 ms
+    ✗ GTN Contributor: Sorbonne Université – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21013 ms
+  Item: 'SPOC' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/spoc [200]
+    [LLM:metadata_analysis] 15522 ms
+    [LLM:json_ld_extraction] 13002 ms
+    [LLM:json_ld_review] 22773 ms
+    ✗ GTN Contributor: 🖖🏾Single-cell & sPatial Omics Community of practice – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24937 ms
+  Item: 'SwissTPH' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/swiss-tph [200]
+    [LLM:metadata_analysis] 15424 ms
+    [LLM:json_ld_extraction] 13413 ms
+    [LLM:json_ld_review] 18167 ms
+    ✗ GTN Contributor: Swiss Tropical and Public Health Institute – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19948 ms
+  Item: 'SURF' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/surf [200]
+    [LLM:metadata_analysis] 15705 ms
+    [LLM:json_ld_extraction] 10546 ms
+    [LLM:json_ld_review] 22530 ms
+    ✗ GTN Contributor: SURF – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23996 ms
+  Item: 'TB-CAPT' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/tb-capt [200]
+    [LLM:metadata_analysis] 14824 ms
+    [LLM:json_ld_extraction] 13926 ms
+    [LLM:json_ld_review] 15201 ms
+    ✓ GTN Contributor: TB-CAPT
+  Item: 'UFZ - Helmholtz-Zentrum für Umweltforschung UFZ' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/helmholtz-ufz [200]
+    [LLM:metadata_analysis] 17642 ms
+    [LLM:json_ld_extraction] 14640 ms
+    [LLM:json_ld_review] 20377 ms
+    ✗ GTN Contributor: UFZ - Helmholtz-Zentrum für Umweltforschung UFZ – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22359 ms
+  Item: 'UGA' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/uga [200]
+    [LLM:metadata_analysis] 14592 ms
+    [LLM:json_ld_extraction] 13720 ms
+    [LLM:json_ld_review] 15258 ms
+    ✓ GTN Contributor: Université Grenoble-Alpes
+  Item: 'UKRI-MRC' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ukmrc [200]
+    [LLM:metadata_analysis] 15687 ms
+    [LLM:json_ld_extraction] 14232 ms
+    [LLM:json_ld_review] 17530 ms
+    ✗ GTN Contributor: UK Medical Research Council – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19285 ms
+  Item: 'Hall of Fame' (TrainingMaterial|HallOfFame)
+    ↓ https://training.galaxyproject.org/training-material/hall-of-fame/ [404]
+    [LLM:metadata_analysis] 16186 ms
+    [LLM:json_ld_extraction] 14744 ms
+    [LLM:json_ld_review] 18678 ms
+    ✗ Hall of Fame – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20275 ms
+  Item: 'Learning Pathways' (TrainingMaterial|LearningPathway)
+    [LLM:metadata_analysis] 15502 ms
+    [LLM:json_ld_extraction] 12799 ms
+    [LLM:json_ld_review] 14948 ms
+    ✓ Learning Pathways
+  Item: 'Getting your hands-on earth data' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 14685 ms
+    [LLM:json_ld_extraction] 20110 ms
+    [LLM:json_ld_review] 22620 ms
+    ✗ Hands-on: Getting your hands-on earth data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25064 ms
+  Item: 'Introduction to climate data' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/introduction/slides.html [200]
+    [LLM:metadata_analysis] 22690 ms
+    [LLM:json_ld_extraction] 24002 ms
+    [LLM:json_ld_review] 24328 ms
+    ✗ Introduction to climate data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25104 ms
+  Item: 'Introduction to Climate Data Analysis with Galaxy' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 15182 ms
+    [LLM:json_ld_extraction] 16998 ms
+    [LLM:json_ld_review] 15872 ms
+    ✓ Slides: Introduction to climate data
+  Item: 'OCEAN-DATA-VIEW Tutorial' (TrainingMaterial|Tutorial)
+    ⚠  Could not fetch detail page: HTTPSConnectionPool(host='training-galaxyproject-org.traning-material', port=443): Max retries exceeded with url: /topics/climate/tutorials/ocean-data-view/tutorial.html (Caused by NameResolutionError("HTTPSConnection(host='training-galaxyproject-org.traning-material', port=443): Failed to resolve 'training-galaxyproject-org.traning-material' ([Errno -2] Name or service not known)"))
+    [LLM:metadata_analysis] 15761 ms
+    [LLM:json_ld_extraction] 3822 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Sentinel 5P data visualisation' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 13855 ms
+    [LLM:json_ld_extraction] 13003 ms
+    [LLM:json_ld_review] 19557 ms
+    ✗ Hands-on: Sentinel 5P data visualisation – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21436 ms
+  Item: 'Sentinel-5 Data Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 15376 ms
+    [LLM:json_ld_extraction] 15462 ms
+    [LLM:json_ld_review] 21235 ms
+    ✓ Hands-on: Sentinel 5P data visualisation
+  Item: 'Sentinel 5P data visualisation tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16991 ms
+    [LLM:json_ld_extraction] 19456 ms
+    [LLM:json_ld_review] 22320 ms
+    ✓ Hands-on: Sentinel 5P data visualisation
+  Item: 'Visualize Climate data with Panoply netCDF viewer' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 16803 ms
+    [LLM:json_ld_extraction] 19046 ms
+    [LLM:json_ld_review] 19764 ms
+    ✓ Visualize Climate data with Panoply netCDF viewer
+  Item: 'Panoply Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 14826 ms
+    [LLM:json_ld_extraction] 20142 ms
+    [LLM:json_ld_review] 19219 ms
+    ✗ Climate / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19922 ms
+  Item: 'Analyse Argo data' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/tutorial.html [200]
+    [LLM:metadata_analysis] 14846 ms
+    [LLM:json_ld_extraction] 14847 ms
+    [LLM:json_ld_review] 19358 ms
+    ✓ Hands-on: Analyse Argo data
+  Item: 'Arctic Ocean Data Analysis' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 14529 ms
+    [LLM:json_ld_extraction] 16298 ms
+    [LLM:json_ld_review] 22981 ms
+    ✗ Climate / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24447 ms
+  Item: 'Analyse Argo data workflows' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/argo_pangeo/workflows/ [200]
+    [LLM:metadata_analysis] 15526 ms
+    [LLM:json_ld_extraction] 19970 ms
+    [LLM:json_ld_review] 21647 ms
+    ✗ Workflows / Analyse Argo data / Climate – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23647 ms
+  Item: 'Collaboration with JupyterGIS' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/jupytergis_collaboration/tutorial.html [200]
+    [LLM:metadata_analysis] 16507 ms
+    [LLM:json_ld_extraction] 22939 ms
+    [LLM:json_ld_review] 24923 ms
+    ✗ Hands-on: Collaboration with JupyterGIS / Climate – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27336 ms
+  Item: 'JupyterGIS Collaboration' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/jupytergis_collaboration/tutorial.html [200]
+    [LLM:metadata_analysis] 14010 ms
+    [LLM:json_ld_extraction] 15156 ms
+    [LLM:json_ld_review] 23551 ms
+    ✗ Hands-on: Collaboration with JupyterGIS – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25943 ms
+  Item: 'Functionally Assembled Terrestrial Ecosystem Simulator (FATES) workflows' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/fates/workflows/ [200]
+    [LLM:metadata_analysis] 17974 ms
+    [LLM:json_ld_extraction] 20214 ms
+    [LLM:json_ld_review] 23715 ms
+    ✗ Workflows / Functionally Assembled Terrestrial Ecosystem Simulator (FATES) / Climate – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25831 ms
+  Item: 'Slides for Functionally Assembled Terrestrial Ecosystem Simulator (FATES)' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16072 ms
+    [LLM:json_ld_extraction] 20584 ms
+    [LLM:json_ld_review] 21744 ms
+    ✗ Climate / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22460 ms
+  Item: 'Ocean QCV Analysis Tutorial' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean_qcv_analysis/tutorial.html [200]
+    [LLM:metadata_analysis] 15756 ms
+    [LLM:json_ld_extraction] 22772 ms
+    [LLM:json_ld_review] 22587 ms
+    ✗ Hands-on: Nitrate DMQC for autonomous platforms such as Argo floats – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24076 ms
+  Item: 'Nitrate DMQC for autonomous platforms such as Argo floats workflows' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean_qcv_analysis/tutorial.html [200]
+    [LLM:metadata_analysis] 16185 ms
+    [LLM:json_ld_extraction] 20071 ms
+    [LLM:json_ld_review] 22466 ms
+    ✓ Hands-on: Nitrate DMQC for autonomous platforms such as Argo floats
+  Item: "Ocean's variables study" (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 14786 ms
+    [LLM:json_ld_extraction] 18879 ms
+    [LLM:json_ld_review] 18532 ms
+    ✗ Hands-on: Ocean's variables study – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20506 ms
+  Item: "Workflows for Ocean's variables study" (TrainingMaterial|Workflow)
+    [LLM:metadata_analysis] 13926 ms
+    [LLM:json_ld_extraction] 3892 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: "Ocean's variables study workflows" (TrainingMaterial|CourseInstance|Course)
+    [LLM:metadata_analysis] 14760 ms
+    [LLM:json_ld_extraction] 21399 ms
+    [LLM:json_ld_review] 22119 ms
+    ✗ Workflows / Ocean's variables study / Climate – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23854 ms
+  Item: 'Pangeo ecosystem 101 for everyone - Introduction to Xarray Galaxy Tools' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/pangeo/tutorial.html [200]
+    [LLM:metadata_analysis] 16956 ms
+    [LLM:json_ld_extraction] 3990 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Pangeo Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16583 ms
+    [LLM:json_ld_extraction] 9830 ms
+    [LLM:json_ld_review] 31375 ms
+    ✓ Climate / Tutorial List
+  Item: 'Pangeo ecosystem 101 for everyone - Introduction to Xarray Galaxy Tools workflows' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/pangeo/workflows/ [200]
+    [LLM:metadata_analysis] 14388 ms
+    [LLM:json_ld_extraction] 24680 ms
+    [LLM:json_ld_review] 25093 ms
+    ✗ Pangeo ecosystem 101 for everyone - Introduction to Xarray Galaxy Tools workflows – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27028 ms
+  Item: 'Functionally Assembled Terrestrial Ecosystem Simulator (FATES) with Galaxy Climate JupyterLab' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/fates-jupyterlab/tutorial.html [200]
+    [LLM:metadata_analysis] 14966 ms
+    [LLM:json_ld_extraction] 18944 ms
+    [LLM:json_ld_review] 21954 ms
+    ✗ Hands-on: Functionally Assembled Terrestrial Ecosystem Simulator (FATES) with Galaxy Climate JupyterLab – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24024 ms
+  Item: 'FATES JupyterLab Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 15808 ms
+    [LLM:json_ld_extraction] 15870 ms
+    [LLM:json_ld_review] 20071 ms
+    ✗ Climate / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20067 ms
+  Item: 'Pangeo Notebook in Galaxy - Introduction to Xarray Tutorial' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/pangeo-notebook/tutorial.html [200]
+    [LLM:metadata_analysis] 16627 ms
+    [LLM:json_ld_extraction] 20990 ms
+    [LLM:json_ld_review] 23962 ms
+    ✗ Hands-on: Pangeo Notebook in Galaxy - Introduction to Xarray / Climate – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26350 ms
+  Item: 'Pangeo Notebook' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/pangeo-notebook/ [404]
+    [LLM:metadata_analysis] 15809 ms
+    [LLM:json_ld_extraction] 11189 ms
+    [LLM:json_ld_review] 20316 ms
+    ✗ Climate / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21684 ms
+  Item: 'Plain text slides' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/pangeo-notebook/slides-plain.html [200]
+    [LLM:metadata_analysis] 15981 ms
+    [LLM:json_ld_extraction] 3993 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Video Slides' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/videos/watch.html?v=climate/tutorials/pangeo-notebook/slides [200]
+    [LLM:metadata_analysis] 16471 ms
+    [LLM:json_ld_extraction] 15051 ms
+    [LLM:json_ld_review] 15154 ms
+    ✓ GTN Videos
+  Item: 'Follow the tutorial' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/pangeo-notebook/tutorial.html [200]
+    [LLM:metadata_analysis] 16053 ms
+    [LLM:json_ld_extraction] 23183 ms
+    [LLM:json_ld_review] 25436 ms
+    ✗ Hands-on: Pangeo Notebook in Galaxy - Introduction to Xarray / Climate – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27643 ms
+  Item: 'Pangeo Notebook in Galaxy - Introduction to Xarray workflows' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/pangeo-notebook/workflows/ [200]
+    [LLM:metadata_analysis] 15721 ms
+    [LLM:json_ld_extraction] 22877 ms
+    [LLM:json_ld_review] 24537 ms
+    ✗ Workflows / Pangeo Notebook in Galaxy - Introduction to Xarray / Climate – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26716 ms
+  Item: 'Pangeo Notebook Tutorial' (TrainingMaterial|Tutorial)
+    ⚠  Could not fetch detail page: HTTPSConnectionPool(host='training-galaxyproject.org', port=443): Max retries exceeded with url: /training-material/topics/climate/tutorials/pangeo-notebook/tutorial.html (Caused by NameResolutionError("HTTPSConnection(host='training-galaxyproject.org', port=443): Failed to resolve 'training-galaxyproject.org' ([Errno -2] Name or service not known)"))
+    [LLM:metadata_analysis] 17419 ms
+    [LLM:json_ld_extraction] 4094 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Pangeo Notebook Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 17848 ms
+    [LLM:json_ld_extraction] 18022 ms
+    [LLM:json_ld_review] 20563 ms
+    ✗ Climate / Tutorial List – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23122 ms
+  Item: 'Introduction to Galaxy and Sequence analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html [200]
+    [LLM:metadata_analysis] 14222 ms
+    [LLM:json_ld_extraction] 19252 ms
+    [LLM:json_ld_review] 18536 ms
+    ✗ Introduction to Galaxy and Sequence analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20291 ms
+  Item: 'Introduction to Galaxy and Sequence analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro_to_galaxy_and_sequence_analysis.html [404]
+    [LLM:metadata_analysis] 18211 ms
+    [LLM:json_ld_extraction] 14949 ms
+    [LLM:json_ld_review] 18225 ms
+    ✗ Learning Pathways – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19042 ms
+  Item: 'Epigenetics data analysis with Galaxy' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/epigenetics_from_zero.html [404]
+    [LLM:metadata_analysis] 16412 ms
+    [LLM:json_ld_extraction] 22528 ms
+    [LLM:json_ld_review] 22118 ms
+    ✗ Epigenetics data analysis with Galaxy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23958 ms
+  Item: 'Introduction to Galaxy and Single Cell RNA Sequence analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro_single_cell.html [200]
+    [LLM:metadata_analysis] 15246 ms
+    [LLM:json_ld_extraction] 21297 ms
+    [LLM:json_ld_review] 20418 ms
+    ✗ Learning Pathway: Introduction to Galaxy and Single Cell RNA Sequence analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21805 ms
+  Item: 'Cell RNA Sequence analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/cell-rna-seq-analysis.html [404]
+    [LLM:metadata_analysis] 15289 ms
+    [LLM:json_ld_extraction] 13720 ms
+    [LLM:json_ld_review] 18861 ms
+    ✗ Cell RNA Sequence analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21298 ms
+  Item: 'Detection of AMR genes in bacterial genomes' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/amr-gene-detection.html [200]
+    [LLM:metadata_analysis] 14966 ms
+    [LLM:json_ld_extraction] 21708 ms
+    [LLM:json_ld_review] 20420 ms
+    ✗ Learning Pathway: Detection of AMR genes in bacterial genomes – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22172 ms
+  Item: 'Applying single-cell RNA-seq analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/beyond_single_cell.html [200]
+    [LLM:metadata_analysis] 15344 ms
+    [LLM:json_ld_extraction] 25645 ms
+    [LLM:json_ld_review] 25086 ms
+    ✗ Learning Pathway: Applying single-cell RNA-seq analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26784 ms
+  Item: 'ngle-cell RNA-seq analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/single-cell-rna-seq.html [404]
+    [LLM:metadata_analysis] 16501 ms
+    [LLM:json_ld_extraction] 16197 ms
+    [LLM:json_ld_review] 17717 ms
+    ✗ single-cell RNA-seq analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19890 ms
+  Item: 'From Zero To Hero with Python' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/biont-python.html [200]
+    [LLM:metadata_analysis] 15859 ms
+    [LLM:json_ld_extraction] 21137 ms
+    [LLM:json_ld_review] 20274 ms
+    ✗ Learning Pathway: From Zero To Hero with Python – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22182 ms
+  Item: 'Discovering Galaxy through climate analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/climate-learning.html [200]
+    [LLM:metadata_analysis] 15376 ms
+    [LLM:json_ld_extraction] 3992 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Discovering Galaxy through climate analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/climate-analysis.html [404]
+    [LLM:metadata_analysis] 17435 ms
+    [LLM:json_ld_extraction] 14543 ms
+    [LLM:json_ld_review] 20830 ms
+    ✗ Learning Pathways – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22319 ms
+  Item: 'Clinical metaproteomics workflows within Galaxy' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/clinical-metaproteomics.html [200]
+    [LLM:metadata_analysis] 15502 ms
+    [LLM:json_ld_extraction] 3889 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Bioinformatics Projects: Using deconvolution to get new insights from old bulk RNA-seq data' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/deconvolution_projects.html [200]
+    [LLM:metadata_analysis] 15982 ms
+    [LLM:json_ld_extraction] 20070 ms
+    [LLM:json_ld_review] 22467 ms
+    ✗ Bioinformatics Projects: Using deconvolution to get new insights from old bulk RNA-seq data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24860 ms
+  Item: 'Finding old bulk RNA-seq data and transforming it into new results' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/old-bulk-rna-seq.html [404]
+    [LLM:metadata_analysis] 19310 ms
+    [LLM:json_ld_extraction] 13412 ms
+    [LLM:json_ld_review] 18538 ms
+    ✗ Finding old bulk RNA-seq data and transforming it into new results – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20705 ms
+    ✓ Finding old bulk RNA-seq data and transforming it into new results
+  Item: 'FAIR Data Management' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/fair-training.html [200]
+    [LLM:metadata_analysis] 15158 ms
+    [LLM:json_ld_extraction] 13517 ms
+    [LLM:json_ld_review] 19903 ms
+    ✗ Learning Pathway: FAIR Data Management – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21811 ms
+  Item: 'Genome annotation for eukaryotes' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/genome-annotation-eukaryote.html [200]
+    [LLM:metadata_analysis] 15594 ms
+    [LLM:json_ld_extraction] 21237 ms
+    [LLM:json_ld_review] 20845 ms
+    ✗ Learning Pathway: Genome annotation for eukaryotes – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22835 ms
+  Item: 'Genome annotation for prokaryotes' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/genome-annotation-prokaryote.html [200]
+    [LLM:metadata_analysis] 14401 ms
+    [LLM:json_ld_extraction] 20776 ms
+    [LLM:json_ld_review] 24381 ms
+    ✗ Learning Pathway: Genome annotation for prokaryotes – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25996 ms
+  Item: 'Introduction to Galaxy and Ecological data analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-ecology.html [200]
+    [LLM:metadata_analysis] 14782 ms
+    [LLM:json_ld_extraction] 20210 ms
+    [LLM:json_ld_review] 19356 ms
+    ✗ Learning Pathway: Introduction to Galaxy and Ecological data analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21345 ms
+  Item: 'Introduction to Galaxy and Ecological data analysis' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-ecological-data-analysis.html [404]
+    [LLM:metadata_analysis] 15192 ms
+    [LLM:json_ld_extraction] 19764 ms
+    [LLM:json_ld_review] 18738 ms
+    ✗ Introduction to Galaxy and Ecological data analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20250 ms
+  Item: 'From R to Machine Learning; an introductory course' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/intro-to-r-and-ml.html [200]
+    [LLM:metadata_analysis] 19071 ms
+    [LLM:json_ld_extraction] 19906 ms
+    [LLM:json_ld_review] 22116 ms
+    ✗ From R to Machine Learning; an introductory course – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23947 ms
+  Item: 'Machine learning' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/machine-learning.html [200]
+    [LLM:metadata_analysis] 16612 ms
+    [LLM:json_ld_extraction] 20758 ms
+    [LLM:json_ld_review] 20887 ms
+    ✗ Learning Pathway: Machine learning – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21949 ms
+    ✓ Learning Pathway: Machine learning
+  Item: 'Building and Annotating Metagenome-Assembled Genomes (MAGs) from Metagenomics Reads' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/mags.html [200]
+    [LLM:metadata_analysis] 15456 ms
+    [LLM:json_ld_extraction] 24000 ms
+    [LLM:json_ld_review] 29042 ms
+    ✗ Learning Pathway: Building and Annotating Metagenome-Assembled Genomes (MAGs) from Metagenomics Reads – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 30904 ms
+  Item: 'Metagenomics data processing and analysis for microbiome' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/metagenomics.html [200]
+    [LLM:metadata_analysis] 15309 ms
+    [LLM:json_ld_extraction] 21646 ms
+    [LLM:json_ld_review] 21747 ms
+    ✗ Learning Pathway: Metagenomics data processing and analysis for microbiome – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22956 ms
+    ✓ Learning Pathway: Metagenomics data processing and analysis for microbiome
+  Item: 'Microbiome data analysis with Galaxy' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/microbiome.html [404]
+    [LLM:metadata_analysis] 18261 ms
+    [LLM:json_ld_extraction] 21810 ms
+    [LLM:json_ld_review] 24307 ms
+    ✗ Microbiome data analysis with Galaxy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25323 ms
+  Item: 'Artificial Intelligence and Machine Learning in Life Sciences using Python' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/ml-using-python.html [200]
+    [LLM:metadata_analysis] 16990 ms
+    [LLM:json_ld_extraction] 21297 ms
+    [LLM:json_ld_review] 21545 ms
+    ✗ Learning Pathway: Artificial Intelligence and Machine Learning in Life Sciences using Python – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23459 ms
+  Item: 'Neoantigen discovery using the iPepGen pipeline' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/neoantigen.html [200]
+    [LLM:metadata_analysis] 18331 ms
+    [LLM:json_ld_extraction] 22363 ms
+    [LLM:json_ld_review] 22733 ms
+    ✗ Neoantigen discovery using the iPepGen pipeline – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24713 ms
+  Item: 'Immunopeptidogenomics (iPepGen) Workflow for Neoantigen Discovery' (LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/immunopeptidogenomics.html [404]
+    [LLM:metadata_analysis] 17480 ms
+    [LLM:json_ld_extraction] 4257 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Proteogenomics' (LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/proteogenomics.html [200]
+    [LLM:metadata_analysis] 15588 ms
+    [LLM:json_ld_extraction] 18738 ms
+    [LLM:json_ld_review] 20008 ms
+    ✗ Learning Pathway: Proteogenomics – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21842 ms
+  Item: 'Introductory Python' (LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/python.html [200]
+    [LLM:metadata_analysis] 14189 ms
+    [LLM:json_ld_extraction] 17305 ms
+    [LLM:json_ld_review] 18369 ms
+    ✗ Learning Pathway: Introductory Python – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20064 ms
+  Item: 'Applying single-cell RNA-seq analysis in Coding Environments' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/reloaded_single_cell.html [200]
+    [LLM:metadata_analysis] 15288 ms
+    [LLM:json_ld_extraction] 25840 ms
+    [LLM:json_ld_review] 25500 ms
+    ✗ Applying single-cell RNA-seq analysis in Coding Environments – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27387 ms
+  Item: 'Introductory SQL' (TrainingMaterial|CourseInstance|Course)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/sql.html [200]
+    [LLM:metadata_analysis] 14452 ms
+    [LLM:json_ld_extraction] 19456 ms
+    [LLM:json_ld_review] 23900 ms
+    ✗ Learning Pathway: Introductory SQL – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24115 ms
+  Item: 'Introductory SQL' (TrainingMaterial|CourseInstance|Course)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/sql-course.html [404]
+    [LLM:metadata_analysis] 15753 ms
+    [LLM:json_ld_extraction] 12698 ms
+    [LLM:json_ld_review] 18270 ms
+    ✗ Learning Pathways – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19205 ms
+  Item: 'Onboarding for new contributors' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/onboarding-contributing.html [200]
+    [LLM:metadata_analysis] 13992 ms
+    [LLM:json_ld_extraction] 15871 ms
+    [LLM:json_ld_review] 18227 ms
+    ✗ Onboarding for new contributors – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19906 ms
+  Item: 'Admin Training Course' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/admin-training.html [200]
+    [LLM:metadata_analysis] 15729 ms
+    [LLM:json_ld_extraction] 4096 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Admin Training Course' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/admin-training-course.html [404]
+    [LLM:metadata_analysis] 16774 ms
+    [LLM:json_ld_extraction] 19640 ms
+    [LLM:json_ld_review] 20505 ms
+    ✗ Learning Pathways – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22082 ms
+  Item: 'Tool development for a nice & shiny subdomain' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/dev_tools_training.html [200]
+    [LLM:metadata_analysis] 15459 ms
+    [LLM:json_ld_extraction] 18225 ms
+    [LLM:json_ld_review] 20110 ms
+    ✗ Learning Pathway: Tool development for a nice & shiny subdomain – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21937 ms
+  Item: 'Creation of a Community CoDex and lab (and optionally of a Special Interest Group (SIG))' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/sig-and-codex-creation.html [200]
+    [LLM:metadata_analysis] 17757 ms
+    [LLM:json_ld_extraction] 20517 ms
+    [LLM:json_ld_review] 21300 ms
+    ✗ Creation of a Community CoDex and lab (and optionally of a Special Interest Group (SIG)) – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23377 ms
+    ✓ Creation of a Community CoDex and lab (and optionally of a Special Interest Group (SIG))
+  Item: 'Train the Trainers' (TrainingMaterial|LearningPathway)
+    ↓ https://training.galaxyproject.org/training-material/learning-pathways/train-the-trainers.html [200]
+    [LLM:metadata_analysis] 13219 ms
+    [LLM:json_ld_extraction] 3788 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Earth System Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 15725 ms
+    [LLM:json_ld_extraction] 22040 ms
+    [LLM:json_ld_review] 25929 ms
+    ✗ Hands-on: Getting your hands-on earth data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 28281 ms
+  Item: 'Ocean’s variables study' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16013 ms
+    [LLM:json_ld_extraction] 20581 ms
+    [LLM:json_ld_review] 20890 ms
+    ✓ Hands-on: Ocean's variables study
+  Item: 'Ocean Data View (ODV)' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/ocean-data-view/tutorial.html [200]
+    [LLM:metadata_analysis] 16405 ms
+    [LLM:json_ld_extraction] 13927 ms
+    [LLM:json_ld_review] 20723 ms
+    ✗ Hands-on: Ocean Data View (ODV) – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22523 ms
+  Item: 'QGIS Web Feature Services' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/ecology/tutorials/QGIS_Web_Feature_Services/tutorial.html [200]
+    [LLM:metadata_analysis] 16719 ms
+    [LLM:json_ld_extraction] 20526 ms
+    [LLM:json_ld_review] 22424 ms
+    ✗ Hands-on: QGIS Web Feature Services / QGIS Web Feature Services / Ecology – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24918 ms
+  Item: 'OBIS marine indicators tutorial' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/ecology/tutorials/obisindicators/tutorial.html [200]
+    [LLM:metadata_analysis] 17728 ms
+    [LLM:json_ld_extraction] 18332 ms
+    [LLM:json_ld_review] 21031 ms
+    ✓ Hands-on: Obis marine indicators
+  Item: 'Sentinel 2 mission' (TrainingMaterial|Resource)
+    ↓ https://marine.copernicus.eu/access-data [200]
+    [LLM:metadata_analysis] 15454 ms
+    [LLM:json_ld_extraction] 21337 ms
+    [LLM:json_ld_review] 23756 ms
+    ✗ Access data | CMEMS – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25388 ms
+  Item: 'From NDVI data with OpenEO to time series visualisation with Holoviews' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/ecology/tutorials/ndvi_openeo/tutorial.html [200]
+    [LLM:metadata_analysis] 16307 ms
+    [LLM:json_ld_extraction] 20069 ms
+    [LLM:json_ld_review] 20724 ms
+    ✓ Hands-on: From NDVI data with OpenEO to time series visualisation with Holoviews
+  Item: 'Climate Data Store' (TrainingMaterial|Tool)
+    ↓ https://usegalaxy.eu/root?tool_id=interactive_tool_copernicus_notebook [200]
+    [LLM:metadata_analysis] 11843 ms
+    [LLM:json_ld_extraction] 12081 ms
+    [LLM:json_ld_review] 19866 ms
+    ✗ Galaxy - Copernicus Climate Data Store Integration – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20853 ms
+  Item: 'OBIS Ocean Biodiversity Information System' (TrainingMaterial|Tool)
+    ⚠  Could not fetch detail page: HTTPSConnectionPool(host='www.iobis.org', port=443): Max retries exceeded with url: / (Caused by SSLError(SSLCertVerificationError(1, "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.iobis.org'. (_ssl.c:1000)")))
+    [LLM:metadata_analysis] 16333 ms
+    [LLM:json_ld_extraction] 19556 ms
+    [LLM:json_ld_review] 21851 ms
+    ✓ Hands-on: Getting your hands-on earth data
+  Item: 'OBIS marine indicators' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/ecology/tutorials/obisindicators/tutorial.html [200]
+    [LLM:metadata_analysis] 14784 ms
+    [LLM:json_ld_extraction] 20725 ms
+    [LLM:json_ld_review] 22631 ms
+    ✗ Hands-on: Obis marine indicators – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25083 ms
+  Item: 'Cleaning GBIF data for the use in Ecology' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/ecology/tutorials/gbif_cleaning/tutorial.html [200]
+    [LLM:metadata_analysis] 15763 ms
+    [LLM:json_ld_extraction] 4051 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Getting your hands-on earth data (Galaxy Training Materials)' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16339 ms
+    [LLM:json_ld_extraction] 4095 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Introduction to Climate Data Resources' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 17442 ms
+    [LLM:json_ld_extraction] 22059 ms
+    [LLM:json_ld_review] 20951 ms
+    ✗ Slides: Introduction to climate data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22895 ms
+  Item: 'Tutorial on Accessing and Downloading Sentinel 5P Data' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16958 ms
+    [LLM:json_ld_extraction] 4198 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Sentinel 5 Data Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16201 ms
+    [LLM:json_ld_extraction] 4300 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Hands On: Visualise data through out time' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 15197 ms
+    [LLM:json_ld_extraction] 4300 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Create a timeseries plot' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/sentinel5_data/tutorial.html#tutorial-content [200]
+    [LLM:metadata_analysis] 15192 ms
+    [LLM:json_ld_extraction] 3956 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Hands-on: Visualize Climate data with Panoply netCDF viewer' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 16082 ms
+    [LLM:json_ld_extraction] 19357 ms
+    [LLM:json_ld_review] 22568 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24823 ms
+  Item: 'Panoply' (TrainingMaterial|Tutorial)
+    ↓ https://www.giss.nasa.gov/tools/panoply/ [200]
+    [LLM:metadata_analysis] 15785 ms
+    [LLM:json_ld_extraction] 25535 ms
+    [LLM:json_ld_review] 30105 ms
+    ✗ Panoply 5 netCDF, HDF and GRIB Data Viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 31022 ms
+  Item: 'Hands On: geographical map' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 14931 ms
+    [LLM:json_ld_extraction] 21504 ms
+    [LLM:json_ld_review] 23613 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25901 ms
+  Item: 'Scale and Color Table' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 16509 ms
+    [LLM:json_ld_extraction] 19250 ms
+    [LLM:json_ld_review] 21440 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23261 ms
+  Item: 'Changing Map Projection' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 17394 ms
+    [LLM:json_ld_extraction] 3997 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Using Orthographic projection' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp#orthographic-projection [200]
+    [LLM:metadata_analysis] 15501 ms
+    [LLM:json_ld_extraction] 21564 ms
+    [LLM:json_ld_review] 23182 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25594 ms
+  Item: 'Creating timeseries' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=de&_x_tr_hl=en&_x_tr_pto=wapp#create-timeseries [200]
+    [LLM:metadata_analysis] 15347 ms
+    [LLM:json_ld_extraction] 4299 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Introduction to Panoply Galaxy Interactive Environment' (TrainingMaterial|Tutorial)
+    ↓ https://www.giss.nasa.gov/tools/panoply/ [200]
+    [LLM:metadata_analysis] 17591 ms
+    [LLM:json_ld_extraction] 27790 ms
+    [LLM:json_ld_review] 28675 ms
+    ✗ Panoply 5 netCDF, HDF and GRIB Data Viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 29646 ms
+  Item: 'Quick View Data with Panoply' (TrainingMaterial|Tutorial)
+    ↓ https://disc.gsfc.nasa.gov/information/howto?title=Quick%20View%20Data%20with%20Panoply [200]
+    [LLM:metadata_analysis] 11503 ms
+    [LLM:json_ld_extraction] 16895 ms
+    [LLM:json_ld_review] 18734 ms
+    ✗ Quick View Data with Panoply – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20485 ms
+  Item: 'Introduction to NetCDF and Climate Data Visualization' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 16388 ms
+    [LLM:json_ld_extraction] 20382 ms
+    [LLM:json_ld_review] 19304 ms
+    ✗ Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21337 ms
+  Item: 'Hands On: geographical map' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html?_x_tr_sl=en&_x_tr_tl=es&_x_tr_hl=en&_x_tr_pto=wapp#hands-on-geographical-map [200]
+    [LLM:metadata_analysis] 17108 ms
+    [LLM:json_ld_extraction] 21198 ms
+    [LLM:json_ld_review] 23696 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26019 ms
+  Item: 'Visualize Climate data with Panoply netCDF viewer (Galaxy Training Materials)' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 14449 ms
+    [LLM:json_ld_extraction] 4198 ms
+    ⚠  Extraction returned empty result — skipping item
+  Item: 'Panoply Tutorial' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 16200 ms
+    [LLM:json_ld_extraction] 21354 ms
+    [LLM:json_ld_review] 22058 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24420 ms
+  Item: 'Introduction to Panoply with Galaxy' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/climate/tutorials/panoply/tutorial.html [200]
+    [LLM:metadata_analysis] 16052 ms
+    [LLM:json_ld_extraction] 22469 ms
+    [LLM:json_ld_review] 19863 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21588 ms
+  Item: 'Panoply Tutorial' (TrainingMaterial|Tutorial)
+    [LLM:metadata_analysis] 16705 ms
+    [LLM:json_ld_extraction] 21749 ms
+    [LLM:json_ld_review] 21579 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23780 ms
+  Item: 'BedTools Genome Coverage' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/galaxy-interface/tutorials/genome-coverage/tutorial.html [404]
+    [LLM:metadata_analysis] 16187 ms
+    [LLM:json_ld_extraction] 18434 ms
+    [LLM:json_ld_review] 21645 ms
+    ✗ Hands-on: Visualize Climate data with Panoply netCDF viewer – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23561 ms
+  Item: 'BedTools Intersect' (TrainingMaterial|Tutorial)
+    ↓ https://training.galaxyproject.org/training-material/topics/galaxy-interface/tutorials/intersect/tutorial.html [404]
+    [LLM:metadata_analysis] 16582 ms
+    [LLM:json_ld_extraction] 16078 ms

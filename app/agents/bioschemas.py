@@ -164,6 +164,10 @@ MAX_FIX_ATTEMPTS = 1  # maximum schema-fix LLM passes per item
 # Maximum characters of item content sent to the extraction LLM.
 MAX_EXTRACTION_CONTENT = 8000
 
+# Maximum characters of a schema property description included in validation
+# error hints (keeps the hint concise for LLM context).
+MAX_SCHEMA_HINT_LENGTH = 120
+
 _USER_AGENT = (
     "BioschemasMetadataGenerator/1.0 "
     "(+https://github.com/pan-training/llm-metadata-generator)"
@@ -188,6 +192,21 @@ and education domains.
 Your job is to extract high-quality Bioschemas/Schema.org JSON-LD metadata from
 web-page text.
 
+## STRICT RULES — read carefully
+- ONLY include information that is EXPLICITLY present in the provided page content.
+- NEVER invent, guess, or hallucinate any field value.
+- NEVER include an ORCID unless the full ORCID URL (https://orcid.org/XXXX-XXXX-XXXX-XXXX)
+  is visibly present in the page content for that specific author.
+- NEVER include a DOI unless a full DOI URL (https://doi.org/...) is explicitly
+  present in the page content.
+- NEVER include a license unless it is explicitly stated in the page content.
+- NEVER include an ontology term URL (EDAM, PaNET, etc.) unless you can confirm the
+  exact term name and URI from the page content — do not construct or guess URIs.
+- The training platform or aggregator website (e.g. "PaN-Training", "TeSS", "ELIXIR")
+  is NOT an author. Only list actual individuals or contributing organisations as authors.
+- Do NOT include the collection/listing URL (e.g. /materials, /events) as the item's
+  url — use the item's own detail page URL.
+
 ## Output a single JSON-LD object
 
 ### For TrainingMaterial / LearningResource
@@ -195,21 +214,21 @@ web-page text.
 - description: 2–5 sentence description (string)
 - keywords: array of lowercase keyword strings
 
-Strongly recommended:
-- url: canonical URL
-- author: [{"@type": "Person", "name": "...", "@id": "https://orcid.org/..."}]
-  (include ORCID in @id whenever available)
-- license: SPDX identifier (e.g. "CC-BY-4.0") or full CC URL
+Strongly recommended (only when found in the page):
+- url: canonical URL of the item's own detail page
+- author: [{"@type": "Person", "name": "..."}]  add "@id": "https://orcid.org/..." only if ORCID is explicitly on the page
+- license: SPDX identifier (e.g. "CC-BY-4.0") or full CC URL — ONLY if stated on the page
 - inLanguage: IETF BCP 47 code (e.g. "en", "de", "fr")
 - audience: [{"@type": "Audience", "audienceType": "beginner|intermediate|advanced"}]
 - teaches: array of learning outcome strings
 - educationalLevel: "beginner" | "intermediate" | "advanced"
 - learningResourceType: array, e.g. ["tutorial", "video", "slides", "e-learning"]
-- about: scientific topics as DefinedTerms
-  (use EDAM URIs for life science: {"@type":"DefinedTerm","name":"Bioinformatics","url":"http://edamontology.org/topic_0091"}
-   use PaNET for photon/neutron: {"@type":"DefinedTerm","name":"Tomography","url":"https://w3id.org/pan-training/PaNET01203"})
+- about: scientific topics as DefinedTerms — ONLY use EDAM or PaNET URIs you recognise exactly
+  (EDAM example: {"@type":"DefinedTerm","name":"Bioinformatics","url":"http://edamontology.org/topic_0091"}
+   PaNET example: {"@type":"DefinedTerm","name":"Tomography","url":"https://w3id.org/pan-training/PaNET01203"})
+  If uncertain about the URI, omit the "url" field and just include the name.
 - timeRequired: ISO 8601 duration (e.g. "PT2H" = 2 hours, "P3D" = 3 days)
-- identifier: DOI URL when present (e.g. "https://doi.org/10.1234/...")
+- identifier: DOI URL — ONLY if explicitly present on the page
 
 ### For CourseInstance (training event / workshop)
 Required:
@@ -220,7 +239,7 @@ Required:
 - location: for onsite: {"@type":"Place","address":{"@type":"PostalAddress","addressLocality":"...","addressCountry":"..."}}
              for online: {"@type":"VirtualLocation","url":"..."}
 
-Strongly recommended:
+Strongly recommended (only when found in the page):
 - startDate, endDate: ISO 8601 datetime ("2024-03-15T09:00:00" or "2024-03-15")
 - url: canonical URL
 - organizer: [{"@type": "Organization", "name": "..."}]
@@ -229,12 +248,13 @@ Strongly recommended:
 
 ## TeSS ingestion conventions
 - keywords: use an array, not a comma-separated string
-- author/@id: use ORCID URI when known (TeSS extracts ORCID by regex)
+- author/@id: use ORCID URI ONLY when the full ORCID URL is visible on the page
 - about: EDAM is primary for life science; PaNET for photon/neutron science
 - identifier: include DOI as full URL; TeSS deduplicates on identifier
 - inLanguage: language subtag only ("en", not "English")
 - courseMode: TeSS maps "online" → virtual flag; use exact values listed above
 - organizer vs provider: for events, prefer organizer; provider is the institution
+  hosting the content permanently (not the event organiser)
 """
 
 # ---------------------------------------------------------------------------
@@ -246,15 +266,26 @@ You are an expert at identifying scientific training content on web pages.
 Your task is to classify a text chunk from a website and identify any training
 materials, courses, or events it describes.  You do NOT produce JSON-LD here.
 
+IMPORTANT — follow ONLY the navigation pattern from the structural summary:
+When a structural summary is provided, it describes exactly how to navigate the
+site (e.g. "paginated with ?page=N" or "category pages at /topics/X").
+In follow_links, include ONLY links that match that described navigation pattern.
+Do NOT follow other links even if they look interesting.
+
 IMPORTANT — faceted search / filter interfaces:
 Many training catalogues have filter panels (checkboxes, dropdowns, tag clouds,
 sort controls) that narrow or re-order the *same* list of items without adding
 new content.  These produce URLs like:
   ?category=bioinformatics  ?sort=date  ?type=online  ?tag=python  ?level=beginner
-These are NOT worth following — they just limit the number of results shown.
-Only include a link in follow_links if it leads to DIFFERENT training content
-(e.g. a next-page link, a genuinely different category landing page, or an
-item detail page), NOT if it merely filters or sorts the current list.
+These are NOT worth following — they just limit or re-sort the result set.
+Only include a link in follow_links if it leads to a DIFFERENT page of content
+(e.g. a next-page pagination link with ?page=N, or a genuinely different content
+section), NOT if it merely filters, re-sorts, or modifies the current list.
+
+IMPORTANT — skip non-content pages:
+Do NOT include links to creation, editing, admin, or login pages in
+follow_links.  Examples to skip: /new, /create, /edit, /delete, /admin,
+/sign_in, /login, /register.
 """
 
 # ---------------------------------------------------------------------------
@@ -271,9 +302,28 @@ and how to navigate to more content (pagination, categories, etc.).
 _STRUCTURE_COMPILE_SYSTEM_PROMPT = """\
 You are an expert at analysing training content websites.
 You have been provided with summaries of several pages from a training website.
-Produce a rich structural summary that will guide a metadata extraction agent
-to focus only on the website's primary training content and ignore secondary
-or peripheral content that merely resembles training materials.
+Produce a rich structural summary that will guide a metadata extraction agent.
+
+IMPORTANT — content type selection:
+- By default ONLY include "TrainingMaterial" and "CourseInstance" content types.
+- DO NOT include Workflows, LearningPaths, Spaces, or other non-standard content
+  types UNLESS the user explicitly provided a URL that points directly to that
+  type of content (e.g. /workflows or /learning_paths was the given entry URL).
+- The simplest, most direct interpretation of the site is preferred.
+
+IMPORTANT — navigation URLs:
+- In each content type's navigation.urls, include ONLY URLs that lead to
+  additional pages of the SAME content type (e.g. pagination URLs like ?page=2,
+  ?page=3, or category landing pages).
+- DO NOT include URLs with filter/facet query parameters (e.g. ?sort=date,
+  ?type=online, ?category=..., etc.) unless those parameters were already
+  present in the user-provided entry URL.
+- The navigation description MUST clearly state the URL pattern to follow
+  (e.g. "Append ?page=N (N=2,3,…) to the primary URL; 'Next' link below list").
+
+IMPORTANT — examples:
+- Include 2–4 concrete example items from the page summaries.
+- Keep examples short — they are inserted into every LLM prompt during extraction.
 """
 
 # ---------------------------------------------------------------------------
@@ -395,6 +445,65 @@ def _html_to_markdown(
     return md, links
 
 
+def _clean_html_for_llm(
+    html: str, base_url: str
+) -> tuple[str, list[tuple[str, str]]]:
+    """Strip noise tags and resolve URLs in *html* without converting to Markdown.
+
+    Produces cleaned HTML suitable for passing directly to an LLM when the
+    caller wants the model to see raw HTML structure instead of Markdown.
+    The same noise tags removed by :func:`_html_to_markdown` (``script``,
+    ``style``, ``noscript``, ``template``) are stripped here too so the
+    output remains compact.  Relative URLs in ``<a href>`` and ``<img src>``
+    attributes are resolved to absolute using *base_url*.
+
+    Returns:
+        ``(cleaned_html, [(absolute_url, anchor_text), ...])``
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    for noise_tag in soup.find_all(["script", "style", "noscript", "template"]):
+        noise_tag.decompose()
+
+    links: list[tuple[str, str]] = []
+    seen_urls: set[str] = set()
+
+    for a_tag in soup.find_all("a", href=True):
+        href = str(a_tag["href"]).strip()
+        if href.startswith(("#", "mailto:", "javascript:")):
+            continue
+        absolute = urljoin(base_url, href)
+        if urlparse(absolute).scheme not in ("http", "https"):
+            continue
+        a_tag["href"] = absolute
+        anchor = a_tag.get_text(strip=True)
+        if absolute not in seen_urls:
+            seen_urls.add(absolute)
+            links.append((absolute, anchor))
+
+    for img_tag in soup.find_all("img", src=True):
+        src = str(img_tag["src"]).strip()
+        if not src.startswith(("data:", "#")):
+            img_tag["src"] = urljoin(base_url, src)
+
+    return str(soup), links
+
+
+def _page_content(
+    html: str, base_url: str, raw_html: bool
+) -> tuple[str, list[tuple[str, str]]]:
+    """Return ``(text, links)`` using either Markdown or cleaned HTML.
+
+    When *raw_html* is ``False`` (default) the result of
+    :func:`_html_to_markdown` is returned.  When *raw_html* is ``True`` the
+    cleaned HTML from :func:`_clean_html_for_llm` is returned instead so the
+    LLM sees the original HTML structure.  Either way, the same set of
+    absolute links is extracted and returned.
+    """
+    if raw_html:
+        return _clean_html_for_llm(html, base_url)
+    return _html_to_markdown(html, base_url)
+
+
 # ---------------------------------------------------------------------------
 # Text chunking
 # ---------------------------------------------------------------------------
@@ -465,6 +574,29 @@ _FILTER_PARAMS: frozenset[str] = frozenset(
 _PAGINATION_PARAMS: frozenset[str] = frozenset(
     {"page", "p", "pg", "offset", "start", "skip", "cursor", "after", "before"}
 )
+
+# URL path segments that identify non-content pages (admin, auth, CRUD).
+# Only block pages that definitely cannot contain training content.
+# Note: "search" and "api" are intentionally excluded because search pages
+# and API endpoints can sometimes yield useful training-content metadata.
+_NON_CONTENT_PATH_SEGMENTS: frozenset[str] = frozenset(
+    {
+        "new", "create", "edit", "update", "delete", "destroy",
+        "admin", "sign_in", "sign_up", "login", "logout", "register",
+        "password", "account", "profile", "settings",
+    }
+)
+
+
+def _is_non_content_url(url: str) -> bool:
+    """Return True when *url* is a non-content page (admin, auth, CRUD, API).
+
+    These URLs are never worth following for training content extraction.
+    The check looks at every segment of the URL path.
+    """
+    path = urlparse(url).path.lower()
+    segments = {seg for seg in path.split("/") if seg}
+    return bool(segments & _NON_CONTENT_PATH_SEGMENTS)
 
 
 def _is_faceted_search_url(url: str, source_url: str) -> bool:
@@ -669,10 +801,8 @@ def _validate_with_schema(item: dict[str, Any]) -> list[str]:
 
     Returns a list of human-readable error strings (empty = valid).
     The schema expects an array at the top level, so the item is wrapped.
-
-    # TODO (issue #3 follow-up): surface richer schema descriptions to the LLM
-    #   (e.g. include the "$comment" field of the failing property from the
-    #   schema) to provide more actionable fix instructions.
+    Errors include the schema property description where available to help
+    the LLM understand what is expected.
     """
     try:
         schema = _get_schema()
@@ -680,7 +810,15 @@ def _validate_with_schema(item: dict[str, Any]) -> list[str]:
         errors = []
         for err in validator.iter_errors([item]):
             path = " → ".join(str(p) for p in err.absolute_path) or "(root)"
-            errors.append(f"{path}: {err.message}")
+            # Enrich the error message with schema context when available
+            hint = ""
+            prop_schema = err.schema
+            if isinstance(prop_schema, dict):
+                desc = prop_schema.get("description") or prop_schema.get("$comment")
+                if desc:
+                    # Trim to a concise hint
+                    hint = f" (expected: {desc[:MAX_SCHEMA_HINT_LENGTH]})"
+            errors.append(f"{path}: {err.message}{hint}")
         return errors
     except Exception as exc:
         # Validation should never crash the pipeline
@@ -737,6 +875,8 @@ def _summarise_page_for_structure(
     url: str,
     content: str,
     llm_client: Any,
+    logger: "AgentLogger | None" = None,
+    parent_id: int | None = None,
 ) -> dict[str, Any]:
     """Ask the LLM to summarise a single page's structure and content.
 
@@ -759,12 +899,23 @@ def _summarise_page_for_structure(
                 '"description": "..."}]}\n\n'
                 "For catalog/listing pages include the first 2–3 and last 1–2 "
                 "visible training items so we can see the range of content. "
-                "For navigation_links include pagination and category links only.\n\n"
+                "For navigation_links include ONLY standard pagination links "
+                "(e.g. 'Next page', '?page=2') and genuine category landing pages. "
+                "Do NOT include filter links, sort links, or any URL with query "
+                "parameters like ?include_broken_links, ?across_all_spaces, "
+                "?include_archived, ?sort, ?type, ?tag, ?category.\n\n"
                 f"Page content:\n{content}"
             ),
         },
     ]
-    result = _call_llm(llm_client, get_model_for_task("content_summary"), messages)
+    result = _call_llm(
+        llm_client,
+        get_model_for_task("content_summary"),
+        messages,
+        logger=logger,
+        task="content_summary",
+        parent_id=parent_id,
+    )
     # Guarantee expected keys even when the model returns a partial response.
     result.setdefault("page_type", "other")
     result.setdefault("description", "")
@@ -777,6 +928,8 @@ def _compile_site_structure(
     source_url: str,
     page_summaries: list[dict[str, Any]],
     llm_client: Any,
+    logger: "AgentLogger | None" = None,
+    parent_id: int | None = None,
 ) -> dict[str, Any]:
     """Ask the LLM to compile page summaries into a final structural summary.
 
@@ -791,32 +944,37 @@ def _compile_site_structure(
             "content": (
                 f"Website: {source_url}\n\n"
                 "Based on the following page summaries, produce a structural "
-                "summary that will guide a metadata extraction agent. "
-                "The agent must focus ONLY on the website's primary training "
-                "content and ignore pages that are merely peripheral (e.g. "
-                "'About us', general documentation not primarily about training, "
-                "or blog posts that happen to mention training).\n\n"
+                "summary that will guide a metadata extraction agent.\n\n"
                 "Output JSON with exactly this structure:\n"
-                '{"site_description": "one sentence about the website\'s purpose", '
+                '{"site_description": "2–3 sentences about the website\'s purpose and content", '
                 '"content_types": [{'
                 '"type": "TrainingMaterial|CourseInstance|Course", '
-                '"description": "what this type of content is on this site", '
+                '"description": "what this type of content is on this site (1 sentence)", '
                 '"primary_url": "main URL where items of this type are listed", '
                 '"navigation": {'
                 '"type": "paginated|categories|single_list|unknown", '
-                '"urls": ["additional URLs to crawl for more items"], '
-                '"description": "how to find all items, e.g. pagination pattern"}, '
-                '"examples": [{"title": "...", "description": "...", "url": "..."}], '
-                '"typical_structure": "how items of this type look on the page"'
+                '"urls": ["additional pagination or category URLs to crawl"], '
+                '"description": "exact URL pattern to follow all pages, e.g. '
+                "'Append ?page=N (N=2,3,…) to primary_url; stop when no Next link'"
+                '"}, '
+                '"examples": [{"title": "...", "description": "one sentence", "url": "..."}], '
+                '"typical_structure": "one sentence: how items are laid out on the listing page"'
                 '}]}\n\n'
-                "Include 2–4 examples per content type taken from the page "
-                "summaries — these help the extraction agent recognise what "
-                "items to extract.\n\n"
+                "Include 2–4 short examples per content type.\n"
+                "In navigation.urls include ONLY standard pagination URLs or "
+                "genuine category landing pages — NO filter/sort/facet URLs.\n\n"
                 f"Page summaries:\n{summaries_text}"
             ),
         },
     ]
-    result = _call_llm(llm_client, get_model_for_task("content_summary"), messages)
+    result = _call_llm(
+        llm_client,
+        get_model_for_task("content_summary"),
+        messages,
+        logger=logger,
+        task="content_summary",
+        parent_id=parent_id,
+    )
     result.setdefault("site_description", "")
     result.setdefault("content_types", [])
     return result
@@ -826,6 +984,7 @@ def compute_site_structure_summary(
     url: str,
     llm_client: Any,
     logger: "AgentLogger | None" = None,
+    raw_html: bool = False,
 ) -> str:
     """Compute a rich structural summary for a training website (Phase 0).
 
@@ -844,6 +1003,9 @@ def compute_site_structure_summary(
         llm_client: An OpenAI-compatible client instance.
         logger: Optional :class:`~app.agents.logger.AgentLogger` for structured
             progress events.
+        raw_html: When ``True`` the LLM receives cleaned HTML instead of the
+            default Markdown conversion.  Hashing is always performed on the
+            Markdown representation regardless of this flag.
 
     Returns:
         JSON string with the structural summary (``schema_version="2"``).
@@ -888,21 +1050,23 @@ def compute_site_structure_summary(
         content_length=len(response.text),
         parent=phase0_id,
     )
-    primary_md, primary_links = _html_to_markdown(response.text, url)
-    _logger.info(f"Primary page: {len(primary_md)} chars", parent=phase0_id)
+    primary_content_text, primary_links = _page_content(response.text, url, raw_html)
+    _logger.info(f"Primary page: {len(primary_content_text)} chars", parent=phase0_id)
 
     # Show beginning + end for large pages so the LLM sees the full range.
-    if len(primary_md) > STRUCTURE_CONTENT_SIZE * 2:
+    if len(primary_content_text) > STRUCTURE_CONTENT_SIZE * 2:
         primary_content = (
-            primary_md[:STRUCTURE_CONTENT_SIZE]
+            primary_content_text[:STRUCTURE_CONTENT_SIZE]
             + "\n\n[...middle content omitted...]\n\n"
-            + primary_md[-STRUCTURE_CONTENT_SIZE:]
+            + primary_content_text[-STRUCTURE_CONTENT_SIZE:]
         )
     else:
-        primary_content = primary_md[: STRUCTURE_CONTENT_SIZE * 2]
+        primary_content = primary_content_text[: STRUCTURE_CONTENT_SIZE * 2]
 
     _logger.info("Summarising primary page structure", parent=phase0_id)
-    primary_summary = _summarise_page_for_structure(url, primary_content, llm_client)
+    primary_summary = _summarise_page_for_structure(
+        url, primary_content, llm_client, logger=_logger, parent_id=phase0_id
+    )
     primary_summary["url"] = url
     page_summaries: list[dict[str, Any]] = [primary_summary]
 
@@ -926,7 +1090,8 @@ def compute_site_structure_summary(
     for link_url in nav_link_urls + extra_links:
         if link_url not in seen:
             seen.add(link_url)
-            links_to_follow.append(link_url)
+            if not _is_non_content_url(link_url):
+                links_to_follow.append(link_url)
         if len(links_to_follow) >= MAX_STRUCTURE_PAGES - 1:
             break
 
@@ -957,19 +1122,21 @@ def compute_site_structure_summary(
             content_length=len(resp.text),
             parent=phase0_id,
         )
-        nav_md, _ = _html_to_markdown(resp.text, nav_url)
-        _logger.info(f"Summarising {nav_url} ({len(nav_md)} chars)", parent=phase0_id)
+        nav_content_text, _ = _page_content(resp.text, nav_url, raw_html)
+        _logger.info(f"Summarising {nav_url} ({len(nav_content_text)} chars)", parent=phase0_id)
 
-        if len(nav_md) > STRUCTURE_CONTENT_SIZE * 2:
+        if len(nav_content_text) > STRUCTURE_CONTENT_SIZE * 2:
             nav_content = (
-                nav_md[:STRUCTURE_CONTENT_SIZE]
+                nav_content_text[:STRUCTURE_CONTENT_SIZE]
                 + "\n\n[...middle content omitted...]\n\n"
-                + nav_md[-STRUCTURE_CONTENT_SIZE:]
+                + nav_content_text[-STRUCTURE_CONTENT_SIZE:]
             )
         else:
-            nav_content = nav_md[: STRUCTURE_CONTENT_SIZE * 2]
+            nav_content = nav_content_text[: STRUCTURE_CONTENT_SIZE * 2]
 
-        page_sum = _summarise_page_for_structure(nav_url, nav_content, llm_client)
+        page_sum = _summarise_page_for_structure(
+            nav_url, nav_content, llm_client, logger=_logger, parent_id=phase0_id
+        )
         page_sum["url"] = nav_url
         page_summaries.append(page_sum)
 
@@ -978,13 +1145,15 @@ def compute_site_structure_summary(
         f"Compiling structural summary from {len(page_summaries)} page summary/ies",
         parent=phase0_id,
     )
-    compiled = _compile_site_structure(url, page_summaries, llm_client)
+    compiled = _compile_site_structure(
+        url, page_summaries, llm_client, logger=_logger, parent_id=phase0_id
+    )
     compiled["source_url"] = url
     compiled["source_domain"] = primary_domain
     compiled["computed_at"] = datetime.now(timezone.utc).isoformat()
     compiled["schema_version"] = "2"
 
-    result_str = json.dumps(compiled, ensure_ascii=False)
+    result_str = json.dumps(compiled, ensure_ascii=False, indent=2)
     _logger.info(
         f"Structural summary ready ({len(result_str)} chars)", parent=phase0_id
     )
@@ -1054,6 +1223,7 @@ class BioschemasExtractorAgent:
     def __init__(self) -> None:
         # Holds the AgentLogger for the duration of a run(); reset to None after.
         self._logger: AgentLogger | None = None
+        self._raw_html: bool = False
 
     def run(
         self,
@@ -1063,6 +1233,7 @@ class BioschemasExtractorAgent:
         llm_client: Any = None,
         logger: AgentLogger | None = None,
         on_item: Callable[[dict[str, Any]], None] | None = None,
+        raw_html: bool = False,
     ) -> list[dict[str, Any]]:
         """Extract Bioschemas JSON-LD from the given URL.
 
@@ -1081,6 +1252,10 @@ class BioschemasExtractorAgent:
             on_item: Optional callback invoked with each fully processed
                 JSON-LD item as it is produced (before the final list is
                 returned).  Useful for streaming / partial result persistence.
+            raw_html: When ``True`` the LLM receives cleaned HTML instead of
+                the default Markdown conversion.  Hashing for change detection
+                is always performed on the Markdown representation regardless
+                of this flag.
 
         Returns:
             List of Bioschemas JSON-LD dicts.
@@ -1090,6 +1265,7 @@ class BioschemasExtractorAgent:
             NotTrainingContentError: No training content found after crawling.
         """
         self._logger = logger if logger is not None else AgentLogger()
+        self._raw_html = raw_html
 
         if llm_client is None:
             raise ValueError("llm_client must be provided")
@@ -1191,7 +1367,7 @@ class BioschemasExtractorAgent:
                         parent=item_id,
                     )
 
-            item_text, _ = _html_to_markdown(item_html or "", item_info.url or url)
+            item_text, _ = _page_content(item_html or "", item_info.url or url, self._raw_html)
             content_for_extraction = item_text[:MAX_EXTRACTION_CONTENT]
 
             # --- Chain-of-thought reasoning pass (step 2a) ---
@@ -1358,13 +1534,15 @@ class BioschemasExtractorAgent:
         html = response.text
         state.pages[start_url] = html
 
-        # Convert HTML → Markdown first; hash the stable Markdown content so
-        # that cosmetic HTML changes (whitespace, inline styles, CDN URLs)
-        # don't trigger unnecessary re-extraction.
+        # Always hash the stable Markdown content so that cosmetic HTML changes
+        # (whitespace, inline styles, CDN URLs) don't trigger unnecessary
+        # re-extraction.  When raw_html mode is active the LLM receives cleaned
+        # HTML instead of Markdown, but the hash is still derived from Markdown.
         md_text, _ = _html_to_markdown(html, start_url)
         page_hash = _content_hash(md_text)
         state.page_hashes[start_url] = page_hash
-        chunks = _chunk_text(md_text)
+        content_text = _clean_html_for_llm(html, start_url)[0] if self._raw_html else md_text
+        chunks = _chunk_text(content_text)
         total_chunks = len(chunks)
         if logger:
             logger.info(
@@ -1399,7 +1577,13 @@ class BioschemasExtractorAgent:
                 else None
             )
             for item_data in result.get("items", []):
-                item_url = item_data.get("url", start_url)
+                raw_item_url = item_data.get("url", start_url)
+                # Resolve relative URLs against the page being crawled
+                item_url = (
+                    urljoin(start_url, raw_item_url)
+                    if raw_item_url and not urlparse(raw_item_url).scheme
+                    else raw_item_url
+                )
                 item_title = item_data.get("title", "")
                 if not item_title:
                     continue
@@ -1430,13 +1614,28 @@ class BioschemasExtractorAgent:
             # Collect follow-links (deduplicated, capped)
             if depth < MAX_FOLLOW_DEPTH:
                 for link_data in result.get("follow_links", [])[:MAX_LINKS_PER_CHUNK]:
-                    link_url = link_data.get("url", "")
-                    if not link_url or link_url in state.pages or link_url in links_to_follow:
+                    raw_link_url = link_data.get("url", "")
+                    if not raw_link_url:
+                        continue
+                    # Resolve relative URLs against the page being crawled
+                    link_url = (
+                        urljoin(start_url, raw_link_url)
+                        if not urlparse(raw_link_url).scheme
+                        else raw_link_url
+                    )
+                    if link_url in state.pages or link_url in links_to_follow:
                         continue
                     if _is_faceted_search_url(link_url, start_url):
                         if logger:
                             logger.warn(
                                 f"Skipping faceted-search URL: {link_url}",
+                                parent=parent_id,
+                            )
+                        continue
+                    if _is_non_content_url(link_url):
+                        if logger:
+                            logger.warn(
+                                f"Skipping non-content URL: {link_url}",
                                 parent=parent_id,
                             )
                         continue
@@ -1465,6 +1664,7 @@ class BioschemasExtractorAgent:
     ) -> dict[str, Any]:
         """Ask the LLM to classify a text chunk and extract items + links."""
         guidance_note = ""
+        nav_guidance = ""
         if structural_summary:
             try:
                 summary = json.loads(structural_summary)
@@ -1474,25 +1674,36 @@ class BioschemasExtractorAgent:
                     site_desc = summary.get("site_description", "")
                     content_types = summary.get("content_types", [])
                     types_text = ""
+                    nav_patterns: list[str] = []
                     for ct in content_types:
                         ct_type = ct.get("type", "")
                         ct_desc = ct.get("description", "")
                         ct_struct = ct.get("typical_structure", "")
                         examples = ct.get("examples", [])
                         ex_lines = ", ".join(
-                            f'"{e.get("title", "")}"' for e in examples[:3] if e.get("title")
+                            f'"{e.get("title", "")}"' for e in examples[:2] if e.get("title")
                         )
                         types_text += (
                             f"\n  - {ct_type}: {ct_desc}"
                             + (f" (e.g. {ex_lines})" if ex_lines else "")
-                            + (f". Structure: {ct_struct}" if ct_struct else "")
+                            + (f". Layout: {ct_struct}" if ct_struct else "")
                         )
+                        nav = ct.get("navigation", {})
+                        nav_desc = nav.get("description", "")
+                        if nav_desc:
+                            nav_patterns.append(f"    {ct_type}: {nav_desc}")
                     guidance_note = (
                         f"\n\nSite description: {site_desc}"
                         f"\nFocus ONLY on extracting these primary training content types:{types_text}"
                         "\nIgnore any content that is not of these primary types "
                         "(e.g. 'About' pages, news, blog posts, general documentation).\n"
                     )
+                    if nav_patterns:
+                        nav_guidance = (
+                            "\n\nNavigation patterns (follow ONLY links matching these):\n"
+                            + "\n".join(nav_patterns)
+                            + "\nDo NOT add any other links to follow_links.\n"
+                        )
                 else:
                     # Legacy format: show previously extracted item URLs so the
                     # LLM can focus on new/changed items.
@@ -1511,17 +1722,17 @@ class BioschemasExtractorAgent:
                 "role": "user",
                 "content": (
                     f"Analyse this text chunk ({chunk_index + 1}/{total_chunks}) "
-                    f"from {source_url}.{guidance_note}\n\n"
+                    f"from {source_url}.{guidance_note}{nav_guidance}\n\n"
                     "Identify:\n"
                     "1. Training materials, courses, or events mentioned\n"
                     "2. Links worth following to find more training content\n\n"
-                    "For follow_links: include pagination (next page) and links to "
-                    "genuinely different content sections. "
-                    "Do NOT include faceted-search / filter links — these are links "
-                    "that just narrow or re-sort the current list (e.g. filter by "
-                    "topic, sort by date, filter by format) without adding new content. "
-                    "If you see a filter panel, tag cloud, or sort dropdown, ignore "
-                    "all those links.\n\n"
+                    "For follow_links: only include pagination links matching the "
+                    "navigation pattern above (if provided), or links to genuinely "
+                    "different content sections when no pattern is given. "
+                    "Do NOT include faceted-search / filter links, creation pages, "
+                    "admin pages, login pages, search pages, or any URL whose path "
+                    "contains /new, /create, /edit, /delete, /admin, /sign_in, "
+                    "/login, /register, /search, /api/.\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
@@ -1566,17 +1777,21 @@ class BioschemasExtractorAgent:
                     "You are about to extract Bioschemas JSON-LD metadata for "
                     "a training item. First, carefully read the page content "
                     "below and write brief notes on what metadata you can find. "
+                    "IMPORTANT: only note information that is EXPLICITLY present "
+                    "in the page — do not invent or assume any details.\n\n"
                     "Cover:\n"
                     "- Type (LearningResource for training material / tutorial, "
                     "CourseInstance for scheduled event / workshop)\n"
                     "- Title (exact wording from the page)\n"
                     "- Description (key points in 2–5 sentences)\n"
-                    "- Authors / instructors (and ORCIDs if visible)\n"
+                    "- Authors / instructors (only if explicitly named on the page; "
+                    "note full ORCID URL only if it appears on the page — do not "
+                    "guess or look up ORCIDs)\n"
                     "- Dates (start/end; note if absent)\n"
                     "- Location or mode (online / onsite / blended)\n"
                     "- Scientific topics / keywords\n"
                     "- Educational level and target audience\n"
-                    "- License\n"
+                    "- License (only if explicitly stated on the page)\n"
                     "- Language\n"
                     "- Any other fields evident in the content\n\n"
                     "Write concise notes in plain text. "
@@ -1699,6 +1914,23 @@ class BioschemasExtractorAgent:
                 "content": (
                     "The following Bioschemas JSON-LD has validation errors. "
                     "Fix ALL of them and return the corrected JSON-LD object.\n\n"
+                    "Quick reference for common fixes:\n"
+                    "- @context must be: {\"@vocab\": \"https://schema.org/\", "
+                    "\"dct\": \"http://purl.org/dc/terms/\"}\n"
+                    "- @type must be one of: \"LearningResource\", "
+                    "\"TrainingMaterial\", \"Course\", \"CourseInstance\"\n"
+                    "- @id must be a stable URL string (use the item's own URL)\n"
+                    "- name, description: required strings\n"
+                    "- keywords: must be an array of strings, not a comma-separated string\n"
+                    "- courseMode: must be an array containing only "
+                    "\"online\", \"onsite\", or \"blended\"\n"
+                    "- inLanguage: use BCP 47 code (e.g. \"en\", \"de\"), "
+                    "not a full language name\n"
+                    "- dates (startDate, endDate): use ISO 8601 format "
+                    "(e.g. \"2024-03-15\" or \"2024-03-15T09:00:00\")\n"
+                    "- license: use SPDX identifier (e.g. \"CC-BY-4.0\") "
+                    "or full CC URL — ONLY if you can confirm it from page content\n"
+                    "- author/@id: ORCID URI only if explicitly on the page\n\n"
                     f"Validation errors:\n{error_list}\n\n"
                     f"Current JSON-LD:\n{json.dumps(item, indent=2)}"
                 ),

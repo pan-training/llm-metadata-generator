@@ -1,0 +1,131 @@
+Computing structural summary (Phase 0) …
+Phase 0: computing structural summary
+  Fetching primary URL: https://test.tesshub.hzdr.de/
+  ↓ https://test.tesshub.hzdr.de/ [200]
+  Primary page: 10752 chars
+  Summarising primary page structure
+  Following 7 structural navigation link(s)
+  ↓ https://test.tesshub.hzdr.de/about [200]
+  Summarising https://test.tesshub.hzdr.de/about (16830 chars)
+  ↓ https://test.tesshub.hzdr.de/events [200]
+  Summarising https://test.tesshub.hzdr.de/events (19471 chars)
+  ↓ https://test.tesshub.hzdr.de/materials [200]
+  Summarising https://test.tesshub.hzdr.de/materials (49740 chars)
+  ↓ https://test.tesshub.hzdr.de/workflows [200]
+  Summarising https://test.tesshub.hzdr.de/workflows (11135 chars)
+  ↓ https://test.tesshub.hzdr.de/spaces [200]
+  Summarising https://test.tesshub.hzdr.de/spaces (12656 chars)
+  ↓ https://test.tesshub.hzdr.de/users/sign_in [200]
+  Summarising https://test.tesshub.hzdr.de/users/sign_in (9679 chars)
+  ↓ https://test.tesshub.hzdr.de/collections [200]
+  Summarising https://test.tesshub.hzdr.de/collections (10934 chars)
+  Compiling structural summary from 8 page summary/ies
+  Structural summary ready (3688 chars)
+Structural summary saved to structural_summary.json
+Using structural summary: {"site_description": "The PaN Training portal provides access to training resources for photon and neutron sciences.", "content_types": [{"type": "CourseInstance|Event", "description": "Individual events or workshops offered as training opportunities.", "primary_url": "https://test.tesshub.hzdr.de/events", "navigation": {"type": "paginated", "urls": ["https://test.tesshub.hzdr.de/events?page=2"], "description": "Events are listed across multiple pages, accessible via pagination."}, "examples": […
+Phase 1 starting from 3 content-type URL(s) listed in structural summary
+Phase 1: crawl + discover
+  Fetch depth-0: https://test.tesshub.hzdr.de/events
+    ↓ https://test.tesshub.hzdr.de/events [200]
+    Page 1/20: 21349 chars, 6 chunk(s), hash=df60ad2c67a8…
+    [LLM:content_relevance] 1948 ms
+    [LLM:content_relevance] 1364 ms
+    [LLM:content_relevance] 2788 ms
+    [LLM:content_relevance] 1608 ms
+    Chunk 4/6: relevant
+    [LLM:content_relevance] 1386 ms
+    [LLM:content_relevance] 1332 ms
+  Fetch depth-1: https://test.tesshub.hzdr.de/events/new
+    ↓ https://test.tesshub.hzdr.de/events/new [200]
+    Page 2/20: 10412 chars, 3 chunk(s), hash=c27949b679b3…
+    [LLM:content_relevance] 2070 ms
+    [LLM:content_relevance] 1469 ms
+    [LLM:content_relevance] 1446 ms
+  Fetch depth-0: https://test.tesshub.hzdr.de/workflows
+    ↓ https://test.tesshub.hzdr.de/workflows [200]
+    Page 3/20: 11969 chars, 4 chunk(s), hash=d9dea45b9c3d…
+    [LLM:content_relevance] 2804 ms
+    [LLM:content_relevance] 1500 ms
+    [LLM:content_relevance] 1668 ms
+    [LLM:content_relevance] 1281 ms
+  Fetch depth-0: https://test.tesshub.hzdr.de/spaces
+    ↓ https://test.tesshub.hzdr.de/spaces [200]
+    Page 4/20: 13136 chars, 4 chunk(s), hash=d1192f9a0047…
+    [LLM:content_relevance] 1380 ms
+    [LLM:content_relevance] 3844 ms
+    Chunk 2/4: relevant
+      ★ 'de.KCD Training Materials' (Course|ResourceCollection)
+      ★ 'DALIA' (Course|ResourceCollection)
+      ★ 'EOSC Academy' (Course|ResourceCollection)
+      ★ 'OERHub.at' (Course|ResourceCollection)
+    [LLM:content_relevance] 3701 ms
+    Chunk 3/4: relevant
+      ★ 'Playground' (Course|ResourceCollection)
+      ★ 'TeSShub' (Course|ResourceCollection)
+      ★ 'PaNOSC Services' (Course|ResourceCollection)
+    [LLM:content_relevance] 1477 ms
+  Fetch depth-1: https://test.tesshub.hzdr.de/spaces/next-page
+    ↓ https://test.tesshub.hzdr.de/spaces/next-page [404]
+  ⚠  Could not retrieve https://test.tesshub.hzdr.de/spaces/next-page (HTTP 404 — the URL may be incorrect, the server may be temporarily unavailable, or access may be restricted)
+  Fetch depth-1: https://test.tesshub.hzdr.de/spaces/browse
+    ↓ https://test.tesshub.hzdr.de/spaces/browse [404]
+  ⚠  Could not retrieve https://test.tesshub.hzdr.de/spaces/browse (HTTP 404 — the URL may be incorrect, the server may be temporarily unavailable, or access may be restricted)
+  Discovery complete: 7 item(s) found across 4 page(s)
+Phase 2–4: extract, review, validate
+  Item: 'de.KCD Training Materials' (Course|ResourceCollection)
+    ↓ https://test.tesshub.hzdr.de/spaces/5 [200]
+    [LLM:metadata_analysis] 12862 ms
+    [LLM:json_ld_extraction] 14026 ms
+    [LLM:json_ld_review] 18752 ms
+    ✗ PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22198 ms
+  Item: 'DALIA' (Course|ResourceCollection)
+    ↓ https://test.tesshub.hzdr.de/spaces/4 [200]
+    [LLM:metadata_analysis] 12928 ms
+    [LLM:json_ld_extraction] 14545 ms
+    [LLM:json_ld_review] 15873 ms
+    ✗ PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 17917 ms
+  Item: 'EOSC Academy' (Course|ResourceCollection)
+    ↓ https://test.tesshub.hzdr.de/spaces/9 [200]
+    [LLM:metadata_analysis] 13177 ms
+    [LLM:json_ld_extraction] 12493 ms
+    [LLM:json_ld_review] 16484 ms
+    ✗ PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20200 ms
+  Item: 'OERHub.at' (Course|ResourceCollection)
+    ↓ https://test.tesshub.hzdr.de/spaces/6 [200]
+    [LLM:metadata_analysis] 14640 ms
+    [LLM:json_ld_extraction] 14642 ms
+    [LLM:json_ld_review] 14743 ms
+    ✗ PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 16065 ms
+  Item: 'Playground' (Course|ResourceCollection)
+    ↓ https://test.tesshub.hzdr.de/spaces/3 [200]
+    [LLM:metadata_analysis] 13409 ms
+    [LLM:json_ld_extraction] 11161 ms
+    [LLM:json_ld_review] 14012 ms
+    ✗ Playground - PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 17394 ms
+  Item: 'TeSShub' (Course|ResourceCollection)
+    ↓ https://test.tesshub.hzdr.de/spaces/8 [200]
+    [LLM:metadata_analysis] 18080 ms
+    [LLM:json_ld_extraction] 20171 ms
+    [LLM:json_ld_review] 19145 ms
+    ✗ PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20849 ms
+  Item: 'PaNOSC Services' (Course|ResourceCollection)
+    ↓ https://test.tesshub.hzdr.de/spaces/2 [200]
+    [LLM:metadata_analysis] 13958 ms
+    [LLM:json_ld_extraction] 13038 ms
+    [LLM:json_ld_review] 14401 ms
+    ✗ PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 14524 ms
+Extraction complete: 7 item(s)

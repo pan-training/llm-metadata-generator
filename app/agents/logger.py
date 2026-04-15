@@ -297,8 +297,8 @@ class AgentLogger:
     # -- Serialisation ---------------------------------------------------------
 
     def to_json(self) -> str:
-        """Serialise all events to a JSON array string."""
-        return json.dumps([asdict(e) for e in self._events], ensure_ascii=False)
+        """Serialise all events to a pretty-printed JSON array string."""
+        return json.dumps([asdict(e) for e in self._events], ensure_ascii=False, indent=2)
 
     # -- Statistics ------------------------------------------------------------
 

@@ -1,0 +1,457 @@
+[
+  {
+    "@type": "ResourceCollection",
+    "name": "PaN Training",
+    "description": "Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.",
+    "keywords": [
+      "photon science",
+      "neutron science",
+      "computational resources",
+      "training materials",
+      "learning resources"
+    ],
+    "url": "https://test.tesshub.hzdr.de/spaces/5",
+    "inLanguage": "en",
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Photon Science",
+        "url": "https://w3id.org/pan-training/PaNET00101"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron Science",
+        "url": "https://w3id.org/pan-training/PaNET00102"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Computational Science",
+        "url": "https://w3id.org/pan-training/PaNET01201"
+      }
+    ],
+    "learningResourceType": [
+      "tutorial",
+      "video",
+      "presentation",
+      "e-learning",
+      "handbook"
+    ],
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "intermediate"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "advanced"
+      }
+    ],
+    "educationalLevel": "beginner",
+    "teaches": [
+      "Leveraging computational resources in photon science",
+      "Leveraging computational resources in neutron science"
+    ],
+    "organizer": [
+      {
+        "@type": "Organization",
+        "name": "PaN Training"
+      }
+    ],
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "@id": "https://test.tesshub.hzdr.de/spaces/5",
+    "_validation": {
+      "valid": false,
+      "errors": [
+        "0: {'@type': 'ResourceCollection', 'name': 'PaN Training', 'description': 'Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.', 'keywords': ['photon science', 'neutron science', 'computational resources', 'training materials', 'learning resources'], 'url': 'https://test.tesshub.hzdr.de/spaces/5', 'inLanguage': 'en', 'about': [{'@type': 'DefinedTerm', 'name': 'Photon Science', 'url': 'https://w3id.org/pan-training/PaNET00101'}, {'@type': 'DefinedTerm', 'name': 'Neutron Science', 'url': 'https://w3id.org/pan-training/PaNET00102'}, {'@type': 'DefinedTerm', 'name': 'Computational Science', 'url': 'https://w3id.org/pan-training/PaNET01201'}], 'learningResourceType': ['tutorial', 'video', 'presentation', 'e-learning', 'handbook'], 'audience': [{'@type': 'Audience', 'audienceType': 'beginner'}, {'@type': 'Audience', 'audienceType': 'intermediate'}, {'@type': 'Audience', 'audienceType': 'advanced'}], 'educationalLevel': 'beginner', 'teaches': ['Leveraging computational resources in photon science', 'Leveraging computational resources in neutron science'], 'organizer': [{'@type': 'Organization', 'name': 'PaN Training'}], '@context': {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'}, 'dct:conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT', '@type': 'CreativeWork'}, '@id': 'https://test.tesshub.hzdr.de/spaces/5'} is not valid under any of the given schemas"
+      ]
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "ResourceCollection",
+    "name": "PaN Training",
+    "description": "Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.",
+    "keywords": [
+      "photon science",
+      "neutron science",
+      "data science",
+      "computational resources",
+      "training"
+    ],
+    "url": "https://test.tesshub.hzdr.de/spaces/4",
+    "inLanguage": "en",
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Photon Science",
+        "url": "https://w3id.org/pan-training/PaNET00101"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron Science",
+        "url": "https://w3id.org/pan-training/PaNET00102"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Data Science",
+        "url": "http://edamontology.org/topic_0091"
+      }
+    ],
+    "author": [
+      {
+        "@type": "Organization",
+        "name": "PaN-Training"
+      }
+    ],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://test.tesshub.hzdr.de/spaces/4",
+      "query-input": "search the portal for courses, events, videos, presentations, learning pathways, handbooks..."
+    },
+    "conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT"
+    },
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "@id": "https://test.tesshub.hzdr.de/spaces/4",
+    "_validation": {
+      "valid": false,
+      "errors": [
+        "0: {'@context': {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'}, '@type': 'ResourceCollection', 'name': 'PaN Training', 'description': 'Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.', 'keywords': ['photon science', 'neutron science', 'data science', 'computational resources', 'training'], 'url': 'https://test.tesshub.hzdr.de/spaces/4', 'inLanguage': 'en', 'about': [{'@type': 'DefinedTerm', 'name': 'Photon Science', 'url': 'https://w3id.org/pan-training/PaNET00101'}, {'@type': 'DefinedTerm', 'name': 'Neutron Science', 'url': 'https://w3id.org/pan-training/PaNET00102'}, {'@type': 'DefinedTerm', 'name': 'Data Science', 'url': 'http://edamontology.org/topic_0091'}], 'author': [{'@type': 'Organization', 'name': 'PaN-Training'}], 'potentialAction': {'@type': 'SearchAction', 'target': 'https://test.tesshub.hzdr.de/spaces/4', 'query-input': 'search the portal for courses, events, videos, presentations, learning pathways, handbooks...'}, 'conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT'}, 'dct:conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT', '@type': 'CreativeWork'}, '@id': 'https://test.tesshub.hzdr.de/spaces/4'} is not valid under any of the given schemas"
+      ]
+    }
+  },
+  {
+    "@type": "ResourceCollection",
+    "name": "PaN Training",
+    "description": "Search the portal for courses, events, videos, presentations, learning pathways, and handbooks. All types of resources at all levels for leveraging computational resources in photon and neutron sciences.",
+    "url": "https://test.tesshub.hzdr.de/spaces/9",
+    "inLanguage": "en",
+    "keywords": [
+      "photon science",
+      "neutron science",
+      "computational resources",
+      "data science",
+      "training",
+      "eosc"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Photon Science",
+        "url": "https://w3id.org/pan-training/PaNET01194"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron Scattering",
+        "url": "https://w3id.org/pan-training/PaNET01197"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Data Analysis",
+        "url": "http://edamontology.org/topic_0034"
+      }
+    ],
+    "learningResourceType": [
+      "course",
+      "video",
+      "presentation",
+      "learning pathway",
+      "handbook"
+    ],
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "intermediate"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "advanced"
+      }
+    ],
+    "educationalLevel": "advanced",
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "@id": "https://test.tesshub.hzdr.de/spaces/9",
+    "_validation": {
+      "valid": false,
+      "errors": [
+        "0: {'@type': 'ResourceCollection', 'name': 'PaN Training', 'description': 'Search the portal for courses, events, videos, presentations, learning pathways, and handbooks. All types of resources at all levels for leveraging computational resources in photon and neutron sciences.', 'url': 'https://test.tesshub.hzdr.de/spaces/9', 'inLanguage': 'en', 'keywords': ['photon science', 'neutron science', 'computational resources', 'data science', 'training', 'eosc'], 'about': [{'@type': 'DefinedTerm', 'name': 'Photon Science', 'url': 'https://w3id.org/pan-training/PaNET01194'}, {'@type': 'DefinedTerm', 'name': 'Neutron Scattering', 'url': 'https://w3id.org/pan-training/PaNET01197'}, {'@type': 'DefinedTerm', 'name': 'Data Analysis', 'url': 'http://edamontology.org/topic_0034'}], 'learningResourceType': ['course', 'video', 'presentation', 'learning pathway', 'handbook'], 'audience': [{'@type': 'Audience', 'audienceType': 'beginner'}, {'@type': 'Audience', 'audienceType': 'intermediate'}, {'@type': 'Audience', 'audienceType': 'advanced'}], 'educationalLevel': 'advanced', '@context': {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'}, 'dct:conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT', '@type': 'CreativeWork'}, '@id': 'https://test.tesshub.hzdr.de/spaces/9'} is not valid under any of the given schemas"
+      ]
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "ResourceCollection",
+    "name": "PaN Training",
+    "description": "Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.",
+    "keywords": [
+      "photon science",
+      "neutron science",
+      "computational resources",
+      "training",
+      "education",
+      "learning resources"
+    ],
+    "url": "https://test.tesshub.hzdr.de/spaces/6",
+    "author": [
+      {
+        "@type": "Organization",
+        "name": "PaN-Training"
+      }
+    ],
+    "inLanguage": "en",
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Photon science",
+        "url": "https://w3id.org/pan-training/PaNET01198"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron science",
+        "url": "https://w3id.org/pan-training/PaNET01199"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Computational Science",
+        "url": "https://w3id.org/pan-training/PaNET01202"
+      }
+    ],
+    "learningResourceType": [
+      "educational portal",
+      "learning resource repository"
+    ],
+    "@id": "https://test.tesshub.hzdr.de/spaces/6",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "_validation": {
+      "valid": false,
+      "errors": [
+        "0: {'@context': {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'}, '@type': 'ResourceCollection', 'name': 'PaN Training', 'description': 'Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.', 'keywords': ['photon science', 'neutron science', 'computational resources', 'training', 'education', 'learning resources'], 'url': 'https://test.tesshub.hzdr.de/spaces/6', 'author': [{'@type': 'Organization', 'name': 'PaN-Training'}], 'inLanguage': 'en', 'about': [{'@type': 'DefinedTerm', 'name': 'Photon science', 'url': 'https://w3id.org/pan-training/PaNET01198'}, {'@type': 'DefinedTerm', 'name': 'Neutron science', 'url': 'https://w3id.org/pan-training/PaNET01199'}, {'@type': 'DefinedTerm', 'name': 'Computational Science', 'url': 'https://w3id.org/pan-training/PaNET01202'}], 'learningResourceType': ['educational portal', 'learning resource repository'], '@id': 'https://test.tesshub.hzdr.de/spaces/6', 'dct:conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT', '@type': 'CreativeWork'}} is not valid under any of the given schemas"
+      ]
+    }
+  },
+  {
+    "@type": "ResourceCollection",
+    "name": "Playground - PaN Training",
+    "description": "Search the portal for courses, events, videos, presentations, learning pathways, and handbooks. All types of resources at all levels for leveraging computational resources in photon and neutron sciences.",
+    "url": "https://test.tesshub.hzdr.de/spaces/3",
+    "keywords": [
+      "photon science",
+      "neutron science",
+      "computational resources",
+      "training",
+      "data science",
+      "resources",
+      "learning pathways",
+      "handbooks"
+    ],
+    "inLanguage": "en",
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Photon Science",
+        "url": "https://w3id.org/pan-training/PaNET01203"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron Science",
+        "url": "https://w3id.org/pan-training/PaNET01203"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Computational Resources",
+        "url": "https://w3id.org/pan-training/PaNET01201"
+      }
+    ],
+    "organizer": [
+      {
+        "@type": "Organization",
+        "name": "PaN Training"
+      }
+    ],
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "@id": "https://test.tesshub.hzdr.de/spaces/3",
+    "_validation": {
+      "valid": false,
+      "errors": [
+        "0: {'@type': 'ResourceCollection', 'name': 'Playground - PaN Training', 'description': 'Search the portal for courses, events, videos, presentations, learning pathways, and handbooks. All types of resources at all levels for leveraging computational resources in photon and neutron sciences.', 'url': 'https://test.tesshub.hzdr.de/spaces/3', 'keywords': ['photon science', 'neutron science', 'computational resources', 'training', 'data science', 'resources', 'learning pathways', 'handbooks'], 'inLanguage': 'en', 'about': [{'@type': 'DefinedTerm', 'name': 'Photon Science', 'url': 'https://w3id.org/pan-training/PaNET01203'}, {'@type': 'DefinedTerm', 'name': 'Neutron Science', 'url': 'https://w3id.org/pan-training/PaNET01203'}, {'@type': 'DefinedTerm', 'name': 'Computational Resources', 'url': 'https://w3id.org/pan-training/PaNET01201'}], 'organizer': [{'@type': 'Organization', 'name': 'PaN Training'}], '@context': {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'}, 'dct:conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT', '@type': 'CreativeWork'}, '@id': 'https://test.tesshub.hzdr.de/spaces/3'} is not valid under any of the given schemas"
+      ]
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "ResourceCollection",
+    "name": "PaN Training",
+    "description": "Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.",
+    "keywords": [
+      "photon science",
+      "neutron science",
+      "computational resources",
+      "research data management",
+      "training",
+      "learning pathways",
+      "workflows"
+    ],
+    "url": "https://test.tesshub.hzdr.de/spaces/8",
+    "author": [
+      {
+        "@type": "Organization",
+        "name": "Helmholtz-Zentrum Dresden-Rossendorf (HZDR)"
+      }
+    ],
+    "inLanguage": "en",
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Photon Science",
+        "url": "https://w3id.org/pan-training/PaNET00101"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron Science",
+        "url": "https://w3id.org/pan-training/PaNET00102"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Research Data Management",
+        "url": "http://edamontology.org/topic_0098"
+      }
+    ],
+    "learningResourceType": [
+      "e-learning",
+      "tutorial",
+      "video",
+      "presentation",
+      "handbook",
+      "learning pathway"
+    ],
+    "educationalLevel": [
+      "beginner",
+      "intermediate",
+      "advanced"
+    ],
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "intermediate"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "advanced"
+      }
+    ],
+    "@id": "https://test.tesshub.hzdr.de/spaces/8",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "_validation": {
+      "valid": false,
+      "errors": [
+        "0: {'@context': {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'}, '@type': 'ResourceCollection', 'name': 'PaN Training', 'description': 'Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.', 'keywords': ['photon science', 'neutron science', 'computational resources', 'research data management', 'training', 'learning pathways', 'workflows'], 'url': 'https://test.tesshub.hzdr.de/spaces/8', 'author': [{'@type': 'Organization', 'name': 'Helmholtz-Zentrum Dresden-Rossendorf (HZDR)'}], 'inLanguage': 'en', 'about': [{'@type': 'DefinedTerm', 'name': 'Photon Science', 'url': 'https://w3id.org/pan-training/PaNET00101'}, {'@type': 'DefinedTerm', 'name': 'Neutron Science', 'url': 'https://w3id.org/pan-training/PaNET00102'}, {'@type': 'DefinedTerm', 'name': 'Research Data Management', 'url': 'http://edamontology.org/topic_0098'}], 'learningResourceType': ['e-learning', 'tutorial', 'video', 'presentation', 'handbook', 'learning pathway'], 'educationalLevel': ['beginner', 'intermediate', 'advanced'], 'audience': [{'@type': 'Audience', 'audienceType': 'beginner'}, {'@type': 'Audience', 'audienceType': 'intermediate'}, {'@type': 'Audience', 'audienceType': 'advanced'}], '@id': 'https://test.tesshub.hzdr.de/spaces/8', 'dct:conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT', '@type': 'CreativeWork'}} is not valid under any of the given schemas"
+      ]
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "ResourceCollection",
+    "name": "PaN Training",
+    "description": "Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.",
+    "keywords": [
+      "photon science",
+      "neutron science",
+      "computational resources",
+      "training",
+      "resources",
+      "learning pathways"
+    ],
+    "url": "https://test.tesshub.hzdr.de/spaces/2",
+    "inLanguage": "en",
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Photon Science",
+        "url": "https://w3id.org/pan-training/PaNET01203"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Neutron Science",
+        "url": "https://w3id.org/pan-training/PaNET01203"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Data Science",
+        "url": "http://edamontology.org/topic_0091"
+      }
+    ],
+    "learningResourceType": [
+      "course",
+      "event",
+      "video",
+      "presentation",
+      "learning pathway",
+      "handbook"
+    ],
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "@id": "https://test.tesshub.hzdr.de/spaces/2",
+    "_validation": {
+      "valid": false,
+      "errors": [
+        "0: {'@context': {'@vocab': 'https://schema.org/', 'dct': 'http://purl.org/dc/terms/'}, '@type': 'ResourceCollection', 'name': 'PaN Training', 'description': 'Search the portal for courses, events, videos, presentations, learning pathways, handbooks... All types of resources at all levels for leveraging computational resources in photon and neutron sciences.', 'keywords': ['photon science', 'neutron science', 'computational resources', 'training', 'resources', 'learning pathways'], 'url': 'https://test.tesshub.hzdr.de/spaces/2', 'inLanguage': 'en', 'about': [{'@type': 'DefinedTerm', 'name': 'Photon Science', 'url': 'https://w3id.org/pan-training/PaNET01203'}, {'@type': 'DefinedTerm', 'name': 'Neutron Science', 'url': 'https://w3id.org/pan-training/PaNET01203'}, {'@type': 'DefinedTerm', 'name': 'Data Science', 'url': 'http://edamontology.org/topic_0091'}], 'learningResourceType': ['course', 'event', 'video', 'presentation', 'learning pathway', 'handbook'], 'dct:conformsTo': {'@id': 'https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT', '@type': 'CreativeWork'}, '@id': 'https://test.tesshub.hzdr.de/spaces/2'} is not valid under any of the given schemas"
+      ]
+    }
+  }
+]

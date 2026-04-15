@@ -16,6 +16,7 @@ from app.agents.bioschemas import (
     _html_to_markdown,
     _chunk_text,
     _is_faceted_search_url,
+    _is_non_content_url,
     compute_site_structure_summary,
 )
 
@@ -213,10 +214,52 @@ def test_chunk_text_splits_long_text() -> None:
             "https://example.com/courses",
             False,
         ),
+        # Platform-specific unknown params: if they're the only params and we
+        # don't know them, they're NOT treated as faceted-search (unknown param
+        # means possibly a different content view, not a filter we recognise)
+        (
+            "https://example.com/materials?include_broken_links=true&myunknown=x",
+            "https://example.com/materials",
+            False,
+        ),
     ],
 )
 def test_is_faceted_search_url(url: str, source_url: str, expected: bool) -> None:
     assert _is_faceted_search_url(url, source_url) is expected
+
+
+# ---------------------------------------------------------------------------
+# Tests for _is_non_content_url
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "url,expected",
+    [
+        # Non-content paths that should be filtered (CRUD / auth)
+        ("https://example.com/materials/new", True),
+        ("https://example.com/events/create", True),
+        ("https://example.com/materials/123/edit", True),
+        ("https://example.com/materials/123/delete", True),
+        ("https://example.com/admin", True),
+        ("https://example.com/admin/users", True),
+        ("https://example.com/sign_in", True),
+        ("https://example.com/login", True),
+        ("https://example.com/register", True),
+        # search and api are NOT filtered — they may yield useful content
+        ("https://example.com/search", False),
+        ("https://example.com/api/v1/materials", False),
+        # Regular content paths that should NOT be filtered
+        ("https://example.com/materials", False),
+        ("https://example.com/materials?page=2", False),
+        ("https://example.com/materials/my-tutorial", False),
+        ("https://example.com/events/workshop-2024", False),
+        ("https://example.com/topics/introduction", False),
+        ("https://example.com/about", False),
+    ],
+)
+def test_is_non_content_url(url: str, expected: bool) -> None:
+    assert _is_non_content_url(url) is expected
 
 
 # ---------------------------------------------------------------------------

@@ -14,10 +14,10 @@ from flask import current_app
 from openai import OpenAI
 
 # Task categories: each task maps to one of three tiers.
-_SMALL_TASKS = {"content_relevance", "link_decision", "model_selection"}
+_SMALL_TASKS = {"link_decision", "model_selection"}
 _EMBEDDING_TASKS = {"ontology_embedding"}
-# All other tasks (content_summary, json_ld_review, metadata_analysis,
-# tool_discovery, …) use the large model.
+# All other tasks (content_relevance, content_summary, json_ld_review,
+# metadata_analysis, tool_discovery, …) use the large model.
 
 
 def get_llm_client(task: str = "default") -> OpenAI:
@@ -35,10 +35,10 @@ def get_model_for_task(task: str = "default") -> str:
 
     Task tiers:
       small  – LLM_MODEL_SMALL (default: qwen2.5-coder-7b-instruct)
-               Fast, cheap: content_relevance, link_decision, model_selection.
+               Fast, cheap: link_decision, model_selection.
       large  – LLM_MODEL_LARGE (default: gemma-3-27b-it)
-               Quality: content_summary, json_ld_review, metadata_analysis,
-               tool_discovery, default.
+               Quality: content_relevance, content_summary, json_ld_review,
+               metadata_analysis, tool_discovery, default.
       embed  – LLM_MODEL_EMBEDDING (default: qwen3-embedding-8b)
                Embedding: ontology_embedding.
     """

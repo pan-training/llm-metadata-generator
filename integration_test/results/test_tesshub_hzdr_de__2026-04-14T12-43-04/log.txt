@@ -1,0 +1,840 @@
+Computing structural summary (Phase 0) …
+Phase 0: computing structural summary
+  Fetching primary URL: https://test.tesshub.hzdr.de/
+  ↓ https://test.tesshub.hzdr.de/ [200]
+  Primary page: 3594 chars
+  Summarising primary page structure
+  Following 7 structural navigation link(s)
+  ↓ https://test.tesshub.hzdr.de/materials [200]
+  Summarising https://test.tesshub.hzdr.de/materials (16598 chars)
+  ↓ https://test.tesshub.hzdr.de/workflows [200]
+  Summarising https://test.tesshub.hzdr.de/workflows (2978 chars)
+  ↓ https://test.tesshub.hzdr.de/learning_paths [200]
+  Summarising https://test.tesshub.hzdr.de/learning_paths (3150 chars)
+  ↓ https://test.tesshub.hzdr.de/spaces [200]
+  Summarising https://test.tesshub.hzdr.de/spaces (4166 chars)
+  ↓ https://test.tesshub.hzdr.de/users/sign_in [200]
+  Summarising https://test.tesshub.hzdr.de/users/sign_in (3021 chars)
+  ↓ https://test.tesshub.hzdr.de/about [200]
+  Summarising https://test.tesshub.hzdr.de/about (8908 chars)
+  ↓ https://test.tesshub.hzdr.de/events [200]
+  Summarising https://test.tesshub.hzdr.de/events (4639 chars)
+  Compiling structural summary from 8 page summary/ies
+  Structural summary ready (4309 chars)
+Structural summary saved to structural_summary.json
+Using structural summary: {"site_description": "PaN Training is a platform providing training resources for the photon & neutron community.", "content_types": [{"type": "TrainingMaterial", "description": "Individual training materials, often workflows or analyses, covering specific scientific topics.", "primary_url": "https://test.tesshub.hzdr.de/materials", "navigation": {"type": "paginated", "urls": ["https://test.tesshub.hzdr.de/materials?page=2", "https://test.tesshub.hzdr.de/materials?page=3"], "description": "Mater…
+Phase 1 starting from 4 content-type URL(s) listed in structural summary
+Phase 1: crawl + discover
+  Fetch depth-0: https://test.tesshub.hzdr.de/materials
+    ↓ https://test.tesshub.hzdr.de/materials [200]
+    Page 1/20: 59048 chars, 5 chunk(s), hash=e37f7f1ea3a5…
+    [LLM:content_relevance] 2844 ms
+    Chunk 1/5: relevant
+    [LLM:content_relevance] 1464 ms
+    [LLM:content_relevance] 1441 ms
+    [LLM:content_relevance] 9548 ms
+    Chunk 4/5: relevant
+      ★ 'Analysis of plant scRNA-Seq Data with Scanpy' (TrainingMaterial)
+      ★ 'Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants' (TrainingMaterial)
+      ★ 'NCBI BLAST+ against the MAdLand' (TrainingMaterial)
+      ★ 'Whole transcriptome analysis of Arabidopsis thaliana' (TrainingMaterial)
+      ★ "From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis" (TrainingMaterial)
+      ★ 'Avian influenza viral strain analysis from gene segment sequencing data' (TrainingMaterial)
+      ★ 'M. tuberculosis Variant Analysis' (TrainingMaterial)
+      ★ 'Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data' (TrainingMaterial)
+      ★ 'Pox virus genome analysis from tiled-amplicon sequencing data' (TrainingMaterial)
+      ★ '16S Microbial analysis with Nanopore data' (TrainingMaterial)
+    [LLM:content_relevance] 2858 ms
+    Chunk 5/5: relevant
+  Fetch depth-1: https://test.tesshub.hzdr.de/materials?max_age=24+hours
+    ↓ https://test.tesshub.hzdr.de/materials?max_age=24+hours [200]
+    Page 2/20: 16688 chars, 1 chunk(s), hash=19d173cb5e0c…
+    [LLM:content_relevance] 1446 ms
+  Fetch depth-1: https://test.tesshub.hzdr.de/materials?max_age=1+week
+    ↓ https://test.tesshub.hzdr.de/materials?max_age=1+week [200]
+    Page 3/20: 16674 chars, 1 chunk(s), hash=7f385fc1b855…
+    [LLM:content_relevance] 1560 ms
+  Fetch depth-1: https://test.tesshub.hzdr.de/materials?max_age=1+month
+    ↓ https://test.tesshub.hzdr.de/materials?max_age=1+month [200]
+    Page 4/20: 16681 chars, 1 chunk(s), hash=858cb178e32e…
+    [LLM:content_relevance] 1359 ms
+  Fetch depth-1: https://test.tesshub.hzdr.de/materials?across_all_spaces=true
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true [200]
+    Page 5/20: 271376 chars, 32 chunk(s), hash=4a2472ff1a48…
+    [LLM:content_relevance] 2373 ms
+    [LLM:content_relevance] 1423 ms
+    [LLM:content_relevance] 1647 ms
+    [LLM:content_relevance] 1298 ms
+    [LLM:content_relevance] 2002 ms
+    [LLM:content_relevance] 1384 ms
+    [LLM:content_relevance] 2360 ms
+    Chunk 7/32: relevant
+      ★ 'European XFEL' (Space)
+    [LLM:content_relevance] 1819 ms
+    [LLM:content_relevance] 1864 ms
+    [LLM:content_relevance] 1313 ms
+    [LLM:content_relevance] 1364 ms
+    [LLM:content_relevance] 1660 ms
+    [LLM:content_relevance] 18451 ms
+    [LLM:content_relevance] 1410 ms
+    [LLM:content_relevance] 1331 ms
+    [LLM:content_relevance] 2434 ms
+    [LLM:content_relevance] 1890 ms
+    [LLM:content_relevance] 1409 ms
+    [LLM:content_relevance] 1312 ms
+    [LLM:content_relevance] 3512 ms
+    Chunk 20/32: relevant
+      ★ 'Coding For Reproducible Research (CfRR)' (TrainingMaterial)
+      ★ 'Common Fund Data Ecosystem' (TrainingMaterial)
+      ★ 'The Carpentries Incubator' (TrainingMaterial)
+    [LLM:content_relevance] 1797 ms
+    [LLM:content_relevance] 19218 ms
+    [LLM:content_relevance] 2319 ms
+    [LLM:content_relevance] 12651 ms
+    [LLM:content_relevance] 1459 ms
+    [LLM:content_relevance] 1304 ms
+    [LLM:content_relevance] 1327 ms
+    [LLM:content_relevance] 1691 ms
+    Chunk 28/32: relevant
+    [LLM:content_relevance] 1394 ms
+    [LLM:content_relevance] 7583 ms
+    [LLM:content_relevance] 7760 ms
+    Chunk 31/32: relevant
+      ★ 'RNA-seq Bioinformatics Course' (TrainingMaterial)
+      ★ 'PaNOSC and mTeSS-X' (TrainingMaterial)
+      ★ 'FAIR metabolomics in practice: submitting and accessing data in MetaboLights' (TrainingMaterial)
+      ★ 'carpentries-incubator/better-research-software' (TrainingMaterial)
+      ★ 'vib-training-conferences/rdm-introductory-course' (TrainingMaterial)
+      ★ 'mTeSS-X: Scaling Training Portal Federation for RIs through Multi-Tenanting and Exchange - Poster 2nd OSCARS AGM 2026' (TrainingMaterial)
+      ★ 'GenomicsAotearoa/data-management-resources' (TrainingMaterial)
+      ★ 'SciLifeLab-Training/open-science' (TrainingMaterial)
+    [LLM:content_relevance] 1385 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?across_all_spaces=true&content_provider=European+XFEL
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&content_provider=European+XFEL [200]
+    Page 6/20: 40508 chars, 4 chunk(s), hash=a2f10b107c2d…
+    [LLM:content_relevance] 4276 ms
+    Chunk 1/4: relevant
+    [LLM:content_relevance] 1882 ms
+    [LLM:content_relevance] 3074 ms
+    Chunk 3/4: relevant
+      ★ 'Offline data analysis tutorial' (TrainingMaterial)
+      ★ 'A deep dive into the mathematics of Machine Learning' (TrainingMaterial)
+      ★ 'Jupyter notebooks on Machine Learning for scientific data analysis' (TrainingMaterial)
+    [LLM:content_relevance] 1273 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?across_all_spaces=true&page=2
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&page=2 [200]
+    Page 7/20: 284149 chars, 32 chunk(s), hash=a75691f4381b…
+    [LLM:content_relevance] 1676 ms
+    Chunk 1/32: relevant
+    [LLM:content_relevance] 1548 ms
+    [LLM:content_relevance] 2282 ms
+    Chunk 3/32: relevant
+      ★ 'Bayesian methods' (CourseInstance)
+    [LLM:content_relevance] 4463 ms
+    Chunk 4/32: relevant
+      ★ 'R6' (TrainingMaterial)
+      ★ 'R program6' (TrainingMaterial)
+      ★ 'R script6' (TrainingMaterial)
+      ★ 'Applied ontology5' (TrainingMaterial)
+    [LLM:content_relevance] 1797 ms
+    [LLM:content_relevance] 14477 ms
+    [LLM:content_relevance] 1528 ms
+    [LLM:content_relevance] 1610 ms
+    [LLM:content_relevance] 1594 ms
+    [LLM:content_relevance] 1800 ms
+    [LLM:content_relevance] 1800 ms
+    [LLM:content_relevance] 1739 ms
+    [LLM:content_relevance] 1740 ms
+    [LLM:content_relevance] 1544 ms
+    [LLM:content_relevance] 1570 ms
+    [LLM:content_relevance] 1788 ms
+    [LLM:content_relevance] 1690 ms
+    [LLM:content_relevance] 1752 ms
+    [LLM:content_relevance] 1614 ms
+    [LLM:content_relevance] 1352 ms
+    [LLM:content_relevance] 1341 ms
+    [LLM:content_relevance] 1665 ms
+    [LLM:content_relevance] 1585 ms
+    [LLM:content_relevance] 1829 ms
+    [LLM:content_relevance] 1393 ms
+    [LLM:content_relevance] 1686 ms
+    Chunk 26/32: relevant
+    [LLM:content_relevance] 1351 ms
+    [LLM:content_relevance] 1668 ms
+    [LLM:content_relevance] 1421 ms
+    [LLM:content_relevance] 1677 ms
+    [LLM:content_relevance] 6385 ms
+    Chunk 31/32: relevant
+      ★ 'HemaFAIR Lecture 11 - Inside the Swiss Transplant Cohort Study App Ecosystem, Quick Tour and Project Management Insights' (TrainingMaterial)
+      ★ 'Python script Python' (TrainingMaterial)
+      ★ 'Data management  FAIR data Data management FAIR data' (TrainingMaterial)
+      ★ 'Data management  FAIR data Data management FAIR data Reproducibility' (TrainingMaterial)
+      ★ 'HemaFAIR Lecture 3 - Introduction to Conceptual Models' (TrainingMaterial)
+      ★ 'HemaFAIR Lecture 2 - Introduction to Biomedical Ontologies' (TrainingMaterial)
+      ★ 'HemaFAIR Lecture 8 - Introduction to Federated Analysis of FAIR Data' (TrainingMaterial)
+      ★ 'HemaFAIR Lecture 7 - Ethical, Legal and Social Implications (ELSI) and Data Protection for Rare Disease Data' (TrainingMaterial)
+      ★ 'HemaFAIR Lecture 6 - Introduction to HL7 FHIR Standard' (TrainingMaterial)
+    [LLM:content_relevance] 1770 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/spaces
+    ↓ https://test.tesshub.hzdr.de/spaces [200]
+    Page 8/20: 13136 chars, 2 chunk(s), hash=d1192f9a0047…
+    [LLM:content_relevance] 4748 ms
+    Chunk 1/2: relevant
+      ★ 'de.KCD Training Materials' (Space)
+      ★ 'DALIA' (Space)
+      ★ 'EOSC Academy' (Space)
+      ★ 'OERHub.at' (Space)
+      ★ 'OERSI' (Space)
+      ★ 'Playground' (Space)
+      ★ 'TeSShub' (Space)
+      ★ 'PaNOSC Services' (Space)
+    [LLM:content_relevance] 1307 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/about/registering
+    ↓ https://test.tesshub.hzdr.de/about/registering [200]
+    Page 9/20: 19261 chars, 3 chunk(s), hash=04188cb18a69…
+    [LLM:content_relevance] 1288 ms
+    [LLM:content_relevance] 1739 ms
+    [LLM:content_relevance] 1324 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/about
+    ↓ https://test.tesshub.hzdr.de/about [200]
+    Page 10/20: 17291 chars, 3 chunk(s), hash=4e1b9c2c422e…
+    [LLM:content_relevance] 2965 ms
+    Chunk 1/3: relevant
+      ★ 'Events' (CourseInstance|Course)
+      ★ 'Materials' (TrainingMaterial)
+    [LLM:content_relevance] 2788 ms
+    Chunk 2/3: relevant
+      ★ 'Materials in PaN-Training' (TrainingMaterial)
+      ★ 'Discover Materials' (TrainingMaterial)
+    [LLM:content_relevance] 1288 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/about/us#funding
+    ↓ https://test.tesshub.hzdr.de/about/us#funding [200]
+    Page 11/20: 19192 chars, 4 chunk(s), hash=64aa62593688…
+    [LLM:content_relevance] 1649 ms
+    Chunk 1/4: relevant
+    [LLM:content_relevance] 1336 ms
+    [LLM:content_relevance] 1346 ms
+    [LLM:content_relevance] 1308 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/privacy
+    ↓ https://test.tesshub.hzdr.de/privacy [200]
+    Page 12/20: 15762 chars, 3 chunk(s), hash=8cbbd5687c49…
+    [LLM:content_relevance] 2591 ms
+    [LLM:content_relevance] 1285 ms
+    [LLM:content_relevance] 2998 ms
+  Fetch depth-1: https://test.tesshub.hzdr.de/materials?include_disabled=true
+    ↓ https://test.tesshub.hzdr.de/materials?include_disabled=true [200]
+    Page 13/20: 62625 chars, 6 chunk(s), hash=2b360515d94e…
+    [LLM:content_relevance] 1382 ms
+    [LLM:content_relevance] 2246 ms
+    Chunk 2/6: relevant
+    [LLM:content_relevance] 1399 ms
+    [LLM:content_relevance] 3567 ms
+    [LLM:content_relevance] 8246 ms
+    Chunk 5/6: relevant
+    [LLM:content_relevance] 1250 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?include_disabled=true&keywords=Plant+Phenotyping+Data
+    ↓ https://test.tesshub.hzdr.de/materials?include_disabled=true&keywords=Plant+Phenotyping+Data [200]
+    Page 14/20: 55017 chars, 6 chunk(s), hash=a01f4362d039…
+    [LLM:content_relevance] 2660 ms
+    Chunk 1/6: relevant
+    [LLM:content_relevance] 3513 ms
+    [LLM:content_relevance] 1925 ms
+    [LLM:content_relevance] 1428 ms
+    [LLM:content_relevance] 2257 ms
+    [LLM:content_relevance] 3338 ms
+    Chunk 6/6: relevant
+      ★ 'RDMkit - Plant Science' (TrainingMaterial)
+      ★ 'FAIR Cookbook - Plant genomic and genetic variation data submission to EMBL-EBI databases' (TrainingMaterial)
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?include_disabled=true&page=2
+    ↓ https://test.tesshub.hzdr.de/materials?include_disabled=true&page=2 [200]
+    Page 15/20: 62546 chars, 6 chunk(s), hash=aee88e1bd9a4…
+    [LLM:content_relevance] 1782 ms
+    Chunk 1/6: relevant
+    [LLM:content_relevance] 1673 ms
+    [LLM:content_relevance] 2050 ms
+    Chunk 3/6: relevant
+      ★ 'Open Educational Resources' (TrainingMaterial)
+    [LLM:content_relevance] 2581 ms
+    [LLM:content_relevance] 7714 ms
+    Chunk 5/6: relevant
+      ★ 'SARS-CoV-2 Viral Sample Alignment and Variant Visualization' (TrainingMaterial)
+      ★ 'Genomic Data Visualisation with JBrowse' (TrainingMaterial)
+      ★ 'Microbial Variant Calling' (TrainingMaterial)
+    [LLM:content_relevance] 1218 ms
+  Fetch depth-1: https://test.tesshub.hzdr.de/materials?include_broken_links=true
+    ↓ https://test.tesshub.hzdr.de/materials?include_broken_links=true [200]
+    Page 16/20: 64183 chars, 6 chunk(s), hash=c604c313a4d2…
+    [LLM:content_relevance] 11162 ms
+    Chunk 1/6: relevant
+    [LLM:content_relevance] 1776 ms
+    [LLM:content_relevance] 1501 ms
+    [LLM:content_relevance] 1739 ms
+    [LLM:content_relevance] 10485 ms
+    Chunk 5/6: relevant
+      ★ 'Test PaNET crystallography' (TrainingMaterial)
+      ★ 'Analysis of plant scRNA-Seq Data with Scanpy plants paper-replication end-to-end' (TrainingMaterial)
+      ★ 'Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants plants' (TrainingMaterial)
+      ★ 'NCBI BLAST+ against the MAdLand plants' (TrainingMaterial)
+      ★ 'Whole transcriptome analysis of Arabidopsis thaliana miRNA plants stress tolerance' (TrainingMaterial)
+      ★ "From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis covid19 virology one-health one-health" (TrainingMaterial)
+      ★ 'Avian influenza viral strain analysis from gene segment sequencing data virology one-health one-health' (TrainingMaterial)
+      ★ 'M. tuberculosis Variant Analysis prokaryote one-health microgalaxy tuberculosis one-health' (TrainingMaterial)
+      ★ 'Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data covid19 virology one-health one-health' (TrainingMaterial)
+      ★ 'Pox virus genome analysis from tiled-amplicon sequencing data virology one-health one-health' (TrainingMaterial)
+    [LLM:content_relevance] 2811 ms
+    Chunk 6/6: relevant
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?include_broken_links=true&max_age=24+hours
+    ↓ https://test.tesshub.hzdr.de/materials?include_broken_links=true&max_age=24+hours [200]
+    Page 17/20: 17248 chars, 2 chunk(s), hash=b1b4892470c4…
+    [LLM:content_relevance] 5133 ms
+    [LLM:content_relevance] 1229 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?include_broken_links=true&max_age=1+week
+    ↓ https://test.tesshub.hzdr.de/materials?include_broken_links=true&max_age=1+week [200]
+    Page 18/20: 17232 chars, 2 chunk(s), hash=3cddfbf0c051…
+    [LLM:content_relevance] 2392 ms
+    Chunk 1/2: relevant
+    [LLM:content_relevance] 1259 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?include_broken_links=true&max_age=1+month
+    ↓ https://test.tesshub.hzdr.de/materials?include_broken_links=true&max_age=1+month [200]
+    Page 19/20: 17240 chars, 2 chunk(s), hash=d8b840114fde…
+    [LLM:content_relevance] 1352 ms
+    [LLM:content_relevance] 1244 ms
+  Fetch depth-2: https://test.tesshub.hzdr.de/materials?include_broken_links=true&scientific_topics=crystallography
+    ↓ https://test.tesshub.hzdr.de/materials?include_broken_links=true&scientific_topics=crystallography [200]
+    Page 20/20: 21207 chars, 2 chunk(s), hash=841960b91a1c…
+    [LLM:content_relevance] 5671 ms
+    Chunk 1/2: relevant
+    [LLM:content_relevance] 1297 ms
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Crawl limit (20 pages) reached
+  Discovery complete: 67 item(s) found across 20 page(s)
+Phase 2–4: extract, review, validate
+  Item: 'Analysis of plant scRNA-Seq Data with Scanpy' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/analysis-of-plant-scrna-seq-data-with-scanpy [200]
+    [LLM:metadata_analysis] 15054 ms
+    [LLM:json_ld_extraction] 12179 ms
+    [LLM:json_ld_review] 21362 ms
+    ✓ Analysis of plant scRNA-Seq Data with Scanpy
+  Item: 'Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/identification-and-evolutionary-analysis-of-transcription-associated-proteins-in-streptophyte-algae-and-land-plants [200]
+    [LLM:metadata_analysis] 16833 ms
+    [LLM:json_ld_extraction] 15431 ms
+    [LLM:json_ld_review] 20618 ms
+    ✗ Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22820 ms
+  Item: 'NCBI BLAST+ against the MAdLand' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/ncbi-blast-against-the-madland [200]
+    [LLM:metadata_analysis] 11964 ms
+    [LLM:json_ld_extraction] 10163 ms
+    [LLM:json_ld_review] 16466 ms
+    ✗ NCBI BLAST+ against the MAdLand – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 18662 ms
+  Item: 'Whole transcriptome analysis of Arabidopsis thaliana' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/whole-transcriptome-analysis-of-arabidopsis-thaliana [200]
+    [LLM:metadata_analysis] 12502 ms
+    [LLM:json_ld_extraction] 14753 ms
+    [LLM:json_ld_review] 22748 ms
+    ✗ Whole transcriptome analysis of Arabidopsis thaliana – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25302 ms
+  Item: "From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis" (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/from-ncbi-s-sequence-read-archive-sra-to-galaxy-sars-cov-2-variant-analysis-f0341854-6ab6-4f93-8543-afebbe3a1d4b [200]
+    [LLM:metadata_analysis] 14264 ms
+    [LLM:json_ld_extraction] 15239 ms
+    [LLM:json_ld_review] 22368 ms
+    ✗ From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25796 ms
+  Item: 'Avian influenza viral strain analysis from gene segment sequencing data' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/avian-influenza-viral-strain-analysis-from-gene-segment-sequencing-data [200]
+    [LLM:metadata_analysis] 13969 ms
+    [LLM:json_ld_extraction] 12758 ms
+    [LLM:json_ld_review] 22946 ms
+    ✗ Avian influenza viral strain analysis from gene segment sequencing data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24265 ms
+  Item: 'M. tuberculosis Variant Analysis' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/m-tuberculosis-variant-analysis [200]
+    [LLM:metadata_analysis] 12520 ms
+    [LLM:json_ld_extraction] 14590 ms
+    [LLM:json_ld_review] 21442 ms
+    ✗ M. tuberculosis Variant Analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23428 ms
+  Item: 'Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/mutation-calling-viral-genome-reconstruction-and-lineage-clade-assignment-from-sars-cov-2-sequencing-data-e219503e-4cc6-46f8-89cd-096405d4dfbe [200]
+    [LLM:metadata_analysis] 15922 ms
+    [LLM:json_ld_extraction] 15434 ms
+    [LLM:json_ld_review] 20758 ms
+    ✗ Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23060 ms
+  Item: 'Pox virus genome analysis from tiled-amplicon sequencing data' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/pox-virus-genome-analysis-from-tiled-amplicon-sequencing-data [200]
+    [LLM:metadata_analysis] 13334 ms
+    [LLM:json_ld_extraction] 11083 ms
+    [LLM:json_ld_review] 18329 ms
+    ✗ Pox virus genome analysis from tiled-amplicon sequencing data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20440 ms
+  Item: '16S Microbial analysis with Nanopore data' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/16s-microbial-analysis-with-nanopore-data [200]
+    [LLM:metadata_analysis] 13832 ms
+    [LLM:json_ld_extraction] 16030 ms
+    [LLM:json_ld_review] 20437 ms
+    ✗ 16S Microbial analysis with Nanopore data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21135 ms
+  Item: 'European XFEL' (Space)
+    [LLM:metadata_analysis] 15359 ms
+    [LLM:json_ld_extraction] 21064 ms
+    [LLM:json_ld_review] 22713 ms
+    ✗ PaN Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25736 ms
+  Item: 'Coding For Reproducible Research (CfRR)' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&authors=Coding+For+Reproducible+Research+%28CfRR%29 [200]
+    [LLM:metadata_analysis] 17054 ms
+    [LLM:json_ld_extraction] 22231 ms
+    [LLM:json_ld_review] 26870 ms
+    ✗ Materials - PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 28457 ms
+  Item: 'Common Fund Data Ecosystem' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&authors=Common+Fund+Data+Ecosystem [200]
+    [LLM:metadata_analysis] 18412 ms
+    [LLM:json_ld_extraction] 30693 ms
+    [LLM:json_ld_review] 29019 ms
+    ✓ PaN Training Materials
+  Item: 'The Carpentries Incubator' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&contributors=The+Carpentries+Incubator [200]
+    [LLM:metadata_analysis] 14331 ms
+    [LLM:json_ld_extraction] 18344 ms
+    [LLM:json_ld_review] 26809 ms
+    ✗ The Carpentries Incubator Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 29019 ms
+  Item: 'RNA-seq Bioinformatics Course' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/rna-seq-bioinformatics-course': No scheme supplied. Perhaps you meant https:///materials/rna-seq-bioinformatics-course?
+    [LLM:metadata_analysis] 15753 ms
+    [LLM:json_ld_extraction] 17668 ms
+    [LLM:json_ld_review] 25096 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24670 ms
+  Item: 'PaNOSC and mTeSS-X' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/panosc-and-mtess-x': No scheme supplied. Perhaps you meant https:///materials/panosc-and-mtess-x?
+    [LLM:metadata_analysis] 18438 ms
+    [LLM:json_ld_extraction] 40692 ms
+    [LLM:json_ld_review] 26638 ms
+    ✗ PaN Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 29178 ms
+  Item: 'FAIR metabolomics in practice: submitting and accessing data in MetaboLights' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/fair-metabolomics-in-practice-submitting-and-accessing-data-in-metabolights': No scheme supplied. Perhaps you meant https:///materials/fair-metabolomics-in-practice-submitting-and-accessing-data-in-metabolights?
+    [LLM:metadata_analysis] 17914 ms
+    [LLM:json_ld_extraction] 17618 ms
+    [LLM:json_ld_review] 25210 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27034 ms
+  Item: 'carpentries-incubator/better-research-software' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/carpentries-incubator-better-research-software': No scheme supplied. Perhaps you meant https:///materials/carpentries-incubator-better-research-software?
+    [LLM:metadata_analysis] 16605 ms
+    [LLM:json_ld_extraction] 21360 ms
+    [LLM:json_ld_review] 24872 ms
+    ✗ PaN Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 28180 ms
+  Item: 'vib-training-conferences/rdm-introductory-course' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/vib-training-conferences-rdm-introductory-course': No scheme supplied. Perhaps you meant https:///materials/vib-training-conferences-rdm-introductory-course?
+    [LLM:metadata_analysis] 17481 ms
+    [LLM:json_ld_extraction] 17284 ms
+    [LLM:json_ld_review] 25920 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27873 ms
+  Item: 'mTeSS-X: Scaling Training Portal Federation for RIs through Multi-Tenanting and Exchange - Poster 2nd OSCARS AGM 2026' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/mtess-x-scaling-training-portal-federation-for-ris-through-multi-tenanting-and-exchange-poster-2nd-oscars-agm-2026 [200]
+    [LLM:metadata_analysis] 17041 ms
+    [LLM:json_ld_extraction] 22821 ms
+    [LLM:json_ld_review] 24784 ms
+    ✓ mTeSS-X: Scaling Training Portal Federation for RIs through Multi-Tenanting and Exchange - Poster 2nd OSCARS AGM 2026
+  Item: 'GenomicsAotearoa/data-management-resources' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/genomicsaotearoa-data-management-resources': No scheme supplied. Perhaps you meant https:///materials/genomicsaotearoa-data-management-resources?
+    [LLM:metadata_analysis] 16835 ms
+    [LLM:json_ld_extraction] 22146 ms
+    [LLM:json_ld_review] 24804 ms
+    ✗ Materials - PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26595 ms
+  Item: 'SciLifeLab-Training/open-science' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/scilifelab-training-open-science': No scheme supplied. Perhaps you meant https:///materials/scilifelab-training-open-science?
+    [LLM:metadata_analysis] 17930 ms
+    [LLM:json_ld_extraction] 35590 ms
+    [LLM:json_ld_review] 23082 ms
+    ✗ PaN Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24182 ms
+  Item: 'Offline data analysis tutorial' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/offline-analysis-tutorial': No scheme supplied. Perhaps you meant https:///materials/offline-analysis-tutorial?
+    [LLM:metadata_analysis] 12484 ms
+    [LLM:json_ld_extraction] 12593 ms
+    [LLM:json_ld_review] 18557 ms
+    ✗ Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20286 ms
+  Item: 'A deep dive into the mathematics of Machine Learning' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/a-deep-dive-into-the-mathematics-of-machine-learning': No scheme supplied. Perhaps you meant https:///materials/a-deep-dive-into-the-mathematics-of-machine-learning?
+    [LLM:metadata_analysis] 13990 ms
+    [LLM:json_ld_extraction] 12328 ms
+    [LLM:json_ld_review] 24600 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 28030 ms
+  Item: 'Jupyter notebooks on Machine Learning for scientific data analysis' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/jupyter-notebooks-on-machine-learning-for-scientific-data-analysis': No scheme supplied. Perhaps you meant https:///materials/jupyter-notebooks-on-machine-learning-for-scientific-data-analysis?
+    [LLM:metadata_analysis] 13577 ms
+    [LLM:json_ld_extraction] 19781 ms
+    [LLM:json_ld_review] 27911 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 31255 ms
+  Item: 'Bayesian methods' (CourseInstance)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&scientific_topics=Bayesian+methods [200]
+    [LLM:metadata_analysis] 14361 ms
+    [LLM:json_ld_extraction] 22323 ms
+    [LLM:json_ld_review] 21960 ms
+    ✓ PaN-Training Materials
+  Item: 'R6' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&scientific_topics=R [200]
+    [LLM:metadata_analysis] 16068 ms
+    [LLM:json_ld_extraction] 14233 ms
+    [LLM:json_ld_review] 14904 ms
+    ✗ Materials - PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 17240 ms
+  Item: 'R program6' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&scientific_topics=R+program [200]
+    [LLM:metadata_analysis] 15166 ms
+    [LLM:json_ld_extraction] 17022 ms
+    [LLM:json_ld_review] 23282 ms
+    ✗ R Program Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25740 ms
+  Item: 'R script6' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&scientific_topics=R+script [200]
+    [LLM:metadata_analysis] 13988 ms
+    [LLM:json_ld_extraction] 13890 ms
+    [LLM:json_ld_review] 19943 ms
+    ✗ Materials - PaN Training – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21397 ms
+  Item: 'Applied ontology5' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?across_all_spaces=true&scientific_topics=Applied+ontology [200]
+    [LLM:metadata_analysis] 14760 ms
+    [LLM:json_ld_extraction] 19915 ms
+    [LLM:json_ld_review] 22076 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25138 ms
+  Item: 'HemaFAIR Lecture 11 - Inside the Swiss Transplant Cohort Study App Ecosystem, Quick Tour and Project Management Insights' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/hemafair-lecture-11-inside-the-swiss-transplant-cohort-study-app-ecosystem-quick-tour-and-project-management-insights': No scheme supplied. Perhaps you meant https:///materials/hemafair-lecture-11-inside-the-swiss-transplant-cohort-study-app-ecosystem-quick-tour-and-project-management-insights?
+    [LLM:metadata_analysis] 14969 ms
+    [LLM:json_ld_extraction] 21891 ms
+    [LLM:json_ld_review] 23794 ms
+    ✗ HemaFAIR Lecture 11 - Inside the Swiss Transplant Cohort Study App Ecosystem, Quick Tour and Project Management Insights – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26588 ms
+  Item: 'Python script Python' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/bpucker-appls': No scheme supplied. Perhaps you meant https:///materials/bpucker-appls?
+    [LLM:metadata_analysis] 17160 ms
+    [LLM:json_ld_extraction] 17248 ms
+    [LLM:json_ld_review] 18887 ms
+    ✗ PaN Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 19914 ms
+  Item: 'Data management  FAIR data Data management FAIR data' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/bioinformaticsdotca-rdm_to-2605': No scheme supplied. Perhaps you meant https:///materials/bioinformaticsdotca-rdm_to-2605?
+    [LLM:metadata_analysis] 15928 ms
+    [LLM:json_ld_extraction] 22023 ms
+    [LLM:json_ld_review] 25676 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27812 ms
+  Item: 'Data management  FAIR data Data management FAIR data Reproducibility' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/bes-guide-reproducible-code': No scheme supplied. Perhaps you meant https:///materials/bes-guide-reproducible-code?
+    [LLM:metadata_analysis] 17331 ms
+    [LLM:json_ld_extraction] 24661 ms
+    [LLM:json_ld_review] 25265 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26571 ms
+  Item: 'HemaFAIR Lecture 3 - Introduction to Conceptual Models' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/hemafair-lecture-3-introduction-to-conceptual-models': No scheme supplied. Perhaps you meant https:///materials/hemafair-lecture-3-introduction-to-conceptual-models?
+    [LLM:metadata_analysis] 14884 ms
+    [LLM:json_ld_extraction] 22648 ms
+    [LLM:json_ld_review] 24662 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27048 ms
+  Item: 'HemaFAIR Lecture 2 - Introduction to Biomedical Ontologies' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/hemafair-lecture-2-introduction-to-biomedical-ontologies': No scheme supplied. Perhaps you meant https:///materials/hemafair-lecture-2-introduction-to-biomedical-ontologies?
+    [LLM:metadata_analysis] 14719 ms
+    [LLM:json_ld_extraction] 20296 ms
+    [LLM:json_ld_review] 25398 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27540 ms
+  Item: 'HemaFAIR Lecture 8 - Introduction to Federated Analysis of FAIR Data' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/hemafair-lecture-8-introduction-to-federated-analysis-of-fair-data': No scheme supplied. Perhaps you meant https:///materials/hemafair-lecture-8-introduction-to-federated-analysis-of-fair-data?
+    [LLM:metadata_analysis] 16587 ms
+    [LLM:json_ld_extraction] 19725 ms
+    [LLM:json_ld_review] 23773 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 25527 ms
+  Item: 'HemaFAIR Lecture 7 - Ethical, Legal and Social Implications (ELSI) and Data Protection for Rare Disease Data' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/hemafair-lecture-7-ethical-legal-and-social-implications-elsi-and-data-protection-for-rare-disease-data': No scheme supplied. Perhaps you meant https:///materials/hemafair-lecture-7-ethical-legal-and-social-implications-elsi-and-data-protection-for-rare-disease-data?
+    [LLM:metadata_analysis] 14649 ms
+    [LLM:json_ld_extraction] 24420 ms
+    [LLM:json_ld_review] 27423 ms
+    ✗ HemaFAIR Lecture 7 - Ethical, Legal and Social Implications (ELSI) and Data Protection for Rare Disease Data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 29774 ms
+  Item: 'HemaFAIR Lecture 6 - Introduction to HL7 FHIR Standard' (TrainingMaterial)
+    ⚠  Could not fetch detail page: Invalid URL '/materials/hemafair-lecture-6-introduction-to-hl7-fhir-standard': No scheme supplied. Perhaps you meant https:///materials/hemafair-lecture-6-introduction-to-hl7-fhir-standard?
+    [LLM:metadata_analysis] 14713 ms
+    [LLM:json_ld_extraction] 19082 ms
+    [LLM:json_ld_review] 25368 ms
+    ✗ Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27127 ms
+  Item: 'de.KCD Training Materials' (Space)
+    ↓ https://kcd.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 13898 ms
+    [LLM:json_ld_extraction] 14226 ms
+    [LLM:json_ld_review] 18123 ms
+    ✗ de.KCD Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 18599 ms
+  Item: 'DALIA' (Space)
+    ↓ https://dalia.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 15224 ms
+    [LLM:json_ld_extraction] 13091 ms
+    [LLM:json_ld_review] 21624 ms
+    ✗ DALIA – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22790 ms
+  Item: 'EOSC Academy' (Space)
+    ↓ https://eosc-academy.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 16806 ms
+    [LLM:json_ld_extraction] 13830 ms
+    [LLM:json_ld_review] 16832 ms
+    ✗ EOSC Academy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 17580 ms
+    ✓ EOSC Academy
+  Item: 'OERHub.at' (Space)
+    ↓ https://oerhub.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 16986 ms
+    [LLM:json_ld_extraction] 14356 ms
+    [LLM:json_ld_review] 19465 ms
+    ✗ OERHub.at – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20371 ms
+  Item: 'OERSI' (Space)
+    ↓ https://oersi.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 15281 ms
+    [LLM:json_ld_extraction] 24149 ms
+    [LLM:json_ld_review] 27032 ms
+    ✗ OERSI - Open Educational Resources Search Index – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 27322 ms
+  Item: 'Playground' (Space)
+    ↓ https://test.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 14537 ms
+    [LLM:json_ld_extraction] 14238 ms
+    [LLM:json_ld_review] 18104 ms
+    ✓ PaN-Training Playground
+  Item: 'TeSShub' (Space)
+    ↓ https://default.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 15768 ms
+    [LLM:json_ld_extraction] 14630 ms
+    [LLM:json_ld_review] 21404 ms
+    ✗ TeSShub – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22981 ms
+  Item: 'PaNOSC Services' (Space)
+    ↓ https://services.tesshub.hzdr.de [200]
+    [LLM:metadata_analysis] 18053 ms
+    [LLM:json_ld_extraction] 28441 ms
+    [LLM:json_ld_review] 40298 ms
+    ✗ PaNOSC Services – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 43609 ms
+  Item: 'Events' (CourseInstance|Course)
+    ↓ https://test.tesshub.hzdr.de/events [200]
+    [LLM:metadata_analysis] 14664 ms
+    [LLM:json_ld_extraction] 15163 ms
+    [LLM:json_ld_review] 19536 ms
+    ✗ PaN Training Events – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21026 ms
+  Item: 'Materials' (TrainingMaterial)
+    [LLM:metadata_analysis] 15042 ms
+    [LLM:json_ld_extraction] 19919 ms
+    [LLM:json_ld_review] 20522 ms
+    ✓ Materials - PaN Training
+  Item: 'Materials in PaN-Training' (TrainingMaterial)
+    [LLM:metadata_analysis] 15060 ms
+    [LLM:json_ld_extraction] 13124 ms
+    [LLM:json_ld_review] 12114 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 13833 ms
+  Item: 'Discover Materials' (TrainingMaterial)
+    [LLM:metadata_analysis] 18305 ms
+    [LLM:json_ld_extraction] 27425 ms
+    [LLM:json_ld_review] 26668 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 28048 ms
+  Item: 'RDMkit - Plant Science' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/rdmkit-plant-science [200]
+    [LLM:metadata_analysis] 12865 ms
+    [LLM:json_ld_extraction] 20772 ms
+    [LLM:json_ld_review] 27109 ms
+    ✗ RDMkit - Plant Science – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 23661 ms
+  Item: 'FAIR Cookbook - Plant genomic and genetic variation data submission to EMBL-EBI databases' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/fair-cookbook-plant-genomic-and-genetic-variation-data-submission-to-embl-ebi-databases [200]
+    [LLM:metadata_analysis] 16624 ms
+    [LLM:json_ld_extraction] 16256 ms
+    [LLM:json_ld_review] 24134 ms
+    ✗ FAIR Cookbook - Plant genomic and genetic variation data submission to EMBL-EBI databases – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26050 ms
+  Item: 'Open Educational Resources' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials?include_disabled=true&keywords=Open+Educational+Resources [200]
+    [LLM:metadata_analysis] 14008 ms
+    [LLM:json_ld_extraction] 18239 ms
+    [LLM:json_ld_review] 18222 ms
+    ✗ PaN-Training Materials – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20369 ms
+  Item: 'SARS-CoV-2 Viral Sample Alignment and Variant Visualization' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/sars-cov-2-viral-sample-alignment-and-variant-visualization-c05ac914-e66f-4b87-b2d5-b6dcaaf5f551 [200]
+    [LLM:metadata_analysis] 13527 ms
+    [LLM:json_ld_extraction] 14032 ms
+    [LLM:json_ld_review] 21202 ms
+    ✗ SARS-CoV-2 Viral Sample Alignment and Variant Visualization – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22405 ms
+  Item: 'Genomic Data Visualisation with JBrowse' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/genomic-data-visualisation-with-jbrowse [200]
+    [LLM:metadata_analysis] 13944 ms
+    [LLM:json_ld_extraction] 10326 ms
+    [LLM:json_ld_review] 17214 ms
+    ✗ Genomic Data Visualisation with JBrowse – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 18715 ms
+  Item: 'Microbial Variant Calling' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/microbial-variant-calling [200]
+    [LLM:metadata_analysis] 13843 ms
+    [LLM:json_ld_extraction] 14125 ms
+    [LLM:json_ld_review] 18784 ms
+    ✓ Microbial Variant Calling
+  Item: 'Test PaNET crystallography' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/test-panet [200]
+    [LLM:metadata_analysis] 15961 ms
+    [LLM:json_ld_extraction] 12132 ms
+    [LLM:json_ld_review] 13048 ms
+    ✓ Test PaNET
+  Item: 'Analysis of plant scRNA-Seq Data with Scanpy plants paper-replication end-to-end' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/analysis-of-plant-scrna-seq-data-with-scanpy [200]
+    [LLM:metadata_analysis] 13726 ms
+    [LLM:json_ld_extraction] 13029 ms
+    [LLM:json_ld_review] 22612 ms
+    ✗ Analysis of plant scRNA-Seq Data with Scanpy – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24598 ms
+  Item: 'Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants plants' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/identification-and-evolutionary-analysis-of-transcription-associated-proteins-in-streptophyte-algae-and-land-plants [200]
+    [LLM:metadata_analysis] 14217 ms
+    [LLM:json_ld_extraction] 12784 ms
+    [LLM:json_ld_review] 21728 ms
+    ✗ Identification and Evolutionary Analysis of Transcription-Associated Proteins in Streptophyte algae and Land plants – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 24395 ms
+  Item: 'NCBI BLAST+ against the MAdLand plants' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/ncbi-blast-against-the-madland [200]
+    [LLM:metadata_analysis] 13959 ms
+    [LLM:json_ld_extraction] 12253 ms
+    [LLM:json_ld_review] 18900 ms
+    ✗ NCBI BLAST+ against the MAdLand – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21086 ms
+  Item: 'Whole transcriptome analysis of Arabidopsis thaliana miRNA plants stress tolerance' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/whole-transcriptome-analysis-of-arabidopsis-thaliana [200]
+    [LLM:metadata_analysis] 12330 ms
+    [LLM:json_ld_extraction] 17952 ms
+    [LLM:json_ld_review] 19558 ms
+    ✗ Whole transcriptome analysis of Arabidopsis thaliana – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21395 ms
+  Item: "From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis covid19 virology one-health one-health" (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/from-ncbi-s-sequence-read-archive-sra-to-galaxy-sars-cov-2-variant-analysis-f0341854-6ab6-4f93-8543-afebbe3a1d4b [200]
+    [LLM:metadata_analysis] 14361 ms
+    [LLM:json_ld_extraction] 18661 ms
+    [LLM:json_ld_review] 23882 ms
+    ✗ From NCBI's Sequence Read Archive (SRA) to Galaxy: SARS-CoV-2 variant analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26951 ms
+  Item: 'Avian influenza viral strain analysis from gene segment sequencing data virology one-health one-health' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/avian-influenza-viral-strain-analysis-from-gene-segment-sequencing-data [200]
+    [LLM:metadata_analysis] 14308 ms
+    [LLM:json_ld_extraction] 13036 ms
+    [LLM:json_ld_review] 20244 ms
+    ✗ Avian influenza viral strain analysis from gene segment sequencing data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 22490 ms
+  Item: 'M. tuberculosis Variant Analysis prokaryote one-health microgalaxy tuberculosis one-health' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/m-tuberculosis-variant-analysis [200]
+    [LLM:metadata_analysis] 12724 ms
+    [LLM:json_ld_extraction] 12737 ms
+    [LLM:json_ld_review] 19140 ms
+    ✗ M. tuberculosis Variant Analysis – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 21073 ms
+  Item: 'Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data covid19 virology one-health one-health' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/mutation-calling-viral-genome-reconstruction-and-lineage-clade-assignment-from-sars-cov-2-sequencing-data-e219503e-4cc6-46f8-89cd-096405d4dfbe [200]
+    [LLM:metadata_analysis] 15273 ms
+    [LLM:json_ld_extraction] 16688 ms
+    [LLM:json_ld_review] 22002 ms
+    ✗ Mutation calling, viral genome reconstruction and lineage/clade assignment from SARS-CoV-2 sequencing data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 26415 ms
+  Item: 'Pox virus genome analysis from tiled-amplicon sequencing data virology one-health one-health' (TrainingMaterial)
+    ↓ https://test.tesshub.hzdr.de/materials/pox-virus-genome-analysis-from-tiled-amplicon-sequencing-data [200]
+    [LLM:metadata_analysis] 12921 ms
+    [LLM:json_ld_extraction] 10887 ms
+    [LLM:json_ld_review] 18722 ms
+    ✗ Pox virus genome analysis from tiled-amplicon sequencing data – 1 error(s)
+    Validation: 1 error(s) — requesting fix (attempt 1/1)
+    [LLM:json_ld_fix] 20790 ms
+Extraction complete: 67 item(s)

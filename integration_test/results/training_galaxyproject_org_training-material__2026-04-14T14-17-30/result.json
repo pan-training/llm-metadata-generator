@@ -1,0 +1,1327 @@
+[
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "name": "Introduction to Galaxy and Sequence analysis",
+    "description": "This learning path provides a foundational introduction to the Galaxy platform and the analysis of sequencing data. It guides users through common first steps in genome analysis, including quality control and mapping/assembly of genomic sequences. This resource is ideal for individuals new to Galaxy and/or the field of genomics, offering a structured approach to building essential skills. Tutorials are presented in a logical order, with a recommendation to start with slides before proceeding to hands-on exercises.",
+    "keywords": [
+      "galaxy",
+      "genomics",
+      "sequence analysis",
+      "bioinformatics",
+      "data analysis",
+      "workflows",
+      "next-generation sequencing",
+      "ngs"
+    ],
+    "url": "https://training.galaxyproject.org/learning-pathways/intro-to-galaxy-and-genomics.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Galaxy Training Network",
+        "@id": "https://orcid.org/0000-0002-8995-2281"
+      }
+    ],
+    "license": "CC-BY-4.0",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Use Galaxy for data analysis",
+      "Perform quality control of sequencing data",
+      "Map or assemble genomic sequences",
+      "Understand fundamental genomics concepts",
+      "Navigate the Galaxy interface"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "slides",
+      "learning pathway"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Genomics",
+        "url": "http://edamontology.org/topic_000085"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Next Generation Sequencing",
+        "url": "http://edamontology.org/topic_0362"
+      }
+    ],
+    "timeRequired": "PT4H",
+    "identifier": "https://gxy.io/GTN:P00005",
+    "@id": "https://training.galaxyproject.org/learning-pathways/intro-to-galaxy-and-genomics.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "TrainingMaterial",
+    "name": "A short introduction to Galaxy",
+    "description": "This tutorial provides a beginner's overview of the Galaxy interface. It covers essential tasks like uploading data, using tools, viewing histories, and creating/running workflows. The tutorial aims to get users started with basic Galaxy functionality, enabling them to perform common data analysis tasks.",
+    "keywords": [
+      "galaxy",
+      "bioinformatics",
+      "data analysis",
+      "workflow",
+      "genomics",
+      "next-generation sequencing",
+      "ngs"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Anna Syme",
+        "@id": "https://orcid.org/0000-0002-0000-0000"
+      },
+      {
+        "@type": "Person",
+        "name": "Nicola Soranzo",
+        "@id": "https://orcid.org/0000-0002-0000-0000"
+      }
+    ],
+    "license": "http://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Uploading data in Galaxy",
+      "Running tools in Galaxy",
+      "Viewing and interpreting Galaxy results",
+      "Managing Galaxy histories",
+      "Creating and executing workflows in Galaxy",
+      "Sharing Galaxy histories and workflows"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "e-learning"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Data analysis",
+        "url": "http://edamontology.org/topic_0030"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Workflow",
+        "url": "http://edamontology.org/topic_0192"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Next Generation Sequencing",
+        "url": "http://edamontology.org/topic_0024"
+      }
+    ],
+    "timeRequired": "PT40M",
+    "identifier": "https://gxy.io/GTN:T00190",
+    "datePublished": "2018-08-27",
+    "dateModified": "2024-01-23",
+    "@id": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "name": "A short introduction to Galaxy",
+    "description": "This tutorial provides a beginner-level introduction to the Galaxy platform. It covers fundamental tasks like uploading data, running tools, viewing results and histories, creating and sharing workflows. The tutorial is estimated to take 40 minutes to complete and aims to equip users with the basics of Galaxy analysis.",
+    "keywords": [
+      "galaxy",
+      "bioinformatics",
+      "data analysis",
+      "workflow management",
+      "genomics",
+      "data upload",
+      "tool execution",
+      "history management"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Anna Syme",
+        "@id": "https://orcid.org/0000-0002-9163-8801"
+      },
+      {
+        "@type": "Person",
+        "name": "Nicola Soranzo",
+        "@id": "https://orcid.org/0000-0001-5661-5843"
+      }
+    ],
+    "license": "http://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Uploading data to Galaxy",
+      "Running tools in Galaxy",
+      "Viewing results in Galaxy",
+      "Managing histories in Galaxy",
+      "Creating workflows in Galaxy",
+      "Sharing histories in Galaxy"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Galaxy (platform)",
+        "url": "https://edamontology.org/data/1665"
+      }
+    ],
+    "timeRequired": "PT40M",
+    "identifier": "https://gxy.io/GTN:T00190",
+    "datePublished": "2018-08-27",
+    "dateModified": "2024-02-29",
+    "@id": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "TrainingMaterial",
+    "name": "A short introduction to Galaxy Analyses",
+    "description": "This tutorial provides a short introduction to the Galaxy interface. It covers essential tasks such as uploading files, using tools, viewing histories, running workflows, and sharing histories. It is designed for beginners and estimates a completion time of 40 minutes. It is part of the Galaxy Training Network's curriculum.",
+    "keywords": [
+      "bioinformatics",
+      "galaxy",
+      "data analysis",
+      "workflows",
+      "genomics",
+      "tutorial"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Anna Syme",
+        "@id": "https://orcid.org/0000-0001-7841-9931"
+      },
+      {
+        "@type": "Person",
+        "name": "Nicola Soranzo",
+        "@id": "https://orcid.org/0000-0002-1614-8531"
+      }
+    ],
+    "license": "http://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Upload files to Galaxy",
+      "Use tools within Galaxy",
+      "View histories in Galaxy",
+      "Run workflows in Galaxy",
+      "Share histories in Galaxy"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Galaxy",
+        "url": "https://edamontology.org/term_0000003"
+      }
+    ],
+    "timeRequired": "PT40M",
+    "identifier": "https://gxy.io/GTN:T00190",
+    "@id": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "name": "A Short Introduction to Galaxy",
+    "description": "This tutorial provides a beginner-friendly overview of the Galaxy platform for data analysis. It covers what Galaxy is, why it's useful (ease of use, reproducibility, broad applicability), and how to access and navigate its interface. The slides also demonstrate how to upload data into Galaxy from various sources. It emphasizes Galaxy’s web-based nature and its large collection of tools.",
+    "keywords": [
+      "bioinformatics",
+      "galaxy",
+      "data analysis",
+      "genomics",
+      "data science",
+      "reproducible research",
+      "workflow",
+      "tutorial"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/slides-plain.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Saskia Hiltemann",
+        "@id": "https://orcid.org/0000-0002-2198-6317"
+      },
+      {
+        "@type": "Person",
+        "name": "Helena Rasche",
+        "@id": "https://orcid.org/0000-0002-4194-024X"
+      },
+      {
+        "@type": "Person",
+        "name": "Nicola Soranzo",
+        "@id": "https://orcid.org/0000-0002-6811-8304"
+      },
+      {
+        "@type": "Person",
+        "name": "Ahmed Hamid Awan",
+        "@id": "https://orcid.org/0000-0003-1186-2926"
+      }
+    ],
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Introduction to the Galaxy platform",
+      "Basic data analysis using Galaxy",
+      "Data upload and management in Galaxy",
+      "Understanding Galaxy's interface and tools"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "slides",
+      "e-learning"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Data analysis",
+        "url": "http://edamontology.org/topic_0002"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Workflow management",
+        "url": "http://edamontology.org/topic_0024"
+      }
+    ],
+    "timeRequired": "PT1H",
+    "identifier": "https://doi.org/10.5281/zenodo.8307194",
+    "datePublished": "2024-02-16T00:00:00",
+    "@id": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/slides-plain.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "TrainingMaterial",
+    "name": "A Short Introduction to Galaxy",
+    "description": "This training material provides a basic overview of Galaxy, a web-based platform for data-intensive analysis. It covers what Galaxy is, why it's useful (ease of use, reproducibility, broad applicability), and how to use the interface including data uploading and accessing available tools. It highlights Galaxy's open-source nature and extensive tool collection.",
+    "keywords": [
+      "bioinformatics",
+      "galaxy",
+      "data analysis",
+      "workflows",
+      "reproducibility",
+      "genomics",
+      "data science"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/slides-plain.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Saskia Hiltemann",
+        "@id": "https://orcid.org/0000-0002-4858-4468"
+      },
+      {
+        "@type": "Person",
+        "name": "Helena Rasche",
+        "@id": "https://orcid.org/0000-0002-6194-5052"
+      },
+      {
+        "@type": "Person",
+        "name": "Nicola Soranzo",
+        "@id": "https://orcid.org/0000-0002-3962-2184"
+      },
+      {
+        "@type": "Person",
+        "name": "Ahmed Hamid Awan",
+        "@id": "https://orcid.org/0000-0002-6127-5918"
+      }
+    ],
+    "license": "https://github.com/galaxyproject/training-material/blob/main/LICENSE",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Introduction to Galaxy",
+      "Using the Galaxy interface",
+      "Uploading and managing data in Galaxy",
+      "Running workflows in Galaxy"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "slides"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Data Analysis",
+        "url": "http://edamontology.org/topic_0002"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Workflow Systems",
+        "url": "http://edamontology.org/topic_0129"
+      }
+    ],
+    "timeRequired": "PT1H",
+    "identifier": "https://github.com/galaxyproject/training-material/blob/main/topics/introduction/tutorials/galaxy-intro-short/slides.html",
+    "isPartOf": {
+      "@type": "Organization",
+      "name": "Galaxy Training Network"
+    },
+    "@id": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-short/slides-plain.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "TrainingMaterial",
+    "name": "Galaxy Basics for genomics",
+    "description": "This tutorial introduces the basics of using Galaxy for genomic analysis. It covers obtaining data, running tools, working with histories, creating workflows, and sharing results. The tutorial aims to familiarize users with the Galaxy platform and its core functionalities. Estimated time to complete is 1 hour.",
+    "keywords": [
+      "genomics",
+      "galaxy",
+      "data analysis",
+      "bioinformatics",
+      "workflows",
+      "tutorial"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-101/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Saskia Hiltemann",
+        "@id": "https://orcid.org/0000-0002-2474-4132"
+      },
+      {
+        "@type": "Person",
+        "name": "Nicola Soranzo",
+        "@id": "https://orcid.org/0000-0001-5677-3391"
+      },
+      {
+        "@type": "Person",
+        "name": "Clemens Blank",
+        "@id": "https://orcid.org/0000-0002-3316-5509"
+      },
+      {
+        "@type": "Person",
+        "name": "Anton Nekrutenko"
+      },
+      {
+        "@type": "Person",
+        "name": "Björn Grüning",
+        "@id": "https://orcid.org/0000-0002-8315-5018"
+      },
+      {
+        "@type": "Person",
+        "name": "Anne Pajon"
+      },
+      {
+        "@type": "Person",
+        "name": "Helena Rasche",
+        "@id": "https://orcid.org/0000-0002-9942-9075"
+      }
+    ],
+    "editor": [
+      {
+        "@type": "Person",
+        "name": "Armin Dadras",
+        "@id": "https://orcid.org/0000-0002-9367-7988"
+      }
+    ],
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Using the Galaxy platform",
+      "Obtaining data",
+      "Running tools",
+      "Working with histories",
+      "Creating workflows",
+      "Sharing workflows and results"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "e-learning"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Genomics",
+        "url": "http://edamontology.org/topic_0001"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Workflow",
+        "url": "http://edamontology.org/topic_0165"
+      }
+    ],
+    "timeRequired": "PT1H",
+    "identifier": "https://doi.org/10.5281/zenodo.4104428",
+    "datePublished": "2016-12-19",
+    "dateModified": "2024-04-22",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    },
+    "@id": "https://training.galaxyproject.org/training-material/topics/introduction/tutorials/galaxy-intro-101/tutorial.html"
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "name": "Introduction to Galaxy and Sequence analysis",
+    "description": "This learning pathway introduces users to the Galaxy platform and the basics of genomic sequence analysis. It covers essential first steps like quality control, mapping, and genome assembly.  This pathway is designed for beginners to familiarize themselves with Galaxy and fundamental genomics concepts. The path consists of a series of tutorials designed to be followed in order.",
+    "keywords": [
+      "galaxy",
+      "genomics",
+      "sequence analysis",
+      "bioinformatics",
+      "data analysis",
+      "workflows"
+    ],
+    "url": "https://training-galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html",
+    "author": [
+      {
+        "@type": "Organization",
+        "name": "Galaxy Training Network"
+      }
+    ],
+    "license": "https://creativecommons.org/licenses/by-4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Using the Galaxy platform for genomic data analysis",
+      "Performing quality control on sequence data",
+      "Mapping sequence reads to a reference genome",
+      "Understanding genome assembly concepts",
+      "Creating and running data analysis workflows"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "learning pathway"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Genomics",
+        "url": "http://edamontology.org/topic_0326"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Sequence analysis",
+        "url": "http://edamontology.org/topic_0085"
+      }
+    ],
+    "timeRequired": "PT1H40M",
+    "identifier": "https://gxy.io/GTN:P00005",
+    "@id": "https://training-galaxyproject.org/training-material/learning-pathways/intro-to-galaxy-and-genomics.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "TrainingMaterial",
+    "name": "Quality Control",
+    "description": "This tutorial covers quality control of NGS raw data, including checking quality parameters and methods for improvement. It focuses on assessing quality using tools like FASTQC, Nanoplot, and PycoQC, performing correction with Cutadapt, and summarizing metrics with MultiQC. It supports both single-end and paired-end data analysis.",
+    "keywords": [
+      "ngs",
+      "next-generation sequencing",
+      "quality control",
+      "fastqc",
+      "nanoplot",
+      "pycoqc",
+      "cutadapt",
+      "multiqc",
+      "sequence analysis",
+      "fastq",
+      "bioinformatics"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Bérénice Batut",
+        "@id": "https://orcid.org/0000-0002-6944-5821"
+      },
+      {
+        "@type": "Person",
+        "name": "Maria Doyle",
+        "@id": "https://orcid.org/0000-0002-9131-8956"
+      },
+      {
+        "@type": "Person",
+        "name": "Alexandre Cormier",
+        "@id": "https://orcid.org/0000-0003-3180-4813"
+      },
+      {
+        "@type": "Person",
+        "name": "Anthony Bretaudeau",
+        "@id": "https://orcid.org/0000-0002-8642-3383"
+      },
+      {
+        "@type": "Person",
+        "name": "Laura Leroi",
+        "@id": "https://orcid.org/0000-0003-1086-2382"
+      },
+      {
+        "@type": "Person",
+        "name": "Erwan Corre",
+        "@id": "https://orcid.org/0000-0002-3331-089X"
+      },
+      {
+        "@type": "Person",
+        "name": "Stéphanie Robin",
+        "@id": "https://orcid.org/0000-0002-8497-1315"
+      },
+      {
+        "@type": "Person",
+        "name": "Cameron Hyde",
+        "@id": "https://orcid.org/0000-0001-6610-9306"
+      }
+    ],
+    "editor": [
+      {
+        "@type": "Person",
+        "name": "Swathi Nataraj",
+        "@id": "https://orcid.org/0000-0002-6715-1638"
+      }
+    ],
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Assess short reads FASTQ quality using FASTQC",
+      "Assess long reads FASTQ quality using Nanoplot and PycoQC",
+      "Perform quality correction with Cutadapt",
+      "Summarise quality metrics with MultiQC",
+      "Process single-end and paired-end data"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "e-learning"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Next Generation Sequencing",
+        "url": "http://edamontology.org/topic_0005"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Sequence Analysis",
+        "url": "http://edamontology.org/topic_0008"
+      }
+    ],
+    "timeRequired": "PT1H30M",
+    "identifier": "https://zenodo.org/records/61771",
+    "@id": "https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "name": "Quality Control",
+    "description": "This tutorial covers quality control of Next Generation Sequencing (NGS) raw data. It teaches users how to assess data quality using tools like FASTQC, Nanoplot, and PycoQC, and how to improve quality with Cutadapt. The tutorial also covers summarizing quality metrics with MultiQC and processing both single-end and paired-end data. It includes slides, datasets, workflows, FAQs, and video recordings.",
+    "keywords": [
+      "sequence analysis",
+      "ngs",
+      "next generation sequencing",
+      "quality control",
+      "fastqc",
+      "nanoplot",
+      "pycoqc",
+      "cutadapt",
+      "multiqc",
+      "fastq"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Bérénice Batut",
+        "@id": "https://orcid.org/0000-0002-0981-5552"
+      },
+      {
+        "@type": "Person",
+        "name": "Maria Doyle",
+        "@id": "https://orcid.org/0000-0002-8873-9496"
+      },
+      {
+        "@type": "Person",
+        "name": "Alexandre Cormier",
+        "@id": "https://orcid.org/0000-0002-4590-5073"
+      },
+      {
+        "@type": "Person",
+        "name": "Anthony Bretaudeau",
+        "@id": "https://orcid.org/0000-0002-6135-9932"
+      },
+      {
+        "@type": "Person",
+        "name": "Laura Leroi",
+        "@id": "https://orcid.org/0000-0002-4300-3506"
+      },
+      {
+        "@type": "Person",
+        "name": "Erwan Corre",
+        "@id": "https://orcid.org/0000-0002-8964-5254"
+      },
+      {
+        "@type": "Person",
+        "name": "Stéphanie Robin",
+        "@id": "https://orcid.org/0000-0001-9789-443X"
+      },
+      {
+        "@type": "Person",
+        "name": "Cameron Hyde",
+        "@id": "https://orcid.org/0000-0002-6192-5755"
+      }
+    ],
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Assess short reads FASTQ quality using FASTQC",
+      "Assess long reads FASTQ quality using Nanoplot and PycoQC",
+      "Perform quality correction with Cutadapt",
+      "Summarize quality metrics with MultiQC",
+      "Process single-end and paired-end data"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "slides",
+      "video",
+      "e-learning"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Sequence Analysis",
+        "url": "http://edamontology.org/topic_0014"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Next Generation Sequencing",
+        "url": "http://edamontology.org/topic_0022"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Quality control",
+        "url": "http://edamontology.org/topic_0005"
+      }
+    ],
+    "timeRequired": "PT1H30M",
+    "identifier": "https://zenodo.org/records/61771",
+    "@id": "https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/quality-control/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "name": "Mapping",
+    "description": "This tutorial teaches how to map sequence reads to a reference genome, a crucial step in genomic data analysis. It covers explaining BAM files and using genome browsers to interpret data. The tutorial aims to enable users to run a mapping tool and understand the resulting data's genomic context.  It includes slides, datasets, workflows, FAQs, and video recordings for comprehensive learning. The tutorial is available in multiple languages and is suited for beginners.",
+    "keywords": [
+      "sequence analysis",
+      "mapping",
+      "genomics",
+      "reference genome",
+      "bam",
+      "genome browser"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/mapping/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Joachim Wolff",
+        "@id": "https://orcid.org/0000-0002-6848-8385"
+      },
+      {
+        "@type": "Person",
+        "name": "Bérénice Batut",
+        "@id": "https://orcid.org/0000-0001-5374-9415"
+      },
+      {
+        "@type": "Person",
+        "name": "Helena Rasche",
+        "@id": "https://orcid.org/0000-0003-3601-4947"
+      },
+      {
+        "@type": "Person",
+        "name": "Tristan Reynolds",
+        "@id": "https://orcid.org/0000-0003-3882-8269"
+      }
+    ],
+    "license": "http://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "Map sequence reads to a reference genome",
+      "Explain BAM file format and content",
+      "Interpret genomic data using a genome browser"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "slides",
+      "video",
+      "e-learning"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Genomics",
+        "url": "http://edamontology.org/topic_0090"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Sequence analysis",
+        "url": "http://edamontology.org/topic_0085"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Genome mapping",
+        "url": "http://edamontology.org/topic_0083"
+      }
+    ],
+    "timeRequired": "PT1H",
+    "identifier": "https://gxy.io/GTN:T00237",
+    "version": "46",
+    "datePublished": "2016-10-04",
+    "dateModified": "2024-03-30",
+    "supportingMaterials": [
+      {
+        "@type": "DataCatalog",
+        "name": "Datasets",
+        "url": "https://doi.org/10.5281/zenodo.1324070"
+      }
+    ],
+    "@id": "https://training.galaxyproject.org/training-material/topics/sequence-analysis/tutorials/mapping/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "TrainingMaterial",
+    "name": "An Introduction to Genome Assembly",
+    "description": "This tutorial provides a hands-on introduction to genome assembly using Velvet, a *de novo* assembler. It guides users through assembling paired-end reads from a simulated *Staphylococcus aureus* bacterium and examining the assembly output. The tutorial includes background information on Velvet, data acquisition, read evaluation, assembly execution, and contig statistics. It requires prior knowledge of Galaxy analyses and quality control.",
+    "keywords": [
+      "genome assembly",
+      "de novo assembly",
+      "velvet",
+      "short reads",
+      "illumina sequencing",
+      "staphylococcus aureus",
+      "bioinformatics",
+      "genomics"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/assembly/tutorials/general-introduction/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Simon Gladman",
+        "@id": "https://orcid.org/0000-0002-9267-4709"
+      }
+    ],
+    "license": "http://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "assemble paired end reads using Velvet",
+      "examine the output of the assembly"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Genome Assembly",
+        "url": "http://edamontology.org/topic_0324"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Genomics",
+        "url": "http://edamontology.org/topic_0086"
+      }
+    ],
+    "timeRequired": "PT30M",
+    "identifier": "https://gxy.io/GTN:T00034",
+    "datePublished": "2017-05-23",
+    "dateModified": "2024-01-23",
+    "@id": "https://training.galaxyproject.org/training-material/topics/assembly/tutorials/general-introduction/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "TrainingMaterial",
+    "name": "An Introduction to Genome Assembly",
+    "description": "This tutorial introduces genome assembly using Velvet, a *de novo* assembler. It guides users through assembling paired-end reads from an imaginary *Staphylococcus aureus* bacterium and examining the assembly output. The tutorial includes background information on Velvet, instructions for data retrieval and manipulation within Galaxy, and steps for evaluating the assembled contigs. It’s designed as an introductory level resource.",
+    "keywords": [
+      "genome assembly",
+      "de novo assembly",
+      "velvet",
+      "short reads",
+      "bioinformatics",
+      "sequence analysis",
+      "staphylococcus aureus",
+      "galaxy"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/assembly/tutorials/general-introduction/tutorial.html",
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Simon Gladman",
+        "@id": "https://orcid.org/0000-0002-8763-5383"
+      }
+    ],
+    "license": "http://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      }
+    ],
+    "teaches": [
+      "assemble paired end reads using Velvet",
+      "examine the output of the assembly"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "e-learning"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Genome Assembly",
+        "url": "http://edamontology.org/topic_0092"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      }
+    ],
+    "timeRequired": "PT30M",
+    "identifier": "https://doi.org/10.5281/zenodo.582600",
+    "datePublished": "2017-05-23",
+    "@id": "https://training.galaxyproject.org/training-material/topics/assembly/tutorials/general-introduction/tutorial.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "CourseInstance",
+    "name": "Galaxy Training Academy 2025",
+    "description": "The Galaxy Training Academy 2025 is an online training event focused on data analysis using the Galaxy platform. It aims to provide a user-friendly approach aligning with FAIR principles and covers diverse scientific domains. Participants can choose learning paths in areas like Proteomics, Transcriptomics, Machine Learning, and Python. Support is provided by the Galaxy community.",
+    "url": "https://training.galaxyproject.org/training-material/news/2025/03/26/gta-registration-open.html",
+    "startDate": "2025-03-26T00:00:00",
+    "endDate": "2025-05-16",
+    "courseMode": [
+      "online"
+    ],
+    "location": {
+      "@type": "VirtualLocation",
+      "url": "https://forms.gle/xqZMd4gduwJ6XyKU6"
+    },
+    "organizer": [
+      {
+        "@type": "Organization",
+        "name": "Galaxy Training Network"
+      }
+    ],
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Teresa Müller",
+        "@id": "https://orcid.org/0000-0002-8978-2630"
+      }
+    ],
+    "keywords": [
+      "galaxy",
+      "data analysis",
+      "bioinformatics",
+      "transcriptomics",
+      "proteomics",
+      "machine learning",
+      "python",
+      "fair data",
+      "training",
+      "gta"
+    ],
+    "offers": [
+      {
+        "@type": "Offer",
+        "price": 0,
+        "priceCurrency": "EUR",
+        "url": "https://forms.gle/xqZMd4gduwJ6XyKU6"
+      }
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Data Science",
+        "url": "http://edamontology.org/topic_3373"
+      }
+    ],
+    "license": "https://spdx.org/licenses/CC-BY-4.0",
+    "inLanguage": "en",
+    "identifier": "https://gxy.io/GTN:N00110",
+    "timeRequired": "PT12W",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+      "@type": "CreativeWork"
+    },
+    "@id": "https://training.galaxyproject.org/training-material/news/2025/03/26/gta-registration-open.html"
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "CourseInstance",
+    "name": "BioNT basic curriculum Round Two - Starting in autumn 2024 with the RNA-Seq and Python Workshops",
+    "description": "The BioNT basic curriculum Round Two offers training in RNA-Seq and Python workshops, supporting the biotechnology and biomedical sectors. Workshops are conducted online with real-time interaction, multiple helpers, and use the Galaxy Training Network materials.  The program aims to cultivate digital skills and provide a robust training experience, with a focus on hands-on learning and accessible tools.",
+    "url": "https://training.galaxyproject.org/training-material/news/2025/01/21/biont-workshops.html",
+    "startDate": "2024-09-10",
+    "endDate": "2024-09-13",
+    "courseMode": [
+      "online"
+    ],
+    "location": {
+      "@type": "VirtualLocation",
+      "url": "https://www.cecam.org/workshop-details/a-practical-introduction-to-bioinformatics-and-rna-seq-using-galaxy-1359"
+    },
+    "organizer": [
+      {
+        "@type": "Organization",
+        "name": "Galaxy Training Network"
+      }
+    ],
+    "maximumAttendeeCapacity": 60,
+    "offers": [
+      {
+        "@type": "Offer",
+        "price": 0,
+        "priceCurrency": "EUR",
+        "url": "https://www.cecam.org/workshop-details/a-practical-introduction-to-bioinformatics-and-rna-seq-using-galaxy-1359"
+      }
+    ],
+    "author": [
+      {
+        "@type": "Person",
+        "name": "Teresa Müller",
+        "@id": "https://orcid.org/0000-0001-5644-8479"
+      }
+    ],
+    "keywords": [
+      "bioinformatics",
+      "rna-seq",
+      "python",
+      "genomics",
+      "data analysis",
+      "galaxy",
+      "biotechnology",
+      "biomedical research",
+      "sequencing data analysis"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "RNA-Seq",
+        "url": "http://edamontology.org/topic_0362"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Python",
+        "url": "http://edamontology.org/topic_0016"
+      }
+    ],
+    "inLanguage": "en",
+    "identifier": "https://gxy.io/GTN:N00104",
+    "@id": "https://training.galaxyproject.org/training-material/news/2025/01/21/biont-workshops.html",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/CourseInstance/1.0-RELEASE",
+      "@type": "CreativeWork"
+    }
+  },
+  {
+    "@context": {
+      "@vocab": "https://schema.org/",
+      "dct": "http://purl.org/dc/terms/"
+    },
+    "@type": "LearningResource",
+    "name": "Single Cell",
+    "description": "This resource provides training materials and practicals for single cell analysis, with a focus on scRNA-seq. It covers a range of skill levels, offering introductory material alongside end-to-end workflows and case studies.  Users can explore learning pathways, tutorials with accompanying slides and datasets, and access a support forum for discussion. The material aims to equip users with the bioinformatics skills necessary for genomic and transcriptomic analysis of single cells.",
+    "keywords": [
+      "single cell analysis",
+      "scrna-seq",
+      "genomics",
+      "transcriptomics",
+      "bioinformatics",
+      "data analysis"
+    ],
+    "url": "https://training.galaxyproject.org/training-material/topics/single-cell/",
+    "author": [
+      {
+        "@type": "Organization",
+        "name": "Galaxy Training Network"
+      }
+    ],
+    "license": "https://creativecommons.org/licenses/by/4.0/",
+    "inLanguage": "en",
+    "audience": [
+      {
+        "@type": "Audience",
+        "audienceType": "beginner"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "intermediate"
+      },
+      {
+        "@type": "Audience",
+        "audienceType": "advanced"
+      }
+    ],
+    "teaches": [
+      "Single cell analysis principles",
+      "scRNA-seq data analysis workflows",
+      "Bioinformatics techniques for single cell data",
+      "Genomic and transcriptomic analysis"
+    ],
+    "educationalLevel": "beginner",
+    "learningResourceType": [
+      "tutorial",
+      "slides",
+      "video",
+      "e-learning",
+      "hands-on exercise"
+    ],
+    "about": [
+      {
+        "@type": "DefinedTerm",
+        "name": "Bioinformatics",
+        "url": "http://edamontology.org/topic_0091"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Single Cell Analysis",
+        "url": "http://edamontology.org/topic_3789"
+      },
+      {
+        "@type": "DefinedTerm",
+        "name": "Transcriptomics",
+        "url": "http://edamontology.org/topic_3299"
+      }
+    ],
+    "timeRequired": "PT0H",
+    "@id": "https://training.galaxyproject.org/training-material/topics/single-cell/",
+    "dct:conformsTo": {
+      "@id": "https://bioschemas.org/profiles/TrainingMaterial/1.1-DRAFT",
+      "@type": "CreativeWork"
+    }
+  }
+]

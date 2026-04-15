@@ -173,6 +173,12 @@ flask integration-test run
 
 # Single ad-hoc URL
 flask integration-test run --url https://example.com/training/
+
+# Limit how long each site may take (skip to next site after 10 minutes)
+flask integration-test run --timeout 10
+
+# Pass raw HTML to the LLM instead of Markdown (to compare extraction quality)
+flask integration-test run --raw-html
 ```
 
 Results are saved to `integration_test/results/<site>__<timestamp>/` with a live-updating `log.txt` and incrementally-written `result.json` (partial results visible even if the run is interrupted).  See [`integration_test/README.md`](integration_test/README.md) for full documentation.

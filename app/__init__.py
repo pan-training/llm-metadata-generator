@@ -198,17 +198,41 @@ def _register_integration_test_cli(app: Flask) -> None:
         help="Results directory (default: integration_test/results).",
     )
     @click.option("--prompt", default=None, help="Override extraction prompt for all sites.")
+    @click.option(
+        "--timeout",
+        default=None,
+        type=int,
+        help=(
+            "Per-site timeout in minutes.  When the extraction for a single site"
+            " exceeds this limit the run is aborted for that site (partial results"
+            " are saved) and the next site is started immediately."
+        ),
+    )
+    @click.option(
+        "--raw-html",
+        is_flag=True,
+        default=False,
+        help=(
+            "Pass cleaned HTML directly to the LLM instead of converting to Markdown"
+            " first.  Hashing for change-detection still uses the Markdown"
+            " representation.  Useful for evaluating whether the LLM performs better"
+            " on raw HTML structure."
+        ),
+    )
     def run_command(
         url: str | None,
         config_path: str | None,
         output_dir: str | None,
         prompt: str | None,
+        timeout: int | None,
+        raw_html: bool,
     ) -> None:
         """Run extraction against real websites and save detailed results.
 
         Results are saved to integration_test/results/<site>__<timestamp>/
         and can be committed to share with collaborators.
         """
+        import concurrent.futures
         import json
         from datetime import datetime, timezone
         from pathlib import Path
@@ -278,6 +302,8 @@ def _register_integration_test_cli(app: Flask) -> None:
             click.echo(f"Site       : {site_url}")
             if description:
                 click.echo(f"Description: {description}")
+            if raw_html:
+                click.echo("Raw HTML   : yes (LLM sees HTML, not Markdown)")
             click.echo(f"Output dir : {run_dir}")
 
             # Persist the inputs used for this run.
@@ -287,6 +313,7 @@ def _register_integration_test_cli(app: Flask) -> None:
                         "url": site_url,
                         "description": description,
                         "prompt": site_prompt,
+                        "raw_html": raw_html,
                         "timestamp": timestamp,
                     },
                     indent=2,
@@ -378,45 +405,74 @@ def _register_integration_test_cli(app: Flask) -> None:
             error: str | None = None
             structural_summary: str | None = None
 
-            # Phase 0: compute structural summary before running extraction.
-            try:
-                run_logger.info("Computing structural summary (Phase 0) …")
-                structural_summary = compute_site_structure_summary(
-                    url=site_url,
-                    llm_client=client,
-                    logger=run_logger,
-                )
-                (run_dir / "structural_summary.json").write_text(
-                    structural_summary,
-                    encoding="utf-8",
-                )
-                run_logger.info("Structural summary saved to structural_summary.json")
-            except (AccessDeniedError, Exception) as exc:
-                error = f"Structural summary failed: {exc}"
-                run_logger.warn(f"{error}; proceeding without structural summary")
-                error = None  # don't abort – extraction can still run without it
+            def _run_extraction() -> str | None:
+                """Run Phase 0 + Phase 1/2 for the current site.
+
+                Returns an error string on failure, or ``None`` on success.
+                Mutations to *structural_summary* are visible to the outer
+                scope via the nonlocal declaration.
+                """
+                nonlocal structural_summary
+
+                # Phase 0: compute structural summary before extraction.
+                try:
+                    run_logger.info("Computing structural summary (Phase 0) …")
+                    structural_summary = compute_site_structure_summary(
+                        url=site_url,
+                        llm_client=client,
+                        logger=run_logger,
+                        raw_html=raw_html,
+                    )
+                    (run_dir / "structural_summary.json").write_text(
+                        structural_summary,
+                        encoding="utf-8",
+                    )
+                    run_logger.info("Structural summary saved to structural_summary.json")
+                except Exception as exc:
+                    _phase0_err = f"Structural summary failed: {exc}"
+                    run_logger.warn(f"{_phase0_err}; proceeding without structural summary")
+                    # Don't abort – extraction can still run without a summary.
+
+                # Phase 1/2: crawl + extract.
+                try:
+                    # items is populated incrementally via on_item so that
+                    # partial results are written to result.json even if the
+                    # agent raises an exception mid-run.
+                    agent.run(
+                        url=site_url,
+                        prompt=site_prompt,  # type: ignore[arg-type]
+                        structural_summary=structural_summary,
+                        llm_client=client,
+                        logger=run_logger,
+                        on_item=_on_item,
+                        raw_html=raw_html,
+                    )
+                except AccessDeniedError as exc:
+                    err = f"AccessDeniedError: {exc}"
+                    click.echo(f"  ERROR: {err}", err=True)
+                    return err
+                except NotTrainingContentError as exc:
+                    err = f"NotTrainingContentError: {exc}"
+                    click.echo(f"  ERROR: {err}", err=True)
+                    return err
+                except Exception as exc:  # Note: Exception intentionally excludes BaseException
+                    err = f"{type(exc).__name__}: {exc}"
+                    click.echo(f"  UNEXPECTED ERROR: {err}", err=True)
+                    return err
+                return None
 
             try:
-                # items is populated incrementally via on_item so that partial
-                # results are written to result.json even if the agent raises
-                # an exception mid-run (e.g. rate-limit error after N items).
-                agent.run(
-                    url=site_url,
-                    prompt=site_prompt,  # type: ignore[arg-type]
-                    structural_summary=structural_summary,
-                    llm_client=client,
-                    logger=run_logger,
-                    on_item=_on_item,
-                )
-            except AccessDeniedError as exc:
-                error = f"AccessDeniedError: {exc}"
-                click.echo(f"  ERROR: {error}", err=True)
-            except NotTrainingContentError as exc:
-                error = f"NotTrainingContentError: {exc}"
-                click.echo(f"  ERROR: {error}", err=True)
-            except Exception as exc:  # Note: Exception intentionally excludes BaseException
-                error = f"{type(exc).__name__}: {exc}"
-                click.echo(f"  UNEXPECTED ERROR: {error}", err=True)
+                if timeout is not None:
+                    click.echo(f"  Timeout   : {timeout}min per site")
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                        future = executor.submit(_run_extraction)
+                        try:
+                            error = future.result(timeout=timeout * 60)
+                        except concurrent.futures.TimeoutError:
+                            error = f"Timeout: site exceeded {timeout}min limit"
+                            click.echo(f"  TIMEOUT: {error}", err=True)
+                else:
+                    error = _run_extraction()
             finally:
                 log_fh.close()
                 # Write the final log.json (events were already written
