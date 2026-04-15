@@ -167,8 +167,11 @@ MAX_FIX_ATTEMPTS = 1  # maximum schema-fix LLM passes per item
 
 # Maximum characters of item content sent to the extraction LLM.
 MAX_EXTRACTION_CONTENT = 8000
+# Characters per extraction chunk when long pages are split for item-level extraction.
 EXTRACTION_CHUNK_SIZE = 2500
+# Overlap between extraction chunks to avoid losing boundary context.
 EXTRACTION_CHUNK_OVERLAP = 250
+# Cap of cached/seeded item detail URLs used to bootstrap incremental runs.
 MAX_INCREMENTAL_START_URLS = 200
 
 # Maximum characters of a schema property description included in validation
