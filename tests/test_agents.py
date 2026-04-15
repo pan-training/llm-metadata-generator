@@ -448,7 +448,7 @@ def test_agent_ignores_faceted_item_urls(monkeypatch: pytest.MonkeyPatch) -> Non
         )
 
 
-def test_classify_chunk_prompt_includes_ignored_links_schema(
+def test_classify_chunk_prompt_includes_decision_gate_and_output_schema(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     captured_messages: list[dict[str, str]] = []
@@ -480,9 +480,14 @@ def test_classify_chunk_prompt_includes_ignored_links_schema(
     )
 
     assert len(captured_messages) >= 2
+    system_prompt = captured_messages[0]["content"]
     prompt = captured_messages[1]["content"]
+    assert "MANDATORY DECISION PROCEDURE" in system_prompt
+    assert "return {\"relevant\": false, \"items\": [], \"follow_links\": []} and STOP." in system_prompt
     assert "Do NOT extract filter/facet/tag links as items." in prompt
-    assert '"ignored_links": [{"url": "...", "reason": "facet_filter|auth|admin|other_non_content"' in prompt
+    assert "Use this summary only to understand section context." in prompt
+    assert '"follow_links": [{"url": "...", "reason": "..."}]}' in prompt
+    assert '"ignored_links"' not in prompt
 
 
 def test_summarize_chunk_context_keeps_chunk_signal_and_ignore_patterns(
