@@ -225,7 +225,7 @@ def test_run_pending_extractions_continues_after_failure(
             prompt: str | None,
             structural_summary: str | None,
         ) -> None:
-            del app, url, prompt, structural_summary
+            _ = (app, url, prompt, structural_summary)
             call_order.append(session_id)
             if session_id == first.id:
                 raise RuntimeError("boom")

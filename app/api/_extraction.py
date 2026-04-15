@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import logging
 
 from flask import Flask
 from flask import current_app
@@ -9,6 +10,8 @@ from flask import current_app
 from app.agents.logger import AgentLogger
 from app.db.sqlite import get_db
 from app.models.session import create_session, get_active_session, update_session
+
+_LOGGER = logging.getLogger(__name__)
 
 
 def _get_structural_summary(url: str) -> str | None:
@@ -211,6 +214,10 @@ def run_pending_extractions(
             )
             executed_ids.append(session_id)
         except Exception:
-            continue
+            _LOGGER.exception(
+                "Failed to execute queued extraction session %s for %s",
+                session_id,
+                session_url,
+            )
 
     return executed_ids
