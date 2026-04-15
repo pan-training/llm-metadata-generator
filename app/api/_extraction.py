@@ -19,6 +19,17 @@ def build_extraction_job_id(session_id: int) -> str:
     return f"session-extraction-{session_id}"
 
 
+def _has_empty_structured_log(log_value: str | None) -> bool:
+    """Return True when log text is empty or a JSON-encoded empty list."""
+    if not log_value:
+        return True
+    try:
+        parsed = json.loads(log_value)
+    except json.JSONDecodeError:
+        return False
+    return isinstance(parsed, list) and len(parsed) == 0
+
+
 def _get_structural_summary(url: str) -> str | None:
     """Return the cached structural summary for *url*, if present."""
     db = get_db()
@@ -199,11 +210,8 @@ def run_pending_extractions(
     """
     db = get_db()
     query = (
-        "SELECT id, url FROM sessions"
-        " WHERE ("
-        "   status = 'pending'"
-        "   OR (status = 'running' AND COALESCE(log, '') IN ('', '[]'))"
-        " )"
+        "SELECT id, url, status, log FROM sessions"
+        " WHERE status IN ('pending', 'running')"
         " AND (? IS NULL OR user_id = ?)"
         " AND (? IS NULL OR url = ?)"
         " ORDER BY created_at ASC"
@@ -212,6 +220,11 @@ def run_pending_extractions(
 
     executed_ids: list[int] = []
     for row in rows:
+        status = str(row["status"])
+        log_value = row["log"]
+        if status == "running" and not _has_empty_structured_log(log_value):
+            continue
+
         session_id = int(row["id"])
         session_url = str(row["url"])
         try:

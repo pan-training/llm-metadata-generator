@@ -127,7 +127,7 @@
             Queued. It will run automatically when the worker picks it up (or via <code>flask tasks run-queued</code>).
             {% endif %}
           </div>
-          <form method="POST" action="/sessions/{{ s.id }}/cancel" onclick="event.stopPropagation()">
+          <form method="POST" action="/sessions/{{ s.id }}/cancel">
             <button class="cancel-btn" type="submit" onclick="event.stopPropagation()">Cancel</button>
           </form>
           {% elif s.status == "running" and (not s.log or s.log == "[]") %}

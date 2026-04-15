@@ -11,6 +11,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
+from apscheduler.jobstores.base import JobLookupError
 from flask import (
     Blueprint,
     Response,
@@ -130,8 +131,6 @@ def cancel_session_view(session_id: int) -> ResponseReturnValue:
     user_id: int | None = session.get("user_id")
     if not user_id:
         return redirect(url_for("sessions_viewer.login_form"))
-
-    from apscheduler.jobstores.base import JobLookupError
 
     from app.api._extraction import build_extraction_job_id
     from app.models.session import cancel_session
