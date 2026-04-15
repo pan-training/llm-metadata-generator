@@ -39,7 +39,11 @@ def build_extraction_job_id(session_id: int) -> str:
 
 
 def _is_structured_log_empty(log_value: str | None) -> bool:
-    """Return True when the log indicates no meaningful extraction progress yet."""
+    """Return True when the log has no persisted progress events yet.
+
+    This includes an empty log (or ``[]``) and the startup-only event
+    ``"Starting extraction for …"`` that can remain after interrupted runs.
+    """
     if not log_value:
         return True
     try:
