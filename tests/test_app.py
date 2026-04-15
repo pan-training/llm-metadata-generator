@@ -210,7 +210,7 @@ def test_run_pending_extractions_continues_after_failure(
         from app.api._extraction import run_pending_extractions
         from app.db.sqlite import init_db
         from app.models.user import create_user
-        from app.models.session import create_session
+        from app.models.session import create_session, get_session_by_id
 
         init_db()
         user, _token = create_user()
@@ -289,7 +289,7 @@ def test_run_extraction_persists_running_log_on_each_event(
     with app.app_context():
         from app.api._extraction import run_extraction
         from app.db.sqlite import init_db
-        from app.models.session import create_session
+        from app.models.session import create_session, get_session_by_id
         from app.models.user import create_user
 
         init_db()
@@ -302,7 +302,7 @@ def test_run_extraction_persists_running_log_on_each_event(
             lambda **kwargs: '{"schema_version":"2"}',
         )
 
-        class _FakeAgent:
+        class _MockBioschemasAgent:
             def run(
                 self,
                 *,
@@ -317,7 +317,7 @@ def test_run_extraction_persists_running_log_on_each_event(
                 logger.info("phase 2")
                 return [{"name": "Item A", "url": "https://example.com/item"}]
 
-        monkeypatch.setattr("app.agents.bioschemas.BioschemasExtractorAgent", _FakeAgent)
+        monkeypatch.setattr("app.agents.bioschemas.BioschemasExtractorAgent", _MockBioschemasAgent)
 
         from app.models.session import update_session as _real_update_session
 
@@ -351,9 +351,16 @@ def test_run_extraction_persists_running_log_on_each_event(
             site_content_hash="hash",
         )
 
+        stored_session = get_session_by_id(session.id)
+
     assert len(running_event_counts) >= 2
     assert running_event_counts == sorted(running_event_counts)
     assert running_event_counts[-1] > 1
+    assert stored_session is not None
+    assert stored_session.log is not None
+    stored_log = json.loads(stored_session.log)
+    assert isinstance(stored_log, list)
+    assert len(stored_log) >= running_event_counts[-1]
 
 
 def test_enqueue_extraction_skips_when_site_hash_unchanged(
