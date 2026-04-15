@@ -3,6 +3,13 @@
 import hashlib
 import json
 import logging
+import posixpath
+import random
+import sqlite3
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Literal
+from urllib.parse import urlparse
 
 from flask import Flask
 from flask import current_app
@@ -12,6 +19,16 @@ from app.db.sqlite import get_db
 from app.models.session import create_session, get_active_session, update_session
 
 _LOGGER = logging.getLogger(__name__)
+MAX_CACHED_ITEM_URLS = 200
+
+
+@dataclass(frozen=True)
+class ExtractionPlan:
+    """Decision for whether to skip, incrementally refresh, or fully refresh."""
+
+    mode: Literal["no_update", "incremental", "full_refresh"]
+    structural_summary: str | None
+    site_content_hash: str | None
 
 
 def _get_structural_summary(url: str) -> str | None:
@@ -24,12 +41,165 @@ def _get_structural_summary(url: str) -> str | None:
     return cache_row["structural_summary"] if cache_row else None
 
 
+def _get_cache_row(url: str) -> sqlite3.Row | None:
+    """Return the cache row for *url* from metadata_cache, if present."""
+    db = get_db()
+    return db.execute(
+        "SELECT content_hash, structural_summary FROM metadata_cache WHERE url = ?",
+        (url,),
+    ).fetchone()
+
+
+def _normalize_probability(raw_probability: object) -> float:
+    """Parse and clamp a probability config value into [0.0, 1.0]."""
+    try:
+        if isinstance(raw_probability, (str, int, float)):
+            probability = float(raw_probability)
+        else:
+            probability = 0.01
+    except (TypeError, ValueError):
+        probability = 0.01
+    return max(0.0, min(1.0, probability))
+
+
+def _fetch_site_content_hash(url: str) -> str | None:
+    """Fetch *url* and return a stable hash of its markdown-normalised content."""
+    from app.agents.bioschemas import _fetch, _html_to_markdown
+
+    try:
+        response = _fetch(url)
+    except Exception as exc:
+        _LOGGER.warning("Could not fetch %s for hash check: %s", url, exc)
+        return None
+
+    if not response.ok:
+        _LOGGER.warning(
+            "Could not fetch %s for hash check: HTTP %s",
+            url,
+            response.status_code,
+        )
+        return None
+
+    markdown, _ = _html_to_markdown(response.text, url)
+    return hashlib.sha256(markdown.encode()).hexdigest()
+
+
+def _build_extraction_plan(url: str, force_refresh: bool = False) -> ExtractionPlan:
+    """Decide whether to skip, incrementally refresh, or fully refresh *url*."""
+    cache_row = _get_cache_row(url)
+    cached_hash = str(cache_row["content_hash"]) if cache_row and cache_row["content_hash"] else None
+    cached_summary = (
+        str(cache_row["structural_summary"])
+        if cache_row and cache_row["structural_summary"]
+        else None
+    )
+
+    if force_refresh:
+        return ExtractionPlan(
+            mode="full_refresh",
+            structural_summary=None,
+            site_content_hash=_fetch_site_content_hash(url),
+        )
+
+    if not cached_hash:
+        return ExtractionPlan(
+            mode="full_refresh",
+            structural_summary=None,
+            site_content_hash=_fetch_site_content_hash(url),
+        )
+
+    current_hash = _fetch_site_content_hash(url)
+    if current_hash is None:
+        return ExtractionPlan(
+            mode="incremental",
+            structural_summary=cached_summary,
+            site_content_hash=None,
+        )
+
+    full_refresh_probability = _normalize_probability(
+        current_app.config.get("CRON_METADATA_FULL_REFRESH_PROBABILITY", 0.01)
+    )
+    if random.random() < full_refresh_probability:
+        return ExtractionPlan(
+            mode="full_refresh",
+            structural_summary=None,
+            site_content_hash=current_hash,
+        )
+
+    if current_hash == cached_hash:
+        return ExtractionPlan(
+            mode="no_update",
+            structural_summary=cached_summary,
+            site_content_hash=current_hash,
+        )
+
+    return ExtractionPlan(
+        mode="incremental",
+        structural_summary=cached_summary,
+        site_content_hash=current_hash,
+    )
+
+
+def _item_path_common_prefix(item_urls: list[str]) -> str:
+    """Return a compact common path prefix for *item_urls*."""
+    if not item_urls:
+        return ""
+    parsed_paths = [urlparse(item_url).path for item_url in item_urls if item_url]
+    if not parsed_paths:
+        return ""
+    try:
+        return posixpath.commonpath(parsed_paths)
+    except ValueError:
+        # Expected when URL paths do not share a common root beyond "/".
+        return ""
+
+
+def _build_structural_summary(
+    *,
+    source_url: str,
+    previous_summary: str | None,
+    result: list[dict[str, object]],
+    crawled_page_hashes: dict[str, str],
+    items_by_url: dict[str, dict[str, object]],
+) -> str:
+    """Merge extracted run data into a structural summary persisted in metadata_cache."""
+    summary: dict[str, object] = {}
+    if previous_summary:
+        try:
+            loaded = json.loads(previous_summary)
+            if isinstance(loaded, dict):
+                summary = loaded
+        except json.JSONDecodeError:
+            summary = {}
+
+    item_urls = [
+        str(item.get("url") or item.get("@id"))
+        for item in result
+        if item.get("url") or item.get("@id")
+    ][:MAX_CACHED_ITEM_URLS]
+
+    summary["source_url"] = source_url
+    summary["source_domain"] = urlparse(source_url).netloc
+    summary["last_extracted"] = datetime.now(timezone.utc).isoformat()
+    summary["item_count"] = len(result)
+    summary["item_urls"] = item_urls
+    summary["item_url_common_prefix"] = _item_path_common_prefix(item_urls)
+    summary["crawled_page_hashes"] = crawled_page_hashes
+    summary["items_by_url"] = items_by_url
+    if "last_semantic_tool_search_at" in summary:
+        summary["last_semantic_tool_search_at"] = summary["last_semantic_tool_search_at"]
+    # Placeholder: this field is set by semantic-tool search once that integration exists.
+
+    return json.dumps(summary, ensure_ascii=False)
+
+
 def run_extraction(
     app: Flask,
     session_id: int,
     url: str,
     prompt: str | None,
     structural_summary: str | None,
+    site_content_hash: str | None = None,
 ) -> None:
     """Background task: run the extraction agent and store the result in the session."""
     from app.agents import get_llm_client
@@ -92,17 +262,36 @@ def run_extraction(
             result_str = json.dumps(result)
             update_session(session_id, "done", log=logger.to_json(), result_json=result_str)
 
-            # Update metadata_cache with the new content hash.
-            content_hash = hashlib.sha256(result_str.encode()).hexdigest()
+            latest_page_hashes: dict[str, str] = getattr(
+                agent,
+                "last_crawled_page_hashes",
+                {},
+            )
+            latest_items_by_url: dict[str, dict[str, object]] = getattr(
+                agent,
+                "last_items_by_url",
+                {},
+            )
+            updated_structural_summary = _build_structural_summary(
+                source_url=url,
+                previous_summary=structural_summary,
+                result=result,
+                crawled_page_hashes=latest_page_hashes,
+                items_by_url=latest_items_by_url,
+            )
+
+            # Update metadata_cache with the latest site-content hash and summary.
+            content_hash = site_content_hash or hashlib.sha256(result_str.encode()).hexdigest()
             db = get_db()
             db.execute(
-                "INSERT INTO metadata_cache (url, content_hash, last_crawled_at)"
-                " VALUES (?, ?, datetime('now'))"
+                "INSERT INTO metadata_cache (url, content_hash, structural_summary, last_crawled_at)"
+                " VALUES (?, ?, ?, datetime('now'))"
                 " ON CONFLICT(url) DO UPDATE SET"
                 "   content_hash = excluded.content_hash,"
+                "   structural_summary = excluded.structural_summary,"
                 "   last_crawled_at = excluded.last_crawled_at,"
                 "   updated_at = datetime('now')",
-                (url, content_hash),
+                (url, content_hash, updated_structural_summary),
             )
             db.commit()
 
@@ -114,7 +303,12 @@ def run_extraction(
             update_session(session_id, "error", log=logger.to_json())
 
 
-def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> None:
+def enqueue_extraction_if_needed(
+    url: str,
+    prompt: str | None,
+    user_id: int,
+    force_refresh: bool = False,
+) -> None:
     """Create a pending session and enqueue an extraction job if no active session exists.
 
     Does nothing if there is already a pending or running session for (user_id, url).
@@ -124,6 +318,11 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
     if active is not None:
         return
 
+    plan = _build_extraction_plan(url, force_refresh=force_refresh)
+    if plan.mode == "no_update":
+        _LOGGER.info("Skipping extraction for %s: unchanged content hash", url)
+        return
+
     new_session = create_session(user_id, url)
 
     # _get_current_object() unwraps the Flask application proxy so the real
@@ -131,10 +330,6 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
     # run outside the request context, so passing the proxy directly would
     # fail; we need the concrete object.
     app = current_app._get_current_object()  # type: ignore[attr-defined]
-
-    # Retrieve structural_summary from metadata_cache for incremental runs.
-    # Pass None (full refresh) if no previous crawl is recorded.
-    structural_summary = _get_structural_summary(url)
 
     scheduler = current_app.extensions.get("scheduler")
     if scheduler is not None:
@@ -146,7 +341,8 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
                 "session_id": new_session.id,
                 "url": url,
                 "prompt": prompt,
-                "structural_summary": structural_summary,
+                "structural_summary": plan.structural_summary,
+                "site_content_hash": plan.site_content_hash,
             },
         )
 
@@ -175,6 +371,7 @@ def trigger_extraction_now(
         url=url,
         prompt=prompt,
         structural_summary=_get_structural_summary(url),
+        site_content_hash=_fetch_site_content_hash(url),
     )
     return new_session.id
 
@@ -211,6 +408,7 @@ def run_pending_extractions(
                 url=session_url,
                 prompt=None,
                 structural_summary=_get_structural_summary(session_url),
+                site_content_hash=_fetch_site_content_hash(session_url),
             )
             executed_ids.append(session_id)
         except Exception:

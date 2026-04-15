@@ -156,6 +156,8 @@ LLM_MODEL_EMBEDDING=qwen3-embedding-8b      # embeddings: ontology search (TODO 
 See `config.py` for all available options and their defaults.
 
 The database is stored in `data/metadata.db` by default. Override with `DATABASE_URL` in `.env` if needed.
+Use `CRON_METADATA_FULL_REFRESH_PROBABILITY` to configure the default random
+full-refresh rate (default `0.01` = 1%).
 
 ---
 

@@ -224,8 +224,9 @@ def test_run_pending_extractions_continues_after_failure(
             url: str,
             prompt: str | None,
             structural_summary: str | None,
+            site_content_hash: str | None = None,
         ) -> None:
-            _ = (app, url, prompt, structural_summary)
+            _ = (app, url, prompt, structural_summary, site_content_hash)
             call_order.append(session_id)
             if session_id == first.id:
                 raise RuntimeError("boom")
@@ -236,3 +237,142 @@ def test_run_pending_extractions_continues_after_failure(
 
     assert call_order == [first.id, second.id]
     assert executed_ids == [second.id]
+
+
+def test_enqueue_extraction_skips_when_site_hash_unchanged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    class _FakeScheduler:
+        def __init__(self) -> None:
+            self.jobs: list[dict[str, Any]] = []
+
+        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
+            _ = (func, trigger)
+            self.jobs.append(kwargs)
+
+    fake_scheduler = _FakeScheduler()
+
+    with app.app_context():
+        from app.api._extraction import enqueue_extraction_if_needed
+        from app.db.sqlite import get_db, init_db
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        app.extensions["scheduler"] = fake_scheduler
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            ("https://example.com/training", "same-hash", '{"schema_version":"2"}'),
+        )
+        db.commit()
+
+        monkeypatch.setattr(
+            "app.api._extraction._fetch_site_content_hash",
+            lambda _url: "same-hash",
+        )
+
+        enqueue_extraction_if_needed("https://example.com/training", None, user.id)
+
+        session_count = db.execute("SELECT COUNT(*) FROM sessions").fetchone()[0]
+
+    assert session_count == 0
+    assert fake_scheduler.jobs == []
+
+
+def test_enqueue_extraction_uses_incremental_mode_on_hash_change(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app(
+        {
+            "TESTING": True,
+            "DATABASE_URL": str(tmp_path / "test.db"),
+            "CRON_METADATA_FULL_REFRESH_PROBABILITY": 0.0,
+        }
+    )
+
+    class _FakeScheduler:
+        def __init__(self) -> None:
+            self.jobs: list[dict[str, Any]] = []
+
+        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
+            _ = (func, trigger)
+            self.jobs.append(kwargs)
+
+    fake_scheduler = _FakeScheduler()
+
+    with app.app_context():
+        from app.api._extraction import enqueue_extraction_if_needed
+        from app.db.sqlite import get_db, init_db
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        app.extensions["scheduler"] = fake_scheduler
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            ("https://example.com/training", "old-hash", '{"schema_version":"2","hint":"keep"}'),
+        )
+        db.commit()
+
+        monkeypatch.setattr(
+            "app.api._extraction._fetch_site_content_hash",
+            lambda _url: "new-hash",
+        )
+
+        enqueue_extraction_if_needed("https://example.com/training", None, user.id)
+
+    assert len(fake_scheduler.jobs) == 1
+    assert fake_scheduler.jobs[0]["structural_summary"] == '{"schema_version":"2","hint":"keep"}'
+    assert fake_scheduler.jobs[0]["site_content_hash"] == "new-hash"
+
+
+def test_enqueue_extraction_random_full_refresh_is_configurable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app(
+        {
+            "TESTING": True,
+            "DATABASE_URL": str(tmp_path / "test.db"),
+            "CRON_METADATA_FULL_REFRESH_PROBABILITY": 1.0,
+        }
+    )
+
+    class _FakeScheduler:
+        def __init__(self) -> None:
+            self.jobs: list[dict[str, Any]] = []
+
+        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
+            _ = (func, trigger)
+            self.jobs.append(kwargs)
+
+    fake_scheduler = _FakeScheduler()
+
+    with app.app_context():
+        from app.api._extraction import enqueue_extraction_if_needed
+        from app.db.sqlite import get_db, init_db
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        app.extensions["scheduler"] = fake_scheduler
+        db = get_db()
+        db.execute(
+            "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
+            ("https://example.com/training", "same-hash", '{"schema_version":"2","hint":"drop"}'),
+        )
+        db.commit()
+
+        monkeypatch.setattr(
+            "app.api._extraction._fetch_site_content_hash",
+            lambda _url: "same-hash",
+        )
+        monkeypatch.setattr("app.api._extraction.random.random", lambda: 0.0)
+
+        enqueue_extraction_if_needed("https://example.com/training", None, user.id)
+
+    assert len(fake_scheduler.jobs) == 1
+    assert fake_scheduler.jobs[0]["structural_summary"] is None
