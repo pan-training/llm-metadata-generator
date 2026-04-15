@@ -448,7 +448,7 @@ def test_agent_ignores_faceted_item_urls(monkeypatch: pytest.MonkeyPatch) -> Non
         )
 
 
-def test_classify_chunk_prompt_requires_ignored_links_schema(
+def test_classify_chunk_prompt_includes_ignored_links_schema(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     captured_messages: list[dict[str, str]] = []
@@ -479,6 +479,7 @@ def test_classify_chunk_prompt_requires_ignored_links_schema(
         llm_client=MockLLMClient([]),
     )
 
+    assert len(captured_messages) >= 2
     prompt = captured_messages[1]["content"]
     assert "Do NOT extract filter/facet/tag links as items." in prompt
     assert '"ignored_links": [{"url": "...", "reason": "facet_filter|auth|admin|other_non_content"' in prompt
@@ -519,6 +520,7 @@ def test_summarize_chunk_context_keeps_chunk_signal_and_ignore_patterns(
         "Active section: Materials filters | chunk_signal=navigation_only | "
         "ignore_link_patterns=facet_filter,auth_or_admin"
     )
+    assert len(captured_messages) >= 2
     assert '"chunk_signal": "content|navigation_only|mixed"' in captured_messages[1]["content"]
 
 

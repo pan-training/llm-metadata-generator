@@ -1899,9 +1899,9 @@ class BioschemasExtractorAgent:
         ignore_patterns = result.get("ignore_link_patterns")
         if isinstance(ignore_patterns, list):
             clean_patterns = [
-                pattern.strip()
+                stripped
                 for pattern in ignore_patterns
-                if isinstance(pattern, str) and pattern.strip()
+                if isinstance(pattern, str) and (stripped := pattern.strip())
             ]
             if clean_patterns:
                 summary_parts.append(
