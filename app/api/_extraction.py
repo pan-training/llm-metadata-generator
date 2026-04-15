@@ -308,7 +308,7 @@ def run_extraction(
                     session_id,
                 )
 
-        def _on_log_event(_ev: object) -> None:
+        def _on_log_event(_: object) -> None:
             _persist_running_log()
 
         logger = AgentLogger(on_event=_on_log_event)
