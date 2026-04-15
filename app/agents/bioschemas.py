@@ -53,8 +53,10 @@ context (source URL, surrounding text excerpt) to drive the extraction phase.
 
 ### Phase 2 – EXTRACT  (per item, separate context windows)
 
-For each discovered item a two-step chain-of-thought extraction is performed
-to improve accuracy, especially for smaller LLM models:
+For each discovered item the page content is split into extraction chunks.
+A fast relevance model first marks which chunks contain metadata evidence for
+that specific item.  Then a two-step chain-of-thought extraction is performed
+per relevant chunk to improve accuracy, especially for smaller LLM models:
 
 **Step 2a – Reasoning scratchpad** (free-text, no JSON mode):
 The LLM reads the item's page content and writes concise notes about every
@@ -65,6 +67,8 @@ reducing the cognitive load on the model.
 **Step 2b – Extraction** (JSON mode):
 The model produces the Bioschemas JSON-LD object, with the scratchpad from
 step 2a included as additional context in the prompt.
+
+The chunk-level extraction outputs are finally merged into one JSON-LD object.
 
 # TODO (issue #6): pass candidate ontology terms to the extraction prompt once
 #   ontology vector search is implemented (see TODO.md item 6).
@@ -541,118 +545,6 @@ def _chunk_text(
         chunks.append(text[start:end])
         start = max(start + 1, end - overlap)
     return chunks
-
-
-_EXTRACTION_POSITIVE_HINTS: tuple[str, ...] = (
-    "training",
-    "course",
-    "workshop",
-    "tutorial",
-    "webinar",
-    "learning",
-    "curriculum",
-    "instructor",
-    "speaker",
-    "agenda",
-    "syllabus",
-    "prerequisite",
-    "duration",
-)
-
-_EXTRACTION_NOISE_HINTS: tuple[str, ...] = (
-    "navigation",
-    "filter",
-    "sort",
-    "menu",
-    "breadcrumb",
-    "privacy policy",
-    "terms of use",
-    "cookie",
-    "sign in",
-    "log in",
-    "register",
-)
-
-_MARKDOWN_OR_HTML_LINK_RE = re.compile(r"\[[^\]]+\]\([^)]+\)|<a\b", flags=re.IGNORECASE)
-
-
-def _title_tokens(title: str) -> set[str]:
-    """Return normalized title tokens useful for chunk relevance scoring."""
-    return {
-        token
-        for token in re.findall(r"[a-z0-9]+", title.lower())
-        if len(token) >= 3
-    }
-
-
-def _chunk_relevance_score(chunk_text: str, title_tokens: set[str]) -> int:
-    """Score a chunk for extraction relevance (higher is better)."""
-    lowered = chunk_text.lower()
-    positive_hits = sum(1 for hint in _EXTRACTION_POSITIVE_HINTS if hint in lowered)
-    noise_hits = sum(1 for hint in _EXTRACTION_NOISE_HINTS if hint in lowered)
-    title_hits = sum(1 for token in title_tokens if token in lowered)
-    heading_hits = chunk_text.count("\n#") + chunk_text.lower().count("<h")
-    link_count = len(_MARKDOWN_OR_HTML_LINK_RE.findall(chunk_text))
-    line_count = max(chunk_text.count("\n") + 1, 1)
-    link_density_penalty = 2 if (link_count / line_count) > 0.35 else 0
-
-    return (
-        positive_hits * 3
-        + title_hits * 5
-        + min(heading_hits, 3)
-        - noise_hits * 3
-        - link_density_penalty
-    )
-
-
-def _select_extraction_content(text: str, item_title: str) -> str:
-    """Build extraction context from relevant chunks instead of only text prefix."""
-    if len(text) <= MAX_EXTRACTION_CONTENT:
-        return text
-
-    chunks = _chunk_text(
-        text,
-        chunk_size=EXTRACTION_CHUNK_SIZE,
-        overlap=EXTRACTION_CHUNK_OVERLAP,
-    )
-    if len(chunks) == 1:
-        return chunks[0][:MAX_EXTRACTION_CONTENT]
-
-    title_tokens = _title_tokens(item_title)
-    scored_chunks = [
-        (idx, _chunk_relevance_score(chunk, title_tokens))
-        for idx, chunk in enumerate(chunks)
-    ]
-    preferred_indexes = [idx for idx, score in scored_chunks if score > 0]
-    if not preferred_indexes:
-        return text[:MAX_EXTRACTION_CONTENT]
-
-    selected_indexes = set(preferred_indexes)
-    for idx in preferred_indexes:
-        if idx > 0:
-            selected_indexes.add(idx - 1)
-        if idx + 1 < len(chunks):
-            selected_indexes.add(idx + 1)
-
-    separator = "\n\n---\n\n"
-    selected_parts: list[str] = []
-    used_chars = 0
-    for idx in sorted(selected_indexes):
-        part = chunks[idx]
-        add_sep = len(separator) if selected_parts else 0
-        if used_chars + add_sep + len(part) > MAX_EXTRACTION_CONTENT:
-            remaining = MAX_EXTRACTION_CONTENT - used_chars - add_sep
-            if remaining > 120:
-                selected_parts.append(part[:remaining])
-            break
-        if selected_parts:
-            selected_parts.append(separator)
-            used_chars += len(separator)
-        selected_parts.append(part)
-        used_chars += len(part)
-
-    selected_text = "".join(selected_parts)
-    return selected_text if selected_text else text[:MAX_EXTRACTION_CONTENT]
 
 
 # ---------------------------------------------------------------------------
@@ -1482,43 +1374,63 @@ class BioschemasExtractorAgent:
                     )
 
             item_text, _ = _page_content(item_html or "", item_info.url or url, self._raw_html)
-            content_for_extraction = _select_extraction_content(
-                item_text,
-                item_info.title,
-            )
-
-            # --- Chain-of-thought reasoning pass (step 2a) ---
-            # The LLM writes free-text notes about what metadata it can
-            # find before committing to a structured JSON format.  This
-            # improves accuracy for smaller models by separating "what
-            # information is here?" from "format it as JSON-LD".
-            reasoning = self._reason_about_item(
+            relevant_chunks = self._select_relevant_item_chunks(
                 item_info=item_info,
-                content=content_for_extraction,
+                content=item_text,
                 llm_client=llm_client,
                 parent_id=item_id,
             )
+            content_for_review = (
+                "\n\n---\n\n".join(relevant_chunks)
+            )[:MAX_EXTRACTION_CONTENT]
 
-            # --- Extraction (step 2b) ---
-            extracted = self._extract_item(
-                item_info=item_info,
-                content=content_for_extraction,
-                prompt=prompt,
-                reasoning=reasoning,
-                llm_client=llm_client,
-                parent_id=item_id,
-            )
-            if not extracted:
+            chunk_extractions: list[dict[str, Any]] = []
+            for chunk_index, chunk_content in enumerate(relevant_chunks):
+                chunk_id = (
+                    self._logger.info(
+                        f"Phase 2 chunk {chunk_index + 1}/{len(relevant_chunks)}",
+                        parent=item_id,
+                    )
+                    if len(relevant_chunks) > 1
+                    else item_id
+                )
+
+                reasoning = self._reason_about_item(
+                    item_info=item_info,
+                    content=chunk_content,
+                    llm_client=llm_client,
+                    parent_id=chunk_id,
+                )
+
+                extracted_chunk = self._extract_item(
+                    item_info=item_info,
+                    content=chunk_content,
+                    prompt=prompt,
+                    reasoning=reasoning,
+                    llm_client=llm_client,
+                    parent_id=chunk_id,
+                )
+                if extracted_chunk:
+                    chunk_extractions.append(extracted_chunk)
+
+            if not chunk_extractions:
                 self._logger.warn(
                     "Extraction returned empty result — skipping item",
                     parent=item_id,
                 )
                 continue
 
+            extracted = self._merge_chunk_extractions(
+                item_info=item_info,
+                chunk_extractions=chunk_extractions,
+                llm_client=llm_client,
+                parent_id=item_id,
+            )
+
             # --- Review ---
             reviewed = self._review_item(
                 item=extracted,
-                content=content_for_extraction,
+                content=content_for_review,
                 llm_client=llm_client,
                 parent_id=item_id,
             )
@@ -1925,6 +1837,122 @@ class BioschemasExtractorAgent:
         if isinstance(summary, str):
             return summary.strip() or None
         return None
+
+    def _classify_item_chunk_relevance(
+        self,
+        item_info: DiscoveredItem,
+        chunk_text: str,
+        chunk_index: int,
+        total_chunks: int,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        """Classify whether a chunk is relevant for extracting one item."""
+        messages: list[dict[str, str]] = [
+            {
+                "role": "system",
+                "content": (
+                    "Decide if this chunk contains information useful for extracting "
+                    "metadata for the specific training item. Focus only on this item, "
+                    "not other courses/events. Return JSON only."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Item title: {item_info.title}\n"
+                    f"Item URL: {item_info.url}\n"
+                    f"Item type: {item_info.item_type}\n"
+                    f"Item context hint: {item_info.context}\n\n"
+                    f"Chunk {chunk_index + 1}/{total_chunks}:\n{chunk_text}\n\n"
+                    'Return JSON: {"relevant": true/false, "reason": "..."}'
+                ),
+            },
+        ]
+        return _call_llm(
+            llm_client,
+            get_model_for_task("content_relevance"),
+            messages,
+            logger=self._logger,
+            task="content_relevance",
+            parent_id=parent_id,
+            chunk=chunk_text,
+        )
+
+    def _select_relevant_item_chunks(
+        self,
+        item_info: DiscoveredItem,
+        content: str,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> list[str]:
+        """Select item-relevant chunks using the fast relevance model."""
+        if len(content) <= MAX_EXTRACTION_CONTENT:
+            return [content]
+
+        chunks = _chunk_text(
+            content,
+            chunk_size=EXTRACTION_CHUNK_SIZE,
+            overlap=EXTRACTION_CHUNK_OVERLAP,
+        )
+        relevant_chunks: list[str] = []
+        for chunk_index, chunk_text in enumerate(chunks):
+            result = self._classify_item_chunk_relevance(
+                item_info=item_info,
+                chunk_text=chunk_text,
+                chunk_index=chunk_index,
+                total_chunks=len(chunks),
+                llm_client=llm_client,
+                parent_id=parent_id,
+            )
+            if result.get("relevant", False):
+                relevant_chunks.append(chunk_text)
+
+        if relevant_chunks:
+            return relevant_chunks
+        return [content[:MAX_EXTRACTION_CONTENT]]
+
+    def _merge_chunk_extractions(
+        self,
+        item_info: DiscoveredItem,
+        chunk_extractions: list[dict[str, Any]],
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        """Merge chunk-level extraction outputs into one JSON-LD object."""
+        if len(chunk_extractions) == 1:
+            return chunk_extractions[0]
+
+        messages: list[dict[str, str]] = [
+            {"role": "system", "content": _SYSTEM_PROMPT},
+            {
+                "role": "user",
+                "content": (
+                    "Merge these partial JSON-LD extraction candidates into one "
+                    "best final JSON-LD object for the same item.\n"
+                    "Rules:\n"
+                    "- Keep only information consistent across candidates or clearly "
+                    "better supported.\n"
+                    "- Prefer explicit values over inferred values.\n"
+                    "- Do not invent fields not present in candidates.\n"
+                    "- Resolve conflicts conservatively.\n\n"
+                    f"Item title: {item_info.title}\n"
+                    f"Item URL: {item_info.url}\n"
+                    f"Item type: {item_info.item_type}\n\n"
+                    "Candidates:\n"
+                    f"{json.dumps(chunk_extractions)}"
+                ),
+            },
+        ]
+        return _call_llm(
+            llm_client,
+            get_model_for_task("json_ld_review"),
+            messages,
+            logger=self._logger,
+            task="json_ld_merge",
+            parent_id=parent_id,
+            chunk=json.dumps(chunk_extractions),
+        )
 
     def _reason_about_item(
         self,

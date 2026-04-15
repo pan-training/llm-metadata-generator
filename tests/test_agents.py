@@ -18,7 +18,6 @@ from app.agents.bioschemas import (
     _chunk_text,
     _is_faceted_search_url,
     _is_non_content_url,
-    _select_extraction_content,
     compute_site_structure_summary,
 )
 
@@ -148,35 +147,70 @@ def test_chunk_text_splits_long_text() -> None:
         assert len(chunk) <= 600  # chunk_size + some flexibility
 
 
-def test_select_extraction_content_prefers_relevant_chunk_over_navigation_prefix() -> None:
-    nav = (
-        ("navigation menu filter sort login register privacy policy terms of use\n" * 120)
-        + ("[Filter](https://example.com/filter)\n" * 80)
+def test_select_relevant_item_chunks_falls_back_when_none_classified_relevant(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    agent = BioschemasExtractorAgent()
+    item_info: Any = type(
+        "DummyItem",
+        (),
+        {
+            "title": "AI",
+            "url": "https://example.com/ai",
+            "item_type": "TrainingMaterial",
+            "context": "ai",
+        },
+    )()
+    text = "nav\n" * 9000
+    monkeypatch.setattr(
+        BioschemasExtractorAgent,
+        "_classify_item_chunk_relevance",
+        lambda self, item_info, chunk_text, chunk_index, total_chunks, llm_client, parent_id=None: {"relevant": False},
     )
-    material = (
-        "\n## Hands-on RNA-Seq Workshop\n"
-        "This training workshop teaches RNA-Seq analysis with practical exercises.\n"
-        "Agenda, duration, prerequisites and instructor details are provided.\n"
+
+    selected = agent._select_relevant_item_chunks(
+        item_info=item_info,
+        content=text,
+        llm_client=MockLLMClient([]),
     )
-    text = nav + ("\nFiller\n" * 800) + material + ("Further notes\n" * 300)
 
-    selected = _select_extraction_content(text, "RNA-Seq Workshop")
-
-    assert len(selected) <= MAX_EXTRACTION_CONTENT
-    assert "Hands-on RNA-Seq Workshop" in selected
-    assert "teaches RNA-Seq analysis" in selected
-    assert "navigation menu filter sort login register" not in selected
+    assert selected == [text[:MAX_EXTRACTION_CONTENT]]
 
 
-def test_select_extraction_content_falls_back_to_prefix_without_relevant_chunks() -> None:
-    text = (
-        ("navigation filter sort login register privacy policy terms of use\n" * 220)
-        + ("[Filter](https://example.com/filter)\n" * 160)
-        + ("Footer links only\n" * 500)
+def test_merge_chunk_extractions_uses_llm_for_multiple_candidates() -> None:
+    merged = json.dumps(
+        {
+            "@type": "LearningResource",
+            "name": "Merged title",
+            "description": "Merged description",
+            "keywords": ["merged"],
+            "url": "https://example.com/merged",
+        }
     )
-    selected = _select_extraction_content(text, "AI")
+    client = MockLLMClient([merged])
+    agent = BioschemasExtractorAgent()
+    item_info: Any = type(
+        "DummyItem",
+        (),
+        {
+            "title": "Merged title",
+            "url": "https://example.com/merged",
+            "item_type": "TrainingMaterial",
+            "context": "context",
+        },
+    )()
 
-    assert selected == text[:MAX_EXTRACTION_CONTENT]
+    result = agent._merge_chunk_extractions(
+        item_info=item_info,
+        chunk_extractions=[
+            {"name": "Merged title", "description": "Part A"},
+            {"name": "Merged title", "description": "Part B"},
+        ],
+        llm_client=client,
+    )
+
+    assert result["name"] == "Merged title"
+    assert result["description"] == "Merged description"
 
 
 # ---------------------------------------------------------------------------
@@ -771,10 +805,10 @@ def test_agent_on_item_callback_called_per_item(monkeypatch: pytest.MonkeyPatch)
     assert result == received
 
 
-def test_agent_uses_chunked_content_selection_for_long_item_pages(
+def test_agent_uses_llm_chunk_relevance_for_long_item_pages(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Long item pages should include relevant later content, not only the prefix."""
+    """Long item pages use fast-model chunk selection before extraction."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
     monkeypatch.setattr(
         "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
@@ -784,17 +818,22 @@ def test_agent_uses_chunked_content_selection_for_long_item_pages(
         lambda *a, **kw: _make_response("<html><body>Workshop listing</body></html>"),
     )
 
-    long_item_text = (
-        ("navigation menu filter sort login register privacy policy\n" * 140)
-        + ("[Filter](https://example.com/filter)\n" * 100)
-        + ("\nFiller\n" * 900)
-        + "## Deep Learning Workshop\n"
-        + "This training workshop includes hands-on sessions and an agenda.\n"
-        + ("Additional content\n" * 350)
+    long_item_text = "filler\n" * 9000
+    chunk_nav = "navigation menu filter sort login register privacy policy"
+    chunk_relevant = (
+        "## Deep Learning Workshop\n"
+        "This training workshop includes hands-on sessions and an agenda.\n"
     )
+    chunk_footer = "footer links and legal notice"
     monkeypatch.setattr(
         "app.agents.bioschemas._page_content",
         lambda html, base_url, raw_html: (long_item_text, []),
+    )
+    monkeypatch.setattr(
+        "app.agents.bioschemas._chunk_text",
+        lambda text, chunk_size=0, overlap=0: (
+            [chunk_nav, chunk_relevant, chunk_footer] if len(text) > 1000 else [text]
+        ),
     )
 
     chunk_class = json.dumps(
@@ -812,8 +851,21 @@ def test_agent_uses_chunked_content_selection_for_long_item_pages(
         }
     )
     client = MockLLMClient([chunk_class])
+    seen_chunk_indexes: list[int] = []
 
     captured_content: dict[str, str] = {}
+
+    def _fake_relevance(
+        self: BioschemasExtractorAgent,
+        item_info: Any,
+        chunk_text: str,
+        chunk_index: int,
+        total_chunks: int,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        seen_chunk_indexes.append(chunk_index)
+        return {"relevant": chunk_text == chunk_relevant}
 
     def _fake_reason(
         self: BioschemasExtractorAgent,
@@ -842,6 +894,11 @@ def test_agent_uses_chunked_content_selection_for_long_item_pages(
             "url": "https://example.com/deep-learning",
         }
 
+    monkeypatch.setattr(
+        BioschemasExtractorAgent,
+        "_classify_item_chunk_relevance",
+        _fake_relevance,
+    )
     monkeypatch.setattr(BioschemasExtractorAgent, "_reason_about_item", _fake_reason)
     monkeypatch.setattr(BioschemasExtractorAgent, "_extract_item", _fake_extract)
     monkeypatch.setattr(
@@ -854,10 +911,10 @@ def test_agent_uses_chunked_content_selection_for_long_item_pages(
     result = agent.run(url="https://example.com/listing", llm_client=client)
 
     assert len(result) == 1
+    assert seen_chunk_indexes == [0, 1, 2]
     assert "Deep Learning Workshop" in captured_content["value"]
     assert "hands-on sessions and an agenda" in captured_content["value"]
-    assert "navigation menu filter sort login register" not in captured_content["value"]
-    assert len(captured_content["value"]) <= MAX_EXTRACTION_CONTENT
+    assert chunk_nav not in captured_content["value"]
 
 
 # ---------------------------------------------------------------------------
