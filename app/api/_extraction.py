@@ -117,7 +117,7 @@ def _snapshot_content_hash(page_hashes: Mapping[str, str], root_hash: str | None
         return root_hash
 
     payload = {
-        "root_hash": root_hash or "",
+        "root_hash": root_hash,
         "pages": normalized_pairs,
     }
     return hashlib.sha256(
@@ -162,6 +162,11 @@ def _build_extraction_plan(url: str, force_refresh: bool = False) -> ExtractionP
     for page_url in cached_page_hashes:
         page_hash = _fetch_site_content_hash(page_url)
         if page_hash is None:
+            _LOGGER.warning(
+                "Could not refresh hash for cached page %s while planning %s; falling back to incremental refresh",
+                page_url,
+                url,
+            )
             return ExtractionPlan(
                 mode="incremental",
                 structural_summary=cached_summary,
@@ -189,6 +194,7 @@ def _build_extraction_plan(url: str, force_refresh: bool = False) -> ExtractionP
         )
 
     # Backward compatibility: old cache entries may contain only the root-page hash.
+    # For entries with no cached subpages, all(...) is intentionally vacuously true.
     if cached_hash == current_hash and all(
         current_page_hashes.get(page_url) == cached_page_hash
         for page_url, cached_page_hash in cached_page_hashes.items()
@@ -328,7 +334,7 @@ def run_extraction(
             result_str = json.dumps(result)
             update_session(session_id, "done", log=logger.to_json(), result_json=result_str)
 
-            latest_page_hashes: dict[str, str] = getattr(
+            extracted_page_hashes: dict[str, str] = getattr(
                 agent,
                 "last_crawled_page_hashes",
                 {},
@@ -342,12 +348,12 @@ def run_extraction(
                 source_url=url,
                 previous_summary=structural_summary,
                 result=result,
-                crawled_page_hashes=latest_page_hashes,
+                crawled_page_hashes=extracted_page_hashes,
                 items_by_url=latest_items_by_url,
             )
 
             # Update metadata_cache with the latest site-content hash and summary.
-            content_hash = _snapshot_content_hash(latest_page_hashes, site_content_hash)
+            content_hash = _snapshot_content_hash(extracted_page_hashes, site_content_hash)
             if content_hash is None:
                 content_hash = hashlib.sha256(result_str.encode()).hexdigest()
             db = get_db()
