@@ -1552,6 +1552,7 @@ class BioschemasExtractorAgent:
             )
 
         links_to_follow: list[str] = []
+        previous_chunk_summary: str | None = None
 
         for chunk_idx, chunk_text in enumerate(chunks):
             result = self._classify_chunk(
@@ -1560,9 +1561,18 @@ class BioschemasExtractorAgent:
                 total_chunks=total_chunks,
                 source_url=start_url,
                 structural_summary=structural_summary,
+                previous_chunk_summary=previous_chunk_summary,
                 llm_client=llm_client,
                 parent_id=page_id,
             )
+
+            if chunk_idx < total_chunks - 1:
+                previous_chunk_summary = self._summarize_chunk_context(
+                    chunk_text=chunk_text,
+                    previous_chunk_summary=previous_chunk_summary,
+                    llm_client=llm_client,
+                    parent_id=page_id,
+                )
 
             if not result.get("relevant", False):
                 continue
@@ -1659,6 +1669,7 @@ class BioschemasExtractorAgent:
         total_chunks: int,
         source_url: str,
         structural_summary: str | None,
+        previous_chunk_summary: str | None,
         llm_client: Any,
         parent_id: int | None = None,
     ) -> dict[str, Any]:
@@ -1733,6 +1744,8 @@ class BioschemasExtractorAgent:
                     "admin pages, login pages, search pages, or any URL whose path "
                     "contains /new, /create, /edit, /delete, /admin, /sign_in, "
                     "/login, /register, /search, /api/.\n\n"
+                    "Previous chunk carry-over context summary "
+                    f"(may be empty): {previous_chunk_summary or '(none)'}\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
@@ -1751,6 +1764,50 @@ class BioschemasExtractorAgent:
             parent_id=parent_id,
             chunk=chunk_text,
         )
+
+    def _summarize_chunk_context(
+        self,
+        chunk_text: str,
+        previous_chunk_summary: str | None,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> str | None:
+        """Summarise carry-over context needed to interpret the next chunk."""
+        messages: list[dict[str, str]] = [
+            {
+                "role": "system",
+                "content": (
+                    "Summarise contextual cues needed to interpret the next text "
+                    "chunk from the same page. Keep only durable context such as "
+                    "active section heading/scope, whether links are explicitly "
+                    "irrelevant, and any list/table continuation cues."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    "Existing carry-over summary from previous chunk "
+                    f"(may be empty): {previous_chunk_summary or '(none)'}\n\n"
+                    "Current chunk:\n"
+                    f"{chunk_text}\n\n"
+                    "Return JSON: "
+                    '{"continuation_context": "brief summary for the next chunk"}'
+                ),
+            },
+        ]
+        result = _call_llm(
+            llm_client,
+            get_model_for_task("content_summary"),
+            messages,
+            logger=self._logger,
+            task="content_summary",
+            parent_id=parent_id,
+            chunk=chunk_text,
+        )
+        summary = result.get("continuation_context")
+        if isinstance(summary, str):
+            return summary.strip() or None
+        return None
 
     def _reason_about_item(
         self,
@@ -1945,4 +2002,3 @@ class BioschemasExtractorAgent:
             parent_id=parent_id,
         )
         return result if result else item
-
