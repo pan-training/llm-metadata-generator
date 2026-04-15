@@ -474,8 +474,14 @@ def _should_skip_enqueue(
 ) -> bool:
     """Return whether enqueue should be skipped for the current extraction plan.
 
-    ``no_update`` means the remote content hash looks unchanged, but we only skip
-    creating a new session when the latest local session is already ``done``.
+    Args:
+        plan_mode: Extraction plan mode calculated for the source URL.
+        latest_session: Most recent session row for the same ``(user_id, url)``,
+            if one exists.
+
+    Returns:
+        ``True`` when the latest session is already ``done`` and the plan says
+        ``no_update``; otherwise ``False``.
     """
     return (
         plan_mode == "no_update"

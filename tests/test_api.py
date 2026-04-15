@@ -210,7 +210,7 @@ def test_get_collection_reenqueues_when_last_session_was_cancelled(
         structural_summary: str | None,
         site_content_hash: str | None = None,
     ) -> None:
-        _ = (app, url, prompt, structural_summary, site_content_hash)
+        del app, url, prompt, structural_summary, site_content_hash
         executed.append(session_id)
 
     monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
@@ -266,7 +266,7 @@ def test_get_collection_reenqueues_when_latest_session_cancelled_even_with_older
         structural_summary: str | None,
         site_content_hash: str | None = None,
     ) -> None:
-        _ = (app, url, prompt, structural_summary, site_content_hash)
+        del app, url, prompt, structural_summary, site_content_hash
         executed.append(session_id)
 
     monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
