@@ -6,6 +6,9 @@ DATABASE_URL = os.environ.get("DATABASE_URL", "data/metadata.db")
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key-change-me")
 
 CRON_METADATA_INTERVAL = int(os.environ.get("CRON_METADATA_INTERVAL", 1440))
+CRON_METADATA_FULL_REFRESH_PROBABILITY = float(
+    os.environ.get("CRON_METADATA_FULL_REFRESH_PROBABILITY", "0.01")
+)
 CRON_ONTOLOGY_INTERVAL = int(os.environ.get("CRON_ONTOLOGY_INTERVAL", 720))
 CRON_TOOLS_INTERVAL = int(os.environ.get("CRON_TOOLS_INTERVAL", 168))
 

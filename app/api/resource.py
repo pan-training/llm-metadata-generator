@@ -31,7 +31,15 @@ def get_single() -> ResponseReturnValue:
         return Response("Missing required query parameter: url", status=400)
 
     prompt = request.args.get("prompt") or None
+    force_refresh = request.args.get("force_refresh", "").lower() in {
+        "1",
+        "true",
+        "yes",
+        "on",
+    }
     user = g.current_user
+    if force_refresh and not user.is_admin:
+        return Response("force_refresh is admin-only", status=403)
 
     # Return latest done result if available
     done_session = get_latest_done_session(user.id, url)
@@ -54,11 +62,10 @@ def get_single() -> ResponseReturnValue:
             )
 
     # Enqueue a new job if no active session exists
-    enqueue_extraction_if_needed(url, prompt, user.id)
+    enqueue_extraction_if_needed(url, prompt, user.id, force_refresh=force_refresh)
 
     return Response(
         json.dumps({}),
         status=200,
         mimetype="application/ld+json",
     )
-

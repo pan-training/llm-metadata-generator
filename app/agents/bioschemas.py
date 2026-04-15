@@ -167,8 +167,12 @@ MAX_FIX_ATTEMPTS = 1  # maximum schema-fix LLM passes per item
 
 # Maximum characters of item content sent to the extraction LLM.
 MAX_EXTRACTION_CONTENT = 8000
+# Characters per extraction chunk when long pages are split for item-level extraction.
 EXTRACTION_CHUNK_SIZE = 2500
+# Overlap between extraction chunks to avoid losing boundary context.
 EXTRACTION_CHUNK_OVERLAP = 250
+# Cap of cached/seeded item detail URLs used to bootstrap incremental runs.
+MAX_INCREMENTAL_START_URLS = 200
 
 # Maximum characters of a schema property description included in validation
 # error hints (keeps the hint concise for LLM context).
@@ -373,6 +377,8 @@ class _CrawlState:
     pages: dict[str, str] = field(default_factory=dict)
     # url → SHA-256 hash of the raw HTML
     page_hashes: dict[str, str] = field(default_factory=dict)
+    # url → hash from the previous run (from structural summary)
+    previous_page_hashes: dict[str, str] = field(default_factory=dict)
     # Deduplicated discovered items
     discovered: list[DiscoveredItem] = field(default_factory=list)
     # robots.txt cache: netloc → RobotFileParser (per-run cache)
@@ -1256,6 +1262,8 @@ class BioschemasExtractorAgent:
         # Holds the AgentLogger for the duration of a run(); reset to None after.
         self._logger: AgentLogger | None = None
         self._raw_html: bool = False
+        self.last_crawled_page_hashes: dict[str, str] = {}
+        self.last_items_by_url: dict[str, dict[str, Any]] = {}
 
     def run(
         self,
@@ -1298,6 +1306,8 @@ class BioschemasExtractorAgent:
         """
         self._logger = logger if logger is not None else AgentLogger()
         self._raw_html = raw_html
+        self.last_crawled_page_hashes = {}
+        self.last_items_by_url = {}
 
         if llm_client is None:
             raise ValueError("llm_client must be provided")
@@ -1314,9 +1324,32 @@ class BioschemasExtractorAgent:
         # When using the new schema_version=2 format, start from the
         # primary_url of each listed content type rather than just the root URL.
         start_urls: list[str] = [url]
+        summary_data: dict[str, Any] = {}
+        previous_page_hashes: dict[str, str] = {}
+        cached_items_by_url: dict[str, dict[str, Any]] = {}
+        known_item_urls: list[str] = []
         if structural_summary:
             try:
                 summary_data = json.loads(structural_summary)
+                raw_hashes = summary_data.get("crawled_page_hashes")
+                if isinstance(raw_hashes, dict):
+                    previous_page_hashes = {
+                        str(page_url): str(page_hash)
+                        for page_url, page_hash in raw_hashes.items()
+                        if page_url and page_hash
+                    }
+                raw_cached_items = summary_data.get("items_by_url")
+                if isinstance(raw_cached_items, dict):
+                    cached_items_by_url = {
+                        str(item_url): item
+                        for item_url, item in raw_cached_items.items()
+                        if isinstance(item, dict)
+                    }
+                known_item_urls = [
+                    str(item_url)
+                    for item_url in summary_data.get("item_urls", [])
+                    if item_url
+                ]
                 if summary_data.get("schema_version") == "2":
                     content_type_urls = [
                         ct["primary_url"]
@@ -1332,7 +1365,18 @@ class BioschemasExtractorAgent:
             except (json.JSONDecodeError, AttributeError, KeyError):
                 pass
 
+        if known_item_urls:
+            combined_urls = [*start_urls, *known_item_urls]
+            # Cap URL probes to bound crawl time and avoid runaway recursion on
+            # very large catalogs; excess known item URLs are revisited in later runs.
+            start_urls = list(dict.fromkeys(combined_urls))[:MAX_INCREMENTAL_START_URLS]
+            self._logger.info(
+                f"Incremental run will probe {len(start_urls)} known URL(s) "
+                "(including previously discovered item URLs)"
+            )
+
         state = _CrawlState()
+        state.previous_page_hashes = previous_page_hashes
 
         # ----------------------------------------------------------------
         # Phase 1: CRAWL + DISCOVER
@@ -1346,6 +1390,31 @@ class BioschemasExtractorAgent:
                 state=state,
                 is_primary=(start_url == url),
                 parent_id=phase1_id,
+            )
+
+        # Ensure known items from previous runs are still represented, even when
+        # unchanged pages are skipped during incremental crawls.
+        known_discovered_urls = {d.url for d in state.discovered}
+        for item_url in known_item_urls:
+            if item_url in known_discovered_urls:
+                continue
+            if item_url not in cached_items_by_url:
+                continue
+            cached_item = cached_items_by_url[item_url]
+            raw_item_type = cached_item.get("@type")
+            item_type = str(
+                raw_item_type[0]
+                if isinstance(raw_item_type, list) and raw_item_type
+                else (raw_item_type or "TrainingMaterial")
+            )
+            state.discovered.append(
+                DiscoveredItem(
+                    title=str(cached_item.get("name") or item_url),
+                    url=item_url,
+                    item_type=item_type,
+                    source_url=item_url,
+                    context="",
+                )
             )
 
         if not state.discovered:
@@ -1365,6 +1434,7 @@ class BioschemasExtractorAgent:
         # ----------------------------------------------------------------
         phase2_id = self._logger.info("Phase 2–4: extract, review, validate")
         final_items: list[dict[str, Any]] = []
+        items_by_url_for_summary: dict[str, dict[str, Any]] = {}
         for item_info in state.discovered:
             item_id = self._logger.info(
                 f"Item: {item_info.title!r} ({item_info.item_type})",
@@ -1398,6 +1468,27 @@ class BioschemasExtractorAgent:
                         f"Could not fetch detail page: {exc}",
                         parent=item_id,
                     )
+
+            previous_item_hash = previous_page_hashes.get(item_info.url)
+            cached_item_for_url = cached_items_by_url.get(item_info.url)
+            item_page_hash = ""
+            if previous_item_hash and cached_item_for_url is not None:
+                item_markdown, _ = _html_to_markdown(item_html or "", item_info.url or url)
+                item_page_hash = _content_hash(item_markdown)
+            if (
+                previous_item_hash
+                and previous_item_hash == item_page_hash
+                and cached_item_for_url is not None
+            ):
+                self._logger.info(
+                    "Unchanged training material page detected; reusing cached metadata",
+                    parent=item_id,
+                )
+                final_items.append(cached_item_for_url)
+                items_by_url_for_summary[item_info.url] = cached_item_for_url
+                if on_item:
+                    on_item(cached_item_for_url)
+                continue
 
             item_text, _ = _page_content(item_html or "", item_info.url or url, self._raw_html)
             relevant_chunks = self._select_relevant_item_chunks(
@@ -1495,9 +1586,13 @@ class BioschemasExtractorAgent:
                         )
 
             final_items.append(reviewed)
+            if item_info.url:
+                items_by_url_for_summary[item_info.url] = reviewed
             if on_item:
                 on_item(reviewed)
 
+        self.last_crawled_page_hashes = dict(state.page_hashes)
+        self.last_items_by_url = items_by_url_for_summary
         self._logger.info(f"Extraction complete: {len(final_items)} item(s)")
         return final_items
 
@@ -1594,6 +1689,14 @@ class BioschemasExtractorAgent:
         md_text, _ = _html_to_markdown(html, start_url)
         page_hash = _content_hash(md_text)
         state.page_hashes[start_url] = page_hash
+        previous_page_hash = state.previous_page_hashes.get(start_url)
+        if previous_page_hash and previous_page_hash == page_hash:
+            if logger:
+                logger.info(
+                    "Page hash unchanged since previous crawl; skipping LLM analysis",
+                    parent=page_id,
+                )
+            return
         content_text = _clean_html_for_llm(html, start_url)[0] if self._raw_html else md_text
         chunks = _chunk_text(content_text)
         total_chunks = len(chunks)

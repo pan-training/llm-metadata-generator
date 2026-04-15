@@ -31,6 +31,15 @@ def client(app: Flask) -> FlaskClient:
     return app.test_client()
 
 
+@pytest.fixture(autouse=True)
+def disable_site_hash_network_calls(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Prevent endpoint tests from performing live network fetches."""
+    monkeypatch.setattr(
+        "app.api._extraction._fetch_site_content_hash",
+        lambda _url: "test-site-hash",
+    )
+
+
 @pytest.fixture
 def auth_header(app: Flask) -> dict[str, str]:
     with app.app_context():
@@ -86,6 +95,32 @@ def test_get_collection_content_type_is_json_ld(
         headers={"Authorization": f"Bearer {token}"},
     )
     assert "application/ld+json" in response.content_type
+
+
+def test_get_collection_force_refresh_is_admin_only(
+    app: Flask, client: FlaskClient
+) -> None:
+    with app.app_context():
+        _user, token = create_user()
+
+    response = client.get(
+        "/metadata?url=https://example.com/training&force_refresh=true",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 403
+
+
+def test_get_collection_force_refresh_allowed_for_admin(
+    app: Flask, client: FlaskClient
+) -> None:
+    with app.app_context():
+        _user, token = create_user(is_admin=True)
+
+    response = client.get(
+        "/metadata?url=https://example.com/training&force_refresh=true",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 200
 
 
 def test_get_collection_enqueues_session(app: Flask, client: FlaskClient) -> None:
@@ -184,6 +219,17 @@ def test_get_single_returns_item_when_one_result(
     assert response.status_code == 200
     data = json.loads(response.data)
     assert data == single[0]
+
+
+def test_get_single_force_refresh_is_admin_only(app: Flask, client: FlaskClient) -> None:
+    with app.app_context():
+        _user, token = create_user()
+
+    response = client.get(
+        "/metadata/single?url=https://example.com/course&force_refresh=1",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 403
 
 
 def test_get_single_returns_400_for_multiple_results(
