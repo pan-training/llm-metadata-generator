@@ -14,6 +14,11 @@ from app.models.session import create_session, get_active_session, update_sessio
 _LOGGER = logging.getLogger(__name__)
 
 
+def build_extraction_job_id(session_id: int) -> str:
+    """Return a deterministic APScheduler job id for a session extraction."""
+    return f"session-extraction-{session_id}"
+
+
 def _get_structural_summary(url: str) -> str | None:
     """Return the cached structural summary for *url*, if present."""
     db = get_db()
@@ -44,8 +49,8 @@ def run_extraction(
         logger = AgentLogger()
 
         try:
-            update_session(session_id, "running", log=logger.to_json())
             logger.info(f"Starting extraction for {url}")
+            update_session(session_id, "running", log=logger.to_json())
 
             llm_client = get_llm_client("default")
 
@@ -141,6 +146,8 @@ def enqueue_extraction_if_needed(url: str, prompt: str | None, user_id: int) -> 
         scheduler.add_job(
             func=run_extraction,
             trigger="date",
+            id=build_extraction_job_id(new_session.id),
+            replace_existing=True,
             kwargs={
                 "app": app,
                 "session_id": new_session.id,
@@ -193,7 +200,10 @@ def run_pending_extractions(
     db = get_db()
     query = (
         "SELECT id, url FROM sessions"
-        " WHERE status = 'pending'"
+        " WHERE ("
+        "   status = 'pending'"
+        "   OR (status = 'running' AND COALESCE(log, '') IN ('', '[]'))"
+        " )"
         " AND (? IS NULL OR user_id = ?)"
         " AND (? IS NULL OR url = ?)"
         " ORDER BY created_at ASC"

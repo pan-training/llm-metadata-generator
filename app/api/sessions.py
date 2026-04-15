@@ -11,7 +11,16 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from flask import Blueprint, Response, redirect, render_template, request, session, url_for
+from flask import (
+    Blueprint,
+    Response,
+    current_app,
+    redirect,
+    render_template,
+    request,
+    session,
+    url_for,
+)
 from flask.typing import ResponseReturnValue
 
 from app.db.sqlite import get_db
@@ -95,12 +104,48 @@ def sessions_view() -> ResponseReturnValue:
 
     user_sessions = get_sessions_for_user(user_id)
     is_admin: bool = bool(session.get("is_admin", False))
+    pending_next_run_by_session: dict[int, str] = {}
+    scheduler = current_app.extensions.get("scheduler")
+    if scheduler is not None:
+        for job in scheduler.get_jobs():
+            session_id = job.kwargs.get("session_id")
+            next_run_time = job.next_run_time
+            if isinstance(session_id, int) and next_run_time is not None:
+                pending_next_run_by_session[session_id] = next_run_time.astimezone(
+                    timezone.utc
+                ).strftime("%Y-%m-%d %H:%M:%S UTC")
+
     return render_template(
         "sessions.html",
         sessions=user_sessions,
         user_id=user_id,
         is_admin=is_admin,
+        pending_next_run_by_session=pending_next_run_by_session,
     )
+
+
+@bp.post("/sessions/<int:session_id>/cancel")
+def cancel_session_view(session_id: int) -> ResponseReturnValue:
+    """Cancel a pending session for the authenticated user."""
+    user_id: int | None = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("sessions_viewer.login_form"))
+
+    from apscheduler.jobstores.base import JobLookupError
+
+    from app.api._extraction import build_extraction_job_id
+    from app.models.session import cancel_session
+
+    cancelled = cancel_session(session_id=session_id, user_id=user_id)
+    if cancelled:
+        scheduler = current_app.extensions.get("scheduler")
+        if scheduler is not None:
+            try:
+                scheduler.remove_job(build_extraction_job_id(session_id))
+            except JobLookupError:
+                pass
+
+    return redirect(url_for("sessions_viewer.sessions_view"))
 
 
 @bp.get("/integration-tests")

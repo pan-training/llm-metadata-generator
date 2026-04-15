@@ -12,7 +12,7 @@ from flask.testing import FlaskClient
 from app import create_app
 from app.db.sqlite import init_db
 from app.models.user import create_user
-from app.models.session import create_session, update_session
+from app.models.session import create_session, get_session_by_id, update_session
 
 
 @pytest.fixture
@@ -284,3 +284,35 @@ def test_sessions_login_form_returns_html(client: FlaskClient) -> None:
     response = client.get("/sessions/login")
     assert response.status_code == 200
     assert b"<form" in response.data
+
+
+def test_sessions_view_shows_pending_hint_and_cancel_button(
+    app: Flask, client: FlaskClient
+) -> None:
+    with app.app_context():
+        user, token = create_user()
+        create_session(user.id, "https://example.com/pending")
+
+    client.post("/sessions/login", json={"token": token})
+    response = client.get("/sessions")
+
+    assert response.status_code == 200
+    assert b"Queued. It will run automatically" in response.data
+    assert b"Cancel" in response.data
+
+
+def test_cancel_pending_session_marks_status_cancelled(
+    app: Flask, client: FlaskClient
+) -> None:
+    with app.app_context():
+        user, token = create_user()
+        pending_session = create_session(user.id, "https://example.com/pending")
+
+    client.post("/sessions/login", json={"token": token})
+    response = client.post(f"/sessions/{pending_session.id}/cancel")
+
+    assert response.status_code in (302, 303)
+    with app.app_context():
+        cancelled = get_session_by_id(pending_session.id)
+    assert cancelled is not None
+    assert cancelled.status == "cancelled"

@@ -21,6 +21,10 @@
     .badge-running  { background: #cce5ff; color: #004085; }
     .badge-done     { background: #d4edda; color: #155724; }
     .badge-error    { background: #f8d7da; color: #721c24; }
+    .badge-cancelled { background: #eceff3; color: #4b5563; }
+    .status-hint { margin-top: 6px; color: #6b7280; font-size: 0.76rem; line-height: 1.35; }
+    .cancel-btn { margin-top: 6px; border: 1px solid #dc2626; color: #dc2626; background: white; border-radius: 4px; padding: 3px 8px; font-size: 0.75rem; cursor: pointer; }
+    .cancel-btn:hover { background: #fef2f2; }
     .detail-row td { padding: 0; }
     .detail-inner { padding: 16px 24px; background: #fafbff; border-top: 2px solid #dde4f0; display: none; }
     .detail-inner.open { display: block; }
@@ -115,6 +119,20 @@
         </td>
         <td>
           <span class="badge badge-{{ s.status }}">{{ s.status }}</span>
+          {% if s.status == "pending" %}
+          <div class="status-hint">
+            {% if pending_next_run_by_session.get(s.id) %}
+            Next scrape attempt: {{ pending_next_run_by_session.get(s.id) }}
+            {% else %}
+            Queued. It will run automatically when the worker picks it up (or via <code>flask tasks run-queued</code>).
+            {% endif %}
+          </div>
+          <form method="POST" action="/sessions/{{ s.id }}/cancel" onclick="event.stopPropagation()">
+            <button class="cancel-btn" type="submit" onclick="event.stopPropagation()">Cancel</button>
+          </form>
+          {% elif s.status == "running" and (not s.log or s.log == "[]") %}
+          <div class="status-hint">Starting… no events have been persisted yet.</div>
+          {% endif %}
         </td>
         <td>{{ s.created_at }}</td>
         <td>{{ s.updated_at }}</td>
