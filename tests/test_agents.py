@@ -413,6 +413,115 @@ def test_agent_raises_not_training_content(monkeypatch: pytest.MonkeyPatch) -> N
         )
 
 
+def test_agent_ignores_faceted_item_urls(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Items pointing to faceted/filter URLs are discarded as non-content."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+    monkeypatch.setattr(
+        "requests.get",
+        lambda *args, **kwargs: _make_response("<html><body>Keyword filters</body></html>"),
+    )
+
+    chunk_classification = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "DALIA",
+                    "url": "https://example.com/materials?keywords=DALIA",
+                    "item_type": "CourseInstance",
+                    "context": "keyword tag",
+                }
+            ],
+            "follow_links": [],
+        }
+    )
+    client = MockLLMClient([chunk_classification])
+
+    agent = BioschemasExtractorAgent()
+    with pytest.raises(NotTrainingContentError):
+        agent.run(
+            url="https://example.com/materials",
+            llm_client=client,
+        )
+
+
+def test_classify_chunk_prompt_requires_ignored_links_schema(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured_messages: list[dict[str, str]] = []
+
+    def _fake_call_llm(
+        client: Any,
+        model: str,
+        messages: list[dict[str, str]],
+        logger: Any = None,
+        task: str = "",
+        parent_id: int | None = None,
+        chunk: str = "",
+    ) -> dict[str, Any]:
+        del client, model, logger, task, parent_id, chunk
+        captured_messages.extend(messages)
+        return {"relevant": False, "items": [], "follow_links": []}
+
+    monkeypatch.setattr("app.agents.bioschemas._call_llm", _fake_call_llm)
+
+    agent = BioschemasExtractorAgent()
+    agent._classify_chunk(
+        chunk_text="Navigation and keyword filters",
+        chunk_index=0,
+        total_chunks=1,
+        source_url="https://example.com/materials",
+        structural_summary=None,
+        previous_chunk_summary=None,
+        llm_client=MockLLMClient([]),
+    )
+
+    prompt = captured_messages[1]["content"]
+    assert "Do NOT extract filter/facet/tag links as items." in prompt
+    assert '"ignored_links": [{"url": "...", "reason": "facet_filter|auth|admin|other_non_content"' in prompt
+
+
+def test_summarize_chunk_context_keeps_chunk_signal_and_ignore_patterns(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured_messages: list[dict[str, str]] = []
+
+    def _fake_call_llm(
+        client: Any,
+        model: str,
+        messages: list[dict[str, str]],
+        logger: Any = None,
+        task: str = "",
+        parent_id: int | None = None,
+        chunk: str = "",
+    ) -> dict[str, Any]:
+        del client, model, logger, task, parent_id, chunk
+        captured_messages.extend(messages)
+        return {
+            "continuation_context": "Active section: Materials filters",
+            "chunk_signal": "navigation_only",
+            "ignore_link_patterns": ["facet_filter", "auth_or_admin"],
+        }
+
+    monkeypatch.setattr("app.agents.bioschemas._call_llm", _fake_call_llm)
+
+    agent = BioschemasExtractorAgent()
+    summary = agent._summarize_chunk_context(
+        chunk_text="Keyword filter links and login links",
+        previous_chunk_summary=None,
+        llm_client=MockLLMClient([]),
+    )
+
+    assert summary == (
+        "Active section: Materials filters | chunk_signal=navigation_only | "
+        "ignore_link_patterns=facet_filter,auth_or_admin"
+    )
+    assert '"chunk_signal": "content|navigation_only|mixed"' in captured_messages[1]["content"]
+
+
 def test_agent_happy_path_returns_jsonld_list(monkeypatch: pytest.MonkeyPatch) -> None:
     """Happy path: agent returns a list of JSON-LD dicts."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
