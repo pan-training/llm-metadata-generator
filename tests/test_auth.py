@@ -285,39 +285,39 @@ def test_integration_tests_admin_can_access(app: Flask, client: FlaskClient) -> 
     assert b"Integration Test" in response.data
 
 
-def test_normal_runs_requires_login(client: FlaskClient) -> None:
-    """GET /normal-runs without a session redirects to login."""
-    response = client.get("/normal-runs")
+def test_archived_runs_requires_login(client: FlaskClient) -> None:
+    """GET /archived-runs without a session redirects to login."""
+    response = client.get("/archived-runs")
     assert response.status_code == 302
     assert "/sessions/login" in response.headers["Location"]
 
 
-def test_normal_runs_requires_admin(app: Flask, client: FlaskClient) -> None:
-    """Non-admin users are forbidden from /normal-runs."""
+def test_archived_runs_requires_admin(app: Flask, client: FlaskClient) -> None:
+    """Non-admin users are forbidden from /archived-runs."""
     with app.app_context():
         _user, token = create_user(is_admin=False)
 
     resp = client.post("/sessions/login", data={"token": token})
     assert resp.status_code == 302
 
-    response = client.get("/normal-runs")
+    response = client.get("/archived-runs")
     assert response.status_code == 403
 
 
-def test_normal_runs_admin_can_access(app: Flask, client: FlaskClient) -> None:
-    """Admin users can access /normal-runs."""
+def test_archived_runs_admin_can_access(app: Flask, client: FlaskClient) -> None:
+    """Admin users can access /archived-runs."""
     with app.app_context():
         _admin, token = create_user(is_admin=True)
 
     resp = client.post("/sessions/login", data={"token": token})
     assert resp.status_code == 302
 
-    response = client.get("/normal-runs")
+    response = client.get("/archived-runs")
     assert response.status_code == 200
-    assert b"Normal Run Log Exports" in response.data
+    assert b"Archived Run Log Exports" in response.data
 
 
-def test_normal_runs_export_creates_sessions_snapshot(
+def test_archived_runs_export_creates_sessions_snapshot(
     app: Flask,
     client: FlaskClient,
     tmp_path: Path,
@@ -326,7 +326,7 @@ def test_normal_runs_export_creates_sessions_snapshot(
     """Admin export writes a commit-ready sessions.json snapshot."""
     import app.api.sessions as sessions_api
 
-    monkeypatch.setattr(sessions_api, "_NORMAL_RUN_RESULTS_DIR", tmp_path)
+    monkeypatch.setattr(sessions_api, "_ARCHIVED_RUN_RESULTS_DIR", tmp_path)
 
     with app.app_context():
         admin, admin_token = create_user(is_admin=True)
@@ -342,9 +342,9 @@ def test_normal_runs_export_creates_sessions_snapshot(
     resp = client.post("/sessions/login", data={"token": admin_token})
     assert resp.status_code == 302
 
-    export_resp = client.post("/normal-runs/export")
+    export_resp = client.post("/archived-runs/export")
     assert export_resp.status_code == 302
-    assert "/normal-runs" in export_resp.headers["Location"]
+    assert "/archived-runs" in export_resp.headers["Location"]
 
     export_dirs = [p for p in tmp_path.iterdir() if p.is_dir()]
     assert len(export_dirs) == 1

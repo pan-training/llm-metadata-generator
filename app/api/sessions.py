@@ -22,7 +22,7 @@ bp = Blueprint("sessions_viewer", __name__)
 # Paths to log-export directories relative to the repo root.
 _REPO_ROOT = Path(__file__).parent.parent.parent
 _INTEGRATION_RESULTS_DIR = _REPO_ROOT / "integration_test" / "results"
-_NORMAL_RUN_RESULTS_DIR = _REPO_ROOT / "normal_run" / "results"
+_ARCHIVED_RUN_RESULTS_DIR = _REPO_ROOT / "archived_run" / "results"
 
 
 @bp.get("/")
@@ -179,9 +179,9 @@ def integration_tests_view() -> ResponseReturnValue:
     )
 
 
-@bp.get("/normal-runs")
-def normal_runs_view() -> ResponseReturnValue:
-    """Admin-only view of exported normal-run logs from normal_run/results/."""
+@bp.get("/archived-runs")
+def archived_runs_view() -> ResponseReturnValue:
+    """Admin-only view of exported archived-run logs from archived_run/results/."""
     user_id: int | None = session.get("user_id")
     if not user_id:
         return redirect(url_for("sessions_viewer.login_form"))
@@ -190,8 +190,8 @@ def normal_runs_view() -> ResponseReturnValue:
         return Response("Forbidden – admin access required", status=403)
 
     exports: list[dict[str, str | int | None]] = []
-    if _NORMAL_RUN_RESULTS_DIR.is_dir():
-        for export_dir in sorted(_NORMAL_RUN_RESULTS_DIR.iterdir(), reverse=True):
+    if _ARCHIVED_RUN_RESULTS_DIR.is_dir():
+        for export_dir in sorted(_ARCHIVED_RUN_RESULTS_DIR.iterdir(), reverse=True):
             if not export_dir.is_dir():
                 continue
 
@@ -225,15 +225,15 @@ def normal_runs_view() -> ResponseReturnValue:
             )
 
     return render_template(
-        "normal_runs.html",
+        "archived_runs.html",
         exports=exports,
         user_id=user_id,
     )
 
 
-@bp.post("/normal-runs/export")
-def normal_runs_export() -> ResponseReturnValue:
-    """Admin-only export of all normal run sessions into normal_run/results/."""
+@bp.post("/archived-runs/export")
+def archived_runs_export() -> ResponseReturnValue:
+    """Admin-only export of all archived run sessions into archived_run/results/."""
     user_id: int | None = session.get("user_id")
     if not user_id:
         return redirect(url_for("sessions_viewer.login_form"))
@@ -257,11 +257,11 @@ def normal_runs_export() -> ResponseReturnValue:
     }
 
     export_stamp = export_now.strftime("%Y-%m-%dT%H-%M-%S-%f")
-    export_dir = _NORMAL_RUN_RESULTS_DIR / f"normal_runs__{export_stamp}"
+    export_dir = _ARCHIVED_RUN_RESULTS_DIR / f"archived_runs__{export_stamp}"
     export_dir.mkdir(parents=True, exist_ok=False)
     (export_dir / "sessions.json").write_text(
         json.dumps(export_payload, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
 
-    return redirect(url_for("sessions_viewer.normal_runs_view"))
+    return redirect(url_for("sessions_viewer.archived_runs_view"))

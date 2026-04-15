@@ -54,7 +54,7 @@ Browse extraction results and agent logs in a browser without needing `curl` or 
 
 Admin users also get:
 - `http://localhost:5000/integration-tests` – viewer for `integration_test/results/`
-- `http://localhost:5000/normal-runs` – export snapshots of normal run logs to `normal_run/results/` for commit/share debugging
+- `http://localhost:5000/archived-runs` – export snapshots of archived run logs to `archived_run/results/` for commit/share debugging
 
 ---
 
