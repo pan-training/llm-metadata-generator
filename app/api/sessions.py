@@ -8,17 +8,21 @@ GET /integration-tests – admin-only view of integration test runs
 """
 
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 from flask import Blueprint, Response, redirect, render_template, request, session, url_for
 from flask.typing import ResponseReturnValue
 
+from app.db.sqlite import get_db
 from app.models.user import get_user_by_token
 
 bp = Blueprint("sessions_viewer", __name__)
 
-# Path to integration test results relative to the repo root.
-_INTEGRATION_RESULTS_DIR = Path(__file__).parent.parent.parent / "integration_test" / "results"
+# Paths to log-export directories relative to the repo root.
+_REPO_ROOT = Path(__file__).parent.parent.parent
+_INTEGRATION_RESULTS_DIR = _REPO_ROOT / "integration_test" / "results"
+_ARCHIVED_RUN_RESULTS_DIR = _REPO_ROOT / "archived_run" / "results"
 
 
 @bp.get("/")
@@ -173,3 +177,91 @@ def integration_tests_view() -> ResponseReturnValue:
         runs=runs,
         user_id=user_id,
     )
+
+
+@bp.get("/archived-runs")
+def archived_runs_view() -> ResponseReturnValue:
+    """Admin-only view of exported archived-run logs from archived_run/results/."""
+    user_id: int | None = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("sessions_viewer.login_form"))
+
+    if not session.get("is_admin"):
+        return Response("Forbidden – admin access required", status=403)
+
+    exports: list[dict[str, str | int | None]] = []
+    if _ARCHIVED_RUN_RESULTS_DIR.is_dir():
+        for export_dir in sorted(_ARCHIVED_RUN_RESULTS_DIR.iterdir(), reverse=True):
+            if not export_dir.is_dir():
+                continue
+
+            sessions_path = export_dir / "sessions.json"
+            if not sessions_path.exists():
+                continue
+
+            sessions_json: str | None = None
+            session_count: int | None = None
+            exported_at: str | None = None
+            try:
+                sessions_json = sessions_path.read_text(encoding="utf-8")
+                parsed = json.loads(sessions_json)
+                if isinstance(parsed, dict):
+                    count = parsed.get("session_count")
+                    if isinstance(count, int):
+                        session_count = count
+                    at = parsed.get("exported_at")
+                    if isinstance(at, str):
+                        exported_at = at
+            except (OSError, json.JSONDecodeError):
+                sessions_json = None
+
+            exports.append(
+                {
+                    "export_id": export_dir.name,
+                    "exported_at": exported_at or export_dir.name,
+                    "session_count": session_count,
+                    "sessions_json": sessions_json,
+                }
+            )
+
+    return render_template(
+        "archived_runs.html",
+        exports=exports,
+        user_id=user_id,
+    )
+
+
+@bp.post("/archived-runs/export")
+def archived_runs_export() -> ResponseReturnValue:
+    """Admin-only export of all archived run sessions into archived_run/results/."""
+    user_id: int | None = session.get("user_id")
+    if not user_id:
+        return redirect(url_for("sessions_viewer.login_form"))
+
+    if not session.get("is_admin"):
+        return Response("Forbidden – admin access required", status=403)
+
+    export_now = datetime.now(timezone.utc)
+
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, user_id, url, status, log, result_json, created_at, updated_at"
+        " FROM sessions ORDER BY created_at DESC"
+    ).fetchall()
+
+    export_payload: dict[str, object] = {
+        "exported_at": export_now.isoformat(),
+        "exported_by_user_id": user_id,
+        "session_count": len(rows),
+        "sessions": [dict(row) for row in rows],
+    }
+
+    export_stamp = export_now.strftime("%Y-%m-%dT%H-%M-%S-%f")
+    export_dir = _ARCHIVED_RUN_RESULTS_DIR / f"archived_runs__{export_stamp}"
+    export_dir.mkdir(parents=True, exist_ok=False)
+    (export_dir / "sessions.json").write_text(
+        json.dumps(export_payload, indent=2, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    return redirect(url_for("sessions_viewer.archived_runs_view"))

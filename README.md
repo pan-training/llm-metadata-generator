@@ -52,6 +52,10 @@ Browse extraction results and agent logs in a browser without needing `curl` or 
 2. Log in with your Bearer token (POST form — token never appears in the URL)
 3. See a colour-coded table of sessions with expandable JSON-LD and full agent logs
 
+Admin users also get:
+- `http://localhost:5000/integration-tests` – viewer for `integration_test/results/`
+- `http://localhost:5000/archived-runs` – export snapshots of archived run logs to `archived_run/results/` for commit/share debugging
+
 ---
 
 ## Extraction agent architecture

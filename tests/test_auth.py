@@ -1,9 +1,11 @@
 """Tests for Bearer-token authentication and related endpoints."""
 
 import hashlib
+import json
 import os
 import tempfile
 from collections.abc import Generator
+from pathlib import Path
 
 import pytest
 from flask import Flask
@@ -11,6 +13,7 @@ from flask.testing import FlaskClient
 
 from app import create_app
 from app.db.sqlite import init_db
+from app.models.session import create_session, update_session
 from app.models.user import User, create_user, delete_user, delete_user_by_hash, delete_user_by_id, get_user_by_token, revoke_user
 
 
@@ -280,3 +283,75 @@ def test_integration_tests_admin_can_access(app: Flask, client: FlaskClient) -> 
     response = client.get("/integration-tests")
     assert response.status_code == 200
     assert b"Integration Test" in response.data
+
+
+def test_archived_runs_requires_login(client: FlaskClient) -> None:
+    """GET /archived-runs without a session redirects to login."""
+    response = client.get("/archived-runs")
+    assert response.status_code == 302
+    assert "/sessions/login" in response.headers["Location"]
+
+
+def test_archived_runs_requires_admin(app: Flask, client: FlaskClient) -> None:
+    """Non-admin users are forbidden from /archived-runs."""
+    with app.app_context():
+        _user, token = create_user(is_admin=False)
+
+    resp = client.post("/sessions/login", data={"token": token})
+    assert resp.status_code == 302
+
+    response = client.get("/archived-runs")
+    assert response.status_code == 403
+
+
+def test_archived_runs_admin_can_access(app: Flask, client: FlaskClient) -> None:
+    """Admin users can access /archived-runs."""
+    with app.app_context():
+        _admin, token = create_user(is_admin=True)
+
+    resp = client.post("/sessions/login", data={"token": token})
+    assert resp.status_code == 302
+
+    response = client.get("/archived-runs")
+    assert response.status_code == 200
+    assert b"Archived Run Log Exports" in response.data
+
+
+def test_archived_runs_export_creates_sessions_snapshot(
+    app: Flask,
+    client: FlaskClient,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Admin export writes a commit-ready sessions.json snapshot."""
+    import app.api.sessions as sessions_api
+
+    monkeypatch.setattr(sessions_api, "_ARCHIVED_RUN_RESULTS_DIR", tmp_path)
+
+    with app.app_context():
+        admin, admin_token = create_user(is_admin=True)
+        user, _user_token = create_user()
+        created = create_session(user.id, "https://example.com/training")
+        update_session(
+            created.id,
+            "done",
+            log='[{"id":1,"type":"info","message":"ok"}]',
+            result_json='[{"@type":"LearningResource","name":"Demo"}]',
+        )
+
+    resp = client.post("/sessions/login", data={"token": admin_token})
+    assert resp.status_code == 302
+
+    export_resp = client.post("/archived-runs/export")
+    assert export_resp.status_code == 302
+    assert "/archived-runs" in export_resp.headers["Location"]
+
+    export_dirs = [p for p in tmp_path.iterdir() if p.is_dir()]
+    assert len(export_dirs) == 1
+    sessions_file = export_dirs[0] / "sessions.json"
+    assert sessions_file.exists()
+
+    payload = json.loads(sessions_file.read_text(encoding="utf-8"))
+    assert payload["exported_by_user_id"] == admin.id
+    assert payload["session_count"] >= 1
+    assert any(s["url"] == "https://example.com/training" for s in payload["sessions"])
