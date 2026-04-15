@@ -605,6 +605,90 @@ def test_agent_discovers_multiple_items_from_single_chunk(
     assert names == {"Intro to Python", "Advanced R"}
 
 
+def test_agent_passes_chunk_context_summary_between_chunks(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Chunk carry-over summaries are threaded through chunk classification."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+    monkeypatch.setattr("requests.get", lambda *a, **kw: _make_response("<html><body>x</body></html>"))
+    monkeypatch.setattr(
+        "app.agents.bioschemas._chunk_text",
+        lambda text, chunk_size=0, overlap=0: ["chunk-1", "chunk-2", "chunk-3"],
+    )
+
+    seen_classifier_inputs: list[str | None] = []
+    seen_summary_inputs: list[tuple[str, str | None]] = []
+
+    def _fake_classify_chunk(
+        self: BioschemasExtractorAgent,
+        chunk_text: str,
+        chunk_index: int,
+        total_chunks: int,
+        source_url: str,
+        structural_summary: str | None,
+        previous_chunk_summary: str | None,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        seen_classifier_inputs.append(previous_chunk_summary)
+        if chunk_index < 2:
+            return {"relevant": False, "items": [], "follow_links": []}
+        return {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Chunked item",
+                    "url": "https://example.com/chunked-item",
+                    "item_type": "TrainingMaterial",
+                    "context": "Found in later chunk",
+                }
+            ],
+            "follow_links": [],
+        }
+
+    def _fake_summarize_chunk_context(
+        self: BioschemasExtractorAgent,
+        chunk_text: str,
+        previous_chunk_summary: str | None,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> str:
+        seen_summary_inputs.append((chunk_text, previous_chunk_summary))
+        return f"summary-for-{chunk_text}"
+
+    monkeypatch.setattr(BioschemasExtractorAgent, "_classify_chunk", _fake_classify_chunk)
+    monkeypatch.setattr(
+        BioschemasExtractorAgent,
+        "_summarize_chunk_context",
+        _fake_summarize_chunk_context,
+    )
+
+    reasoning = "Type: LearningResource. Title: Chunked item."
+    item = json.dumps(
+        {
+            "@type": "LearningResource",
+            "name": "Chunked item",
+            "description": "A chunked item.",
+            "keywords": ["chunked"],
+            "url": "https://example.com/chunked-item",
+        }
+    )
+    client = MockLLMClient([reasoning, item, item])
+
+    agent = BioschemasExtractorAgent()
+    result = agent.run(url="https://example.com/courses", llm_client=client)
+
+    assert len(result) == 1
+    assert seen_classifier_inputs == [None, "summary-for-chunk-1", "summary-for-chunk-2"]
+    assert seen_summary_inputs == [
+        ("chunk-1", None),
+        ("chunk-2", "summary-for-chunk-1"),
+    ]
+
+
 def test_agent_on_item_callback_called_per_item(monkeypatch: pytest.MonkeyPatch) -> None:
     """on_item callback is invoked once per extracted item."""
     monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
@@ -823,4 +907,3 @@ def test_agent_uses_structural_summary_start_urls(
     # Phase 1 should have fetched the primary_url from the structural summary,
     # NOT the root URL.
     assert "https://example.com/catalogue" in fetched_urls
-
