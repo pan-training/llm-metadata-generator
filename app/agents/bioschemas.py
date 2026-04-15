@@ -273,16 +273,15 @@ Many training catalogues have filter panels (checkboxes, dropdowns, tag clouds,
 sort controls) that narrow or re-order the *same* list of items without adding
 new content.  These produce URLs like:
   ?category=bioinformatics  ?sort=date  ?type=online  ?tag=python  ?level=beginner
-  ?include_broken_links=true  ?across_all_spaces=true  ?include_archived=true
 These are NOT worth following — they just limit or re-sort the result set.
 Only include a link in follow_links if it leads to a DIFFERENT page of content
 (e.g. a next-page pagination link with ?page=N, or a genuinely different content
 section), NOT if it merely filters, re-sorts, or modifies the current list.
 
 IMPORTANT — skip non-content pages:
-Do NOT include links to creation, editing, admin, login, or search pages in
+Do NOT include links to creation, editing, admin, or login pages in
 follow_links.  Examples to skip: /new, /create, /edit, /delete, /admin,
-/sign_in, /login, /register, /search, /api/.
+/sign_in, /login, /register.
 """
 
 # ---------------------------------------------------------------------------
@@ -312,10 +311,9 @@ IMPORTANT — navigation URLs:
 - In each content type's navigation.urls, include ONLY URLs that lead to
   additional pages of the SAME content type (e.g. pagination URLs like ?page=2,
   ?page=3, or category landing pages).
-- DO NOT include URLs with filter/facet query parameters (e.g.
-  ?include_broken_links=true, ?across_all_spaces=true, ?include_archived=true,
-  ?sort=date, ?type=online, etc.) unless those parameters were already present
-  in the user-provided entry URL.
+- DO NOT include URLs with filter/facet query parameters (e.g. ?sort=date,
+  ?type=online, ?category=..., etc.) unless those parameters were already
+  present in the user-provided entry URL.
 - The navigation description MUST clearly state the URL pattern to follow
   (e.g. "Append ?page=N (N=2,3,…) to the primary URL; 'Next' link below list").
 
@@ -565,9 +563,6 @@ _FILTER_PARAMS: frozenset[str] = frozenset(
         "q", "query", "search", "s",
         # View style (grid vs list, etc.)
         "view", "display",
-        # TeSS / TeSS-Hub specific filter parameters
-        "include_broken_links", "across_all_spaces", "include_archived",
-        "space", "event_type", "node",
     }
 )
 
@@ -577,13 +572,14 @@ _PAGINATION_PARAMS: frozenset[str] = frozenset(
 )
 
 # URL path segments that identify non-content pages (admin, auth, CRUD).
-# These paths are never worth following for training content extraction.
+# Only block pages that definitely cannot contain training content.
+# Note: "search" and "api" are intentionally excluded because search pages
+# and API endpoints can sometimes yield useful training-content metadata.
 _NON_CONTENT_PATH_SEGMENTS: frozenset[str] = frozenset(
     {
         "new", "create", "edit", "update", "delete", "destroy",
         "admin", "sign_in", "sign_up", "login", "logout", "register",
         "password", "account", "profile", "settings",
-        "search", "api",
     }
 )
 
@@ -801,10 +797,8 @@ def _validate_with_schema(item: dict[str, Any]) -> list[str]:
 
     Returns a list of human-readable error strings (empty = valid).
     The schema expects an array at the top level, so the item is wrapped.
-
-    # TODO (issue #3 follow-up): surface richer schema descriptions to the LLM
-    #   (e.g. include the "$comment" field of the failing property from the
-    #   schema) to provide more actionable fix instructions.
+    Errors include the schema property description where available to help
+    the LLM understand what is expected.
     """
     try:
         schema = _get_schema()
@@ -812,7 +806,15 @@ def _validate_with_schema(item: dict[str, Any]) -> list[str]:
         errors = []
         for err in validator.iter_errors([item]):
             path = " → ".join(str(p) for p in err.absolute_path) or "(root)"
-            errors.append(f"{path}: {err.message}")
+            # Enrich the error message with schema context when available
+            hint = ""
+            prop_schema = err.schema
+            if isinstance(prop_schema, dict):
+                desc = prop_schema.get("description") or prop_schema.get("$comment")
+                if desc:
+                    # Trim to a concise hint
+                    hint = f" (expected: {desc[:120]})"
+            errors.append(f"{path}: {err.message}{hint}")
         return errors
     except Exception as exc:
         # Validation should never crash the pipeline
@@ -1571,7 +1573,11 @@ class BioschemasExtractorAgent:
                 else None
             )
             for item_data in result.get("items", []):
-                item_url = item_data.get("url", start_url)
+                raw_item_url = item_data.get("url", start_url)
+                # Resolve relative URLs against the page being crawled
+                if raw_item_url and not urlparse(raw_item_url).scheme:
+                    raw_item_url = urljoin(start_url, raw_item_url)
+                item_url = raw_item_url
                 item_title = item_data.get("title", "")
                 if not item_title:
                     continue
@@ -1603,7 +1609,12 @@ class BioschemasExtractorAgent:
             if depth < MAX_FOLLOW_DEPTH:
                 for link_data in result.get("follow_links", [])[:MAX_LINKS_PER_CHUNK]:
                     link_url = link_data.get("url", "")
-                    if not link_url or link_url in state.pages or link_url in links_to_follow:
+                    if not link_url:
+                        continue
+                    # Resolve relative URLs against the page being crawled
+                    if not urlparse(link_url).scheme:
+                        link_url = urljoin(start_url, link_url)
+                    if link_url in state.pages or link_url in links_to_follow:
                         continue
                     if _is_faceted_search_url(link_url, start_url):
                         if logger:
@@ -1894,6 +1905,23 @@ class BioschemasExtractorAgent:
                 "content": (
                     "The following Bioschemas JSON-LD has validation errors. "
                     "Fix ALL of them and return the corrected JSON-LD object.\n\n"
+                    "Quick reference for common fixes:\n"
+                    "- @context must be: {\"@vocab\": \"https://schema.org/\", "
+                    "\"dct\": \"http://purl.org/dc/terms/\"}\n"
+                    "- @type must be one of: \"LearningResource\", "
+                    "\"TrainingMaterial\", \"Course\", \"CourseInstance\"\n"
+                    "- @id must be a stable URL string (use the item's own URL)\n"
+                    "- name, description: required strings\n"
+                    "- keywords: must be an array of strings, not a comma-separated string\n"
+                    "- courseMode: must be an array containing only "
+                    "\"online\", \"onsite\", or \"blended\"\n"
+                    "- inLanguage: use BCP 47 code (e.g. \"en\", \"de\"), "
+                    "not a full language name\n"
+                    "- dates (startDate, endDate): use ISO 8601 format "
+                    "(e.g. \"2024-03-15\" or \"2024-03-15T09:00:00\")\n"
+                    "- license: use SPDX identifier (e.g. \"CC-BY-4.0\") "
+                    "or full CC URL — ONLY if you can confirm it from page content\n"
+                    "- author/@id: ORCID URI only if explicitly on the page\n\n"
                     f"Validation errors:\n{error_list}\n\n"
                     f"Current JSON-LD:\n{json.dumps(item, indent=2)}"
                 ),

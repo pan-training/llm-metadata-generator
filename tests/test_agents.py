@@ -214,21 +214,13 @@ def test_chunk_text_splits_long_text() -> None:
             "https://example.com/courses",
             False,
         ),
-        # TeSS-Hub specific filter parameters
+        # Platform-specific unknown params: if they're the only params and we
+        # don't know them, they're NOT treated as faceted-search (unknown param
+        # means possibly a different content view, not a filter we recognise)
         (
-            "https://tesshub.example.com/materials?include_broken_links=true",
-            "https://tesshub.example.com/materials",
-            True,
-        ),
-        (
-            "https://tesshub.example.com/materials?across_all_spaces=true",
-            "https://tesshub.example.com/materials",
-            True,
-        ),
-        (
-            "https://tesshub.example.com/learning_paths?include_archived=true",
-            "https://tesshub.example.com/learning_paths",
-            True,
+            "https://example.com/materials?include_broken_links=true&myunknown=x",
+            "https://example.com/materials",
+            False,
         ),
     ],
 )
@@ -244,7 +236,7 @@ def test_is_faceted_search_url(url: str, source_url: str, expected: bool) -> Non
 @pytest.mark.parametrize(
     "url,expected",
     [
-        # Non-content paths that should be filtered
+        # Non-content paths that should be filtered (CRUD / auth)
         ("https://example.com/materials/new", True),
         ("https://example.com/events/create", True),
         ("https://example.com/materials/123/edit", True),
@@ -254,8 +246,9 @@ def test_is_faceted_search_url(url: str, source_url: str, expected: bool) -> Non
         ("https://example.com/sign_in", True),
         ("https://example.com/login", True),
         ("https://example.com/register", True),
-        ("https://example.com/search", True),
-        ("https://example.com/api/v1/materials", True),
+        # search and api are NOT filtered — they may yield useful content
+        ("https://example.com/search", False),
+        ("https://example.com/api/v1/materials", False),
         # Regular content paths that should NOT be filtered
         ("https://example.com/materials", False),
         ("https://example.com/materials?page=2", False),
