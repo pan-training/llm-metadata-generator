@@ -288,9 +288,17 @@ sort controls) that narrow or re-order the *same* list of items without adding
 new content.  These produce URLs like:
   ?category=bioinformatics  ?sort=date  ?type=online  ?tag=python  ?level=beginner
 These are NOT worth following — they just limit or re-sort the result set.
+Filter/tag option labels are also NOT training items, even when they look like
+topic names (e.g. "DALIA", "FAIR", "Open Educational Resources").
+Never extract these controls as items.
 Only include a link in follow_links if it leads to a DIFFERENT page of content
 (e.g. a next-page pagination link with ?page=N, or a genuinely different content
 section), NOT if it merely filters, re-sorts, or modifies the current list.
+
+IMPORTANT — relevance for navigation-only chunks:
+If a chunk only contains navigation/filter UI, tag clouds, sort controls, auth
+links, cookie/privacy text, or other scaffolding (and no concrete item card/row/
+detail content), set relevant=false and return an empty items array.
 
 IMPORTANT — skip non-content pages:
 Do NOT include links to creation, editing, admin, or login pages in
@@ -1750,6 +1758,20 @@ class BioschemasExtractorAgent:
                     if raw_item_url and not urlparse(raw_item_url).scheme
                     else raw_item_url
                 )
+                if item_url and _is_faceted_search_url(item_url, start_url):
+                    if logger:
+                        logger.warn(
+                            f"Skipping faceted-search item URL: {item_url}",
+                            parent=chunk_id,
+                        )
+                    continue
+                if item_url and _is_non_content_url(item_url):
+                    if logger:
+                        logger.warn(
+                            f"Skipping non-content item URL: {item_url}",
+                            parent=chunk_id,
+                        )
+                    continue
                 item_title = item_data.get("title", "")
                 if not item_title:
                     continue
@@ -1893,6 +1915,9 @@ class BioschemasExtractorAgent:
                     "Identify:\n"
                     "1. Training materials, courses, or events mentioned\n"
                     "2. Links worth following to find more training content\n\n"
+                    "Only treat an entry as an item when the chunk shows concrete "
+                    "training content (e.g. card/row/detail text). Do NOT extract "
+                    "filter/facet/tag links as items.\n\n"
                     "For follow_links: only include pagination links matching the "
                     "navigation pattern above (if provided), or links to genuinely "
                     "different content sections when no pattern is given. "
@@ -1900,13 +1925,17 @@ class BioschemasExtractorAgent:
                     "admin pages, login pages, search pages, or any URL whose path "
                     "contains /new, /create, /edit, /delete, /admin, /sign_in, "
                     "/login, /register, /search, /api/.\n\n"
+                    "If this chunk is navigation/filter UI only (no concrete item "
+                    "content), set relevant=false and items=[].\n\n"
                     "Previous chunk carry-over context summary "
                     f"(may be empty): {previous_chunk_summary or '(none)'}\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
                     '"context": "excerpt mentioning this item"}], '
-                    '"follow_links": [{"url": "...", "reason": "..."}]}\n\n'
+                    '"follow_links": [{"url": "...", "reason": "..."}], '
+                    '"ignored_links": [{"url": "...", "reason": "facet_filter|auth|admin|other_non_content", '
+                    '"context": "short evidence from chunk"}]}\n\n'
                     f"Text chunk:\n{chunk_text}"
                 ),
             },
@@ -1936,7 +1965,8 @@ class BioschemasExtractorAgent:
                     "Summarise contextual cues needed to interpret the next text "
                     "chunk from the same page. Keep only durable context such as "
                     "active section heading/scope, whether links are explicitly "
-                    "irrelevant, and any list/table continuation cues."
+                    "irrelevant, and any list/table continuation cues. Explicitly "
+                    "flag when the chunk is navigation/filter UI only."
                 ),
             },
             {
@@ -1947,7 +1977,9 @@ class BioschemasExtractorAgent:
                     "Current chunk:\n"
                     f"{chunk_text}\n\n"
                     "Return JSON: "
-                    '{"continuation_context": "brief summary for the next chunk"}'
+                    '{"continuation_context": "brief summary for the next chunk", '
+                    '"chunk_signal": "content|navigation_only|mixed", '
+                    '"ignore_link_patterns": ["facet_filter", "auth_or_admin", "..."]}'
                 ),
             },
         ]
@@ -1960,9 +1992,26 @@ class BioschemasExtractorAgent:
             parent_id=parent_id,
             chunk=chunk_text,
         )
+        summary_parts: list[str] = []
         summary = result.get("continuation_context")
-        if isinstance(summary, str):
-            return summary.strip() or None
+        if isinstance(summary, str) and summary.strip():
+            summary_parts.append(summary.strip())
+        chunk_signal = result.get("chunk_signal")
+        if chunk_signal in {"content", "navigation_only", "mixed"}:
+            summary_parts.append(f"chunk_signal={chunk_signal}")
+        ignore_patterns = result.get("ignore_link_patterns")
+        if isinstance(ignore_patterns, list):
+            clean_patterns = [
+                stripped
+                for pattern in ignore_patterns
+                if isinstance(pattern, str) and (stripped := pattern.strip())
+            ]
+            if clean_patterns:
+                summary_parts.append(
+                    "ignore_link_patterns=" + ",".join(clean_patterns[:5])
+                )
+        if summary_parts:
+            return " | ".join(summary_parts)
         return None
 
     def _classify_item_chunk_relevance(
