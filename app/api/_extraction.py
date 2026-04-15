@@ -28,6 +28,8 @@ from app.models.session import (
 _LOGGER = logging.getLogger(__name__)
 MAX_CACHED_ITEM_URLS = 200
 MAX_HASH_CHECK_PAGES = 200
+INITIAL_PROGRESS_EVENTS_TO_PERSIST = 3
+PROGRESS_PERSIST_EVERY_N_EVENTS = 10
 
 
 @dataclass(frozen=True)
@@ -325,6 +327,20 @@ def run_extraction(
 
     with app.app_context():
         logger = AgentLogger()
+        def _persist_progress(_event: object) -> None:
+            event_count = len(logger.events)
+            if (
+                event_count > INITIAL_PROGRESS_EVENTS_TO_PERSIST
+                and event_count % PROGRESS_PERSIST_EVERY_N_EVENTS != 0
+            ):
+                return
+            update_session(
+                session_id,
+                "running",
+                log=logger.to_json(),
+            )
+
+        logger.on_event = _persist_progress
 
         try:
             logger.info(f"Starting extraction for {url}")

@@ -330,6 +330,66 @@ def test_run_pending_extractions_includes_startup_only_running_sessions(
     assert executed_ids == [stale_running.id]
 
 
+def test_run_extraction_persists_progress_logs_while_running(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+    progress_log_seen: str | None = None
+
+    with app.app_context():
+        from app.api._extraction import run_extraction
+        from app.db.sqlite import init_db
+        from app.models.session import create_session, get_session_by_id
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        session = create_session(user.id, "https://example.com/training")
+
+        class _FakeAgent:
+            def run(
+                self,
+                *,
+                url: str,
+                prompt: str | None,
+                structural_summary: str | None,
+                llm_client: object,
+                logger: Any,
+            ) -> list[dict[str, str]]:
+                nonlocal progress_log_seen
+                _ = (url, prompt, structural_summary, llm_client)
+                current = get_session_by_id(session.id)
+                assert current is not None
+                assert current.status == "running"
+                assert current.log is not None
+                progress_log_seen = current.log
+                logger.info("Fake progress from agent.run")
+                refreshed = get_session_by_id(session.id)
+                assert refreshed is not None
+                assert refreshed.log is not None
+                assert "Fake progress from agent.run" in refreshed.log
+                return [{"name": "Example material"}]
+
+        monkeypatch.setattr("app.agents.get_llm_client", lambda _task="default": object())
+        monkeypatch.setattr("app.agents.bioschemas.BioschemasExtractorAgent", _FakeAgent)
+
+        run_extraction(
+            app=app,
+            session_id=session.id,
+            url="https://example.com/training",
+            prompt=None,
+            structural_summary='{"schema_version":"2"}',
+            site_content_hash="test-site-hash",
+        )
+
+        updated = get_session_by_id(session.id)
+        assert updated is not None
+        assert updated.status == "done"
+
+    assert progress_log_seen is not None
+    assert "Starting extraction for https://example.com/training" in progress_log_seen
+
+
 def test_enqueue_extraction_skips_when_site_hash_unchanged(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
