@@ -76,8 +76,9 @@ This produces a deduplicated list of `DiscoveredItem` objects, each with enough 
 
 For each discovered item:
 - Fetch the item's own URL if it differs from the source page and is not yet crawled.
-- Strip and chunk the item page.
-- Call the quality LLM (`json_ld_review` task / large model) to produce a full Bioschemas JSON-LD object.
+- If the item page is long, split it into overlapping chunks.
+- Use a fast model (`content_relevance`) to classify which chunks are relevant for that specific item.
+- Run reasoning + extraction on relevant chunks and merge the partial JSON-LD outputs into one final object.
 
 ### Phase 3 – Review  *(per item)*
 

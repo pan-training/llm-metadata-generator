@@ -11,6 +11,8 @@ import pytest
 from app.agents.bioschemas import (
     AccessDeniedError,
     BioschemasExtractorAgent,
+    DiscoveredItem,
+    MAX_EXTRACTION_CONTENT,
     NotTrainingContentError,
     _content_hash,
     _html_to_markdown,
@@ -144,6 +146,106 @@ def test_chunk_text_splits_long_text() -> None:
     # Each chunk should be at most chunk_size + some tolerance
     for chunk in chunks:
         assert len(chunk) <= 600  # chunk_size + some flexibility
+
+
+def test_select_relevant_item_chunks_falls_back_when_none_classified_relevant(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    agent = BioschemasExtractorAgent()
+    item_info = DiscoveredItem(
+        title="AI",
+        url="https://example.com/ai",
+        item_type="TrainingMaterial",
+        source_url="https://example.com/listing",
+        context="ai",
+    )
+    text = (
+        "Navigation menu | Filters | Login | Register\n"
+        "Privacy policy | Terms of use | Cookie settings\n"
+    ) * 500
+
+    def _fake_all_irrelevant(
+        _self: Any,
+        item_info: Any,
+        chunk_text: str,
+        chunk_index: int,
+        total_chunks: int,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        return {"relevant": False}
+
+    monkeypatch.setattr(
+        BioschemasExtractorAgent,
+        "_classify_item_chunk_relevance",
+        _fake_all_irrelevant,
+    )
+
+    selected = agent._select_relevant_item_chunks(
+        item_info=item_info,
+        content=text,
+        llm_client=MockLLMClient([]),
+    )
+
+    assert selected == [text[:MAX_EXTRACTION_CONTENT]]
+
+
+def test_merge_chunk_extractions_uses_llm_for_multiple_candidates() -> None:
+    merged = json.dumps(
+        {
+            "@type": "LearningResource",
+            "name": "Merged title",
+            "description": "Merged description",
+            "keywords": ["merged"],
+            "url": "https://example.com/merged",
+        }
+    )
+    client = MockLLMClient([merged])
+    agent = BioschemasExtractorAgent()
+    item_info = DiscoveredItem(
+        title="Merged title",
+        url="https://example.com/merged",
+        item_type="TrainingMaterial",
+        source_url="https://example.com/listing",
+        context="context",
+    )
+
+    result = agent._merge_chunk_extractions(
+        item_info=item_info,
+        chunk_extractions=[
+            {"name": "Merged title", "description": "Part A"},
+            {"name": "Merged title", "description": "Part B"},
+        ],
+        llm_client=client,
+    )
+
+    assert result["name"] == "Merged title"
+    assert result["description"] == "Merged description"
+
+
+def test_merge_chunk_extractions_returns_single_candidate_directly() -> None:
+    agent = BioschemasExtractorAgent()
+    item_info = DiscoveredItem(
+        title="Single candidate",
+        url="https://example.com/single",
+        item_type="TrainingMaterial",
+        source_url="https://example.com/listing",
+        context="context",
+    )
+    candidate = {
+        "@type": "LearningResource",
+        "name": "Single candidate",
+        "description": "Only one chunk result",
+        "keywords": ["single"],
+    }
+
+    result = agent._merge_chunk_extractions(
+        item_info=item_info,
+        chunk_extractions=[candidate],
+        llm_client=MockLLMClient([]),
+    )
+
+    assert result == candidate
 
 
 # ---------------------------------------------------------------------------
@@ -736,6 +838,118 @@ def test_agent_on_item_callback_called_per_item(monkeypatch: pytest.MonkeyPatch)
     assert len(received) == 1
     assert received[0]["name"] == "Workshop"
     assert result == received
+
+
+def test_agent_uses_llm_chunk_relevance_for_long_item_pages(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Long item pages use fast-model chunk selection before extraction."""
+    monkeypatch.setattr("urllib.robotparser.RobotFileParser.read", lambda self: None)
+    monkeypatch.setattr(
+        "urllib.robotparser.RobotFileParser.can_fetch", lambda self, ua, url: True
+    )
+    monkeypatch.setattr(
+        "requests.get",
+        lambda *a, **kw: _make_response("<html><body>Workshop listing</body></html>"),
+    )
+
+    long_item_text = "filler\n" * 9000
+    chunk_nav = "navigation menu filter sort login register privacy policy"
+    chunk_relevant = (
+        "## Deep Learning Workshop\n"
+        "This training workshop includes hands-on sessions and an agenda.\n"
+    )
+    chunk_footer = "footer links and legal notice"
+    monkeypatch.setattr(
+        "app.agents.bioschemas._page_content",
+        lambda html, base_url, raw_html: (long_item_text, []),
+    )
+    monkeypatch.setattr(
+        "app.agents.bioschemas._chunk_text",
+        lambda text, chunk_size=0, overlap=0: (
+            [chunk_nav, chunk_relevant, chunk_footer] if len(text) > 1000 else [text]
+        ),
+    )
+
+    chunk_class = json.dumps(
+        {
+            "relevant": True,
+            "items": [
+                {
+                    "title": "Deep Learning Workshop",
+                    "url": "https://example.com/deep-learning",
+                    "item_type": "TrainingMaterial",
+                    "context": "workshop listing",
+                }
+            ],
+            "follow_links": [],
+        }
+    )
+    client = MockLLMClient([chunk_class])
+    seen_chunk_indexes: list[int] = []
+
+    captured_content: dict[str, str] = {}
+
+    def _fake_relevance(
+        _self: Any,
+        item_info: Any,
+        chunk_text: str,
+        chunk_index: int,
+        total_chunks: int,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        seen_chunk_indexes.append(chunk_index)
+        return {"relevant": chunk_text == chunk_relevant}
+
+    def _fake_reason(
+        self: BioschemasExtractorAgent,
+        item_info: Any,
+        content: str,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> str:
+        captured_content["value"] = content
+        return "reasoning"
+
+    def _fake_extract(
+        self: BioschemasExtractorAgent,
+        item_info: Any,
+        content: str,
+        prompt: str | None,
+        reasoning: str,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        return {
+            "@type": "LearningResource",
+            "name": "Deep Learning Workshop",
+            "description": "A workshop.",
+            "keywords": ["workshop"],
+            "url": "https://example.com/deep-learning",
+        }
+
+    monkeypatch.setattr(
+        BioschemasExtractorAgent,
+        "_classify_item_chunk_relevance",
+        _fake_relevance,
+    )
+    monkeypatch.setattr(BioschemasExtractorAgent, "_reason_about_item", _fake_reason)
+    monkeypatch.setattr(BioschemasExtractorAgent, "_extract_item", _fake_extract)
+    monkeypatch.setattr(
+        BioschemasExtractorAgent,
+        "_review_item",
+        lambda self, item, content, llm_client, parent_id=None: item,
+    )
+
+    agent = BioschemasExtractorAgent()
+    result = agent.run(url="https://example.com/listing", llm_client=client)
+
+    assert len(result) == 1
+    assert seen_chunk_indexes == [0, 1, 2]
+    assert "Deep Learning Workshop" in captured_content["value"]
+    assert "hands-on sessions and an agenda" in captured_content["value"]
+    assert chunk_nav not in captured_content["value"]
 
 
 # ---------------------------------------------------------------------------
