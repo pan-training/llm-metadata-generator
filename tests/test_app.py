@@ -129,3 +129,72 @@ def test_tasks_trigger_metadata_command_fails_for_unknown_user(tmp_path: Path) -
 
     assert result.exit_code != 0
     assert "User id 9999 not found." in result.output
+
+
+def test_tasks_run_queued_command_executes_pending_sessions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    with app.app_context():
+        from app.db.sqlite import init_db
+
+        init_db()
+
+    captured: dict[str, Any] = {}
+
+    def _fake_run_pending_extractions(
+        app: Any, user_id: int | None = None, url: str | None = None
+    ) -> list[int]:
+        captured["user_id"] = user_id
+        captured["url"] = url
+        return [5, 6]
+
+    monkeypatch.setattr(
+        "app.api._extraction.run_pending_extractions",
+        _fake_run_pending_extractions,
+    )
+
+    runner = app.test_cli_runner()
+    result = runner.invoke(
+        args=[
+            "tasks",
+            "run-queued",
+            "--user-id",
+            "7",
+            "--url",
+            "https://example.com/training",
+        ]
+    )
+
+    assert result.exit_code == 0
+    assert "Executed 2 queued metadata task(s): 5, 6" in result.output
+    assert captured["user_id"] == 7
+    assert captured["url"] == "https://example.com/training"
+
+
+def test_tasks_run_queued_command_when_none_found(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    with app.app_context():
+        from app.db.sqlite import init_db
+
+        init_db()
+
+    def _fake_run_pending_extractions(
+        app: Any, user_id: int | None = None, url: str | None = None
+    ) -> list[int]:
+        return []
+
+    monkeypatch.setattr(
+        "app.api._extraction.run_pending_extractions",
+        _fake_run_pending_extractions,
+    )
+
+    runner = app.test_cli_runner()
+    result = runner.invoke(args=["tasks", "run-queued"])
+
+    assert result.exit_code == 0
+    assert "No queued metadata tasks found." in result.output

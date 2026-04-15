@@ -200,6 +200,19 @@ Optional prompt override:
 flask tasks trigger-metadata --user-id <user_id> --url https://example.com/training --prompt "focus on workshop events"
 ```
 
+If you first queued tasks by calling `/metadata` or `/metadata/single`, you can execute
+all queued sessions immediately:
+
+```bash
+flask tasks run-queued
+```
+
+You can also restrict execution:
+
+```bash
+flask tasks run-queued --user-id <user_id> --url https://example.com/training
+```
+
 You can find user IDs with:
 
 ```bash

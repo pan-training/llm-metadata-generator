@@ -204,6 +204,24 @@ def _register_tasks_cli(app: Flask) -> None:
         session_id = trigger_extraction_now(current_app, user_id, url, prompt)
         click.echo(f"Triggered metadata extraction (session_id={session_id}).")
 
+    @tasks.command("run-queued")
+    @click.option("--user-id", type=int, default=None, help="Only run queued tasks for this user id.")
+    @click.option("--url", default=None, help="Only run queued tasks for this URL.")
+    def run_queued_command(user_id: int | None, url: str | None) -> None:
+        """Run queued (pending) metadata extraction tasks immediately."""
+        from flask import current_app
+
+        from app.api._extraction import run_pending_extractions
+
+        executed_ids = run_pending_extractions(current_app, user_id=user_id, url=url)
+        if not executed_ids:
+            click.echo("No queued metadata tasks found.")
+            return
+        click.echo(
+            f"Executed {len(executed_ids)} queued metadata task(s): "
+            + ", ".join(str(session_id) for session_id in executed_ids)
+        )
+
 
 def _register_integration_test_cli(app: Flask) -> None:
     """Register the ``flask integration-test`` command group."""

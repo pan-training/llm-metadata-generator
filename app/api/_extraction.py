@@ -174,3 +174,35 @@ def trigger_extraction_now(
         structural_summary=_get_structural_summary(url),
     )
     return new_session.id
+
+
+def run_pending_extractions(
+    app: Flask,
+    user_id: int | None = None,
+    url: str | None = None,
+) -> list[int]:
+    """Run queued (pending) extraction sessions immediately and return their ids."""
+    db = get_db()
+    query = (
+        "SELECT id, url FROM sessions"
+        " WHERE status = 'pending'"
+        " AND (? IS NULL OR user_id = ?)"
+        " AND (? IS NULL OR url = ?)"
+        " ORDER BY created_at ASC"
+    )
+    rows = db.execute(query, (user_id, user_id, url, url)).fetchall()
+
+    executed_ids: list[int] = []
+    for row in rows:
+        session_id = int(row["id"])
+        session_url = str(row["url"])
+        run_extraction(
+            app=app,
+            session_id=session_id,
+            url=session_url,
+            prompt=None,
+            structural_summary=_get_structural_summary(session_url),
+        )
+        executed_ids.append(session_id)
+
+    return executed_ids
