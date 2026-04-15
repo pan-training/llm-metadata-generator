@@ -198,3 +198,41 @@ def test_tasks_run_queued_command_when_none_found(
 
     assert result.exit_code == 0
     assert "No queued metadata tasks found." in result.output
+
+
+def test_run_pending_extractions_continues_after_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    with app.app_context():
+        from app.api._extraction import run_pending_extractions
+        from app.db.sqlite import init_db
+        from app.models.user import create_user
+        from app.models.session import create_session
+
+        init_db()
+        user, _token = create_user()
+        first = create_session(user.id, "https://example.com/one")
+        second = create_session(user.id, "https://example.com/two")
+
+        call_order: list[int] = []
+
+        def _fake_run_extraction(
+            app: Any,
+            session_id: int,
+            url: str,
+            prompt: str | None,
+            structural_summary: str | None,
+        ) -> None:
+            del app, url, prompt, structural_summary
+            call_order.append(session_id)
+            if session_id == first.id:
+                raise RuntimeError("boom")
+
+        monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
+
+        executed_ids = run_pending_extractions(app)
+
+    assert call_order == [first.id, second.id]
+    assert executed_ids == [second.id]

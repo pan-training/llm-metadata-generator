@@ -181,7 +181,12 @@ def run_pending_extractions(
     user_id: int | None = None,
     url: str | None = None,
 ) -> list[int]:
-    """Run queued (pending) extraction sessions immediately and return their ids."""
+    """Run queued (pending) extraction sessions immediately and return successful ids.
+
+    Sessions are processed in creation order. If one session fails before
+    ``run_extraction`` can persist an error state, processing continues with the
+    remaining queued sessions.
+    """
     db = get_db()
     query = (
         "SELECT id, url FROM sessions"
@@ -196,13 +201,16 @@ def run_pending_extractions(
     for row in rows:
         session_id = int(row["id"])
         session_url = str(row["url"])
-        run_extraction(
-            app=app,
-            session_id=session_id,
-            url=session_url,
-            prompt=None,
-            structural_summary=_get_structural_summary(session_url),
-        )
-        executed_ids.append(session_id)
+        try:
+            run_extraction(
+                app=app,
+                session_id=session_id,
+                url=session_url,
+                prompt=None,
+                structural_summary=_get_structural_summary(session_url),
+            )
+            executed_ids.append(session_id)
+        except Exception:
+            continue
 
     return executed_ids
