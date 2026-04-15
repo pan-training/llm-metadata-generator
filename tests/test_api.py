@@ -31,6 +31,15 @@ def client(app: Flask) -> FlaskClient:
     return app.test_client()
 
 
+@pytest.fixture(autouse=True)
+def disable_site_hash_network_calls(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Prevent endpoint tests from performing live network fetches."""
+    monkeypatch.setattr(
+        "app.api._extraction._fetch_site_content_hash",
+        lambda _url: "test-site-hash",
+    )
+
+
 @pytest.fixture
 def auth_header(app: Flask) -> dict[str, str]:
     with app.app_context():

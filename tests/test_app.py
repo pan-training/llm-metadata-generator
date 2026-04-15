@@ -232,6 +232,10 @@ def test_run_pending_extractions_continues_after_failure(
                 raise RuntimeError("boom")
 
         monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
+        monkeypatch.setattr(
+            "app.api._extraction._fetch_site_content_hash",
+            lambda _url: "test-site-hash",
+        )
 
         executed_ids = run_pending_extractions(app)
 
