@@ -11,6 +11,7 @@ import pytest
 from app.agents.bioschemas import (
     AccessDeniedError,
     BioschemasExtractorAgent,
+    DiscoveredItem,
     MAX_EXTRACTION_CONTENT,
     NotTrainingContentError,
     _content_hash,
@@ -151,16 +152,13 @@ def test_select_relevant_item_chunks_falls_back_when_none_classified_relevant(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     agent = BioschemasExtractorAgent()
-    item_info: Any = type(
-        "DummyItem",
-        (),
-        {
-            "title": "AI",
-            "url": "https://example.com/ai",
-            "item_type": "TrainingMaterial",
-            "context": "ai",
-        },
-    )()
+    item_info = DiscoveredItem(
+        title="AI",
+        url="https://example.com/ai",
+        item_type="TrainingMaterial",
+        source_url="https://example.com/listing",
+        context="ai",
+    )
     text = (
         "Navigation menu | Filters | Login | Register\n"
         "Privacy policy | Terms of use | Cookie settings\n"
@@ -204,16 +202,13 @@ def test_merge_chunk_extractions_uses_llm_for_multiple_candidates() -> None:
     )
     client = MockLLMClient([merged])
     agent = BioschemasExtractorAgent()
-    item_info: Any = type(
-        "DummyItem",
-        (),
-        {
-            "title": "Merged title",
-            "url": "https://example.com/merged",
-            "item_type": "TrainingMaterial",
-            "context": "context",
-        },
-    )()
+    item_info = DiscoveredItem(
+        title="Merged title",
+        url="https://example.com/merged",
+        item_type="TrainingMaterial",
+        source_url="https://example.com/listing",
+        context="context",
+    )
 
     result = agent._merge_chunk_extractions(
         item_info=item_info,
