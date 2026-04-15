@@ -203,14 +203,9 @@ def test_get_collection_reenqueues_when_last_session_was_cancelled(
         db.commit()
 
     def _fake_run_extraction(
-        app: Flask,
         session_id: int,
-        url: str,
-        prompt: str | None,
-        structural_summary: str | None,
-        site_content_hash: str | None = None,
+        **_kwargs: object,
     ) -> None:
-        del app, url, prompt, structural_summary, site_content_hash
         executed.append(session_id)
 
     monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
