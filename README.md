@@ -51,6 +51,7 @@ Browse extraction results and agent logs in a browser without needing `curl` or 
 1. Navigate to `http://localhost:5000/sessions`
 2. Log in with your Bearer token (POST form — token never appears in the URL)
 3. See a colour-coded table of sessions with expandable JSON-LD and full agent logs
+4. Pending sessions show a queue hint (including next scheduled scrape time when available) and can be cancelled directly from the viewer
 
 Admin users also get:
 - `http://localhost:5000/integration-tests` – viewer for `integration_test/results/`

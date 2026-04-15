@@ -131,3 +131,20 @@ def get_sessions_for_user(user_id: int) -> list[Session]:
         (user_id,),
     ).fetchall()
     return [_row_to_session(row) for row in rows]
+
+
+def cancel_session(session_id: int, user_id: int) -> bool:
+    """Cancel a pending session owned by the user.
+
+    Returns:
+        True when a pending session was cancelled, else False.
+    """
+    db = get_db()
+    cursor = db.execute(
+        "UPDATE sessions"
+        " SET status = 'cancelled', updated_at = datetime('now')"
+        " WHERE id = ? AND user_id = ? AND status = 'pending'",
+        (session_id, user_id),
+    )
+    db.commit()
+    return cursor.rowcount > 0

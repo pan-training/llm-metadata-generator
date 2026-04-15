@@ -243,6 +243,43 @@ def test_run_pending_extractions_continues_after_failure(
     assert executed_ids == [second.id]
 
 
+def test_run_pending_extractions_includes_stale_running_sessions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
+
+    with app.app_context():
+        from app.api._extraction import run_pending_extractions
+        from app.db.sqlite import init_db
+        from app.models.session import create_session, update_session
+        from app.models.user import create_user
+
+        init_db()
+        user, _token = create_user()
+        stale_running = create_session(user.id, "https://example.com/stale")
+        update_session(stale_running.id, "running", log="[]")
+
+        called: list[int] = []
+
+        def _fake_run_extraction(
+            app: Any,
+            session_id: int,
+            url: str,
+            prompt: str | None,
+            structural_summary: str | None,
+            site_content_hash: str | None = None,
+        ) -> None:
+            _ = (app, url, prompt, structural_summary, site_content_hash)
+            called.append(session_id)
+
+        monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
+
+        executed_ids = run_pending_extractions(app)
+
+    assert called == [stale_running.id]
+    assert executed_ids == [stale_running.id]
+
+
 def test_enqueue_extraction_skips_when_site_hash_unchanged(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -252,8 +289,16 @@ def test_enqueue_extraction_skips_when_site_hash_unchanged(
         def __init__(self) -> None:
             self.jobs: list[dict[str, Any]] = []
 
-        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
-            _ = (func, trigger)
+        def add_job(
+            self,
+            *,
+            func: Any,
+            trigger: str,
+            kwargs: dict[str, Any],
+            id: str | None = None,
+            replace_existing: bool = False,
+        ) -> None:
+            _ = (func, trigger, id, replace_existing)
             self.jobs.append(kwargs)
 
     fake_scheduler = _FakeScheduler()
@@ -301,8 +346,16 @@ def test_enqueue_extraction_uses_incremental_mode_on_hash_change(
         def __init__(self) -> None:
             self.jobs: list[dict[str, Any]] = []
 
-        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
-            _ = (func, trigger)
+        def add_job(
+            self,
+            *,
+            func: Any,
+            trigger: str,
+            kwargs: dict[str, Any],
+            id: str | None = None,
+            replace_existing: bool = False,
+        ) -> None:
+            _ = (func, trigger, id, replace_existing)
             self.jobs.append(kwargs)
 
     fake_scheduler = _FakeScheduler()
@@ -349,8 +402,16 @@ def test_enqueue_extraction_random_full_refresh_is_configurable(
         def __init__(self) -> None:
             self.jobs: list[dict[str, Any]] = []
 
-        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
-            _ = (func, trigger)
+        def add_job(
+            self,
+            *,
+            func: Any,
+            trigger: str,
+            kwargs: dict[str, Any],
+            id: str | None = None,
+            replace_existing: bool = False,
+        ) -> None:
+            _ = (func, trigger, id, replace_existing)
             self.jobs.append(kwargs)
 
     fake_scheduler = _FakeScheduler()
@@ -397,8 +458,16 @@ def test_enqueue_extraction_detects_changes_on_cached_subpages(
         def __init__(self) -> None:
             self.jobs: list[dict[str, Any]] = []
 
-        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
-            _ = (func, trigger)
+        def add_job(
+            self,
+            *,
+            func: Any,
+            trigger: str,
+            kwargs: dict[str, Any],
+            id: str | None = None,
+            replace_existing: bool = False,
+        ) -> None:
+            _ = (func, trigger, id, replace_existing)
             self.jobs.append(kwargs)
 
     fake_scheduler = _FakeScheduler()
@@ -464,8 +533,16 @@ def test_enqueue_extraction_skips_when_cached_subpages_are_unchanged(
         def __init__(self) -> None:
             self.jobs: list[dict[str, Any]] = []
 
-        def add_job(self, *, func: Any, trigger: str, kwargs: dict[str, Any]) -> None:
-            _ = (func, trigger)
+        def add_job(
+            self,
+            *,
+            func: Any,
+            trigger: str,
+            kwargs: dict[str, Any],
+            id: str | None = None,
+            replace_existing: bool = False,
+        ) -> None:
+            _ = (func, trigger, id, replace_existing)
             self.jobs.append(kwargs)
 
     fake_scheduler = _FakeScheduler()
