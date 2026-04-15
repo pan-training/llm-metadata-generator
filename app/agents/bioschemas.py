@@ -547,6 +547,32 @@ def _chunk_text(
     return chunks
 
 
+def _join_chunks_with_limit(
+    chunks: list[str],
+    max_chars: int,
+    separator: str = "\n\n---\n\n",
+) -> str:
+    """Join full chunks up to *max_chars* without truncating mid-chunk."""
+    if not chunks:
+        return ""
+
+    joined_parts: list[str] = []
+    used_chars = 0
+    for chunk in chunks:
+        sep_len = len(separator) if joined_parts else 0
+        if used_chars + sep_len + len(chunk) > max_chars:
+            break
+        if joined_parts:
+            joined_parts.append(separator)
+            used_chars += len(separator)
+        joined_parts.append(chunk)
+        used_chars += len(chunk)
+
+    if joined_parts:
+        return "".join(joined_parts)
+    return chunks[0][:max_chars]
+
+
 # ---------------------------------------------------------------------------
 # Faceted search URL detection
 # ---------------------------------------------------------------------------
@@ -1380,20 +1406,19 @@ class BioschemasExtractorAgent:
                 llm_client=llm_client,
                 parent_id=item_id,
             )
-            content_for_review = (
-                "\n\n---\n\n".join(relevant_chunks)
-            )[:MAX_EXTRACTION_CONTENT]
+            content_for_review = _join_chunks_with_limit(
+                relevant_chunks,
+                MAX_EXTRACTION_CONTENT,
+            )
 
             chunk_extractions: list[dict[str, Any]] = []
             for chunk_index, chunk_content in enumerate(relevant_chunks):
-                chunk_id = (
+                chunk_id = item_id
+                if len(relevant_chunks) > 1:
                     self._logger.info(
                         f"Phase 2 chunk {chunk_index + 1}/{len(relevant_chunks)}",
                         parent=item_id,
                     )
-                    if len(relevant_chunks) > 1
-                    else item_id
-                )
 
                 reasoning = self._reason_about_item(
                     item_info=item_info,

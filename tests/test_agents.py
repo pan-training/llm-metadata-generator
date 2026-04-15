@@ -161,11 +161,26 @@ def test_select_relevant_item_chunks_falls_back_when_none_classified_relevant(
             "context": "ai",
         },
     )()
-    text = "nav\n" * 9000
+    text = (
+        "Navigation menu | Filters | Login | Register\n"
+        "Privacy policy | Terms of use | Cookie settings\n"
+    ) * 500
+
+    def _fake_all_irrelevant(
+        self: BioschemasExtractorAgent,
+        item_info: Any,
+        chunk_text: str,
+        chunk_index: int,
+        total_chunks: int,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> dict[str, Any]:
+        return {"relevant": False}
+
     monkeypatch.setattr(
         BioschemasExtractorAgent,
         "_classify_item_chunk_relevance",
-        lambda self, item_info, chunk_text, chunk_index, total_chunks, llm_client, parent_id=None: {"relevant": False},
+        _fake_all_irrelevant,
     )
 
     selected = agent._select_relevant_item_chunks(
