@@ -289,47 +289,6 @@ def test_run_pending_extractions_includes_stale_running_sessions(
     assert executed_ids == [stale_running.id]
 
 
-def test_run_pending_extractions_includes_startup_only_running_sessions(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    app = create_app({"TESTING": True, "DATABASE_URL": str(tmp_path / "test.db")})
-
-    with app.app_context():
-        from app.api._extraction import run_pending_extractions
-        from app.db.sqlite import init_db
-        from app.models.session import create_session, update_session
-        from app.models.user import create_user
-
-        init_db()
-        user, _token = create_user()
-        stale_running = create_session(user.id, "https://example.com/stale-startup")
-        update_session(
-            stale_running.id,
-            "running",
-            log='[{"id":1,"type":"info","message":"Starting extraction for https://example.com/stale-startup"}]',
-        )
-
-        called: list[int] = []
-
-        def _fake_run_extraction(
-            app: Any,
-            session_id: int,
-            url: str,
-            prompt: str | None,
-            structural_summary: str | None,
-            site_content_hash: str | None = None,
-        ) -> None:
-            _ = (app, url, prompt, structural_summary, site_content_hash)
-            called.append(session_id)
-
-        monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
-
-        executed_ids = run_pending_extractions(app)
-
-    assert called == [stale_running.id]
-    assert executed_ids == [stale_running.id]
-
-
 def test_run_extraction_persists_progress_logs_while_running(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

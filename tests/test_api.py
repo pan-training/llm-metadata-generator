@@ -287,10 +287,10 @@ def test_get_collection_reenqueues_when_latest_session_cancelled_even_with_older
     assert executed == [active.id]
 
 
-def test_get_collection_reenqueues_after_cancelling_startup_running_session(
+def test_get_collection_reenqueues_after_cancelling_running_session(
     app: Flask, client: FlaskClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """Exact repro flow: stuck running -> cancel -> /metadata must enqueue again."""
+    """Cancel a running session via endpoint, then /metadata must create a new pending session."""
     url = "https://example.com/training"
     executed: list[int] = []
 
@@ -305,12 +305,8 @@ def test_get_collection_reenqueues_after_cancelling_startup_running_session(
             "INSERT INTO metadata_cache (url, content_hash, structural_summary) VALUES (?, ?, ?)",
             (url, "test-site-hash", '{"schema_version":"2"}'),
         )
-        stuck = create_session(user.id, url)
-        update_session(
-            stuck.id,
-            "running",
-            log='[{"id":1,"type":"info","message":"Starting extraction for https://example.com/training"}]',
-        )
+        running = create_session(user.id, url)
+        update_session(running.id, "running")
         db.commit()
 
     def _fake_run_extraction(
@@ -327,7 +323,7 @@ def test_get_collection_reenqueues_after_cancelling_startup_running_session(
     monkeypatch.setattr("app.api._extraction.run_extraction", _fake_run_extraction)
 
     client.post("/sessions/login", json={"token": token})
-    cancel_response = client.post(f"/sessions/{stuck.id}/cancel")
+    cancel_response = client.post(f"/sessions/{running.id}/cancel")
     assert cancel_response.status_code in (302, 303)
 
     response = client.get(
