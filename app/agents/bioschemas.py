@@ -276,6 +276,23 @@ You are an expert at identifying scientific training content on web pages.
 Your task is to classify a text chunk from a website and identify any training
 materials, courses, or events it describes.  You do NOT produce JSON-LD here.
 
+Mandatory decision procedure (follow in order):
+Step 1 — classify chunk type first.
+- If the chunk is navigation/filter UI only (tag clouds, sort controls, keyword
+  filters, auth links, cookie/privacy text, scaffolding) and has no concrete
+  training item card/row/detail content:
+  return {"relevant": false, "items": [], "follow_links": []} and STOP.
+
+Step 2 — extract items only when evidence is concrete in THIS chunk.
+- Only extract an item if the chunk shows all of these:
+  1) a clear item title, 2) supporting item text (description/row/detail), and
+  3) an item/detail URL (not a filter URL).
+- If any part is missing, do not extract the item.
+
+Step 3 — choose follow_links.
+- Include only links that truly lead to additional content pages.
+- Never include links that only filter/sort/reorder the same list.
+
 IMPORTANT — follow ONLY the navigation pattern from the structural summary:
 When a structural summary is provided, it describes exactly how to navigate the
 site (e.g. "paginated with ?page=N" or "category pages at /topics/X").
@@ -304,6 +321,11 @@ IMPORTANT — skip non-content pages:
 Do NOT include links to creation, editing, admin, or login pages in
 follow_links.  Examples to skip: /new, /create, /edit, /delete, /admin,
 /sign_in, /login, /register.
+
+CRITICAL:
+- Do NOT use previous chunks to invent or carry over items/links.
+- Extract only what is explicitly visible in the current chunk.
+- If uncertain, skip it (prefer false negatives over false positives).
 """
 
 # ---------------------------------------------------------------------------
@@ -1927,15 +1949,16 @@ class BioschemasExtractorAgent:
                     "/login, /register, /search, /api/.\n\n"
                     "If this chunk is navigation/filter UI only (no concrete item "
                     "content), set relevant=false and items=[].\n\n"
+                    "Before reading the previous summary: use it only to "
+                    "understand section context. Do NOT "
+                    "extract items or links from the summary itself.\n"
                     "Previous chunk carry-over context summary "
                     f"(may be empty): {previous_chunk_summary or '(none)'}\n\n"
                     "Output JSON:\n"
                     '{"relevant": true/false, "items": [{"title": "...", '
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
                     '"context": "excerpt mentioning this item"}], '
-                    '"follow_links": [{"url": "...", "reason": "..."}], '
-                    '"ignored_links": [{"url": "...", "reason": "facet_filter|auth|admin|other_non_content", '
-                    '"context": "short evidence from chunk"}]}\n\n'
+                    '"follow_links": [{"url": "...", "reason": "..."}]}\n\n'
                     f"Text chunk:\n{chunk_text}"
                 ),
             },
