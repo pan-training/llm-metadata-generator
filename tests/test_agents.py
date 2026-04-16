@@ -14,6 +14,7 @@ from app.agents.bioschemas import (
     DiscoveredItem,
     MAX_EXTRACTION_CONTENT,
     NotTrainingContentError,
+    _call_llm,
     _content_hash,
     _html_to_markdown,
     _chunk_text,
@@ -75,6 +76,32 @@ def _make_response(
     mock.status_code = status_code
     mock.ok = status_code < 400
     return mock
+
+
+def test_call_llm_uses_deterministic_temperature_zero() -> None:
+    captured_kwargs: dict[str, Any] = {}
+
+    class _FakeCompletions:
+        def create(self, **kwargs: Any) -> MockCompletion:
+            captured_kwargs.update(kwargs)
+            return MockCompletion('{"relevant": false, "items": [], "follow_links": []}')
+
+    class _FakeChat:
+        def __init__(self) -> None:
+            self.completions = _FakeCompletions()
+
+    class _FakeClient:
+        def __init__(self) -> None:
+            self.chat = _FakeChat()
+
+    result = _call_llm(
+        client=_FakeClient(),
+        model="test-model",
+        messages=[{"role": "user", "content": "classify"}],
+    )
+
+    assert captured_kwargs.get("temperature") == 0
+    assert result == {"relevant": False, "items": [], "follow_links": []}
 
 
 # ---------------------------------------------------------------------------
@@ -489,6 +516,7 @@ def test_classify_chunk_prompt_includes_decision_gate_and_output_schema(
     assert "Do NOT extract filter/facet/tag links as items." in prompt
     assert "Before reading the previous summary: use it only to understand section context." in prompt
     assert '"follow_links": [{"url": "...", "reason": "..."}]}' in prompt
+    assert "Return ONLY this JSON object shape with exactly these keys" in prompt
     assert '"ignored_links"' not in prompt
 
 

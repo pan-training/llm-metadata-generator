@@ -787,6 +787,7 @@ def _call_llm(
         model=model,
         messages=messages,
         response_format={"type": "json_object"},
+        temperature=0,
     )
     latency_ms = (time.monotonic() - t0) * 1000
     content = response.choices[0].message.content or "{}"
@@ -1959,6 +1960,9 @@ class BioschemasExtractorAgent:
                     '"url": "...", "item_type": "TrainingMaterial|CourseInstance|Course", '
                     '"context": "excerpt mentioning this item"}], '
                     '"follow_links": [{"url": "...", "reason": "..."}]}\n\n'
+                    "Return ONLY this JSON object shape with exactly these keys: "
+                    "relevant, items, follow_links. Do NOT include ignored_links "
+                    "or any other extra keys.\n\n"
                     f"Text chunk:\n{chunk_text}"
                 ),
             },
