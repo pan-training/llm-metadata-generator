@@ -1,0 +1,2 @@
+"""Admin routes package."""
+

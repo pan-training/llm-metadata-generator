@@ -157,7 +157,7 @@ Acceptance: after running the discovery agent for bio.tools, the main extraction
 
 ---
 
-## 6. Ontology support (EDAM, PaNET, …)
+## ✅ 6. Ontology support (EDAM, PaNET, …) — Done
 
 Index ontology terms in the vector database for fast candidate lookup. **This is the issue where the sqlite-vector extension is set up.**
 

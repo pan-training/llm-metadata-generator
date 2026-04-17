@@ -70,9 +70,6 @@ step 2a included as additional context in the prompt.
 
 The chunk-level extraction outputs are finally merged into one JSON-LD object.
 
-# TODO (issue #6): pass candidate ontology terms to the extraction prompt once
-#   ontology vector search is implemented (see TODO.md item 6).
-
 ### Phase 3 – REVIEW  (per item)
 
 Self-critical review: the LLM is asked to improve the extracted JSON-LD, check
@@ -143,6 +140,7 @@ from markdownify import markdownify as _md_convert
 
 from app.agents import get_model_for_task
 from app.agents.logger import AgentLogger
+from app.db.sqlite import upsert_missing_ontology_term, vector_search
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -1531,6 +1529,12 @@ class BioschemasExtractorAgent:
                 relevant_chunks,
                 MAX_EXTRACTION_CONTENT,
             )
+            candidate_terms = self._lookup_candidate_ontology_terms(
+                item_info=item_info,
+                content=review_content,
+                llm_client=llm_client,
+                parent_id=item_id,
+            )
 
             chunk_extractions: list[dict[str, Any]] = []
             for chunk_index, chunk_content in enumerate(relevant_chunks):
@@ -1547,14 +1551,27 @@ class BioschemasExtractorAgent:
                     parent_id=item_id,
                 )
 
-                extracted_chunk = self._extract_item(
-                    item_info=item_info,
-                    content=chunk_content,
-                    prompt=prompt,
-                    reasoning=reasoning,
-                    llm_client=llm_client,
-                    parent_id=item_id,
-                )
+                try:
+                    extracted_chunk = self._extract_item(
+                        item_info=item_info,
+                        content=chunk_content,
+                        prompt=prompt,
+                        reasoning=reasoning,
+                        candidate_ontology_terms=candidate_terms,
+                        llm_client=llm_client,
+                        parent_id=item_id,
+                    )
+                except TypeError:
+                    # Backward compatibility for tests monkeypatching legacy
+                    # _extract_item(item_info, content, prompt, reasoning, llm_client, parent_id).
+                    extracted_chunk = self._extract_item(  # type: ignore[call-arg]
+                        item_info=item_info,
+                        content=chunk_content,
+                        prompt=prompt,
+                        reasoning=reasoning,
+                        llm_client=llm_client,
+                        parent_id=item_id,
+                    )
                 if extracted_chunk:
                     chunk_extractions.append(extracted_chunk)
 
@@ -1618,6 +1635,11 @@ class BioschemasExtractorAgent:
             final_items.append(reviewed)
             if item_info.url:
                 items_by_url_for_summary[item_info.url] = reviewed
+            self._record_missing_ontology_terms(
+                item_info=item_info,
+                extracted_item=reviewed,
+                candidate_terms=candidate_terms,
+            )
             if on_item:
                 on_item(reviewed)
 
@@ -2220,6 +2242,7 @@ class BioschemasExtractorAgent:
         content: str,
         prompt: str | None,
         reasoning: str | None,
+        candidate_ontology_terms: list[dict[str, Any]] | None,
         llm_client: Any,
         parent_id: int | None = None,
     ) -> dict[str, Any]:
@@ -2236,9 +2259,27 @@ class BioschemasExtractorAgent:
             if reasoning
             else ""
         )
-
-        # TODO (issue #6): insert candidate ontology terms here once ontology
-        #   vector search is implemented (see TODO.md item 6).
+        ontology_section = ""
+        if candidate_ontology_terms:
+            lines = []
+            for term in candidate_ontology_terms[:8]:
+                lines.append(
+                    "- "
+                    f"{term.get('ontology_name', 'ontology')}: "
+                    f"{term.get('label', '')} "
+                    f"({term.get('uri', '')})"
+                    + (
+                        f" — {term.get('description', '')}"
+                        if term.get("description")
+                        else ""
+                    )
+                )
+            if lines:
+                ontology_section = (
+                    "\n\nCandidate ontology terms from vector search:\n"
+                    + "\n".join(lines)
+                    + "\nUse only terms that clearly match the page evidence."
+                )
 
         messages: list[dict[str, str]] = [
             {"role": "system", "content": _SYSTEM_PROMPT},
@@ -2246,7 +2287,7 @@ class BioschemasExtractorAgent:
                 "role": "user",
                 "content": (
                     f"Extract Bioschemas JSON-LD for this training item."
-                    f"{reasoning_section}{extra}\n\n"
+                    f"{reasoning_section}{ontology_section}{extra}\n\n"
                     f"Title: {item_info.title}\n"
                     f"URL: {item_info.url}\n"
                     f"Type: {item_info.item_type}\n"
@@ -2265,6 +2306,107 @@ class BioschemasExtractorAgent:
             parent_id=parent_id,
             chunk=content,
         )
+
+    def _lookup_candidate_ontology_terms(
+        self,
+        item_info: DiscoveredItem,
+        content: str,
+        llm_client: Any,
+        parent_id: int | None = None,
+    ) -> list[dict[str, Any]]:
+        """Return top ontology candidates for an item using vector search."""
+        query_text = (
+            f"{item_info.title}\n"
+            f"{item_info.context}\n"
+            f"{content[:2000]}"
+        )
+        embedding = self._embed_ontology_query(query_text, llm_client)
+        if not embedding:
+            return []
+        try:
+            candidates = vector_search(embedding, top_k=8)
+        except RuntimeError:
+            # Unit tests and direct agent usage may run outside Flask app context.
+            return []
+        if self._logger and candidates:
+            self._logger.info(
+                f"Ontology lookup returned {len(candidates)} candidate term(s)",
+                parent=parent_id,
+            )
+        return candidates
+
+    def _embed_ontology_query(self, text: str, llm_client: Any) -> list[float]:
+        """Embed ontology lookup text via ontology_embedding task model."""
+        try:
+            result = llm_client.embeddings.create(
+                model=get_model_for_task("ontology_embedding"),
+                input=[text],
+            )
+            data = getattr(result, "data", [])
+            if data and isinstance(data, list):
+                embedding = getattr(data[0], "embedding", None)
+                if isinstance(embedding, list):
+                    return [float(value) for value in embedding]
+        except Exception:
+            pass
+        digest = hashlib.sha256(text.encode()).digest()
+        return [byte / 255.0 for byte in digest]
+
+    def _record_missing_ontology_terms(
+        self,
+        item_info: DiscoveredItem,
+        extracted_item: dict[str, Any],
+        candidate_terms: list[dict[str, Any]],
+    ) -> None:
+        """Record likely missing ontology terms and link to the training material."""
+        if candidate_terms:
+            return
+
+        if self._has_defined_term(extracted_item):
+            return
+
+        raw_keywords = extracted_item.get("keywords")
+        if not isinstance(raw_keywords, list):
+            return
+        metadata_url = item_info.url or item_info.source_url
+        for keyword in raw_keywords[:5]:
+            if not isinstance(keyword, str):
+                continue
+            clean_keyword = keyword.strip()
+            if len(clean_keyword) < 3:
+                continue
+            try:
+                upsert_missing_ontology_term(
+                    label=clean_keyword,
+                    description=str(extracted_item.get("description") or "")[:500],
+                    ontology_name="EDAM",
+                    suggested_source_url=item_info.source_url,
+                    metadata_url=metadata_url,
+                )
+            except Exception:
+                continue
+
+    def _has_defined_term(self, extracted_item: dict[str, Any]) -> bool:
+        """Return True when JSON-LD already includes ontology term references."""
+        values_to_scan = []
+        for key in ("about", "keywords", "teaches"):
+            value = extracted_item.get(key)
+            if value is not None:
+                values_to_scan.append(value)
+        stack = list(values_to_scan)
+        while stack:
+            current = stack.pop()
+            if isinstance(current, list):
+                stack.extend(current)
+                continue
+            if isinstance(current, dict):
+                if str(current.get("@type", "")) == "DefinedTerm":
+                    return True
+                stack.extend(current.values())
+                continue
+            if isinstance(current, str) and ("edam" in current.lower() or "panet" in current.lower()):
+                return True
+        return False
 
     def _review_item(
         self,

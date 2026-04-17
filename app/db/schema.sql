@@ -72,3 +72,77 @@ CREATE TABLE IF NOT EXISTS semantic_tools (
     created_at        TEXT    NOT NULL DEFAULT (datetime('now')),
     updated_at        TEXT    NOT NULL DEFAULT (datetime('now'))
 );
+
+-- ontology_sources: admin-provided ontology ingestion definitions.
+-- description may include plain text and links to RDF/OWL files, docs, SPARQL endpoints.
+CREATE TABLE IF NOT EXISTS ontology_sources (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    name              TEXT    NOT NULL,
+    description       TEXT    NOT NULL,
+    rdf_url           TEXT,
+    documentation_url TEXT,
+    active_version_id INTEGER REFERENCES ontology_index_versions(id),
+    last_indexed_at   TEXT,
+    created_at        TEXT    NOT NULL DEFAULT (datetime('now')),
+    updated_at        TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
+-- ontology_index_versions: immutable snapshots for rollback/history.
+CREATE TABLE IF NOT EXISTS ontology_index_versions (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_id       INTEGER NOT NULL REFERENCES ontology_sources(id) ON DELETE CASCADE,
+    embedding_model TEXT    NOT NULL,
+    status          TEXT    NOT NULL DEFAULT 'ready',
+    notes           TEXT,
+    is_active       INTEGER NOT NULL DEFAULT 0,
+    created_at      TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
+-- ontology_terms: vector-indexed terms per source/version.
+-- embedding_json stores numeric vectors. sqlite-vector loading is configured in app/db/sqlite.py.
+CREATE TABLE IF NOT EXISTS ontology_terms (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_id       INTEGER NOT NULL REFERENCES ontology_sources(id) ON DELETE CASCADE,
+    version_id      INTEGER NOT NULL REFERENCES ontology_index_versions(id) ON DELETE CASCADE,
+    label           TEXT    NOT NULL,
+    description     TEXT,
+    uri             TEXT    NOT NULL,
+    ontology_name   TEXT    NOT NULL,
+    properties_json TEXT,
+    embedding_json  TEXT    NOT NULL,
+    created_at      TEXT    NOT NULL DEFAULT (datetime('now')),
+    updated_at      TEXT    NOT NULL DEFAULT (datetime('now')),
+    UNIQUE(version_id, uri)
+);
+
+CREATE INDEX IF NOT EXISTS idx_ontology_terms_version ON ontology_terms(version_id);
+CREATE INDEX IF NOT EXISTS idx_ontology_terms_label ON ontology_terms(label);
+
+-- missing_ontology_terms: concepts detected in extraction but missing from indexed ontologies.
+CREATE TABLE IF NOT EXISTS missing_ontology_terms (
+    id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+    label                TEXT    NOT NULL,
+    description          TEXT,
+    ontology_name        TEXT,
+    suggested_source_url TEXT,
+    created_at           TEXT    NOT NULL DEFAULT (datetime('now')),
+    updated_at           TEXT    NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_missing_ontology_terms_label_ontology
+ON missing_ontology_terms(lower(label), coalesce(lower(ontology_name), ''));
+
+-- many-to-many: missing ontology terms <-> metadata_cache rows that would benefit.
+CREATE TABLE IF NOT EXISTS missing_ontology_term_links (
+    missing_term_id  INTEGER NOT NULL REFERENCES missing_ontology_terms(id) ON DELETE CASCADE,
+    metadata_cache_id INTEGER NOT NULL REFERENCES metadata_cache(id) ON DELETE CASCADE,
+    created_at       TEXT    NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (missing_term_id, metadata_cache_id)
+);
+
+-- app_settings: small key/value storage for startup checks (e.g. embedding model changes).
+CREATE TABLE IF NOT EXISTS app_settings (
+    key        TEXT PRIMARY KEY,
+    value      TEXT NOT NULL,
+    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);

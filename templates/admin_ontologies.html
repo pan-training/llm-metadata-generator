@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Ontologies</title>
+  <style>
+    body { font-family: sans-serif; margin: 24px; }
+    table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+    th, td { border: 1px solid #ddd; padding: 8px; vertical-align: top; }
+    input, textarea { width: 100%; box-sizing: border-box; margin-top: 4px; margin-bottom: 8px; }
+    .actions form { display: inline; margin-right: 8px; }
+    .status { color: #1a73e8; }
+  </style>
+</head>
+<body>
+  <h1>Ontology Administration</h1>
+  <p><a href="/admin/missing-terms">View missing ontology terms</a></p>
+
+  {% if status_message %}
+    <p class="status">{{ status_message }}</p>
+  {% endif %}
+
+  <h2>Add ontology source</h2>
+  <form method="post" action="/admin/ontologies">
+    <input type="hidden" name="action" value="add">
+    <label>Name</label>
+    <input name="name" required>
+    <label>Description (free-text, can include RDF/OWL + docs URLs)</label>
+    <textarea name="description" rows="4" required></textarea>
+    <label>RDF/OWL URL (optional)</label>
+    <input name="rdf_url" placeholder="https://.../ontology.owl">
+    <label>Documentation URL (optional)</label>
+    <input name="documentation_url" placeholder="https://.../docs">
+    <button type="submit">Add source</button>
+  </form>
+
+  <h2>Ontology lookup test</h2>
+  <form method="post" action="/admin/ontologies">
+    <input type="hidden" name="action" value="lookup">
+    <label>Query term</label>
+    <input name="lookup_query" value="{{ lookup_query }}" placeholder="sequence analysis">
+    <button type="submit">Test lookup</button>
+  </form>
+  {% if lookup_results %}
+    <table>
+      <thead>
+        <tr>
+          <th>Ontology</th>
+          <th>Label</th>
+          <th>URI</th>
+          <th>Description</th>
+          <th>Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in lookup_results %}
+          <tr>
+            <td>{{ result.ontology_name }}</td>
+            <td>{{ result.label }}</td>
+            <td><a href="{{ result.uri }}" target="_blank" rel="noopener">{{ result.uri }}</a></td>
+            <td>{{ result.description }}</td>
+            <td>{{ "%.4f"|format(result.score) }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <h2>Configured ontology sources</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>RDF URL</th>
+        <th>Docs URL</th>
+        <th>Active version</th>
+        <th>Last indexed</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for source in sources %}
+        <tr>
+          <td>{{ source.id }}</td>
+          <td>{{ source.name }}</td>
+          <td>{{ source.description }}</td>
+          <td>{% if source.rdf_url %}<a href="{{ source.rdf_url }}" target="_blank" rel="noopener">{{ source.rdf_url }}</a>{% endif %}</td>
+          <td>{% if source.documentation_url %}<a href="{{ source.documentation_url }}" target="_blank" rel="noopener">{{ source.documentation_url }}</a>{% endif %}</td>
+          <td>{{ source.active_version_id or "-" }}</td>
+          <td>{{ source.last_indexed_at or "-" }}</td>
+          <td class="actions">
+            <form method="post" action="/admin/ontologies/{{ source.id }}/reindex">
+              <button type="submit">Reindex</button>
+            </form>
+            <a href="/admin/ontologies/{{ source.id }}/history">History</a>
+            <a href="/admin/ontologies/{{ source.id }}/delete">Delete</a>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">No ontology sources configured.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
