@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Missing Ontology Terms</title>
+  <style>
+    body { font-family: sans-serif; margin: 24px; }
+    h2 { margin-top: 24px; }
+    ul { margin-top: 8px; }
+    li { margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Missing Ontology Terms</h1>
+  <p><a href="/admin/ontologies">Back to ontologies</a></p>
+
+  {% for ontology_name, terms in grouped_missing_terms.items() %}
+    <h2>{{ ontology_name }}</h2>
+    <ul>
+      {% for term in terms %}
+        <li>
+          <strong>{{ term.label }}</strong><br>
+          {% if term.description %}{{ term.description }}<br>{% endif %}
+          {% if term.suggested_source_url %}
+            Suggested source:
+            <a href="{{ term.suggested_source_url }}" target="_blank" rel="noopener">{{ term.suggested_source_url }}</a><br>
+          {% endif %}
+          {% if term.metadata_urls %}
+            Training materials:
+            {% for url in term.metadata_urls %}
+              <a href="{{ url }}" target="_blank" rel="noopener">{{ url }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            No linked training materials yet.
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No missing ontology terms recorded.</p>
+  {% endfor %}
+</body>
+</html>

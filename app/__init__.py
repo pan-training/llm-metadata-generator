@@ -1,5 +1,7 @@
 import atexit
+import logging
 import re
+import sqlite3
 from pathlib import Path
 
 import click
@@ -8,6 +10,7 @@ from flask import Flask
 
 # Templates live at the repo root, one level above the app package.
 _TEMPLATE_FOLDER = str(Path(__file__).parent.parent / "templates")
+_LOGGER = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -99,19 +102,92 @@ def create_app(config=None) -> Flask:
     from app.api.collection import bp as collection_bp
     from app.api.resource import bp as resource_bp
     from app.api.sessions import bp as sessions_bp
+    from app.admin.routes import bp as admin_bp
 
     app.register_blueprint(collection_bp)
     app.register_blueprint(resource_bp)
     app.register_blueprint(sessions_bp)
+    app.register_blueprint(admin_bp)
+
+    _ensure_embedding_model_index_state(app)
 
     # Start the background scheduler unless we are in testing mode.
     if not app.config.get("TESTING"):
         scheduler = BackgroundScheduler()
         scheduler.start()
         app.extensions["scheduler"] = scheduler
+        from app.cron.ontologies import register as register_ontology_cron
+
+        register_ontology_cron(scheduler, app)
         atexit.register(lambda: scheduler.shutdown(wait=False))
 
     return app
+
+
+def _ensure_embedding_model_index_state(app: Flask) -> None:
+    """Reindex ontology sources when the embedding model changed."""
+    if app.config.get("TESTING"):
+        return
+
+    from app.agents import get_llm_client, get_model_for_task
+    from app.agents.ontology import OntologyIndexerAgent
+    from app.db.sqlite import get_app_setting, get_db, set_app_setting
+
+    with app.app_context():
+        try:
+            db = get_db()
+            required_tables = {"ontology_sources", "app_settings"}
+            rows = db.execute(
+                "SELECT name FROM sqlite_master"
+                " WHERE type = 'table' AND name IN ('ontology_sources', 'app_settings')"
+            ).fetchall()
+            existing_tables = {str(row["name"]) for row in rows}
+            if required_tables - existing_tables:
+                return
+        except sqlite3.OperationalError:
+            # Database not initialised yet; startup should continue.
+            return
+
+        model_key = "ontology_embedding_model"
+        current_model = get_model_for_task("ontology_embedding")
+        previous_model = get_app_setting(model_key)
+        if previous_model == current_model:
+            return
+
+        set_app_setting(model_key, current_model)
+        rows = db.execute(
+            "SELECT id, name, description, rdf_url, documentation_url FROM ontology_sources"
+        ).fetchall()
+        if not rows:
+            return
+
+        _LOGGER.info(
+            "Embedding model changed (%s -> %s); re-indexing %d ontology source(s)",
+            previous_model,
+            current_model,
+            len(rows),
+        )
+        agent = OntologyIndexerAgent()
+        llm_client = get_llm_client("ontology_embedding")
+        for row in rows:
+            description = str(row["description"])
+            if row["rdf_url"]:
+                description += f"\nRDF/OWL source: {row['rdf_url']}"
+            if row["documentation_url"]:
+                description += f"\nDocumentation URL: {row['documentation_url']}"
+            try:
+                agent.run(
+                    description=description,
+                    llm_client=llm_client,
+                    source_id=int(row["id"]),
+                    source_name=str(row["name"]),
+                )
+            except Exception as exc:
+                _LOGGER.warning(
+                    "Failed auto re-index for ontology source %s: %s",
+                    row["id"],
+                    exc,
+                )
 
 
 def _register_db_cli(app: Flask) -> None:

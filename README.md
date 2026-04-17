@@ -10,7 +10,7 @@ An LLM-powered Flask service that generates [Bioschemas](https://bioschemas.org/
 2. **Single-resource endpoint** – given a URL of one training resource, returns a single Bioschemas JSON-LD object.
 3. **Lazy generation** – the first request returns an empty (or previously cached) result while an agent generates fresh metadata in the background; the second request returns the result.
 4. **Smart updates** – incremental refresh (only changed pages re-crawled) vs. full refresh, chosen automatically based on stored page hashes.
-5. **Ontology support** *(planned, issue #6)* – EDAM, PaNET and other ontologies will be indexed in the vector database; the extraction agent uses nearest-neighbour search to find candidate terms.
+5. **Ontology support** – EDAM, PaNET and other ontologies can be indexed in the vector database; the extraction agent uses nearest-neighbour search to find candidate terms and records missing-term suggestions.
 6. **Semantic-tool support** *(planned, issue #5)* – bio.tools, FAIRsharing and similar sites get a dedicated discovery workflow.
 7. **Flexible LLM backend** – any OpenAI-compatible API can be used; model selection is driven by three env-var tiers (`LLM_MODEL_SMALL`, `LLM_MODEL_LARGE`, `LLM_MODEL_EMBEDDING`) with defaults suited to common open-source deployments.
 
@@ -56,6 +56,8 @@ Browse extraction results and agent logs in a browser without needing `curl` or 
 Admin users also get:
 - `http://localhost:5000/integration-tests` – viewer for `integration_test/results/`
 - `http://localhost:5000/archived-runs` – export snapshots of archived run logs to `archived_run/results/` for commit/share debugging
+- `http://localhost:5000/admin/ontologies` – ontology source management, reindexing, history/rollback, and lookup testing
+- `http://localhost:5000/admin/missing-terms` – missing ontology-term suggestions grouped by ontology
 
 ---
 

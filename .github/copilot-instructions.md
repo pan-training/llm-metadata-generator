@@ -23,7 +23,7 @@ llm-metadata-generator/
 │   ├── agents/
 │   │   ├── __init__.py      ✅  get_llm_client() + get_model_for_task() (env-var model config)
 │   │   ├── bioschemas.py    ✅  Main extraction agent: chunk-based crawl, integrated link-follow, JSON schema validation
-│   │   ├── ontology.py      📋  Ontology indexing agent (EDAM, PaNET, …)
+│   │   ├── ontology.py      ✅  Ontology indexing/reindexing agent (RDF/OWL + text descriptions)
 │   │   ├── semantic_tool.py 📋  Semantic-tool discovery agent (bio.tools, FAIRsharing, …)
 │   │   └── model_selector.py📋  Agent that checks available OpenAI-compatible models
 │   ├── models/
@@ -38,17 +38,19 @@ llm-metadata-generator/
 │   ├── cron/
 │   │   ├── __init__.py      ✅
 │   │   ├── metadata.py      ✅  Cron: trigger metadata refresh for tracked URLs
-│   │   ├── ontologies.py    📋  Cron: keep ontology vector index up to date
+│   │   ├── ontologies.py    ✅  Cron: refresh stale ontology index snapshots
 │   │   └── tools.py         📋  Cron: refresh semantic-tool descriptions
 │   └── admin/
-│       ├── __init__.py      📋
-│       └── routes.py        📋  Admin blueprint: user CLI, ontology/tool admin UI
+│       ├── __init__.py      ✅
+│       └── routes.py        ✅  Admin blueprint: ontology management + lookup test + missing terms UI
 ├── docs/
 │   └── Bioschemas/
 │       ├── bioschemas-training-schema.json  ✅  JSON Schema (Draft 2020-12) for validation
 │       └── examples/        ✅  Example JSON-LD files used in tests
 ├── templates/
-│   └── sessions.html        ✅  HTML session viewer (login via POST /sessions/login)
+│   ├── sessions.html        ✅  HTML session viewer (login via POST /sessions/login)
+│   ├── admin_ontologies.html ✅  Admin ontology source management + lookup test UI
+│   └── admin_missing_terms.html ✅  Admin missing ontology term suggestions UI
 ├── archived_run/
 │   ├── README.md            ✅  How admins export archived-run logs
 │   └── results/             ✅  Commit-friendly exports (`archived_runs__<timestamp>/sessions.json`)
@@ -58,7 +60,8 @@ llm-metadata-generator/
 │   ├── test_api.py          ✅  API endpoint tests
 │   ├── test_agents.py       ✅  Agent tests with mock LLM client
 │   ├── test_auth.py         ✅  Authentication tests
-│   └── test_bioschemas_examples.py  ✅  Schema validation tests for example JSON-LD files
+│   ├── test_bioschemas_examples.py  ✅  Schema validation tests for example JSON-LD files
+│   └── test_ontology.py     ✅  Ontology vector search + admin ontology route tests
 ├── config.py                ✅  All config read from environment variables
 ├── pyproject.toml           ✅  Poetry project + dependency definitions
 ├── .env.example             ✅  Placeholder values for all environment variables
@@ -93,7 +96,7 @@ llm-metadata-generator/
   - **Level 0 – No update:** hash matches stored hash → skip entirely.
   - **Level 1 – Incremental:** hash changed → agent receives a structural summary of the last crawl and focuses on changed/new items.
   - **Level 2 – Full refresh:** triggered (a) randomly with a very low probability (e.g. ~1 % of cron runs) to catch drift, (b) when the agent itself reports that the site structure has fundamentally changed since the structural summary was created, or (c) when no stored hash exists. The `force_refresh` query parameter exists for admin/debugging use only — computer agents never set it.
-- 📋 **Ontology search** – the bioschemas agent calls `app.db.sqlite.vector_search(query, top_k)` to find candidate ontology terms. This capability is added to the agent in the same issue that implements ontology indexing (TODO item 6).
+- ✅ **Ontology search** – `app.db.sqlite.vector_search(query_embedding, top_k)` returns top ontology-term candidates from active ontology index snapshots. The Bioschemas extractor includes those candidates in extraction prompts and records missing ontology terms linked to `metadata_cache`.
 - 📋 **Semantic tools** – tools (bio.tools, FAIRsharing, …) are **globally admin-managed** (not per-user). A short one-line description of every configured tool is always included in the extraction agent's system prompt so it is aware of available tools. When the agent decides to use a specific tool, it requests the full detailed description on demand. Tool descriptions are stored in the `semantic_tools` table and refreshed by a cron job.
 - 📋 **LLM configuration** – all LLM calls go through `app/agents/__init__.py:get_llm_client(task)`, which reads `OPENAI_API_BASE`, `OPENAI_API_KEY`, and looks up the preferred model for the given task from the `model_assignments` table. Tasks are fine-grained: `content_relevance` (detect irrelevant JS/noise), `content_summary`, `link_decision`, `json_ld_review`, `metadata_analysis` (chain-of-thought reasoning scratchpad before extraction), `ontology_embedding`, `tool_discovery`, `model_selection`.
 - 📋 **Bioschemas / TeSS** – the extraction agent's system prompt includes the Bioschemas TrainingMaterial and CourseInstance profiles and notes about TeSS-specific field usage. Keep this prompt in `app/agents/bioschemas.py`, not in a separate template file.
@@ -117,7 +120,7 @@ llm-metadata-generator/
 | `CRON_TOOLS_INTERVAL` | **Hours** between semantic-tool description refreshes (default 168 = weekly) |
 | `LLM_MODEL_SMALL` | Fast model for classification/routing tasks (default: `qwen2.5-coder-7b-instruct`) |
 | `LLM_MODEL_LARGE` | Quality model for extraction/review tasks (default: `gemma-3-27b-it`) |
-| `LLM_MODEL_EMBEDDING` | Embedding model for ontology vector search — TODO #6 (default: `qwen3-embedding-8b`) |
+| `LLM_MODEL_EMBEDDING` | Embedding model for ontology vector search (default: `qwen3-embedding-8b`) |
 
 ---
 
