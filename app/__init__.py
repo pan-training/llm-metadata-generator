@@ -136,8 +136,14 @@ def _ensure_embedding_model_index_state(app: Flask) -> None:
     with app.app_context():
         try:
             db = get_db()
-            db.execute("SELECT 1 FROM ontology_sources LIMIT 1").fetchall()
-            db.execute("SELECT 1 FROM app_settings LIMIT 1").fetchall()
+            required_tables = {"ontology_sources", "app_settings"}
+            rows = db.execute(
+                "SELECT name FROM sqlite_master"
+                " WHERE type = 'table' AND name IN ('ontology_sources', 'app_settings')"
+            ).fetchall()
+            existing_tables = {str(row["name"]) for row in rows}
+            if required_tables - existing_tables:
+                return
         except sqlite3.OperationalError:
             # Database not initialised yet; startup should continue.
             return

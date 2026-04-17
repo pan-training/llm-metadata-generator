@@ -175,6 +175,7 @@ MAX_INCREMENTAL_START_URLS = 200
 # Maximum characters of a schema property description included in validation
 # error hints (keeps the hint concise for LLM context).
 MAX_SCHEMA_HINT_LENGTH = 120
+KNOWN_ONTOLOGY_TOKENS = ("edam", "panet")
 
 _USER_AGENT = (
     "BioschemasMetadataGenerator/1.0 "
@@ -1561,7 +1562,9 @@ class BioschemasExtractorAgent:
                         llm_client=llm_client,
                         parent_id=item_id,
                     )
-                except TypeError:
+                except TypeError as exc:
+                    if "candidate_ontology_terms" not in str(exc):
+                        raise
                     # Backward compatibility for tests monkeypatching legacy
                     # _extract_item(item_info, content, prompt, reasoning, llm_client, parent_id).
                     extracted_chunk = self._extract_item(  # type: ignore[call-arg]
@@ -2325,8 +2328,10 @@ class BioschemasExtractorAgent:
             return []
         try:
             candidates = vector_search(embedding, top_k=8)
-        except RuntimeError:
+        except RuntimeError as exc:
             # Unit tests and direct agent usage may run outside Flask app context.
+            if "application context" not in str(exc).lower():
+                raise
             return []
         if self._logger and candidates:
             self._logger.info(
@@ -2359,6 +2364,8 @@ class BioschemasExtractorAgent:
         candidate_terms: list[dict[str, Any]],
     ) -> None:
         """Record likely missing ontology terms and link to the training material."""
+        # If ontology lookup produced candidates, we do not create a "missing term"
+        # suggestion for this item.
         if candidate_terms:
             return
 
@@ -2404,7 +2411,9 @@ class BioschemasExtractorAgent:
                     return True
                 stack.extend(current.values())
                 continue
-            if isinstance(current, str) and ("edam" in current.lower() or "panet" in current.lower()):
+            if isinstance(current, str) and any(
+                token in current.lower() for token in KNOWN_ONTOLOGY_TOKENS
+            ):
                 return True
         return False
 

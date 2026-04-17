@@ -124,11 +124,9 @@ def _parse_embedding(embedding_json: str | None) -> list[float]:
         return []
     if not isinstance(parsed, list):
         return []
-    vector: list[float] = []
-    for value in parsed:
-        if isinstance(value, (int, float)):
-            vector.append(float(value))
-    return vector
+    if any(not isinstance(value, (int, float)) for value in parsed):
+        return []
+    return [float(value) for value in parsed]
 
 
 def _to_embedding_list(query_embedding: Sequence[float] | str) -> list[float]:

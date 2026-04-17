@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import hashlib
 from typing import Any
 
 from flask import Blueprint, Response, redirect, render_template, request, session, url_for
 from flask.typing import ResponseReturnValue
+from markupsafe import escape
 
 from app.agents import get_llm_client, get_model_for_task
 from app.agents.ontology import OntologyIndexerAgent
@@ -37,7 +39,8 @@ def _embed_lookup_query(query: str, llm_client: Any) -> list[float]:
     except Exception:
         pass
     # deterministic fallback for environments/tests without live embedding endpoint
-    return [float((ord(char) % 23) / 23.0) for char in query[:32]] or [0.0]
+    digest = hashlib.sha256(query.encode()).digest()
+    return [byte / 255.0 for byte in digest]
 
 
 @bp.get("")
@@ -121,8 +124,8 @@ def delete_ontology(source_id: int) -> ResponseReturnValue:
     return Response(
         (
             "<html><body>"
-            f"<h3>Delete ontology '{row['name']}'?</h3>"
-            f"<form method='post' action='/admin/ontologies/{source_id}/delete'>"
+            "<h3>Delete this ontology source?</h3>"
+            "<form method='post' action=''>"
             "<button type='submit'>Confirm delete</button>"
             "</form>"
             "<p><a href='/admin/ontologies'>Cancel</a></p>"
@@ -221,10 +224,11 @@ def ontology_history(source_id: int) -> ResponseReturnValue:
             "</li>"
         )
 
+    escaped_source_name = escape(source["name"])
     return Response(
         (
             "<html><body>"
-            f"<h2>Ontology history: {source['name']}</h2>"
+            f"<h2>Ontology history: {escaped_source_name}</h2>"
             "<ul>"
             + "".join(html_rows)
             + "</ul>"

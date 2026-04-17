@@ -6,6 +6,7 @@ import os
 import sqlite3
 import tempfile
 
+import pytest
 from flask import Flask
 from flask.testing import FlaskClient
 
@@ -130,7 +131,7 @@ def test_upsert_missing_ontology_term_reuses_existing_label() -> None:
         _cleanup_app(app)
 
 
-def test_admin_ontology_lookup_can_test_indexing(monkeypatch) -> None:
+def test_admin_ontology_lookup_returns_indexed_terms(monkeypatch: pytest.MonkeyPatch) -> None:
     app = _make_app()
     try:
         with app.app_context():

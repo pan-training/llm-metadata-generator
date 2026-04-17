@@ -9,6 +9,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any
+from urllib.parse import urlparse
 
 import requests
 
@@ -151,6 +152,9 @@ class OntologyIndexerAgent:
         )
 
     def _fetch_text(self, url: str) -> str | None:
+        parsed = urlparse(url)
+        if parsed.scheme not in {"http", "https"}:
+            return None
         try:
             response = requests.get(url, timeout=20)
         except requests.RequestException:
@@ -239,7 +243,7 @@ class OntologyIndexerAgent:
             desc = desc.strip()
             if not label or not desc:
                 continue
-            uri_hash = hashlib.sha1(f"{label}-{index}".encode()).hexdigest()[:12]
+            uri_hash = hashlib.sha256(f"{label}-{index}".encode()).hexdigest()[:12]
             uri = f"urn:ontology:text:{uri_hash}"
             terms.append(
                 ParsedOntologyTerm(
@@ -255,7 +259,7 @@ class OntologyIndexerAgent:
         fallback = description.strip()
         if not fallback:
             return []
-        uri_hash = hashlib.sha1(fallback.encode()).hexdigest()[:12]
+        uri_hash = hashlib.sha256(fallback.encode()).hexdigest()[:12]
         return [
             ParsedOntologyTerm(
                 label=fallback[:80],
